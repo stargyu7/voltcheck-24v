@@ -85,22 +85,32 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function bindEvents() {
-  // Segmented Navigation Tabs
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
+  // Segmented Navigation Tabs (Zero-Latency Cached Toggle)
+  const tabBtns = Array.from(document.querySelectorAll('.tab-btn'));
+  const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
+  let currentActiveTab = 'tab-voltagedrop';
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const tabId = btn.getAttribute('data-tab');
-      const panel = document.getElementById(tabId);
-      if (panel) panel.classList.add('active');
+      if (tabId === currentActiveTab) return;
+      currentActiveTab = tabId;
+
+      for (let i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].classList.toggle('active', tabBtns[i] === btn);
+      }
+      for (let i = 0; i < tabPanels.length; i++) {
+        tabPanels[i].classList.toggle('active', tabPanels[i].id === tabId);
+      }
+
       updateUrlHash();
 
       // Quick selective draw only for the tab opened
       if (tabId === 'tab-voltagedrop') calculateVoltageDrop();
       else if (tabId === 'tab-rs485') calculateRS485();
       else if (tabId === 'tab-ductutility') calculateDuctFill();
-    });
+    }, { passive: false });
   });
 
   // Share URL Button

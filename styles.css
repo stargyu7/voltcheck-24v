@@ -246,7 +246,7 @@ body.theme-precision {
   white-space: nowrap;
   flex-shrink: 0;
   line-height: 1;
-  transition: all 0.15s ease;
+  transition: background-color 0.05s, color 0.05s, border-color 0.05s;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
@@ -445,12 +445,6 @@ body.theme-precision {
 
 .tab-panel.active {
   display: block;
-  animation: tabFadeIn 0.12s ease-out;
-}
-
-@keyframes tabFadeIn {
-  from { opacity: 0; transform: translateY(2px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Section Title & Pill Presets */
@@ -2387,16 +2381,17 @@ body.theme-dark .showcase-card {
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.8), transparent);
+  will-change: transform;
   animation: electronPulse 1.8s infinite linear;
 }
 
 @keyframes electronPulse {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 /* ========================================================================== */
