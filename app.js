@@ -236,6 +236,23 @@ function bindEvents() {
   // Copy Summary
   document.getElementById('copyResultSummaryBtn')?.addEventListener('click', copySummaryToClipboard);
 
+  // Catalog Modal
+  const catalogModal = document.getElementById('catalogModal');
+  document.getElementById('openCatalogModalBtn')?.addEventListener('click', () => catalogModal?.classList.remove('hidden'));
+  document.getElementById('closeCatalogModalBtn')?.addEventListener('click', () => catalogModal?.classList.add('hidden'));
+  document.getElementById('dlCatalogCableBtn')?.addEventListener('click', () => {
+    exportTableAsCsv();
+    catalogModal?.classList.add('hidden');
+  });
+  document.getElementById('dlCatalogSmpsBtn')?.addEventListener('click', () => {
+    generateAndPrintReport();
+    catalogModal?.classList.add('hidden');
+  });
+  document.getElementById('dlCatalogRs485Btn')?.addEventListener('click', () => {
+    downloadNoiseGuideTxt();
+    catalogModal?.classList.add('hidden');
+  });
+
   // Quote Modal
   const quoteModal = document.getElementById('quoteModal');
   document.getElementById('openQuoteModalBtn')?.addEventListener('click', () => quoteModal?.classList.remove('hidden'));
@@ -950,8 +967,60 @@ function openPolicyModal(type) {
   }
 }
 
+function downloadNoiseGuideTxt() {
+  const text = `================================================================================
+2026 FA 전장설계 노이즈 대책 & 계측 신호 무결성 기술 가이드 (VoltCheck Pro)
+================================================================================
+
+1. RS-485 / Modbus 통신선로 배선 원칙
+--------------------------------------------------------------------------------
+- 토폴로지: 반드시 일자형 데이지 체인(Daisy-Chain)을 사용하십시오. 스타(Star) 및 트리(Tree) 결선은 심각한 반사파를 유발합니다.
+- 종단저항(Termination): 버스 양 끝단의 물리적 종단 노드에만 120Ω 1/4W 금속피막 저항을 체결합니다.
+- T자 분기(Stub) 길이: 보레이트가 115.2 kbps일 때 스터브 길이는 최대 0.8m 이하여야 합니다.
+- 차폐(Shield) 접지: 그라운드 루프(Ground Loop)로 인한 순환전류를 막기 위해 마스터 제어반 한쪽 끝에서만 단일 1점 접지(PE)를 실시합니다.
+
+2. 4-20mA 아날로그 전류 루프 전압 마진 확보
+--------------------------------------------------------------------------------
+- Shunt 저항: 1~5V ADC 변환 시 250Ω (오차 0.1% 정밀 저항)을 사용하며, 20mA 통전 시 5.00V가 강하됩니다.
+- 최소 전압 마진: 트랜스미터에 인가되는 전압 (24V - 5V Shunt - 선로강하 - 배리어강하)이 트랜스미터 최저 기동전압(12.0V)보다 최소 1.0V 이상 높아야 과도 응답 시 계측 에러가 발생하지 않습니다.
+
+3. 솔레노이드/릴레이 유도성 역기전력 방지
+--------------------------------------------------------------------------------
+- DC 코일: 코일 양단에 역방향으로 1N4007 (1000V 1A) 플라이백 다이오드를 병렬 연결합니다.
+- AC 코일: 코일 양단에 RC 서지 킬러(스너버: 0.1µF + 100Ω)를 병렬 연결합니다.
+
+발행: 볼트체크 24V 엔지니어링 랩 (VoltCheck Pro)
+기술 검토: IEC 60204-1, NFPA 79, EIA/TIA-485 준용
+`;
+
+  const blob = new Blob(['\uFEFF' + text], { type: 'text/plain;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'VoltCheck_2026_FA_Noise_Immunity_Guide.txt';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 function toggleLanguage() {
   currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
   document.getElementById('currentLangText').textContent = currentLanguage.toUpperCase();
-  alert(currentLanguage === 'en' ? 'Switched to English mode.' : '한국어 모드로 변경되었습니다.');
+  
+  // Update key text elements
+  if (currentLanguage === 'en') {
+    document.querySelector('.brand-name').textContent = 'VoltCheck 24V';
+    document.querySelector('.brand-tagline').textContent = 'Industrial Cable Voltage Drop & Sizing Engineering Suite';
+    document.querySelector('#tab-voltagedrop .main-title').textContent = 'DC 24V Cable Voltage Drop & Sensor Power Margin';
+    document.querySelector('#tab-voltagedrop .main-desc').textContent = 'Calculate cable voltage drop, loop resistance, and sensor brownout margin in real-time.';
+    document.querySelector('#printReportBtn span').textContent = 'Print Report';
+    document.querySelector('#shareUrlBtn span').textContent = 'Share Link';
+  } else {
+    document.querySelector('.brand-name').textContent = '볼트체크 24V';
+    document.querySelector('.brand-tagline').textContent = '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷';
+    document.querySelector('#tab-voltagedrop .main-title').textContent = 'DC 24V 선로 전압강하 및 말단 전원 마진 검토';
+    document.querySelector('#tab-voltagedrop .main-desc').textContent = '배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.';
+    document.querySelector('#printReportBtn span').textContent = '검토서 인쇄';
+    document.querySelector('#shareUrlBtn span').textContent = '조건 공유';
+  }
 }

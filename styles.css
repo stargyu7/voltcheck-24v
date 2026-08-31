@@ -313,6 +313,23 @@ body.theme-precision {
   text-decoration: underline;
 }
 
+.sponsor-link-btn {
+  background: transparent;
+  border: none;
+  color: var(--brand-orange);
+  font-weight: 700;
+  font-size: 0.775rem;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.sponsor-link-btn:hover {
+  text-decoration: underline;
+}
+
 /* ==========================================================================
    Main Content Layout
    ========================================================================== */
@@ -1332,6 +1349,86 @@ body.theme-precision {
 
 .btn-primary-action:hover {
   background: var(--brand-orange-hover);
+}
+
+.catalog-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.catalog-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  transition: all 0.15s;
+}
+
+.catalog-item:hover {
+  border-color: var(--brand-orange);
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.catalog-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-blue { background: #eff6ff; color: #2563eb; }
+.icon-orange { background: #fff7ed; color: #ea580c; }
+.icon-green { background: #ecfdf5; color: #059669; }
+
+.catalog-info {
+  flex: 1;
+}
+
+.catalog-info h5 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 0.2rem;
+}
+
+.catalog-info p {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.btn-catalog-dl {
+  background: #ffffff;
+  border: 1px solid var(--border-main);
+  color: var(--navy-dark);
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s;
+}
+
+.btn-catalog-dl:hover {
+  background: var(--navy-dark);
+  color: #ffffff;
+  border-color: var(--navy-dark);
+}
+
+.btn-catalog-dl i {
+  width: 14px;
+  height: 14px;
 }
 
 .policy-text {

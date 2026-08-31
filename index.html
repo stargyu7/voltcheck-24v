@@ -125,9 +125,9 @@
     <div class="sponsor-inner">
       <span class="sponsor-tag">SPONSORED PARTNER</span>
       <span class="sponsor-text">산업용 고굴곡 가동 케이블, 24V DIN레일 SMPS, 제어반 쿨링 에어컨 & 4-20mA 절연 배리어</span>
-      <a href="#sponsor" class="sponsor-link" onclick="alert('스폰서사 기술 카탈로그 페이지로 연결됩니다.'); return false;">
-        카탈로그 다운로드 &rarr;
-      </a>
+      <button type="button" id="openCatalogModalBtn" class="sponsor-link-btn">
+        기술 카탈로그 & 핸드북 다운로드 &rarr;
+      </button>
     </div>
   </aside>
 
@@ -1238,6 +1238,66 @@
     <div class="report-signatures">
       <div>설계 검토 (Checked): ___________________ (인)</div>
       <div>기술 승인 (Approved): ___________________ (인)</div>
+    </div>
+  </div>
+
+  <!-- Technical Catalog & Handbook Download Modal -->
+  <div id="catalogModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h4><i data-lucide="book-marked"></i> 2026 FA 전장설계 기술 핸드북 & 카탈로그 센터</h4>
+        <button type="button" id="closeCatalogModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">실무에 즉시 적용 가능한 공학 데이터시트, 선정 규격표, 노이즈 대책 기술집을 무료로 다운로드할 수 있습니다.</p>
+        
+        <div class="catalog-grid">
+          <!-- Catalog Item 1 -->
+          <div class="catalog-item">
+            <div class="catalog-icon-box icon-blue">
+              <i data-lucide="file-spreadsheet"></i>
+            </div>
+            <div class="catalog-info">
+              <h5>산업용 케이블 규격 & 허용전류 데이터북 (2026)</h5>
+              <p>AWG 10~30 및 0.2~6.0 SQ 도체저항, 포설 방식별 허용전류, 온도 계수 보정표 (Excel/CSV 호환)</p>
+              <button type="button" class="btn-catalog-dl" id="dlCatalogCableBtn">
+                <i data-lucide="download"></i>
+                <span>데이터시트 다운로드 (CSV)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Catalog Item 2 -->
+          <div class="catalog-item">
+            <div class="catalog-icon-box icon-orange">
+              <i data-lucide="cpu"></i>
+            </div>
+            <div class="catalog-info">
+              <h5>DC 24V SMPS 전원 & 제어반 쿨러 선정 실무 가이드</h5>
+              <p>설비 부하 계산식, 돌입전류 대응 CP 선정 기준, 밀폐 제어반 열교환기/에어컨 용량 산정표</p>
+              <button type="button" class="btn-catalog-dl" id="dlCatalogSmpsBtn">
+                <i data-lucide="printer"></i>
+                <span>기술 규격서 인쇄/PDF 저장</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Catalog Item 3 -->
+          <div class="catalog-item">
+            <div class="catalog-icon-box icon-green">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <div class="catalog-info">
+              <h5>RS-485 & 4-20mA 아날로그 계측 노이즈 대책 핸드북</h5>
+              <p>120Ω 종단저항 배치, T자 분기(Stub) 한계, 그라운드 루프 방지 단일 접지 및 배리어 가이드</p>
+              <button type="button" class="btn-catalog-dl" id="dlCatalogRs485Btn">
+                <i data-lucide="file-text"></i>
+                <span>기술 요약본 다운로드</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
