@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>볼트체크 24V (VoltCheck Pro) - 산업용 전장설계 통합 엔지니어링 툴킷</title>
+    <link>https://stargyu7.github.io/voltcheck-24v/</link>
+    <description>공장 자동화(FA), 반도체, 배터리 팹 전장설계용 DC 24V 케이블 전압강하, 4-20mA 아날로그 루프 마진, SMPS 전원 용량, 제어반 쿨링, AWG 허용전류, RS-485 통신, 공압 소모량, 배선 덕트 점유율 계산기</description>
+    <language>ko-kr</language>
+    <pubDate>Mon, 31 Aug 2026 17:36:00 +0900</pubDate>
+    <lastBuildDate>Mon, 31 Aug 2026 17:36:00 +0900</lastBuildDate>
+    <atom:link href="https://stargyu7.github.io/voltcheck-24v/rss.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>DC 24V 케이블 선로 전압강하 및 센서 브라운아웃 안전 마진 계산기</title>
+      <link>https://stargyu7.github.io/voltcheck-24v/#tab=tab-voltagedrop</link>
+      <description>배선 거리(m), 도선 규격(AWG/SQ), 부하 전류(A)에 따른 도체 온도 보정 저항 및 전압강하 산출, IEC 60204-1 및 NFPA 79 규격 5% 허용 한계 검증</description>
+      <pubDate>Mon, 31 Aug 2026 17:36:00 +0900</pubDate>
+      <guid>https://stargyu7.github.io/voltcheck-24v/#tab=tab-voltagedrop</guid>
+    </item>
+
+    <item>
+      <title>4-20mA 아날로그 전류 루프 전압 마진 및 250Ω Shunt 계산기</title>
+      <link>https://stargyu7.github.io/voltcheck-24v/#tab=tab-analogloop</link>
+      <description>2선식 계장 루프 전원(24V), Shunt 저항(250Ω), 안전 배리어 저항, 트랜스미터 최저 수전 전압(12V) 안전 마진 검증</description>
+      <pubDate>Mon, 31 Aug 2026 17:36:00 +0900</pubDate>
+      <guid>https://stargyu7.github.io/voltcheck-24v/#tab=tab-analogloop</guid>
+    </item>
+
+    <item>
+      <title>DC 24V SMPS 파워서플라이 정격 용량 &amp; 회로보호기(CP) 선정 계산기</title>
+      <link>https://stargyu7.github.io/voltcheck-24v/#tab=tab-smpsbudget</link>
+      <description>센서, 솔레노이드 밸브, PLC, HMI, 릴레이 동시 사용률 및 돌입전류 1.3배 안전율 반영 표준 SMPS(60W~960W) 및 CP(2A~10A) 추천</description>
+      <pubDate>Mon, 31 Aug 2026 17:36:00 +0900</pubDate>
+      <guid>https://stargyu7.github.io/voltcheck-24v/#tab=tab-smpsbudget</guid>
+    </item>
+
+    <item>
+      <title>밀폐형 제어반 내부 발열량 계산 및 쿨링팬/에어컨 용량 산정 (IEC 60890)</title>
+      <link>https://stargyu7.github.io/voltcheck-24v/#tab=tab-cabinetcooling</link>
+      <description>제어반 외형 치수 표면적 방열량, 내부 발열체 부하, 외기 온도차에 따른 필요 환기 풍량(CFM) 및 제어반 에어컨 용량(W, BTU/h) 계산</description>
+      <pubDate>Mon, 31 Aug 2026 17:36:00 +0900</pubDate>
+      <guid>https://stargyu7.github.io/voltcheck-24v/#tab=tab-cabinetcooling</guid>
+    </item>
+
+    <item>
+      <title>산업용 케이블 AWG 및 미터법(SQ) 단면적·허용전류 조견표</title>
+      <link>https://stargyu7.github.io/voltcheck-24v/#tab=tab-cabletable</link>
+      <description>AWG 30부터 AWG 10까지 도체 외경, 20°C/60°C 선로 저항, 공기 중/배선 덕트 포설 시 허용전류 검색 및 CSV 다운로드</description>
+      <pubDate>Mon, 31 Aug 2026 17:36:00 +0900</pubDate>
+      <guid>https://stargyu7.github.io/voltcheck-24v/#tab=tab-cabletable</guid>
+    </item>
+
+    <item>
+      <title>배선 덕트(Duct) 및 전선관 점유율(40% Rule) 계산기</title>
+      <link>https://stargyu7.github.io/voltcheck-24v/#tab=tab-ductutility</link>
+      <description>NEC 및 IEC 60204-1 기준 덕트 폭/높이와 케이블 외경/수량에 따른 내부 점유율(%) 및 발열 위험 판정</description>
+      <pubDate>Mon, 31 Aug 2026 17:36:00 +0900</pubDate>
+      <guid>https://stargyu7.github.io/voltcheck-24v/#tab=tab-ductutility</guid>
+    </item>
+  </channel>
+</rss>

@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
+User-agent: Yeti
+Allow: /
+
+# Sitemaps & RSS Feeds for Google & Naver
 Sitemap: https://stargyu7.github.io/voltcheck-24v/sitemap.xml
+Sitemap: https://stargyu7.github.io/voltcheck-24v/rss.xml
