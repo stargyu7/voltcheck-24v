@@ -61,8 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Restore URL state if hash exists
   restoreStateFromUrlHash();
 
-  // Initialize theme from storage
+  // Initialize theme and language from storage
   initTheme();
+  initLanguage();
 
   // Initial calculations for all tools
   calculateVoltageDrop();
@@ -454,24 +455,31 @@ function calculateVoltageDrop() {
   const powerLossW = Math.pow(iLoad, 2) * totalLoopR;
   const ampUsagePct = Math.round((iLoad / ampRating) * 100);
 
+  const isEn = currentLanguage === 'en';
   let stampClass = 'stamp-pass';
-  let stampText = '정상 (PASS)';
+  let stampText = isEn ? 'PASS (Normal)' : '정상 (PASS)';
   let verdictIcon = 'check';
   let recHtml = '';
 
   if (vMargin < 0.0) {
     stampClass = 'stamp-fail';
-    stampText = '동작불가 (FAIL)';
+    stampText = isEn ? 'FAIL (Undervoltage)' : '동작불가 (FAIL)';
     verdictIcon = 'x';
     const recGauge = getRecommendedGauge(vSource, lengthM, loopMultiplier, matKey, ambientT, iLoad, vMinReq);
-    recHtml = `<strong>⚠️ 전압 부족 오동작 위험:</strong> 말단 전압(${vTerm.toFixed(2)}V)이 최저 동작 전압(${vMinReq.toFixed(1)}V) 미달입니다. 케이블 규격을 <strong>${recGauge}</strong> 이상으로 상향하거나 SMPS 전압을 24.5V~25.0V로 승압하십시오.`;
+    recHtml = isEn
+      ? `<strong>⚠️ Undervoltage Risk:</strong> Terminal voltage (${vTerm.toFixed(2)}V) is below minimum threshold (${vMinReq.toFixed(1)}V). Upgrade cable to <strong>${recGauge}</strong> or boost SMPS output to 24.5V~25.0V.`
+      : `<strong>⚠️ 전압 부족 오동작 위험:</strong> 말단 전압(${vTerm.toFixed(2)}V)이 최저 동작 전압(${vMinReq.toFixed(1)}V) 미달입니다. 케이블 규격을 <strong>${recGauge}</strong> 이상으로 상향하거나 SMPS 전압을 24.5V~25.0V로 승압하십시오.`;
   } else if (vMargin < 0.8 || vDropPct > 5.0) {
     stampClass = 'stamp-warn';
-    stampText = '주의 (CAUTION)';
+    stampText = isEn ? 'CAUTION (Low Margin)' : '주의 (CAUTION)';
     verdictIcon = 'alert-triangle';
-    recHtml = `<strong>⚠️ 여유 마진 협소:</strong> 현재 안전 마진(+${vMargin.toFixed(2)}V)이 좁습니다. 주변 노이즈나 솔레노이드 기동 시 순간 전압강하로 센서가 리셋될 수 있으니 1단계 굵은 규격을 권장합니다.`;
+    recHtml = isEn
+      ? `<strong>⚠️ Narrow Safety Margin:</strong> Margin (+${vMargin.toFixed(2)}V) is tight. Transient inrush from solenoids may cause brownout resets. 1-step thicker wire recommended.`
+      : `<strong>⚠️ 여유 마진 협소:</strong> 현재 안전 마진(+${vMargin.toFixed(2)}V)이 좁습니다. 주변 노이즈나 솔레노이드 기동 시 순간 전압강하로 센서가 리셋될 수 있으니 1단계 굵은 규격을 권장합니다.`;
   } else {
-    recHtml = `<strong>엔지니어링 소견:</strong> 편도 ${lengthM}m 배선에서 전압강하율이 ${vDropPct.toFixed(1)}%로 안정적이며, ${vMargin.toFixed(2)}V의 충분한 안전 마진을 만족합니다.`;
+    recHtml = isEn
+      ? `<strong>Engineering Assessment:</strong> At ${lengthM}m one-way distance, voltage drop ratio is ${vDropPct.toFixed(1)}% with +${vMargin.toFixed(2)}V safety margin, fully compliant.`
+      : `<strong>엔지니어링 소견:</strong> 편도 ${lengthM}m 배선에서 전압강하율이 ${vDropPct.toFixed(1)}%로 안정적이며, ${vMargin.toFixed(2)}V의 충분한 안전 마진을 만족합니다.`;
   }
 
   const verdictBadge = document.getElementById('verdictBadge');
@@ -586,17 +594,18 @@ function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource
   }
 
   // 1. Voltage Margin Text
+  const isEn = currentLanguage === 'en';
   const t1 = document.getElementById('auditText1');
   const it1 = document.getElementById('auditItem1');
   if (t1 && it1) {
     if (vMargin < 0) {
-      t1.textContent = `최저 요구 전압 대비 ${Math.abs(vMargin).toFixed(2)}V 부족 (기기 오동작/정지 위험)`;
+      t1.textContent = isEn ? `-${Math.abs(vMargin).toFixed(2)}V below min requirement (Brownout/Stall risk)` : `최저 요구 전압 대비 ${Math.abs(vMargin).toFixed(2)}V 부족 (기기 오동작/정지 위험)`;
       it1.className = 'audit-item fail';
     } else if (vMargin < 0.8) {
-      t1.textContent = `안전 여유 마진 +${vMargin.toFixed(2)}V (협소, 서지 시 센서 리셋 주의)`;
+      t1.textContent = isEn ? `Tight margin +${vMargin.toFixed(2)}V (Caution: Inrush transients)` : `안전 여유 마진 +${vMargin.toFixed(2)}V (협소, 서지 시 센서 리셋 주의)`;
       it1.className = 'audit-item warn';
     } else {
-      t1.textContent = `최저 동작 전압 대비 +${vMargin.toFixed(2)}V 여유 (안전 확보)`;
+      t1.textContent = isEn ? `Safe margin +${vMargin.toFixed(2)}V above min threshold` : `최저 동작 전압 대비 +${vMargin.toFixed(2)}V 여유 (안전 확보)`;
       it1.className = 'audit-item';
     }
   }
@@ -606,13 +615,13 @@ function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource
   const it2 = document.getElementById('auditItem2');
   if (t2 && it2) {
     if (ampUsagePct > 80) {
-      t2.textContent = `허용전류의 ${ampUsagePct}% 사용 (피복 과열 화재 위험)`;
+      t2.textContent = isEn ? `${ampUsagePct}% of rated ampacity used (Overheating risk)` : `허용전류의 ${ampUsagePct}% 사용 (피복 과열 화재 위험)`;
       it2.className = 'audit-item fail';
     } else if (ampUsagePct > 50) {
-      t2.textContent = `허용전류의 ${ampUsagePct}% 사용 (밀집 닥트 내 발열 주의)`;
+      t2.textContent = isEn ? `${ampUsagePct}% ampacity used (Monitor duct thermal rise)` : `허용전류의 ${ampUsagePct}% 사용 (밀집 닥트 내 발열 주의)`;
       it2.className = 'audit-item warn';
     } else {
-      t2.textContent = `허용전류 대비 ${ampUsagePct}% 사용 (발열 위험 없음)`;
+      t2.textContent = isEn ? `${ampUsagePct}% ampacity used (Optimal thermal margin)` : `허용전류 대비 ${ampUsagePct}% 사용 (발열 위험 없음)`;
       it2.className = 'audit-item';
     }
   }
@@ -622,25 +631,27 @@ function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource
   const it3 = document.getElementById('auditItem3');
   if (t3 && it3) {
     if (vMargin < 0.5) {
-      t3.textContent = `솔레노이드 기동 시 센서 리셋 브라운아웃 위험률 85%`;
+      t3.textContent = isEn ? `85% risk of sensor reset during solenoid inrush` : `솔레노이드 기동 시 센서 리셋 브라운아웃 위험률 85%`;
       it3.className = 'audit-item fail';
     } else {
-      t3.textContent = `솔레노이드 통전 시 순간 전압강하 마진 안전`;
+      t3.textContent = isEn ? `Immune to brownout during inductive inrush` : `솔레노이드 통전 시 순간 전압강하 마진 안전`;
       it3.className = 'audit-item';
     }
   }
 
   // 4. Power Loss Text
   const t4 = document.getElementById('auditText4');
-  if (t4) t4.textContent = `선로 손실 ${powerLossW.toFixed(2)}W (닥트 열축적 상태: ${powerLossW > 2.0 ? '주의' : '양호'})`;
+  if (t4) t4.textContent = isEn ? `Line I²R loss: ${powerLossW.toFixed(2)}W (Duct heat: ${powerLossW > 2.0 ? 'Caution' : 'Normal'})` : `선로 손실 ${powerLossW.toFixed(2)}W (닥트 열축적 상태: ${powerLossW > 2.0 ? '주의' : '양호'})`;
 
   // 5. Short Circuit Coordination Text
   const t5 = document.getElementById('auditText5');
-  if (t5) t5.textContent = `선로 임피던스 양호 (단락 시 CP C-Curve 순시 트립 보장)`;
+  if (t5) t5.textContent = isEn ? `Line impedance compliant (Guarantees CP C-curve instantaneous trip)` : `선로 임피던스 양호 (단락 시 CP C-Curve 순시 트립 보장)`;
 
   // 6. Topology Text
   const t6 = document.getElementById('auditText6');
-  if (t6) t6.textContent = topology === 'distributed' ? '등간격 분산 배선으로 선로 손실 50% 최적화' : `말단 전압강하율 ${vDropPct.toFixed(1)}%로 안정적`;
+  if (t6) t6.textContent = isEn
+    ? (topology === 'distributed' ? 'Distributed wiring saves 50% line loss' : `End-load voltage drop ${vDropPct.toFixed(1)}%, standard compliant`)
+    : (topology === 'distributed' ? '등간격 분산 배선으로 선로 손실 50% 최적화' : `말단 전압강하율 ${vDropPct.toFixed(1)}%로 안정적`);
 }
 
 // ==========================================================================
@@ -1693,27 +1704,316 @@ function copyMarkdownSummary() {
 *Generated by [VoltCheck 24V (볼트체크)](https://stargyu7.github.io/voltcheck-24v/)*`;
 
   navigator.clipboard.writeText(md).then(() => {
-    alert('[마크다운 표 복사 완료]\n\nNotion, Jira, GitHub 이슈에 바로 붙여넣기(Ctrl+V)할 수 있는 마크다운 표 서식이 클립보드에 복사되었습니다.');
+    alert(currentLanguage === 'en' ? '[Markdown Table Copied]\n\nMarkdown format has been copied to clipboard for Notion/Jira/GitHub.' : '[마크다운 표 복사 완료]\n\nNotion, Jira, GitHub 이슈에 바로 붙여넣기(Ctrl+V)할 수 있는 마크다운 표 서식이 클립보드에 복사되었습니다.');
   });
+}
+
+// ==========================================================================
+// 11. Global Multi-Language (i18n) Engine [NEW]
+// ==========================================================================
+const I18N = {
+  ko: {
+    brand_name: '볼트체크 24V',
+    brand_en: 'VoltCheck Pro',
+    brand_tagline: '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷',
+    btn_unit: '단위 환산',
+    btn_history: '내 보관함',
+    btn_dark: '다크',
+    btn_light: '라이트',
+    btn_share: '조건 공유',
+    btn_print: '검토서 인쇄',
+    tab_vd: '24V 전압강하',
+    tab_loop: '4-20mA 루프',
+    tab_smps: 'SMPS·CP 용량',
+    tab_cool: '제어반 쿨링',
+    tab_awg: 'AWG 조견표',
+    tab_rs485: 'RS-485 통신',
+    tab_pneu: '공압 소모량',
+    tab_duct: '덕트 점유율',
+    tab_plc: 'PLC 스케일링',
+    tab_motor: '3상 모터·MC',
+    tab_bend: '케이블 베어',
+    tab_notes: '기술 노트',
+    
+    // Tab 1
+    t1_title: 'DC 24V 선로 전압강하 및 말단 전원 마진 검토',
+    t1_desc: '배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.',
+    t1_p1: '포토/근접센서 (35mA)',
+    t1_p2: '솔레노이드 밸브 (0.45A)',
+    t1_p3: 'IO-Link 마스터 (2.0A)',
+    t1_p4: '서보 브레이크 (1.2A)',
+    t1_p5: '비전 조명 (3.5A)',
+    t1_c1_title: '설계 파라미터 입력',
+    t1_adv_btn: '상세 환경 설정',
+    t1_lbl_len: '선로 편도 배선 거리 (L)',
+    t1_lbl_gauge: '케이블 도선 규격',
+    t1_lbl_cur: '부하 소비전류 (I)',
+    t1_lbl_topo: '부하 배선 토폴로지 (배선 형태)',
+    t1_c2_title: '검증 판정 및 계측치',
+    t1_meter_term: '말단 센서 수전 전압 (V_term)',
+    t1_meter_drop: '선로 전압강하:',
+    t1_meter_margin: '전원 안전마진:',
+    t1_gauge_title: '전압 마진 레벨 게이지 (Voltage Margin Gauge)',
+    t1_ai_badge: 'AI 스마트 진단',
+    t1_ai_title: 'FA 전장설계 6대 항목 종합 안전 진단서',
+    btn_copy_summary: '요약 복사',
+    btn_copy_md: '마크다운 복사',
+    btn_req_quote: '부품 견적 요청 (BOM)',
+    
+    // Tab 2
+    t2_title: '4-20mA 아날로그 전류 루프 수전 전압 마진 검증기',
+    t2_desc: '압력/유량/온도 트랜스미터 루프 전원(24V), 수신측 Shunt 저항(250Ω, 1~5V 변환), 선로 저항, 방폭 배리어에 따른 계측 마진을 판정합니다.',
+    
+    // Tab 3
+    t3_title: 'DC 24V SMPS 전원 용량 산정 & 회로보호기(CP) 선정기',
+    t3_desc: '제어반 내 센서, 솔레노이드 밸브, 릴레이, 서보 브레이크 등 총 부하 전류를 집계하고 1.3배 안전율을 적용한 SMPS 정격 용량 및 2차측 C-곡선 CP를 선정합니다.',
+    
+    // Tab 4
+    t4_title: '제어반 내부 발열량 계산 및 냉각 에어컨(AC) 용량 선정',
+    t4_desc: '인버터, SMPS, PLC, 변압기 등 전장 부품 발열량과 외기 최고온도(40°C) 조건에서 제어반 밀폐 시 표면 방열량 및 필요 냉각 에어컨/환기팬 용량을 산출합니다.',
+    
+    // Tab 5
+    t5_title: '산업용 제어 케이블 규격 조견표 (AWG ↔ SQ mm² ↔ 외경)',
+    t5_desc: '미국 전선 규격(AWG)과 한국/유럽 공칭 단면적(SQ, mm²), 도체 저항, 기중/닥트 허용전류, 추천 용도를 한눈에 검색하고 CSV로 내보냅니다.',
+    
+    // Tab 6
+    t6_title: 'RS-485 산업용 시리얼 통신 거리 & 120Ω 종단저항 검증',
+    t6_desc: '통신 보레이트(Baud Rate)별 최대 허용 배선 거리, 특성 임피던스(120Ω) 종단저항 매칭 여부, 케이블 정전용량(pF/m) 신호 왜곡을 검증합니다.',
+    
+    // Tab 7
+    t7_title: '공압 실린더 공기 소비량 & 콤프레샤 마력(HP) 산정',
+    t7_desc: '실린더 튜브 내경, 스트로크, 작동 압력, 분당 왕복 사이클(CPM)에 따른 분당 공기 소비 유량(NL/min)과 필요 콤프레샤 정격 마력(HP)을 산출합니다.',
+    
+    // Tab 8
+    t8_title: '제어반 배선 닥트 점유율(40% 규정) & NPN/PNP 센서 시뮬레이터',
+    t8_desc: 'KEC 및 NFPA 79 규격에 따른 배선 닥트 최대 40% 점유율(단면적 여유) 검증 및 NPN(싱크) / PNP(소스) 센서 인터랙티브 결선 시뮬레이터입니다.',
+    
+    // Tab 9
+    t9_title: 'PLC 아날로그 12-bit / 16-bit ADC 스케일링 디지털 변환기',
+    t9_desc: '지멘스, 미쓰비시, LS산전, 오므론 등 주요 PLC 아날로그 입력 모듈의 Raw 디지털 카운트와 실제 물리량(MPa, °C, RPM) 간 선형 변환 수식을 자동 생성합니다.',
+    
+    // Tab 10
+    t10_title: '3상 AC 220V/380V/440V 모터 정격전류 & 마그네트(MC)/EOCR 선정기',
+    t10_desc: '모터 정격 용량(kW/HP), 사용 전압, 효율 및 역률에 따른 전부하 정격전류(FLA), 기동 돌입전류, 추천 전자접촉기(MC), 차단기(MCCB), EOCR 정정치, KEC 보호접지선(PE)을 산출합니다.',
+    
+    // Tab 11
+    t11_title: '가동 케이블베어 벤딩 반경 & 최소 곡률 계산기',
+    t11_desc: '가동 케이블베어(Cable Carrier) 및 다관절 로봇 배선 시 전선 외경에 따른 최소 굴곡 반경(R)과 설치 필요 높이(H)를 산출하여 단선 사고를 예방합니다.',
+    
+    // Tab 12
+    t12_title: 'FA 전장설계 국제 기술 규격 및 엔지니어링 가이드 핸드북',
+    t12_desc: 'KEC(한국전기설비규정), IEC 60204-1, NFPA 79, CE, UL 508A 등 산업용 제어반 설계 시 필수 준수 표준입니다.'
+  },
+  en: {
+    brand_name: 'VoltCheck 24V',
+    brand_en: 'VoltCheck Pro',
+    brand_tagline: 'Industrial Cable Voltage Drop & Control Panel Engineering Suite',
+    btn_unit: 'Unit Converter',
+    btn_history: 'Saved Calcs',
+    btn_dark: 'Dark',
+    btn_light: 'Light',
+    btn_share: 'Share Link',
+    btn_print: 'Print Report',
+    tab_vd: '24V Volt Drop',
+    tab_loop: '4-20mA Loop',
+    tab_smps: 'SMPS & CP',
+    tab_cool: 'Cabinet Cooler',
+    tab_awg: 'AWG Table',
+    tab_rs485: 'RS-485 Bus',
+    tab_pneu: 'Pneumatics',
+    tab_duct: 'Duct Fill',
+    tab_plc: 'PLC Scaling',
+    tab_motor: '3-Ph Motor·MC',
+    tab_bend: 'Cable Carrier',
+    tab_notes: 'Tech Notes',
+    
+    // Tab 1
+    t1_title: 'DC 24V Cable Voltage Drop & Sensor Power Margin',
+    t1_desc: 'Calculate cable loop resistance, voltage drop, and sensor brownout margin in real-time according to distance, wire gauge, and load current.',
+    t1_p1: 'Photo Sensor (35mA)',
+    t1_p2: 'Solenoid Valve (0.45A)',
+    t1_p3: 'IO-Link Master (2.0A)',
+    t1_p4: 'Servo Brake (1.2A)',
+    t1_p5: 'Vision Light (3.5A)',
+    t1_c1_title: 'Design Parameters Input',
+    t1_adv_btn: 'Advanced Settings',
+    t1_lbl_len: 'One-Way Cable Distance (L)',
+    t1_lbl_gauge: 'Wire Gauge Specification',
+    t1_lbl_cur: 'Load Operating Current (I)',
+    t1_lbl_topo: 'Wiring Load Topology',
+    t1_c2_title: 'Verification Verdict & Readouts',
+    t1_meter_term: 'Terminal Operating Voltage (V_term)',
+    t1_meter_drop: 'Line Voltage Drop:',
+    t1_meter_margin: 'Safety Margin:',
+    t1_gauge_title: 'Voltage Margin Level Gauge',
+    t1_ai_badge: 'AI Smart Audit',
+    t1_ai_title: '6-Point Comprehensive Engineering Safety Audit',
+    btn_copy_summary: 'Copy Summary',
+    btn_copy_md: 'Copy Markdown',
+    btn_req_quote: 'Request BOM Quote',
+    
+    // Tab 2
+    t2_title: '4-20mA Analog Current Loop Margin & 250Ω Shunt Sizing',
+    t2_desc: 'Verify transmitter power supply margin (24V), receiver shunt resistor (250Ω, 1-5V conversion), loop resistance, and intrinsic safety barriers.',
+    
+    // Tab 3
+    t3_title: 'DC 24V SMPS Power Budget & Circuit Protector (CP) Sizing',
+    t3_desc: 'Aggregate total load current across sensors, solenoids, relays, and servo brakes with 1.3x derating safety factor and C-curve breaker selection.',
+    
+    // Tab 4
+    t4_title: 'Control Cabinet Heat Dissipation & AC Cooler Sizing',
+    t4_desc: 'Calculate total heat loss from VFDs, SMPS, and PLCs with surface dissipation area (IEC 60890) and size required air conditioner BTU/Watts.',
+    
+    // Tab 5
+    t5_title: 'Industrial Cable Specification Table (AWG ↔ Metric SQ ↔ OD)',
+    t5_desc: 'Searchable cross-reference database for AWG, Metric SQ (mm²), conductor resistance, ampacity in air/ducts, and CSV export.',
+    
+    // Tab 6
+    t6_title: 'RS-485 Serial Fieldbus Max Distance & 120Ω Termination Check',
+    t6_desc: 'Verify max baud rate vs line distance, characteristic impedance (120Ω) termination matching, and signal distortion limits.',
+    
+    // Tab 7
+    t7_title: 'Pneumatic Cylinder Air Consumption & Compressor HP Sizing',
+    t7_desc: 'Calculate standard air consumption (NL/min) and required air compressor horsepower (HP) from cylinder bore, stroke, and cycles/min.',
+    
+    // Tab 8
+    t8_title: 'Cable Duct Fill Ratio (40% Rule) & NPN/PNP Wiring Simulator',
+    t8_desc: 'Verify NEC/IEC 40% maximum conduit/duct fill ratio for thermal safety and simulate NPN (Sink) vs PNP (Source) polarity wiring.',
+    
+    // Tab 9
+    t9_title: 'PLC 12-bit / 16-bit ADC Analog Linear Scaling Tool',
+    t9_desc: 'Convert raw digital counts to engineering units (MPa, °C, RPM) with vendor presets (Siemens, Mitsubishi, LS, Omron) and Structured Text code.',
+    
+    // Tab 10
+    t10_title: '3-Phase AC 220V/380V/440V Motor FLA & Contactor (MC) Sizing',
+    t10_desc: 'Calculate full-load amps (FLA), starting inrush current, contactor (MC), circuit breaker (MCCB), EOCR range, and KEC PE ground wire gauge.',
+    
+    // Tab 11
+    t11_title: 'Cable Carrier Minimum Bending Radius & Loop Height Sizing',
+    t11_desc: 'Determine minimum bending radius (R) and chain bracket height (H) for flexible dynamic cable carriers and robotics.',
+    
+    // Tab 12
+    t12_title: 'International Industrial Automation Standards & Engineering Handbook',
+    t12_desc: 'Essential electrical safety and wiring standards reference: IEC 60204-1, NFPA 79, CE, UL 508A, and KEC.'
+  }
+};
+
+function initLanguage() {
+  const savedLang = localStorage.getItem('voltcheck_lang') || 'ko';
+  currentLanguage = savedLang;
+  applyLanguage(currentLanguage);
 }
 
 function toggleLanguage() {
   currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
-  document.getElementById('currentLangText').textContent = currentLanguage.toUpperCase();
-  
-  if (currentLanguage === 'en') {
-    document.querySelector('.brand-name').textContent = 'VoltCheck 24V';
-    document.querySelector('.brand-tagline').textContent = 'Industrial Cable Voltage Drop & Sizing Engineering Suite';
-    document.querySelector('#tab-voltagedrop .main-title').textContent = 'DC 24V Cable Voltage Drop & Sensor Power Margin';
-    document.querySelector('#tab-voltagedrop .main-desc').textContent = 'Calculate cable voltage drop, loop resistance, and sensor brownout margin in real-time.';
-    document.querySelector('#printReportBtn span').textContent = 'Print Report';
-    document.querySelector('#shareUrlBtn span').textContent = 'Share Link';
-  } else {
-    document.querySelector('.brand-name').textContent = '볼트체크 24V';
-    document.querySelector('.brand-tagline').textContent = '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷';
-    document.querySelector('#tab-voltagedrop .main-title').textContent = 'DC 24V 선로 전압강하 및 말단 전원 마진 검토';
-    document.querySelector('#tab-voltagedrop .main-desc').textContent = '배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.';
-    document.querySelector('#printReportBtn span').textContent = '검토서 인쇄';
-    document.querySelector('#shareUrlBtn span').textContent = '조건 공유';
-  }
+  localStorage.setItem('voltcheck_lang', currentLanguage);
+  applyLanguage(currentLanguage);
 }
+
+function applyLanguage(lang) {
+  const dict = I18N[lang] || I18N.ko;
+  const langText = document.getElementById('currentLangText');
+  if (langText) langText.textContent = lang.toUpperCase();
+
+  // Brand Info
+  const brandName = document.querySelector('.brand-name');
+  if (brandName) brandName.textContent = dict.brand_name;
+  const brandTag = document.querySelector('.brand-tagline');
+  if (brandTag) brandTag.textContent = dict.brand_tagline;
+
+  // Nav Utils
+  const u1 = document.querySelector('#openUnitConverterBtn span');
+  if (u1) u1.textContent = dict.btn_unit;
+  const u2 = document.querySelector('#openHistoryModalBtn span');
+  if (u2) u2.textContent = dict.btn_history;
+  const u3 = document.querySelector('#shareUrlBtn span');
+  if (u3) u3.textContent = dict.btn_share;
+  const u4 = document.querySelector('#printReportBtn span');
+  if (u4) u4.textContent = dict.btn_print;
+
+  // 12 Tabs
+  const tabMap = {
+    'tab-voltagedrop': dict.tab_vd,
+    'tab-analogloop': dict.tab_loop,
+    'tab-smpsbudget': dict.tab_smps,
+    'tab-cabinetcooling': dict.tab_cool,
+    'tab-cabletable': dict.tab_awg,
+    'tab-rs485': dict.tab_rs485,
+    'tab-pneumatics': dict.tab_pneu,
+    'tab-ductutility': dict.tab_duct,
+    'tab-plcscaling': dict.tab_plc,
+    'tab-motorcalc': dict.tab_motor,
+    'tab-bendingradius': dict.tab_bend,
+    'tab-articles': dict.tab_notes
+  };
+
+  Object.keys(tabMap).forEach(tabId => {
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"] span`);
+    if (btn) btn.textContent = tabMap[tabId];
+  });
+
+  // Tab Titles & Descriptions
+  const titles = [
+    { id: 'tab-voltagedrop', t: dict.t1_title, d: dict.t1_desc },
+    { id: 'tab-analogloop', t: dict.t2_title, d: dict.t2_desc },
+    { id: 'tab-smpsbudget', t: dict.t3_title, d: dict.t3_desc },
+    { id: 'tab-cabinetcooling', t: dict.t4_title, d: dict.t4_desc },
+    { id: 'tab-cabletable', t: dict.t5_title, d: dict.t5_desc },
+    { id: 'tab-rs485', t: dict.t6_title, d: dict.t6_desc },
+    { id: 'tab-pneumatics', t: dict.t7_title, d: dict.t7_desc },
+    { id: 'tab-ductutility', t: dict.t8_title, d: dict.t8_desc },
+    { id: 'tab-plcscaling', t: dict.t9_title, d: dict.t9_desc },
+    { id: 'tab-motorcalc', t: dict.t10_title, d: dict.t10_desc },
+    { id: 'tab-bendingradius', t: dict.t11_title, d: dict.t11_desc },
+    { id: 'tab-articles', t: dict.t12_title, d: dict.t12_desc }
+  ];
+
+  titles.forEach(item => {
+    const p = document.getElementById(item.id);
+    if (p) {
+      const h2 = p.querySelector('.main-title');
+      if (h2) h2.textContent = item.t;
+      const desc = p.querySelector('.main-desc');
+      if (desc) desc.textContent = item.d;
+    }
+  });
+
+  // Presets in Tab 1
+  const pBtns = document.querySelectorAll('#tab-voltagedrop .pill-btn');
+  if (pBtns.length >= 5) {
+    pBtns[0].textContent = dict.t1_p1;
+    pBtns[1].textContent = dict.t1_p2;
+    pBtns[2].textContent = dict.t1_p3;
+    pBtns[3].textContent = dict.t1_p4;
+    pBtns[4].textContent = dict.t1_p5;
+  }
+
+  // Buttons in Tab 1
+  const copySumBtn = document.querySelector('#copyResultSummaryBtn span');
+  if (copySumBtn) copySumBtn.textContent = dict.btn_copy_summary;
+  const copyMdBtn = document.querySelector('#copyMarkdownBtn span');
+  if (copyMdBtn) copyMdBtn.textContent = dict.btn_copy_md;
+  const reqQuoteBtn = document.querySelector('#openQuoteModalBtn span');
+  if (reqQuoteBtn) reqQuoteBtn.textContent = dict.btn_req_quote;
+
+  // AI Audit Title
+  const aiBadge = document.querySelector('.audit-badge');
+  if (aiBadge) aiBadge.innerHTML = `<i data-lucide="shield-check"></i> ${dict.t1_ai_badge}`;
+  const aiH4 = document.querySelector('.audit-title-group h4');
+  if (aiH4) aiH4.textContent = dict.t1_ai_title;
+
+  // Recalculate everything to update verdicts and notes in current language
+  calculateVoltageDrop();
+  calculateAnalogLoop();
+  calculateSmpsBudget();
+  calculateCabinetCooling();
+  calculateRS485();
+  calculatePneumatics();
+  calculateDuctFill();
+  calculatePlcScaling();
+  calculateMotorSpecs();
+  calculateBendingRadius();
+
+  if (window.lucide) window.lucide.createIcons();
+}
+
