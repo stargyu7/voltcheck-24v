@@ -85,17 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function bindEvents() {
-  // Segmented Navigation Tabs (Zero-Latency Cached Toggle)
+  // Segmented Navigation Tabs (Zero-Latency Instant Toggle)
   const tabBtns = Array.from(document.querySelectorAll('.tab-btn'));
   const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
-  let currentActiveTab = 'tab-voltagedrop';
 
   tabBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      if (btn.classList.contains('active')) return;
       const tabId = btn.getAttribute('data-tab');
-      if (tabId === currentActiveTab) return;
-      currentActiveTab = tabId;
+      if (!tabId) return;
 
       for (let i = 0; i < tabBtns.length; i++) {
         tabBtns[i].classList.toggle('active', tabBtns[i] === btn);
@@ -110,7 +109,7 @@ function bindEvents() {
       if (tabId === 'tab-voltagedrop') calculateVoltageDrop();
       else if (tabId === 'tab-rs485') calculateRS485();
       else if (tabId === 'tab-ductutility') calculateDuctFill();
-    }, { passive: false });
+    });
   });
 
   // Share URL Button
