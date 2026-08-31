@@ -104,6 +104,10 @@
 
       <!-- Right Utility Actions -->
       <div class="nav-utils">
+        <button id="openUnitConverterBtn" class="btn-util" title="산업용 단위 환산기">
+          <i data-lucide="scale"></i>
+          <span>단위 환산</span>
+        </button>
         <button id="shareUrlBtn" class="btn-util" title="현재 계산 조건 링크 복사">
           <i data-lucide="share-2"></i>
           <span>조건 공유</span>
@@ -313,6 +317,31 @@
             </div>
           </div>
 
+          <!-- Dynamic Visual Voltage Level Meter -->
+          <div class="voltage-level-card">
+            <div class="level-meta">
+              <span>전압 마진 레벨 게이지 (Voltage Margin Gauge)</span>
+              <span id="levelStatusLabel" class="font-mono text-safe">안전 영역 (SAFE)</span>
+            </div>
+            <div class="level-track-wrapper">
+              <div class="level-gradient-track">
+                <div id="levelFillBar" class="level-fill-bar" style="width: 88%;"></div>
+                <div id="levelPointer" class="level-pointer" style="left: 88%;">
+                  <span id="pointerVal" class="pointer-badge font-mono">23.33V</span>
+                </div>
+                <div id="levelMinThresholdLine" class="level-min-line" style="left: 65%;" title="최소 요구 전압 한계선">
+                  <span class="min-line-label">V_min</span>
+                </div>
+              </div>
+              <div class="level-scale-ticks font-mono">
+                <span class="text-warn">18.0V (위험)</span>
+                <span>20.4V (경고)</span>
+                <span id="levelScaleMinV">21.6V (최저)</span>
+                <span class="text-safe">24.0V (정격)</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Realistic Schematic Strip -->
           <div class="circuit-strip">
             <div class="strip-header">
@@ -369,13 +398,17 @@
 
           <!-- Action Toolbars -->
           <div class="meter-actions">
-            <button type="button" id="copyResultSummaryBtn" class="btn-action-outline">
+            <button type="button" id="copyResultSummaryBtn" class="btn-action-outline" title="텍스트 요약 복사">
               <i data-lucide="copy"></i>
-              <span>검토 요약 복사</span>
+              <span>요약 복사</span>
+            </button>
+            <button type="button" id="copyMarkdownBtn" class="btn-action-outline" title="Notion/Jira 마크다운 표 복사">
+              <i data-lucide="table"></i>
+              <span>마크다운 복사</span>
             </button>
             <button type="button" id="openQuoteModalBtn" class="btn-action-primary">
               <i data-lucide="file-check"></i>
-              <span>케이블·부품 견적 요청 (BOM)</span>
+              <span>부품 견적 요청 (BOM)</span>
             </button>
           </div>
         </div>
@@ -1118,6 +1151,75 @@
         </article>
       </div>
 
+      <!-- International Standards Matrix -->
+      <div class="standard-matrix-container mt-4">
+        <h3><i data-lucide="award"></i> 주요 국제 공학 표준 규격 가이드 (International Standards Matrix)</h3>
+        <p class="guide-note mb-2">본 웹사이트의 모든 계산 알고리즘은 아래 8대 공인 국제/국가 표준 규격을 엄격히 준용합니다.</p>
+        
+        <div class="data-table-frame">
+          <table class="precision-table">
+            <thead>
+              <tr>
+                <th>표준 규격명</th>
+                <th>적용 분야</th>
+                <th>핵심 설계 기준 및 규정</th>
+                <th>준용 한계치</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>IEC 60204-1</strong></td>
+                <td>산업용 기계 전기 안전</td>
+                <td>제어선로 전압강하 한계, 최소 도선 굵기(동력 0.75mm², 제어 0.2mm²), 접지 연속성</td>
+                <td>정상운전 시 전압강하 &le; 5.0% (24V 기준 1.2V 이내)</td>
+              </tr>
+              <tr>
+                <td><strong>NFPA 79</strong></td>
+                <td>미국 산업기계 전기 표준</td>
+                <td>Chapter 12 도선 허용전류 Table 12.5.1, 60°C/75°C/90°C 절연 피복별 허용전류 및 온도 보정</td>
+                <td>제어반 내 MTW/THHN 전선 정격 및 Derating 적용</td>
+              </tr>
+              <tr>
+                <td><strong>UL 508A</strong></td>
+                <td>북미 산업용 제어반 표준</td>
+                <td>제어반 내부 배선 닥트 밀집 포설 시 전류 감소율, 단락전류정격(SCCR) 회로보호기(CP) 선정</td>
+                <td>다심 번들링 시 허용전류 최대 50% 감쇄 적용</td>
+              </tr>
+              <tr>
+                <td><strong>IEC 60364-5-52</strong></td>
+                <td>저압 전기설비 배선 공사</td>
+                <td>도체 허용전류, 포설 방식(트레이, 닥트, 공기 중), 주위온도 보정계수(k1, k2) 산정식</td>
+                <td>주위온도 40°C~60°C 상승 시 도체 저항 보정 공식</td>
+              </tr>
+              <tr>
+                <td><strong>EIA/TIA-485-A</strong></td>
+                <td>RS-485 차동 시리얼 통신</td>
+                <td>특성 임피던스 120Ω 트위스트 페어, 공통모드 전압(-7V ~ +12V), 최대 32 Unit Loads</td>
+                <td>양단 120Ω 종단저항, 최대 1.2km 배선 한계</td>
+              </tr>
+              <tr>
+                <td><strong>IEC 60890 / EN 61439</strong></td>
+                <td>제어반 발열 및 온도 상승</td>
+                <td>밀폐형 제어반 표면적(Ae) 계산, 자연 방열 상수(k=5.5W/m²K), 내부 최고온도 한계</td>
+                <td>필요 환기량 V=3.1×Q/ΔT (m³/h) 또는 에어컨 용량</td>
+              </tr>
+              <tr>
+                <td><strong>ISO 4414</strong></td>
+                <td>공압 유체 동력 시스템 안전</td>
+                <td>공압 배관 적정 유속(주배관 15~30 m/s, 분기 5~10 m/s), 작동 압력 손실 한계</td>
+                <td>배관 압력강하 &le; 0.05 MPa 유지</td>
+              </tr>
+              <tr>
+                <td><strong>NAMUR NE 43</strong></td>
+                <td>프로세스 4-20mA 계측 신호</td>
+                <td>아날로그 전류 신호 고장 진단 레벨 (정상 3.8~20.5mA, 단선 &le;3.6mA, 과부하 &ge;21.0mA)</td>
+                <td>250Ω Shunt 변환 시 최소 12V 수전 마진 확보</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- FAQ Container -->
       <div class="faq-container mt-4">
         <h3>자주 묻는 질문 (FAQ)</h3>
@@ -1128,6 +1230,10 @@
         <div class="faq-row">
           <div class="faq-question">Q. 제어반 쿨링팬과 에어컨은 언제 구분해서 쓰나요?</div>
           <div class="faq-answer">공장 내부 최고 외기온도가 30°C 이하이고 내부 목표온도가 40°C 수준이면 환기팬(Filter Fan)으로 충분하지만, 여름철 공장 온도가 35°C 이상으로 올라가거나 분진/절삭유 차단을 위해 완전 밀폐(IP54)해야 하는 경우엔 반드시 <strong>제어반 에어컨</strong>을 설치해야 합니다.</div>
+        </div>
+        <div class="faq-row">
+          <div class="faq-question">Q. IEC 60204-1과 NFPA 79 규격의 가장 큰 차이는 무엇인가요?</div>
+          <div class="faq-answer">IEC 60204-1은 유럽 및 글로벌 표준으로 미터법(SQ, mm²) 기반이며, NFPA 79는 미국 북미 표준으로 미국 와이어 규격(AWG)과 UL 인증 전선(THHN/MTW)의 허용전류 및 분기보호 차단기(SCCR) 기준을 강제합니다.</div>
         </div>
       </div>
     </section>
@@ -1294,6 +1400,86 @@
                 <i data-lucide="file-text"></i>
                 <span>기술 요약본 다운로드</span>
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Engineering Unit Converter Modal -->
+  <div id="unitConverterModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h4><i data-lucide="scale"></i> 산업 전장 & 공압 단위 환산기 (Engineering Unit Converter)</h4>
+        <button type="button" id="closeUnitConverterBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="converter-tabs-grid">
+          <!-- Pressure Conversion -->
+          <div class="converter-box">
+            <h5>공압 / 유압 압력 환산</h5>
+            <div class="conv-row">
+              <input type="number" id="convPressMpa" value="0.5" step="0.05" class="input-precision font-mono">
+              <span class="conv-unit">MPa</span>
+              <span class="conv-eq">=</span>
+              <span id="convPressBar" class="conv-res font-mono">5.00 bar</span>
+              <span class="conv-eq">=</span>
+              <span id="convPressPsi" class="conv-res font-mono">72.5 psi</span>
+              <span class="conv-eq">=</span>
+              <span id="convPressKgf" class="conv-res font-mono">5.10 kgf/cm²</span>
+            </div>
+          </div>
+
+          <!-- Flow Conversion -->
+          <div class="converter-box mt-2">
+            <h5>공기 유량 환산</h5>
+            <div class="conv-row">
+              <input type="number" id="convFlowNl" value="100" step="10" class="input-precision font-mono">
+              <span class="conv-unit">Nℓ/min</span>
+              <span class="conv-eq">=</span>
+              <span id="convFlowScfm" class="conv-res font-mono">3.53 SCFM</span>
+              <span class="conv-eq">=</span>
+              <span id="convFlowM3h" class="conv-res font-mono">6.00 m³/h</span>
+            </div>
+          </div>
+
+          <!-- Wire Cross Section Conversion -->
+          <div class="converter-box mt-2">
+            <h5>도선 규격 (AWG ↔ mm² / SQ)</h5>
+            <div class="conv-row">
+              <select id="convAwgSelect" class="select-precision font-mono" style="width:130px;">
+                <option value="30">AWG 30</option>
+                <option value="28">AWG 28</option>
+                <option value="26">AWG 26</option>
+                <option value="24" selected>AWG 24</option>
+                <option value="22">AWG 22</option>
+                <option value="20">AWG 20</option>
+                <option value="18">AWG 18</option>
+                <option value="16">AWG 16</option>
+                <option value="14">AWG 14</option>
+                <option value="12">AWG 12</option>
+                <option value="10">AWG 10</option>
+              </select>
+              <span class="conv-eq">↔</span>
+              <span id="convAwgSqRes" class="conv-res font-mono font-bold text-highlight">0.205 mm² (0.2 SQ 상당)</span>
+              <span class="conv-eq">•</span>
+              <span id="convAwgDiaRes" class="conv-res font-mono">외경 Φ 0.51 mm</span>
+            </div>
+          </div>
+
+          <!-- Cooling / Power Conversion -->
+          <div class="converter-box mt-2">
+            <h5>냉각 열량 & 전력 환산</h5>
+            <div class="conv-row">
+              <input type="number" id="convPowerWatts" value="1000" step="100" class="input-precision font-mono">
+              <span class="conv-unit">Watts (W)</span>
+              <span class="conv-eq">=</span>
+              <span id="convPowerBtu" class="conv-res font-mono">3,412 BTU/h</span>
+              <span class="conv-eq">=</span>
+              <span id="convPowerKcal" class="conv-res font-mono">860 kcal/h</span>
+              <span class="conv-eq">=</span>
+              <span id="convPowerHp" class="conv-res font-mono">1.34 HP</span>
             </div>
           </div>
         </div>

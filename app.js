@@ -233,8 +233,12 @@ function bindEvents() {
   // Print Report
   document.getElementById('printReportBtn')?.addEventListener('click', generateAndPrintReport);
 
-  // Copy Summary
+  // Copy Summary & Markdown Table
   document.getElementById('copyResultSummaryBtn')?.addEventListener('click', copySummaryToClipboard);
+  document.getElementById('copyMarkdownBtn')?.addEventListener('click', copyMarkdownSummary);
+
+  // Unit Converter Modal
+  setupUnitConverter();
 
   // Catalog Modal
   const catalogModal = document.getElementById('catalogModal');
@@ -428,6 +432,40 @@ function calculateVoltageDrop() {
   const recCard = document.getElementById('recCard');
   if (recCard) {
     recCard.style.borderLeftColor = vMargin < 0 ? 'var(--fail-crimson)' : (vMargin < 0.8 ? 'var(--warn-amber)' : 'var(--safe-green)');
+  }
+
+  // Update Dynamic Visual Level Meter
+  const pct = Math.max(0, Math.min(100, ((vTerm - 18.0) / (vSource - 18.0)) * 100));
+  const minPct = Math.max(0, Math.min(100, ((vMinReq - 18.0) / (vSource - 18.0)) * 100));
+
+  const levelFillBar = document.getElementById('levelFillBar');
+  const levelPointer = document.getElementById('levelPointer');
+  const pointerVal = document.getElementById('pointerVal');
+  const levelMinThresholdLine = document.getElementById('levelMinThresholdLine');
+  const levelScaleMinV = document.getElementById('levelScaleMinV');
+  const levelStatusLabel = document.getElementById('levelStatusLabel');
+
+  if (levelFillBar && levelPointer && pointerVal) {
+    levelFillBar.style.width = `${pct}%`;
+    levelPointer.style.left = `${pct}%`;
+    pointerVal.textContent = `${vTerm.toFixed(2)}V`;
+    if (levelMinThresholdLine) levelMinThresholdLine.style.left = `${minPct}%`;
+    if (levelScaleMinV) levelScaleMinV.textContent = `${vMinReq.toFixed(1)}V (최저)`;
+    if (levelStatusLabel) {
+      if (vMargin < 0) {
+        levelStatusLabel.textContent = '동작 불가 (FAIL - 저전압)';
+        levelStatusLabel.className = 'font-mono text-warn';
+        levelStatusLabel.style.color = 'var(--fail-crimson)';
+      } else if (vMargin < 0.8) {
+        levelStatusLabel.textContent = '주의 영역 (CAUTION - 마진 협소)';
+        levelStatusLabel.className = 'font-mono text-warn';
+        levelStatusLabel.style.color = 'var(--warn-amber)';
+      } else {
+        levelStatusLabel.textContent = '안전 영역 (SAFE - 정상 마진)';
+        levelStatusLabel.className = 'font-mono text-safe';
+        levelStatusLabel.style.color = 'var(--safe-green)';
+      }
+    }
   }
 
   document.getElementById('gaugeDetailHint').textContent =
@@ -1003,11 +1041,80 @@ function downloadNoiseGuideTxt() {
   document.body.removeChild(link);
 }
 
+function setupUnitConverter() {
+  const modal = document.getElementById('unitConverterModal');
+  document.getElementById('openUnitConverterBtn')?.addEventListener('click', () => {
+    modal?.classList.remove('hidden');
+    calculateUnitConversions();
+  });
+  document.getElementById('closeUnitConverterBtn')?.addEventListener('click', () => modal?.classList.add('hidden'));
+
+  document.getElementById('convPressMpa')?.addEventListener('input', calculateUnitConversions);
+  document.getElementById('convFlowNl')?.addEventListener('input', calculateUnitConversions);
+  document.getElementById('convAwgSelect')?.addEventListener('change', calculateUnitConversions);
+  document.getElementById('convPowerWatts')?.addEventListener('input', calculateUnitConversions);
+}
+
+function calculateUnitConversions() {
+  // Pressure
+  const mpa = parseFloat(document.getElementById('convPressMpa')?.value) || 0;
+  document.getElementById('convPressBar').textContent = `${(mpa * 10).toFixed(2)} bar`;
+  document.getElementById('convPressPsi').textContent = `${(mpa * 145.038).toFixed(1)} psi`;
+  document.getElementById('convPressKgf').textContent = `${(mpa * 10.1972).toFixed(2)} kgf/cm²`;
+
+  // Flow
+  const nl = parseFloat(document.getElementById('convFlowNl')?.value) || 0;
+  document.getElementById('convFlowScfm').textContent = `${(nl * 0.0353147).toFixed(2)} SCFM`;
+  document.getElementById('convFlowM3h').textContent = `${(nl * 0.06).toFixed(2)} m³/h`;
+
+  // AWG
+  const awgVal = document.getElementById('convAwgSelect')?.value || '24';
+  const foundWire = WIRE_DATABASE.find(w => w.awg.includes(awgVal)) || WIRE_DATABASE[3];
+  document.getElementById('convAwgSqRes').textContent = `${foundWire.sq} mm² (${foundWire.sq >= 0.5 ? foundWire.sq + ' SQ' : '0.2~0.3 SQ'} 상당)`;
+  document.getElementById('convAwgDiaRes').textContent = `외경 Φ ${foundWire.dia} mm`;
+
+  // Power
+  const w = parseFloat(document.getElementById('convPowerWatts')?.value) || 0;
+  document.getElementById('convPowerBtu').textContent = `${Math.round(w * 3.41214).toLocaleString()} BTU/h`;
+  document.getElementById('convPowerKcal').textContent = `${Math.round(w * 0.859845).toLocaleString()} kcal/h`;
+  document.getElementById('convPowerHp').textContent = `${(w / 745.7).toFixed(2)} HP`;
+}
+
+function copyMarkdownSummary() {
+  const vSource = document.getElementById('sourceVoltage').value;
+  const l = document.getElementById('wireLength').value;
+  const gauge = document.getElementById('wireGaugeValue').value;
+  const i = document.getElementById('loadCurrent').value;
+  const vTerm = document.getElementById('resTerminalV').textContent;
+  const vDrop = document.getElementById('resDropV').textContent;
+  const margin = document.getElementById('resMarginV').textContent;
+  const loopR = document.getElementById('resLoopR').textContent;
+  const pLoss = document.getElementById('resPowerLoss').textContent;
+  const status = document.getElementById('verdictBadgeText').textContent;
+
+  const md = `| 항목 (Parameter) | 설계 검토 값 (Value) |
+| :--- | :--- |
+| **공급 전원 (V_source)** | DC ${vSource} V |
+| **선로 편도 거리 (Length)** | ${l} m (${gauge}) |
+| **소비 전류 (I_load)** | ${i} A |
+| **왕복 선로 저항 (R_loop)** | ${loopR} |
+| **선로 전압강하 (ΔV)** | ${vDrop} |
+| **말단 수전 전압 (V_term)** | **${vTerm} V** |
+| **전원 안전 마진 (Margin)** | **${margin}** |
+| **선로 발열 손실 (I²R)** | ${pLoss} |
+| **최종 판정 (Verdict)** | **${status}** |
+
+*Generated by [VoltCheck 24V (볼트체크)](https://stargyu7.github.io/voltcheck-24v/)*`;
+
+  navigator.clipboard.writeText(md).then(() => {
+    alert('[마크다운 표 복사 완료]\n\nNotion, Jira, GitHub 이슈에 바로 붙여넣기(Ctrl+V)할 수 있는 마크다운 표 서식이 클립보드에 복사되었습니다.');
+  });
+}
+
 function toggleLanguage() {
   currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
   document.getElementById('currentLangText').textContent = currentLanguage.toUpperCase();
   
-  // Update key text elements
   if (currentLanguage === 'en') {
     document.querySelector('.brand-name').textContent = 'VoltCheck 24V';
     document.querySelector('.brand-tagline').textContent = 'Industrial Cable Voltage Drop & Sizing Engineering Suite';
