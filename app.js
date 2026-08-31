@@ -65,6 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initLanguage();
 
+  // Initialize Canvas Buffers for Zero-Lag Rendering
+  initAllCanvases();
+
   // Initial calculations for all tools
   calculateVoltageDrop();
   calculateAnalogLoop();
@@ -89,9 +92,14 @@ function bindEvents() {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       const tabId = btn.getAttribute('data-tab');
-      document.getElementById(tabId)?.classList.add('active');
+      const panel = document.getElementById(tabId);
+      if (panel) panel.classList.add('active');
       updateUrlHash();
-      if (window.lucide) window.lucide.createIcons();
+
+      // Quick selective draw only for the tab opened
+      if (tabId === 'tab-voltagedrop') calculateVoltageDrop();
+      else if (tabId === 'tab-rs485') calculateRS485();
+      else if (tabId === 'tab-ductutility') calculateDuctFill();
     });
   });
 
@@ -2371,8 +2379,21 @@ function applyLanguage(lang) {
 }
 
 // ==========================================================================
-// 16. Interactive HTML5 Canvas Engineering Visualizers [High-Performance RAF]
+// 16. Interactive HTML5 Canvas Engineering Visualizers [Zero-Lag GPU Accelerated]
 // ==========================================================================
+
+function initAllCanvases() {
+  const dpr = window.devicePixelRatio || 1;
+  ['vdChartCanvas', 'ductCanvas', 'rs485Canvas'].forEach(id => {
+    const canvas = document.getElementById(id);
+    if (canvas && canvas.parentElement) {
+      const w = canvas.parentElement.clientWidth || 600;
+      const h = parseInt(canvas.getAttribute('height')) || (id === 'rs485Canvas' ? 130 : (id === 'ductCanvas' ? 180 : 170));
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+    }
+  });
+}
 
 let rafVd = null;
 function queueDrawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
@@ -2400,27 +2421,24 @@ function queueDrawRs485Waveform(baud, lengthM, isPass) {
 
 function drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
   const canvas = document.getElementById('vdChartCanvas');
-  if (!canvas) return;
+  if (!canvas || canvas.offsetParent === null) return;
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = (rect.width || 600) * dpr;
-  canvas.height = (rect.height || 170) * dpr;
-  ctx.scale(dpr, dpr);
-
-  const w = rect.width || 600;
-  const h = rect.height || 170;
+  const w = canvas.width / dpr || 600;
+  const h = canvas.height / dpr || 170;
   const isDark = document.body.classList.contains('theme-dark');
   const isEn = currentLanguage === 'en';
 
+  ctx.save();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
   const padLeft = 45;
   const padRight = 30;
   const padTop = 20;
   const padBottom = 30;
-  const plotW = w - padLeft - padRight;
-  const plotH = h - padTop - padBottom;
+  const plotW = Math.max(10, w - padLeft - padRight);
+  const plotH = Math.max(10, h - padTop - padBottom);
 
   const yMinV = 16.0;
   const yMaxV = Math.max(25.0, vSource + 0.5);
@@ -2448,7 +2466,7 @@ function drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
   // 2. Brownout Danger Zone (<18V)
   const y18 = getY(18.0);
   ctx.fillStyle = isDark ? 'rgba(239, 68, 68, 0.15)' : 'rgba(239, 68, 68, 0.08)';
-  ctx.fillRect(padLeft, y18, plotW, getY(yMinV) - y18);
+  ctx.fillRect(padLeft, y18, plotW, Math.max(0, getY(yMinV) - y18));
   ctx.fillStyle = '#ef4444';
   ctx.fillText(isEn ? 'Brownout Risk (<18V)' : '센서 리셋 위험구역 (<18V)', padLeft + 10, getY(yMinV) - 8);
 
@@ -2472,7 +2490,7 @@ function drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
 
   ctx.beginPath();
   ctx.moveTo(padLeft, getY(vSource));
-  for (let m = 0; m <= lengthM; m += lengthM / 40) {
+  for (let m = 0; m <= lengthM; m += lengthM / 30) {
     const vAtM = vSource - (vDrop * (m / lengthM));
     ctx.lineTo(getX(m), getY(vAtM));
   }
@@ -2488,7 +2506,7 @@ function drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
   ctx.strokeStyle = vTerm >= vMin ? '#3b82f6' : '#ef4444';
   ctx.lineWidth = 2.5;
   ctx.moveTo(padLeft, getY(vSource));
-  for (let m = 0; m <= lengthM; m += lengthM / 40) {
+  for (let m = 0; m <= lengthM; m += lengthM / 30) {
     const vAtM = vSource - (vDrop * (m / lengthM));
     ctx.lineTo(getX(m), getY(vAtM));
   }
@@ -2514,23 +2532,21 @@ function drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
   ctx.fillText('0m', padLeft, h - 10);
   ctx.fillText(`${Math.round(lengthM / 2)}m`, padLeft + plotW / 2 - 10, h - 10);
   ctx.fillText(`${lengthM}m`, w - padRight - 20, h - 10);
+  ctx.restore();
 }
 
 function drawDuctCrossSection(ductW, ductH, cableQty, cableDia, fillPct) {
   const canvas = document.getElementById('ductCanvas');
-  if (!canvas) return;
+  if (!canvas || canvas.offsetParent === null) return;
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = (rect.width || 600) * dpr;
-  canvas.height = (rect.height || 180) * dpr;
-  ctx.scale(dpr, dpr);
-
-  const w = rect.width || 600;
-  const h = rect.height || 180;
+  const w = canvas.width / dpr || 600;
+  const h = canvas.height / dpr || 180;
   const isDark = document.body.classList.contains('theme-dark');
   const isEn = currentLanguage === 'en';
 
+  ctx.save();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
   const maxDuctDim = Math.max(ductW, ductH);
@@ -2591,23 +2607,21 @@ function drawDuctCrossSection(ductW, ductH, cableQty, cableDia, fillPct) {
   const statusColor = fillPct <= 30 ? '#10b981' : (fillPct <= 40 ? '#f59e0b' : '#ef4444');
   ctx.fillStyle = statusColor;
   ctx.fillText(`Fill: ${fillPct.toFixed(1)}% (${fillPct <= 40 ? (isEn ? 'PASS' : '적합') : (isEn ? 'OVERFILL' : '초과 과열')})`, dx + 8, dy + 18);
+  ctx.restore();
 }
 
 function drawRs485Waveform(baud, lengthM, isPass) {
   const canvas = document.getElementById('rs485Canvas');
-  if (!canvas) return;
+  if (!canvas || canvas.offsetParent === null) return;
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = (rect.width || 600) * dpr;
-  canvas.height = (rect.height || 130) * dpr;
-  ctx.scale(dpr, dpr);
-
-  const w = rect.width || 600;
-  const h = rect.height || 130;
+  const w = canvas.width / dpr || 600;
+  const h = canvas.height / dpr || 130;
   const isDark = document.body.classList.contains('theme-dark');
   const isEn = currentLanguage === 'en';
 
+  ctx.save();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
   const midY = h / 2;
@@ -2659,6 +2673,7 @@ function drawRs485Waveform(baud, lengthM, isPass) {
   ctx.fillText('TX (+2.5V / -2.5V)', 35, 18);
   ctx.fillStyle = isPass ? '#10b981' : '#ef4444';
   ctx.fillText(isEn ? `RX (${lengthM}m @ ${baud.toLocaleString()} bps)` : `수신단 (${lengthM}m @ ${baud.toLocaleString()} bps)`, 35, h - 8);
+  ctx.restore();
 }
 
 // High-Performance Debounced Window Resize Handler
@@ -2666,6 +2681,7 @@ let resizeTimeout = null;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
+    initAllCanvases();
     calculateVoltageDrop();
     calculateDuctFill();
     calculateRS485();
