@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>볼트체크 24V | 산업용 제어선로 전압강하 & 센서 마진 검증기</title>
+  <meta name="description" content="공장 자동화(FA), 반도체/배터리 팹 전장설계용 DC 24V 케이블 전압강하, 4-20mA 아날로그 루프 마진, SMPS 전원 용량 계산, 제어반 발열 쿨링, AWG 허용전류, RS-485 통신선로, 공압 소모량 통합 엔지니어링 웹 도구.">
+  <meta name="keywords" content="볼트체크, DC 24V 전압강하 계산기, 4-20mA 전압강하, SMPS 용량 계산, 제어반 발열량 계산기, 제어반 에어컨 용량, AWG 허용전류표, RS485 종단저항, 공압 실린더 소모량">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="볼트체크 24V (VoltCheck) - 산업용 전장설계 통합 엔지니어링 툴킷">
+  <meta property="og:description" content="장거리 배선 전압강하, 4-20mA 루프, SMPS 전원 용량, 제어반 쿨링 용량을 즉시 검증하고 A4 검토서를 출력하세요.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23ea580c'/><path d='M30 65 L48 25 L55 46 L74 46' stroke='%23ffffff' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><circle cx='74' cy='46' r='5' fill='%23fef08a'/></svg>">
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google AdSense Verification Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7654949933724243"
+     crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "VoltCheck 24V - Industrial Automation Engineering Toolkit",
+    "applicationCategory": "EngineeringApplication",
+    "operatingSystem": "All",
+    "description": "DC 24V industrial cable voltage drop, 4-20mA loop margin, SMPS power budget, enclosure heat dissipation, and fieldbus calculations for automation engineers.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KRW"
+    }
+  }
+  </script>
+</head>
+<body class="theme-precision">
+  <!-- Top Global Header -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="nav-brand-group">
+        <a href="#" class="brand-link">
+          <div class="brand-symbol">
+            <span class="symbol-v">V</span>
+            <span class="symbol-dot"></span>
+          </div>
+          <div class="brand-titles">
+            <div class="brand-main">
+              <span class="brand-name">볼트체크 24V</span>
+              <span class="brand-en">VoltCheck Pro</span>
+            </div>
+            <span class="brand-tagline">산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Segmented Navigation Menu -->
+      <nav class="nav-tabs-segmented" role="tablist">
+        <button class="tab-btn active" data-tab="tab-voltagedrop" role="tab">
+          <i data-lucide="activity"></i>
+          <span>24V 전압강하</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-analogloop" role="tab">
+          <i data-lucide="gauge"></i>
+          <span>4-20mA 루프</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-smpsbudget" role="tab">
+          <i data-lucide="cpu"></i>
+          <span>SMPS·CP 용량</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-cabinetcooling" role="tab">
+          <i data-lucide="thermometer-snowflake"></i>
+          <span>제어반 발열·냉각</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-cabletable" role="tab">
+          <i data-lucide="table"></i>
+          <span>AWG·SQ 조견표</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-rs485" role="tab">
+          <i data-lucide="git-commit"></i>
+          <span>RS-485 통신</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-pneumatics" role="tab">
+          <i data-lucide="wind"></i>
+          <span>공압 소모량</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-articles" role="tab">
+          <i data-lucide="book-open"></i>
+          <span>기술 노트</span>
+        </button>
+      </nav>
+
+      <!-- Right Utility Actions -->
+      <div class="nav-utils">
+        <button id="shareUrlBtn" class="btn-util" title="현재 계산 조건 링크 복사">
+          <i data-lucide="share-2"></i>
+          <span>조건 공유</span>
+        </button>
+        <button id="langToggleBtn" class="btn-util" title="Language Switch">
+          <i data-lucide="globe"></i>
+          <span id="currentLangText">KO</span>
+        </button>
+        <button id="printReportBtn" class="btn-print" title="A4 기술 검토서 출력">
+          <i data-lucide="printer"></i>
+          <span>검토서 인쇄</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Clean Sponsor Bar (AdSense Ready) -->
+  <aside class="sponsor-strip">
+    <div class="sponsor-inner">
+      <span class="sponsor-tag">SPONSORED PARTNER</span>
+      <span class="sponsor-text">산업용 고굴곡 가동 케이블, 24V DIN레일 SMPS, 제어반 쿨링 에어컨 & 4-20mA 절연 배리어</span>
+      <a href="#sponsor" class="sponsor-link" onclick="alert('스폰서사 기술 카탈로그 페이지로 연결됩니다.'); return false;">
+        카탈로그 다운로드 &rarr;
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Container -->
+  <main class="page-container">
+    <!-- ========================================================================= -->
+    <!-- TAB 1: DC 24V 전압강하 & 센서 전원 마진 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-voltagedrop" class="tab-panel active">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">DC 24V 선로 전압강하 및 말단 전원 마진 검토</h1>
+          <p class="main-desc">배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.</p>
+        </div>
+        <div class="preset-pill-group">
+          <span class="preset-title">빠른 부하 선택:</span>
+          <div class="preset-pill-items">
+            <button type="button" class="pill-btn active" data-preset="photo_sensor">포토/근접센서 (35mA)</button>
+            <button type="button" class="pill-btn" data-preset="solenoid">솔레노이드 밸브 (0.45A)</button>
+            <button type="button" class="pill-btn" data-preset="iolink">IO-Link 마스터 (2.0A)</button>
+            <button type="button" class="pill-btn" data-preset="servo_brake">서보 브레이크 (1.2A)</button>
+            <button type="button" class="pill-btn" data-preset="led_light">비전 조명 (3.5A)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <!-- Left: Workbench Input Card -->
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>설계 파라미터 입력</h3>
+            </div>
+            <button type="button" id="toggleAdvModeBtn" class="btn-adv-toggle">
+              <i data-lucide="sliders"></i>
+              <span id="advModeBtnText">상세 환경 설정</span>
+            </button>
+          </div>
+
+          <form id="vdForm" class="workbench-body" onsubmit="return false;">
+            <!-- 1. Cable Length -->
+            <div class="field-box">
+              <div class="field-header">
+                <label for="wireLength">선로 편도 배선 거리 (L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="wireLength" value="40" min="1" max="500" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="slider-wrapper">
+                <input type="range" id="wireLengthRange" min="1" max="200" value="40" class="precision-slider">
+                <div class="slider-ticks">
+                  <span>1m</span>
+                  <span>50m</span>
+                  <span>100m</span>
+                  <span>150m</span>
+                  <span>200m</span>
+                </div>
+              </div>
+              <span class="field-caption">※ 전류가 왕복하는 폐루프 특성상 2배 거리(80m) 저항이 계산됩니다.</span>
+            </div>
+
+            <!-- 2. Wire Gauge -->
+            <div class="field-box">
+              <div class="field-header">
+                <label for="wireGaugeValue">케이블 도선 규격</label>
+                <div class="unit-toggle-pills">
+                  <button type="button" class="unit-pill active" data-unit="AWG">AWG</button>
+                  <button type="button" class="unit-pill" data-unit="METRIC">SQ (mm²)</button>
+                </div>
+              </div>
+              <select id="wireGaugeValue" class="select-precision font-mono">
+                <!-- Dynamically Populated -->
+              </select>
+              <div class="field-specs-bar" id="gaugeDetailHint">
+                단면적 0.205 mm² • 상온 저항 84.2 Ω/km • 허용전류 2.1A
+              </div>
+            </div>
+
+            <!-- 3. Load Current -->
+            <div class="field-box">
+              <div class="field-header">
+                <label for="loadCurrent">말단 부하 소비전류 (I)</label>
+                <div class="val-input-group">
+                  <input type="number" id="loadCurrent" value="0.5" min="0.001" max="50" step="0.05" class="input-val font-mono">
+                  <span class="val-unit">A</span>
+                </div>
+              </div>
+              <div class="quick-step-chips">
+                <button type="button" class="step-chip" data-current="0.035">35mA (센서)</button>
+                <button type="button" class="step-chip" data-current="0.2">200mA (I/O)</button>
+                <button type="button" class="step-chip active" data-current="0.5">0.5A (밸브)</button>
+                <button type="button" class="step-chip" data-current="1.5">1.5A (중간부하)</button>
+                <button type="button" class="step-chip" data-current="3.0">3.0A (대용량)</button>
+              </div>
+            </div>
+
+            <!-- Collapsible Advanced Settings -->
+            <div id="advancedOptionsBox" class="advanced-settings-panel hidden">
+              <div class="adv-heading">상세 환경 및 보정 계수</div>
+              <div class="adv-inputs-grid">
+                <div class="adv-col">
+                  <label for="sourceVoltage">SMPS 출력 전압</label>
+                  <div class="val-input-group">
+                    <input type="number" id="sourceVoltage" value="24.0" step="0.1" min="12.0" max="48.0" class="input-val font-mono">
+                    <span class="val-unit">V</span>
+                  </div>
+                </div>
+
+                <div class="adv-col">
+                  <label for="minDeviceVoltage">센서 최소 동작 전압</label>
+                  <div class="val-input-group">
+                    <input type="number" id="minDeviceVoltage" value="21.6" step="0.1" min="10.0" max="30.0" class="input-val font-mono">
+                    <span class="val-unit">V</span>
+                  </div>
+                </div>
+
+                <div class="adv-col">
+                  <label for="ambientTemp">배선 주위 온도</label>
+                  <div class="val-input-group">
+                    <input type="number" id="ambientTemp" value="40" step="5" min="-20" max="90" class="input-val font-mono">
+                    <span class="val-unit">°C</span>
+                  </div>
+                </div>
+
+                <div class="adv-col">
+                  <label for="conductorMaterial">도체 재질</label>
+                  <select id="conductorMaterial" class="select-precision">
+                    <option value="copper_annealed">연동선 (순동 - 표준)</option>
+                    <option value="copper_tinned">주석도금동 (Tinned)</option>
+                    <option value="aluminum">알루미늄 (Aluminum)</option>
+                  </select>
+                </div>
+
+                <div class="adv-col full-span">
+                  <label for="wiringSystem">배선 방식</label>
+                  <select id="wiringSystem" class="select-precision">
+                    <option value="2wire">2선식 DC 단상 (+ / - 왕복 2선)</option>
+                    <option value="3wire">3선식 센서선 (전원+, 전원-, 신호 분리)</option>
+                    <option value="4wire_parallel">4선식 병렬 페어 (+,- 각 2가닥 병렬 결선)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Digital Meter Readout Panel -->
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>검증 판정 및 계측치</h3>
+            </div>
+            <div id="verdictBadge" class="verdict-stamp stamp-pass">
+              <i data-lucide="check" id="verdictIcon"></i>
+              <span id="verdictBadgeText">정상 (PASS)</span>
+            </div>
+          </div>
+
+          <!-- Digital Multimeter Style Display -->
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">TERMINAL VOLTAGE (말단 수전 전압)</span>
+                <span class="gauge-target">TARGET: DC 24.0V</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resTerminalV" class="digit-value">23.33</span>
+                <span class="digit-unit">V</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>선로 전압강하:</span>
+                  <strong id="resDropV" class="text-warn">-0.67 V (2.80%)</strong>
+                </div>
+                <div class="g-stat">
+                  <span>전원 안전마진:</span>
+                  <strong id="resMarginV" class="text-safe">+1.73 V</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Realistic Schematic Strip -->
+          <div class="circuit-strip">
+            <div class="strip-header">
+              <span>선로 전위 분포</span>
+              <span id="schematicSummaryText" class="font-mono">편도 40m • 왕복 80m • R_loop: 6.74Ω</span>
+            </div>
+            <div class="strip-flow">
+              <div class="strip-node node-smps">
+                <span class="node-title">SMPS 전원</span>
+                <span class="node-v font-mono" id="scSourceV">24.0 V</span>
+              </div>
+              <div class="strip-line">
+                <span class="drop-pill font-mono" id="scDropBadge">-0.67V 강하</span>
+                <div class="flow-track"></div>
+              </div>
+              <div class="strip-node node-load" id="scLoadNode">
+                <span class="node-title">센서 / 부하</span>
+                <span class="node-v font-mono" id="scTermV">23.33 V</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Engineering Specs Grid -->
+          <div class="specs-mini-grid">
+            <div class="spec-cell">
+              <span class="s-label">왕복 선로 저항</span>
+              <strong class="s-val font-mono" id="resLoopR">6.74 Ω</strong>
+              <span class="s-sub" id="resUnitR">단위: 84.2 Ω/km</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">선로 발열 손실 (I²R)</span>
+              <strong class="s-val font-mono" id="resPowerLoss">0.34 W</strong>
+              <span class="s-sub">정상 발열 범위</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">허용전류 사용률</span>
+              <strong class="s-val font-mono" id="resAmpacityUsage">24%</strong>
+              <span class="s-sub" id="resAmpLimit">2.1A 중 0.5A 사용</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">추천 최소 규격</span>
+              <strong class="s-val font-mono text-highlight" id="resRecGauge">AWG 24</strong>
+              <span class="s-sub">마진 1.0V 기준 충족</span>
+            </div>
+          </div>
+
+          <!-- Practical Engineering Note -->
+          <div class="engineer-note-box" id="recCard">
+            <i data-lucide="check-circle" class="note-icon"></i>
+            <div class="note-content" id="recText">
+              <strong>엔지니어링 소견:</strong> 편도 40m 배선에서 전압강하율이 2.8%로 허용 기준(5% 이내)을 만족하며, 최소 요구전압 대비 1.73V의 충분한 안전 마진이 확보되어 있습니다.
+            </div>
+          </div>
+
+          <!-- Action Toolbars -->
+          <div class="meter-actions">
+            <button type="button" id="copyResultSummaryBtn" class="btn-action-outline">
+              <i data-lucide="copy"></i>
+              <span>검토 요약 복사</span>
+            </button>
+            <button type="button" id="openQuoteModalBtn" class="btn-action-primary">
+              <i data-lucide="file-check"></i>
+              <span>케이블·부품 견적 요청 (BOM)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: 4-20mA 아날로그 루프 수전 마진 & 250Ω Shunt 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-analogloop" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">4-20mA 아날로그 전류 루프 수전 전압 마진 검증기</h2>
+          <p class="main-desc">압력/유량/온도 트랜스미터 루프 전원(24V), 수신측 Shunt 저항(250Ω, 1~5V 변환), 선로 저항, 방폭 배리어에 따른 계측 마진을 판정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>4-20mA 루프 사양 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="loopPowerV">루프 전원 전압 (V_loop)</label>
+                <div class="val-input-group">
+                  <input type="number" id="loopPowerV" value="24.0" step="0.5" class="input-val font-mono">
+                  <span class="val-unit">V</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="transMinV">트랜스미터 최소 동작 전압</label>
+                <div class="val-input-group">
+                  <input type="number" id="transMinV" value="12.0" step="0.5" class="input-val font-mono">
+                  <span class="val-unit">V</span>
+                </div>
+                <span class="field-caption">보통 10.5V ~ 12.0V 요구</span>
+              </div>
+            </div>
+
+            <div class="field-box">
+              <div class="field-header">
+                <label for="loopWireLen">선로 편도 배선 거리 (L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="loopWireLen" value="150" min="1" max="2000" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <input type="range" id="loopWireLenRange" min="1" max="1000" value="150" class="precision-slider">
+            </div>
+
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="loopWireGauge">케이블 규격</label>
+                <select id="loopWireGauge" class="select-precision font-mono">
+                  <option value="AWG 24">AWG 24 (0.2 SQ, 84.2 Ω/km)</option>
+                  <option value="AWG 22">AWG 22 (0.3 SQ, 53.0 Ω/km)</option>
+                  <option value="AWG 20" selected>AWG 20 (0.5 SQ, 33.3 Ω/km)</option>
+                  <option value="AWG 18">AWG 18 (0.75 SQ, 20.9 Ω/km)</option>
+                  <option value="AWG 16">AWG 16 (1.5 SQ, 13.2 Ω/km)</option>
+                </select>
+              </div>
+
+              <div class="adv-col">
+                <label for="loopShuntR">수신 Shunt 저항 (R_in)</label>
+                <select id="loopShuntR" class="select-precision font-mono">
+                  <option value="250" selected>250 Ω (1 ~ 5V ADC 변환)</option>
+                  <option value="500">500 Ω (2 ~ 10V ADC 변환)</option>
+                  <option value="100">100 Ω (0.4 ~ 2V 변환)</option>
+                  <option value="0">0 Ω (전류 직독 모듈)</option>
+                </select>
+              </div>
+
+              <div class="adv-col full-span">
+                <label for="loopBarrierR">방폭 배리어 / 기타 직렬 저항</label>
+                <div class="val-input-group">
+                  <input type="number" id="loopBarrierR" value="0" min="0" max="500" step="5" class="input-val font-mono">
+                  <span class="val-unit">Ω</span>
+                </div>
+                <span class="field-caption">절연 안전 배리어 사용 시 약 50~150Ω 추가 저항 적용</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>트랜스미터 수전 마진</h3>
+            </div>
+            <div id="loopStatusBadge" class="verdict-stamp stamp-pass">
+              <span id="loopStatusText">정상 (PASS)</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">TRANSMITTER VOLTAGE (@ 20mA Peak)</span>
+                <span class="gauge-target" id="loopMinReqText">MIN REQ: 12.0 V</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resLoopTransV" class="digit-value">18.80</span>
+                <span class="digit-unit">V</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>Shunt 전압강하:</span>
+                  <strong id="resLoopShuntDrop">5.00 V</strong>
+                </div>
+                <div class="g-stat">
+                  <span>안전 마진:</span>
+                  <strong id="resLoopMargin" class="text-safe">+6.80 V</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid">
+            <div class="spec-cell">
+              <span class="s-label">선로 왕복 저항</span>
+              <strong class="s-val font-mono" id="resLoopWireR">9.99 Ω</strong>
+              <span class="s-sub" id="resLoopWireDrop">배선 전압강하: 0.20 V</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">허용 최대 루프 저항</span>
+              <strong class="s-val font-mono" id="resLoopMaxAllowR">600 Ω</strong>
+              <span class="s-sub" id="resLoopCurrentR">현재 총 저항: 260 Ω</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-2">
+            <i data-lucide="info" class="note-icon"></i>
+            <div class="note-content" id="loopRecText">
+              <strong>계측 신뢰성 소견:</strong> 20mA 풀 스케일 출력 시에도 트랜스미터에 18.80V가 공급되어 최저 요구전압(12.0V) 대비 충분한 여유가 있습니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: DC 24V SMPS 총 전원 용량 & 분기 CP 선정기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-smpsbudget" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">DC 24V SMPS 전원 용량 합산 & 분기 회로보호기(CP) 선정기</h2>
+          <p class="main-desc">설비에 장착되는 센서, 솔레노이드, PLC, 터치패널 수량을 합산하고 안전율(30%)을 반영하여 최적 SMPS 및 분기별 CP 정격을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>설비 장착 부하 수량 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="smpsSensorsQty">포토/근접센서 (개당 35mA)</label>
+                <div class="val-input-group">
+                  <input type="number" id="smpsSensorsQty" value="16" min="0" max="200" class="input-val font-mono">
+                  <span class="val-unit">개</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="smpsValvesQty">솔레노이드 밸브 (개당 0.45A)</label>
+                <div class="val-input-group">
+                  <input type="number" id="smpsValvesQty" value="6" min="0" max="64" class="input-val font-mono">
+                  <span class="val-unit">개</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="smpsPlcAmps">PLC CPU 및 분산 I/O</label>
+                <div class="val-input-group">
+                  <input type="number" id="smpsPlcAmps" value="1.5" step="0.1" min="0" max="20" class="input-val font-mono">
+                  <span class="val-unit">A</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="smpsHmiAmps">HMI 터치스크린 (7~15인치)</label>
+                <div class="val-input-group">
+                  <input type="number" id="smpsHmiAmps" value="0.8" step="0.1" min="0" max="10" class="input-val font-mono">
+                  <span class="val-unit">A</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="smpsRelayQty">릴레이 / 시그널 타워</label>
+                <div class="val-input-group">
+                  <input type="number" id="smpsRelayQty" value="8" min="0" max="50" class="input-val font-mono">
+                  <span class="val-unit">개</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="smpsEtcAmps">기타 부하 (조명/카메라 등)</label>
+                <div class="val-input-group">
+                  <input type="number" id="smpsEtcAmps" value="1.0" step="0.5" min="0" max="30" class="input-val font-mono">
+                  <span class="val-unit">A</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>추천 SMPS 및 분기 CP</h3>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">RECOMMENDED POWER SUPPLY (추천 SMPS)</span>
+                <span class="gauge-target">SAFETY MARGIN: 1.30x</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resSmpsRating" class="digit-value">24V 10A</span>
+                <span class="digit-unit">(240W)</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>총 소비전류:</span>
+                  <strong id="resSmpsTotalI">6.96 A</strong>
+                </div>
+                <div class="g-stat">
+                  <span>소비전력:</span>
+                  <strong id="resSmpsWatts">167 W</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid">
+            <div class="spec-cell">
+              <span class="s-label">센서 전원 분기 CP</span>
+              <strong class="s-val font-mono text-highlight" id="resCpSensor">CP 2A (C-curve)</strong>
+              <span class="s-sub">전자기식/전자식 보호기</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">밸브 구동 분기 CP</span>
+              <strong class="s-val font-mono text-highlight" id="resCpValve">CP 4A (C-curve)</strong>
+              <span class="s-sub">돌입 전류 대응 곡선</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">PLC·제어 전원 분기 CP</span>
+              <strong class="s-val font-mono text-highlight" id="resCpPlc">CP 4A (B/C-curve)</strong>
+              <span class="s-sub">안정적 제어 전원 분리</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">부하율 (SMPS Load Ratio)</span>
+              <strong class="s-val font-mono text-safe" id="resSmpsLoadPct">70 %</strong>
+              <span class="s-sub">권장 적정 부하율 (70~80%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 4: 제어반 발열량 & 쿨링팬/에어컨 냉각 용량 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-cabinetcooling" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">제어반(Control Box) 내부 발열량 & 환기팬/에어컨 냉각 용량 계산기</h2>
+          <p class="main-desc">밀폐형 제어반 내부의 전장품 발열량과 외기 온도를 기반으로 필요 환기팬 풍량(CFM) 또는 제어반 에어컨 용량(W)을 산정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>제어반 치수 및 발열 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="cabHeight">제어반 높이 (H)</label>
+                <div class="val-input-group">
+                  <input type="number" id="cabHeight" value="1800" step="100" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="cabWidth">제어반 폭 (W)</label>
+                <div class="val-input-group">
+                  <input type="number" id="cabWidth" value="800" step="100" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="cabDepth">제어반 깊이 (D)</label>
+                <div class="val-input-group">
+                  <input type="number" id="cabDepth" value="600" step="50" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="cabHeatWatts">내부 총 발열량 (Q_in)</label>
+                <div class="val-input-group">
+                  <input type="number" id="cabHeatWatts" value="650" step="50" class="input-val font-mono">
+                  <span class="val-unit">W</span>
+                </div>
+                <span class="field-caption">SMPS + 인버터 + PLC 손실</span>
+              </div>
+
+              <div class="adv-col">
+                <label for="cabAmbTemp">공장 외기 최고 온도</label>
+                <div class="val-input-group">
+                  <input type="number" id="cabAmbTemp" value="35" step="1" class="input-val font-mono">
+                  <span class="val-unit">°C</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="cabSetTemp">제어반 내부 목표 온도</label>
+                <div class="val-input-group">
+                  <input type="number" id="cabSetTemp" value="35" step="1" class="input-val font-mono">
+                  <span class="val-unit">°C</span>
+                </div>
+                <span class="field-caption">권장: 35°C 이하 유지</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>냉각 솔루션 진단</h3>
+            </div>
+            <div id="cabCoolingBadge" class="verdict-stamp stamp-pass">
+              <span id="cabCoolingBadgeText">에어컨 권장</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">REQUIRED COOLING CAPACITY (필요 냉각 용량)</span>
+                <span class="gauge-target" id="cabCoolingType">CABINET AIR CONDITIONER</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resCabCoolingVal" class="digit-value">750</span>
+                <span class="digit-unit">W</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>BTU 환산:</span>
+                  <strong id="resCabBtu">2,560 BTU/h</strong>
+                </div>
+                <div class="g-stat">
+                  <span>환기팬 필요시:</span>
+                  <strong id="resCabFanCfm">135 CFM</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid">
+            <div class="spec-cell">
+              <span class="s-label">제어반 유효 방열 면적</span>
+              <strong class="s-val font-mono" id="resCabArea">4.48 m²</strong>
+              <span class="s-sub">자연 방열: 약 123 W</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">추천 쿨러 사양</span>
+              <strong class="s-val font-mono text-highlight" id="resCabRecModel">800W 급 에어컨</strong>
+              <span class="s-sub">IP54 이상 밀폐 보호</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-2">
+            <i data-lucide="shield-alert" class="note-icon"></i>
+            <div class="note-content" id="cabRecNote">
+              <strong>환경 진단 소견:</strong> 외기 최고온도(35°C)와 내부 설정온도(35°C) 간 온도차가 없어 환기팬만으로는 냉각이 불가합니다. <strong>밀폐형 제어반 에어컨(800W 급)</strong> 설치가 필수적입니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 5: 산업용 케이블 AWG / SQ 조견표 -->
+    <!-- ========================================================================= -->
+    <section id="tab-cabletable" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">산업용 케이블 규격별 도체 저항 및 허용전류 조견표</h2>
+          <p class="main-desc">IEC 60228 및 NFPA 79 규격에 따른 케이블 단면적, 상온/고온 도체 저항치, 포설 방식별 허용전류 기준표입니다.</p>
+        </div>
+        <div class="table-tool-group">
+          <div class="search-box">
+            <i data-lucide="search"></i>
+            <input type="text" id="cableTableSearch" placeholder="규격 검색 (예: 24, 18, 0.75 SQ)...">
+          </div>
+          <button type="button" id="exportTableCsvBtn" class="btn-action-outline">
+            <i data-lucide="download"></i>
+            <span>CSV 다운로드</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="data-table-frame">
+        <table class="precision-table" id="cableReferenceTable">
+          <thead>
+            <tr>
+              <th>AWG 규격</th>
+              <th>단면적 (mm² / SQ)</th>
+              <th>외경 (mm)</th>
+              <th>도체 저항 (Ω/km @20°C)</th>
+              <th>도체 저항 (Ω/km @60°C)</th>
+              <th>공기 중 허용전류</th>
+              <th>닥트 내 허용전류</th>
+              <th>주요 사용처</th>
+            </tr>
+          </thead>
+          <tbody id="cableTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="standard-guide-card mt-3">
+        <h4><i data-lucide="info"></i> 다심 케이블 및 제어반 닥트 밀집 포설 시 허용전류 감소율 (Derating Factor)</h4>
+        <div class="derating-pills-row">
+          <div class="d-pill"><span>1 ~ 3 심</span><strong>100% (1.00)</strong></div>
+          <div class="d-pill"><span>4 ~ 6 심</span><strong>80% (0.80)</strong></div>
+          <div class="d-pill"><span>7 ~ 9 심</span><strong>70% (0.70)</strong></div>
+          <div class="d-pill"><span>10 ~ 20 심</span><strong>50% (0.50)</strong></div>
+          <div class="d-pill"><span>21심 이상</span><strong>45% (0.45)</strong></div>
+        </div>
+        <p class="guide-note">* 제어반 내 배선 닥트에 다수의 전원선이 함께 묶여 포설될 경우 위 감소 계수를 곱하여 실제 허용전류를 산정하십시오.</p>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 6: RS-485 통신선로 & 종단저항 계산기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-rs485" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">RS-485 / Modbus 통신선로 & 120Ω 종단저항 검토</h2>
+          <p class="main-desc">통신 보레이트(Baud Rate)와 배선 길이에 따른 최대 허용 거리, 종단저항 체결 여부, T자 분기(Stub) 한계를 계산합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>통신 선로 사양</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="rs485BaudRate">통신 보레이트 (Baud Rate)</label>
+              <select id="rs485BaudRate" class="select-precision font-mono">
+                <option value="9600">9,600 bps (기본 온도컨트롤러/인버터)</option>
+                <option value="19200">19,200 bps (표준 Modbus RTU)</option>
+                <option value="38400">38,400 bps (PLC 분산 I/O)</option>
+                <option value="57600">57,600 bps</option>
+                <option value="115200" selected>115,200 bps (고속 서보/센서 통신)</option>
+                <option value="500000">500,000 bps (0.5 Mbps)</option>
+                <option value="1000000">1,000,000 bps (1.0 Mbps)</option>
+              </select>
+            </div>
+
+            <div class="field-box">
+              <div class="field-header">
+                <label for="rs485Length">전체 버스 배선 길이</label>
+                <div class="val-input-group">
+                  <input type="number" id="rs485Length" value="200" min="1" max="1500" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <input type="range" id="rs485LengthRange" min="1" max="1200" value="200" class="precision-slider">
+            </div>
+
+            <div class="field-box">
+              <label for="rs485CableType">케이블 종류</label>
+              <select id="rs485CableType" class="select-precision">
+                <option value="belden_9841">120Ω 차폐 트위스트 페어 (Belden 9841 동등 - 권장)</option>
+                <option value="utp_cat5e">UTP / STP Cat.5e (100Ω 트위스트 페어)</option>
+                <option value="generic_vctf">일반 비차폐 제어선 (VCTF - 장거리 비권장)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="rs485Nodes">연결 슬레이브 수</label>
+                <div class="val-input-group">
+                  <input type="number" id="rs485Nodes" value="16" min="1" max="128" class="input-val font-mono">
+                  <span class="val-unit">대</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="rs485MaxStub">분기(Stub) 길이</label>
+                <div class="val-input-group">
+                  <input type="number" id="rs485MaxStub" value="0.3" step="0.1" min="0" max="20" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>통신 신호 무결성 검증</h3>
+            </div>
+            <div id="rs485StatusBadge" class="verdict-stamp stamp-pass">
+              <span id="rs485StatusText">적합 (PASS)</span>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid">
+            <div class="spec-cell">
+              <span class="s-label">해당 속도 최대 거리</span>
+              <strong class="s-val font-mono" id="rs485MaxLenVal">1,041 m</strong>
+              <span class="s-sub" id="rs485DistanceUsage">설정 거리(200m)는 한계의 19%</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">120Ω 종단저항</span>
+              <strong class="s-val font-mono text-highlight" id="rs485TermResVal">필수 (양단 2개소)</strong>
+              <span class="s-sub">양 끝단 노드에 체결</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">분기(Stub) 길이 한계</span>
+              <strong class="s-val font-mono" id="rs485StubLimitVal">0.86 m</strong>
+              <span class="s-sub" id="rs485StubStatus">현재 0.3m 설정 적합</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">1비트 전송 시간</span>
+              <strong class="s-val font-mono" id="rs485BitTimeVal">8.68 µs</strong>
+              <span class="s-sub" id="rs485CapacitanceTotal">총 정전용량: 8.4 nF</span>
+            </div>
+          </div>
+
+          <div class="standard-guide-card mt-2">
+            <h4><i data-lucide="git-branch"></i> RS-485 배선 원칙</h4>
+            <p class="guide-note">
+              1. 스타(Star) 결선은 반사파를 유발하므로 <strong>일자형 데이지 체인(Daisy-Chain)</strong>으로 결선하십시오.<br>
+              2. 쉴드선(Shield)은 그라운드 루프 방지를 위해 <strong>제어반 한쪽 끝에서만 단일 접지(PE)</strong>하십시오.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 7: 공압 실린더 소모량 & 컴프레셔 용량 계산기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-pneumatics" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">공압 실린더 공기 소모량 & 컴프레셔 마력(HP) 산출</h2>
+          <p class="main-desc">실린더 튜브 내경, 스트로크, 작동 횟수를 기준으로 분당 공기 소모량(Nℓ/min)과 필요 컴프레셔 용량을 산정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>실린더 사양 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="pneuBore">튜브 내경 (Bore)</label>
+                <select id="pneuBore" class="select-precision font-mono">
+                  <option value="12">Φ12 mm</option>
+                  <option value="16">Φ16 mm</option>
+                  <option value="20">Φ20 mm</option>
+                  <option value="25">Φ25 mm</option>
+                  <option value="32" selected>Φ32 mm (표준)</option>
+                  <option value="40">Φ40 mm</option>
+                  <option value="50">Φ50 mm</option>
+                  <option value="63">Φ63 mm</option>
+                  <option value="80">Φ80 mm</option>
+                  <option value="100">Φ100 mm</option>
+                </select>
+              </div>
+
+              <div class="adv-col">
+                <label for="pneuStroke">스트로크 (Stroke)</label>
+                <div class="val-input-group">
+                  <input type="number" id="pneuStroke" value="150" step="10" min="5" max="1500" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="pneuPressure">공급 압력</label>
+                <div class="val-input-group">
+                  <input type="number" id="pneuPressure" value="0.5" step="0.05" min="0.2" max="0.9" class="input-val font-mono">
+                  <span class="val-unit">MPa</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="pneuCpm">분당 사이클</label>
+                <div class="val-input-group">
+                  <input type="number" id="pneuCpm" value="20" step="1" min="1" max="200" class="input-val font-mono">
+                  <span class="val-unit">CPM</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="pneuQuantity">동일 실린더 수량</label>
+                <div class="val-input-group">
+                  <input type="number" id="pneuQuantity" value="4" min="1" max="50" class="input-val font-mono">
+                  <span class="val-unit">대</span>
+                </div>
+              </div>
+
+              <div class="adv-col">
+                <label for="pneuTubingLen">튜브 배관 길이</label>
+                <div class="val-input-group">
+                  <input type="number" id="pneuTubingLen" value="2.0" step="0.5" min="0.5" max="20" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>공기 소모량 및 동력</h3>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">TOTAL AIR CONSUMPTION (총 분당 공기 소모량)</span>
+                <span class="gauge-target">SAFETY FACTOR: 1.3x</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="pneuTotalAirMin" class="digit-value">116.4</span>
+                <span class="digit-unit">Nℓ/min</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>추천 컴프레셔:</span>
+                  <strong id="pneuCompHp" class="text-safe">1.5 HP (약 1.1 kW)</strong>
+                </div>
+                <div class="g-stat">
+                  <span>유량 환산:</span>
+                  <strong id="pneuScfmText">4.11 SCFM</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid">
+            <div class="spec-cell">
+              <span class="s-label">1회 왕복 소모량 (1대)</span>
+              <strong class="s-val font-mono" id="pneuCycleAir">1.45 Nℓ</strong>
+              <span class="s-sub">배관 잔류 공기 포함</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">전진 정격 추력 (@0.5MPa)</span>
+              <strong class="s-val font-mono" id="pneuThrustVal">402 N</strong>
+              <span class="s-sub" id="pneuThrustKg">약 41.0 kgf</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 8: 기술 자료 & 실무 가이드 -->
+    <!-- ========================================================================= -->
+    <section id="tab-articles" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">FA 전장설계 기술 노트 & 현장 트러블슈팅</h2>
+          <p class="main-desc">현장에서 발생하는 전압강하, 센서 브라운아웃 원인 및 기술 규격을 정리한 레퍼런스입니다.</p>
+        </div>
+      </div>
+
+      <div class="tech-card-grid">
+        <article class="tech-article-item">
+          <div class="tech-badge">전기 이론</div>
+          <h3>DC 24V 전압강하 계산 공식과 도체 온도 계수의 실무 적용</h3>
+          <p>도선의 전기 저항은 고유저항률, 단면적, 길이에 비례하며 주위 온도가 상승함에 따라 선형적으로 증가합니다. 제어반 내부 닥트 온도가 50°C~60°C로 올라가면 상온 대비 저항이 15% 가량 증가하므로 설계 시 온도 보정 계수 반영이 필수적입니다.</p>
+          <div class="formula-box font-mono">
+            ΔV = I × R_loop = I × [2 × ρ_20 × (L / A) × (1 + α(T - 20))]
+          </div>
+        </article>
+
+        <article class="tech-article-item">
+          <div class="tech-badge">현장 트러블슈팅</div>
+          <h3>솔레노이드 밸브 동작 시 센서 브라운아웃(Brownout) 방지 대책</h3>
+          <p>솔레노이드나 릴레이 코일 통전 시 발생하는 순간 돌입 전류(Inrush)로 인해 전원선의 전압이 순간적으로 18V 이하로 떨어져 센서가 리셋되는 현상입니다. 센서 전원선과 밸브 구동선의 분리 배선 및 별도 SMPS 구성이 효과적입니다.</p>
+        </article>
+
+        <article class="tech-article-item">
+          <div class="tech-badge">서지 보호 가이드</div>
+          <h3>유도성 부하(릴레이/솔레노이드) 역기전력 보호 다이오드 선정</h3>
+          <p>DC 코일 OFF 시 코일 인덕턴스에 의해 공급전압의 수 배에 달하는 역기전력(-V)이 발생하여 PLC 트랜지스터 출력단을 파손시킵니다. 코일 양단에 역방향으로 <strong>1N4007 (1000V 1A) 다이오드</strong>를 병렬 연결(Flyback)하여 역기전력을 흡수해야 합니다.</p>
+        </article>
+
+        <article class="tech-article-item">
+          <div class="tech-badge">국제 표준 규격</div>
+          <h3>NFPA 79 및 IEC 60204-1 허용 전압강하 기준</h3>
+          <p>산업용 기계 전기 안전 규격에서는 정상 운전 시 전원 말단 전압강하를 최대 5% 이내(24V 기준 1.2V 이하)로 유지할 것을 권장하며, 기동 시 순간 전압강하는 최대 10% 이내여야 설비의 신뢰성을 보장할 수 있습니다.</p>
+        </article>
+      </div>
+
+      <!-- FAQ Container -->
+      <div class="faq-container mt-4">
+        <h3>자주 묻는 질문 (FAQ)</h3>
+        <div class="faq-row">
+          <div class="faq-question">Q. 4-20mA 전송 시 왜 250Ω 저항을 사용하나요?</div>
+          <div class="faq-answer">오옴의 법칙(V=I×R)에 의해 4mA일 때 1V (0.004×250=1.0V), 20mA일 때 5V (0.020×250=5.0V)로 정밀 변환되어 PLC의 1~5V 아날로그 입력 모듈에서 직관적으로 처리할 수 있기 때문입니다.</div>
+        </div>
+        <div class="faq-row">
+          <div class="faq-question">Q. 제어반 쿨링팬과 에어컨은 언제 구분해서 쓰나요?</div>
+          <div class="faq-answer">공장 내부 최고 외기온도가 30°C 이하이고 내부 목표온도가 40°C 수준이면 환기팬(Filter Fan)으로 충분하지만, 여름철 공장 온도가 35°C 이상으로 올라가거나 분진/절삭유 차단을 위해 완전 밀폐(IP54)해야 하는 경우엔 반드시 <strong>제어반 에어컨</strong>을 설치해야 합니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom Showcase (AdSense Ready) -->
+    <section class="bottom-showcase-bar mt-4">
+      <div class="showcase-header">
+        <span class="sponsor-tag">SPONSORED AUTOMATION COMPONENTS</span>
+      </div>
+      <div class="showcase-grid">
+        <div class="showcase-card">
+          <span class="sc-tag">SMPS 전원</span>
+          <h5>초박형 DIN레일 24V 파워서플라이</h5>
+          <p>전압강하 보상 V.ADJ 내장, 94% 고효율, 글로벌 인증</p>
+        </div>
+        <div class="showcase-card">
+          <span class="sc-tag">제어반 쿨링</span>
+          <h5>산업용 밀폐형 제어반 에어컨</h5>
+          <p>500W~3000W 슬림형, IP54 분진방수, 디지털 제어</p>
+        </div>
+        <div class="showcase-card">
+          <span class="sc-tag">필드버스</span>
+          <h5>RS-485 절연 통신 리피터</h5>
+          <p>최대 1.2km 장거리 확장, 2.5kV 서지 절연 보호</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Printable A4 Engineering Calculation Sheet Template -->
+  <div id="printReportTemplate" class="print-only-report">
+    <div class="report-header">
+      <div class="report-title-box">
+        <h2>FA 설비 케이블 전압강하 및 전원 마진 기술 검토서</h2>
+        <span class="report-subtitle">ENGINEERING VOLTAGE DROP & POWER MARGIN CALCULATION SHEET</span>
+      </div>
+      <div class="report-meta">
+        <div><strong>검토일자:</strong> <span id="rptDate">2026-08-31</span></div>
+        <div><strong>작성:</strong> <span>FA 전장설계팀</span></div>
+        <div><strong>판정:</strong> <span id="rptFinalStatus" class="font-bold">PASS</span></div>
+      </div>
+    </div>
+
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th colspan="2">1. 설계 입력 조건</th>
+          <th colspan="2">2. 케이블 사양 및 환경</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>공급 전원 전압 (V_source)</td>
+          <td id="rptSourceV" class="font-mono">24.00 V</td>
+          <td>선로 편도 거리 (L)</td>
+          <td id="rptLength" class="font-mono">40 m</td>
+        </tr>
+        <tr>
+          <td>부하 소비 전류 (I_load)</td>
+          <td id="rptLoadI" class="font-mono">0.50 A</td>
+          <td>도선 규격 (AWG / SQ)</td>
+          <td id="rptWireGauge" class="font-mono">AWG 24 (0.205 mm²)</td>
+        </tr>
+        <tr>
+          <td>기기 최소 허용 전압 (V_min)</td>
+          <td id="rptMinV" class="font-mono">21.60 V</td>
+          <td>주위 온도 및 도체 재질</td>
+          <td id="rptTempMat" class="font-mono">40°C / Annealed Copper</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="report-table mt-2">
+      <thead>
+        <tr>
+          <th colspan="4">3. 공학 계산 및 마진 검증 결과</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>총 왕복 선로 저항 (R_loop)</td>
+          <td id="rptLoopR" class="font-mono">6.74 Ω</td>
+          <td>선로 전압 강하 (ΔV)</td>
+          <td id="rptDropV" class="font-mono">-0.67 V (2.80%)</td>
+        </tr>
+        <tr>
+          <td>말단 기기 수전 전압 (V_terminal)</td>
+          <td id="rptTermV" class="font-mono font-bold">23.33 V</td>
+          <td>전원 안전 마진 (Margin)</td>
+          <td id="rptMarginV" class="font-mono font-bold">+1.73 V</td>
+        </tr>
+        <tr>
+          <td>선로 발열 손실 (Power Loss)</td>
+          <td id="rptPowerLoss" class="font-mono">0.34 W</td>
+          <td>추천 최소 도선 규격</td>
+          <td id="rptRecGauge" class="font-mono">AWG 24 이상</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="report-opinion mt-2">
+      <strong>4. 종합 기술 의견:</strong>
+      <p id="rptConclusionText">
+        상기 검토 결과, 공급 전원 24.0V에서 40m 배선 시 말단 전압은 23.33V로 수전되어 최소 요구 전압 21.6V 대비 1.73V의 안전 마진을 만족하므로 정상 가동에 적합함.
+      </p>
+    </div>
+
+    <div class="report-signatures">
+      <div>설계 검토 (Checked): ___________________ (인)</div>
+      <div>기술 승인 (Approved): ___________________ (인)</div>
+    </div>
+  </div>
+
+  <!-- Quote Modal -->
+  <div id="quoteModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4>FA 전장 부품 및 케이블 견적 문의</h4>
+        <button type="button" id="closeQuoteModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">계산된 사양에 부합하는 산업용 케이블 및 파워서플라이 제조사 공식 대리점 통합 견적서를 발송해 드립니다.</p>
+        <form id="quoteForm" onsubmit="return false;">
+          <div class="form-field">
+            <label for="quoteCompany">회사명 / 설비 프로젝트명 *</label>
+            <input type="text" id="quoteCompany" placeholder="예: (주)한국FA / 2차전지 조립라인" required class="input-precision">
+          </div>
+          <div class="form-row-2 mt-2">
+            <div class="form-field">
+              <label for="quoteName">담당자 성함/직함 *</label>
+              <input type="text" id="quoteName" placeholder="홍길동 수석" required class="input-precision">
+            </div>
+            <div class="form-field">
+              <label for="quoteEmail">업무용 이메일 *</label>
+              <input type="email" id="quoteEmail" placeholder="engineer@company.com" required class="input-precision">
+            </div>
+          </div>
+          <button type="button" id="submitQuoteBtn" class="btn-primary-action w-100 mt-3">
+            견적 요청서 발송 (무료)
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compliance Policy Modal -->
+  <div id="policyModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h4 id="policyModalTitle">개인정보처리방침</h4>
+        <button type="button" id="closePolicyModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div id="policyModalContent" class="modal-body policy-text"></div>
+    </div>
+  </div>
+
+  <!-- Clean Bottom Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-meta">
+        <div class="footer-brand">볼트체크 24V (VoltCheck Pro)</div>
+        <p class="footer-desc">공장 자동화(FA), 반도체, 2차전지 전장설계 엔지니어를 위한 개방형 공학 계산 도구입니다.</p>
+        <div class="footer-standards">
+          <span>IEC 60204-1</span>
+          <span>NFPA 79</span>
+          <span>EIA/TIA-485</span>
+          <span>IEC 60890</span>
+        </div>
+      </div>
+      <div class="footer-links-col">
+        <div class="f-nav-links">
+          <a href="#" id="linkPrivacyPolicy">개인정보처리방침</a>
+          <a href="#" id="linkTermsOfService">이용약관 및 면책조항</a>
+          <a href="#" id="linkAboutUs">기술 기준 소개</a>
+          <a href="#" id="linkContactUs">문의하기</a>
+        </div>
+        <p class="copyright-text">&copy; 2026 VoltCheck. All calculations based on IEC & UL standards.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
