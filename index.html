@@ -486,6 +486,66 @@
             </div>
           </div>
 
+          <!-- AI 6-Point Comprehensive Engineering Safety Audit Report [KILLER FEATURE] -->
+          <div class="ai-audit-panel mt-3">
+            <div class="audit-header">
+              <div class="audit-title-group">
+                <span class="audit-badge"><i data-lucide="shield-check"></i> AI 스마트 진단</span>
+                <h4>FA 전장설계 6대 항목 종합 안전 진단서</h4>
+              </div>
+              <div class="audit-score-box">
+                <span class="score-num" id="auditScore">96</span>
+                <span class="score-total">/ 100점</span>
+                <span class="grade-pill grade-a" id="auditGrade">GRADE A+</span>
+              </div>
+            </div>
+
+            <div class="audit-items-grid">
+              <div class="audit-item" id="auditItem1">
+                <div class="a-icon"><i data-lucide="check-circle"></i></div>
+                <div class="a-text">
+                  <strong>1. 수전 전압 마진:</strong>
+                  <span id="auditText1">최저 동작 전압 대비 +1.73V 여유 (안전)</span>
+                </div>
+              </div>
+              <div class="audit-item" id="auditItem2">
+                <div class="a-icon"><i data-lucide="check-circle"></i></div>
+                <div class="a-text">
+                  <strong>2. 도체 열용량 안전율:</strong>
+                  <span id="auditText2">허용전류 대비 24% 사용 (발열 위험 없음)</span>
+                </div>
+              </div>
+              <div class="audit-item" id="auditItem3">
+                <div class="a-icon"><i data-lucide="check-circle"></i></div>
+                <div class="a-text">
+                  <strong>3. 기동 돌입 브라운아웃:</strong>
+                  <span id="auditText3">솔레노이드 통전 시 센서 리셋 위험 0%</span>
+                </div>
+              </div>
+              <div class="audit-item" id="auditItem4">
+                <div class="a-icon"><i data-lucide="check-circle"></i></div>
+                <div class="a-text">
+                  <strong>4. 닥트 내 I²R 손실:</strong>
+                  <span id="auditText4">선로 손실 0.34W (닥트 열축적 안전)</span>
+                </div>
+              </div>
+              <div class="audit-item" id="auditItem5">
+                <div class="a-icon"><i data-lucide="check-circle"></i></div>
+                <div class="a-text">
+                  <strong>5. 단락 보호 협조:</strong>
+                  <span id="auditText5">선로 임피던스 양호 (CP 트립 전류 만족)</span>
+                </div>
+              </div>
+              <div class="audit-item" id="auditItem6">
+                <div class="a-icon"><i data-lucide="check-circle"></i></div>
+                <div class="a-text">
+                  <strong>6. 배선 토폴로지 균일성:</strong>
+                  <span id="auditText6">말단 전압 편차 2.8%로 규격 준수</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Action Toolbars -->
           <div class="meter-actions">
             <button type="button" id="copyResultSummaryBtn" class="btn-action-outline" title="텍스트 요약 복사">
@@ -1848,6 +1908,120 @@
             • <strong>IP65:</strong> 완전 분진 방지 / 노즐 분사 방수 (기계 외부 제어박스)<br>
             • <strong>IP67:</strong> 1m 수심 30분 침수 방수 (현장 분산 IO 및 센서)<br>
             • <strong>IP69K:</strong> 80°C 고온 100bar 고압 세척 방수 (식품/배터리 팹)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Troubleshooting Decision Tree [KILLER FEATURE 1] -->
+      <div class="standard-matrix-container mt-4">
+        <h3><i data-lucide="help-circle"></i> 현장 전장 트러블슈팅 인터랙티브 진단기 (Diagnostic Decision Tree)</h3>
+        <p class="guide-note mb-2">현장에서 가장 빈번하게 발생하는 고장 증상을 선택하면, 멀티미터 측정 포인트와 즉각적인 하드웨어 처방을 제공합니다.</p>
+
+        <div class="trouble-symptom-tabs mb-3">
+          <button type="button" class="trouble-tab active" data-trouble="brownout">⚡ 24V 센서/IO 간헐적 리셋</button>
+          <button type="button" class="trouble-tab" data-trouble="analog_noise">📊 4-20mA 신호 흔들림·노이즈</button>
+          <button type="button" class="trouble-tab" data-trouble="rs485_timeout">🌐 RS-485 통신 타임아웃</button>
+          <button type="button" class="trouble-tab" data-trouble="smps_hiccup">🔌 SMPS 켜자마자 딸깍 셧다운</button>
+        </div>
+
+        <div id="troubleDetailCard" class="trouble-detail-box">
+          <!-- Dynamic Content -->
+          <div class="trouble-header">
+            <h4 id="troubleTitle">⚡ 증상: 솔레노이드 밸브/실린더 동작 시 근접센서 또는 PLC I/O가 0.1초 꺼졌다 켜짐 (Brownout)</h4>
+            <span class="badge-cause font-mono" id="troubleCauseTag">원인: 과도 돌입전류 전압강하</span>
+          </div>
+          <div class="trouble-grid-3 mt-2">
+            <div class="t-step-box">
+              <span class="t-step-num">Step 1. 테스터기 측정 포인트</span>
+              <p id="troubleStep1">센서 전원 단자대(+24V, 0V)에 디지털 테스터기를 **Min/Max 모드**로 물리고 솔레노이드를 ON/OFF 시켜 최저 순간 전압을 계측합니다.</p>
+            </div>
+            <div class="t-step-box">
+              <span class="t-step-num">Step 2. 판정 기준</span>
+              <p id="troubleStep2">계측된 순간 전압이 **20.4V 미만(정격 대비 -15% 초과)**으로 떨어지면 센서 내부 MCU 브라운아웃 리셋 회로가 동작한 것입니다.</p>
+            </div>
+            <div class="t-step-box t-remedy-box">
+              <span class="t-step-num">Step 3. 즉각적인 해결 조치</span>
+              <p id="troubleStep3">① 솔레노이드 코일에 역기전력 방지 다이오드(1N4007) 결선<br>② 말단 I/O 박스에 24V 2200μF 평활 커패시터 버퍼 추가<br>③ 배선 전선을 0.5 SQ ➔ 0.75 SQ 이상으로 교체</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pre-Shipment Control Panel Commissioning Checklist [KILLER FEATURE 2] -->
+      <div class="standard-matrix-container mt-4">
+        <div class="checklist-top-bar">
+          <div>
+            <h3><i data-lucide="clipboard-check"></i> 제어반 출하 전 전기 안전 자체 감리 체크리스트 15선</h3>
+            <p class="guide-note">IEC 60204-1 및 KEC 감리 기준에 맞춘 제어반 출하 전 자체 전수 검사표입니다.</p>
+          </div>
+          <div class="checklist-score-badge">
+            <span>검사 완료율: </span>
+            <strong id="chkPassCount" class="font-mono text-safe">0</strong> / 15 항목
+            <button type="button" id="resetChecklistBtn" class="btn-check-reset ml-2">초기화</button>
+          </div>
+        </div>
+
+        <div class="audit-checklist-grid mt-2">
+          <!-- Group 1 -->
+          <div class="check-group-box">
+            <h5>I. 전원 및 보호접지 (Power &amp; Grounding)</h5>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>1. 메인 인입선 차단기(MCCB) 차단 용량이 변압기 단락용량(SCCR) 이상인가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>2. 도어 및 기구부 본딩 접지선(녹황색 편조선)이 견고하게 체결되었는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>3. 제어전원(DC 24V) 0V 라인과 프레임 접지(PE)의 단일 기준점 결선 여부 확인</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>4. 서지보호기(SPD) 전단에 전용 차단기(MCCB 30AF)가 분리 설치되었는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>5. SMPS 2차측 각 분기 회로마다 개별 차회로보호기(CP)가 설치되었는가?</span></label>
+          </div>
+
+          <!-- Group 2 -->
+          <div class="check-group-box">
+            <h5>II. 배선 및 단자대 (Wiring &amp; Terminals)</h5>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>6. 모든 전선 단말에 규격 페룰(Ferrule) 압착 단자가 적용되었는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>7. 닥트 내 전선 점유율이 40% 이하로 유지되어 열 발산 공간이 확보되었는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>8. 동력선(380V)과 아날로그/통신 신호선이 최소 100mm 이상 이격되었는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>9. 단자대 볼트 조임 토크(Torque) 마킹 및 터미널 헐거움(Loose) 검사 완료</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>10. 케이블 넘버 튜브(선번장)가 도면 회로 번호와 100% 일치하는가?</span></label>
+          </div>
+
+          <!-- Group 3 -->
+          <div class="check-group-box">
+            <h5>III. 열관리 및 인터록 안전 (Thermal &amp; Interlocks)</h5>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>11. 비상정지(E-Stop) 버튼 및 안전 릴레이가 이중화 채널(Dual CH)로 결선되었는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>12. 제어반 내부 발열 기기(인버터, SMPS) 상하단 이격 거리(100mm) 준수 여부</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>13. 필터 팬 / 에어컨 흡배기 통로가 배선 닥트에 의해 가려지지 않았는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>14. 모터 전자개폐기(MC) 전단 열동계전기(EOCR) 전류치가 정격 1.1배로 정정되었는가?</span></label>
+            <label class="check-item"><input type="checkbox" class="audit-chk"> <span>15. 절연저항계(메거 500V)로 전원-외함 간 절연저항 5MΩ 이상 측정 확인</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deep Engineering Case Studies [E-E-A-T MOAT] -->
+      <div class="standard-matrix-container mt-4">
+        <h3><i data-lucide="file-text"></i> 실무 전장설계 심층 테크 백서 (Deep Engineering Case Studies)</h3>
+        <p class="guide-note mb-2">반도체, 2차전지, 자동차 조립라인 현장 감리 시 필수로 요구되는 고급 전장설계 기법 분석 자료입니다.</p>
+
+        <div class="tech-card-grid">
+          <div class="tech-article-item">
+            <div class="tech-badge">클린룸 전원 이중화</div>
+            <h4>2차전지/반도체 제어반 DC 24V 무정전 Diode ORing 설계</h4>
+            <p>메인 SMPS 고장 시에도 생산 라인이 멈추지 않도록 2대의 SMPS를 <strong>Redundancy Diode Module</strong>로 병렬 결선하는 방법입니다. 이상 전압 역류 방지 쇼트키 다이오드 전압강하(약 0.5V)를 보상하기 위해 SMPS 출력을 24.5V로 조정해야 하며, 각 SMPS의 부하 분담(Current Sharing) 오차를 10% 이내로 맞추는 튜닝 기법을 제시합니다.</p>
+          </div>
+
+          <div class="tech-article-item">
+            <div class="tech-badge">EMC 노이즈 대책</div>
+            <h4>VFD 인버터 고주파 노이즈와 엔코더 360° EMC 차폐 접지 실무</h4>
+            <p>서보/인버터 구동 시 발생하는 수십 kHz PWM 스위칭 노이즈가 인접 아날로그 센서선에 유도되는 현상을 차단합니다. 피그테일(Pigtail) 접지선 방식은 고주파 임피던스가 높아 노이즈 안테나 역할을 하므로, 반드시 <strong>360° EMC 쉴드 클램프</strong>를 사용하여 금속 제어반 바닥판(Gland Plate)에 면접촉시켜야 합니다.</p>
+          </div>
+
+          <div class="tech-article-item">
+            <div class="tech-badge">KEC 법적 규격</div>
+            <h4>KEC 및 IEC 60364-5-52에 따른 제어선로 전압강하 감리 대응</h4>
+            <p>한국전기설비규정(KEC 232.3.9)에 의하면 저압 수전 수용가 설비의 전압강하는 조명 3%, 기타 부하 5% 이내여야 합니다. 그러나 기동 전류가 큰 유도성 부하(모터, 솔레노이드)는 기동 시 최대 10%까지 허용됩니다. 감리 제출용 계산서 작성 시 <strong>주위 온도(40°C~60°C) 도체 저항 보정 공식 $R(T) = R_{20}[1 + 0.00393(T-20)]$</strong>을 필수로 명시해야 승인됩니다.</p>
+          </div>
+
+          <div class="tech-article-item">
+            <div class="tech-badge">안전 회로 설계</div>
+            <h4>리튬 배터리 공정 NPN/PNP 센서 안전 결선 및 지락 사고 방지</h4>
+            <p>한국/일본(NPN 오픈컬렉터)과 유럽/미국(PNP 소싱) 방식의 안전성 비교 분석입니다. NPN 방식은 신호선이 기계 프레임(GND)에 쇼트(지락)될 경우 센서가 감지되지 않았는데도 PLC 입력이 ON되어 <strong>기계 불시 기동(Unintended Start) 위험</strong>이 있습니다. 따라서 CE/UL 인증 장비는 신호선 지락 시 퓨즈가 트립되어 안전하게 셧다운되는 PNP 결선이 강제됩니다.</p>
           </div>
         </div>
       </div>

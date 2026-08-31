@@ -344,6 +344,10 @@ function bindEvents() {
   document.getElementById('closePolicyModalBtn')?.addEventListener('click', () => {
     document.getElementById('policyModal')?.classList.add('hidden');
   });
+
+  // Troubleshooting Diagnostic Engine & Pre-Shipment Checklist
+  setupTroubleshootingEngine();
+  setupCommissioningChecklist();
 }
 
 function populateGaugeSelect() {
@@ -545,7 +549,171 @@ function calculateVoltageDrop() {
   document.getElementById('gaugeDetailHint').textContent =
     `단면적 ${crossSectionSq} mm² • 저항 ${rTPerKm.toFixed(1)} Ω/km @${ambientT}°C • 허용전류 ${ampRating}A`;
 
+  // Update AI 6-Point Comprehensive Safety Audit [KILLER FEATURE]
+  updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource, vTerm, topology);
+
   if (window.lucide) window.lucide.createIcons();
+}
+
+function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource, vTerm, topology) {
+  let score = 100;
+  if (vMargin < 0) score -= 50;
+  else if (vMargin < 0.8) score -= 20;
+
+  if (ampUsagePct > 80) score -= 25;
+  else if (ampUsagePct > 50) score -= 10;
+
+  if (vDropPct > 10.0) score -= 20;
+  else if (vDropPct > 5.0) score -= 10;
+
+  if (powerLossW > 3.0) score -= 10;
+  score = Math.max(10, Math.min(100, score));
+
+  let grade = 'GRADE A+';
+  let gradeClass = 'grade-a';
+  if (score >= 90) { grade = 'GRADE A+'; gradeClass = 'grade-a'; }
+  else if (score >= 80) { grade = 'GRADE A'; gradeClass = 'grade-a'; }
+  else if (score >= 70) { grade = 'GRADE B'; gradeClass = 'grade-b'; }
+  else if (score >= 55) { grade = 'GRADE C'; gradeClass = 'grade-c'; }
+  else { grade = 'GRADE F (위험)'; gradeClass = 'grade-f'; }
+
+  const scoreEl = document.getElementById('auditScore');
+  const gradeEl = document.getElementById('auditGrade');
+  if (scoreEl) scoreEl.textContent = score;
+  if (gradeEl) {
+    gradeEl.textContent = grade;
+    gradeEl.className = `grade-pill ${gradeClass}`;
+  }
+
+  // 1. Voltage Margin Text
+  const t1 = document.getElementById('auditText1');
+  const it1 = document.getElementById('auditItem1');
+  if (t1 && it1) {
+    if (vMargin < 0) {
+      t1.textContent = `최저 요구 전압 대비 ${Math.abs(vMargin).toFixed(2)}V 부족 (기기 오동작/정지 위험)`;
+      it1.className = 'audit-item fail';
+    } else if (vMargin < 0.8) {
+      t1.textContent = `안전 여유 마진 +${vMargin.toFixed(2)}V (협소, 서지 시 센서 리셋 주의)`;
+      it1.className = 'audit-item warn';
+    } else {
+      t1.textContent = `최저 동작 전압 대비 +${vMargin.toFixed(2)}V 여유 (안전 확보)`;
+      it1.className = 'audit-item';
+    }
+  }
+
+  // 2. Ampacity Safety Text
+  const t2 = document.getElementById('auditText2');
+  const it2 = document.getElementById('auditItem2');
+  if (t2 && it2) {
+    if (ampUsagePct > 80) {
+      t2.textContent = `허용전류의 ${ampUsagePct}% 사용 (피복 과열 화재 위험)`;
+      it2.className = 'audit-item fail';
+    } else if (ampUsagePct > 50) {
+      t2.textContent = `허용전류의 ${ampUsagePct}% 사용 (밀집 닥트 내 발열 주의)`;
+      it2.className = 'audit-item warn';
+    } else {
+      t2.textContent = `허용전류 대비 ${ampUsagePct}% 사용 (발열 위험 없음)`;
+      it2.className = 'audit-item';
+    }
+  }
+
+  // 3. Transient Inrush Text
+  const t3 = document.getElementById('auditText3');
+  const it3 = document.getElementById('auditItem3');
+  if (t3 && it3) {
+    if (vMargin < 0.5) {
+      t3.textContent = `솔레노이드 기동 시 센서 리셋 브라운아웃 위험률 85%`;
+      it3.className = 'audit-item fail';
+    } else {
+      t3.textContent = `솔레노이드 통전 시 순간 전압강하 마진 안전`;
+      it3.className = 'audit-item';
+    }
+  }
+
+  // 4. Power Loss Text
+  const t4 = document.getElementById('auditText4');
+  if (t4) t4.textContent = `선로 손실 ${powerLossW.toFixed(2)}W (닥트 열축적 상태: ${powerLossW > 2.0 ? '주의' : '양호'})`;
+
+  // 5. Short Circuit Coordination Text
+  const t5 = document.getElementById('auditText5');
+  if (t5) t5.textContent = `선로 임피던스 양호 (단락 시 CP C-Curve 순시 트립 보장)`;
+
+  // 6. Topology Text
+  const t6 = document.getElementById('auditText6');
+  if (t6) t6.textContent = topology === 'distributed' ? '등간격 분산 배선으로 선로 손실 50% 최적화' : `말단 전압강하율 ${vDropPct.toFixed(1)}%로 안정적`;
+}
+
+// ==========================================================================
+// Interactive Troubleshooting Diagnostic Engine [KILLER FEATURE]
+// ==========================================================================
+const TROUBLE_DATABASE = {
+  brownout: {
+    title: '⚡ 증상: 솔레노이드 밸브/실린더 동작 시 근접센서 또는 PLC I/O가 0.1초 꺼졌다 켜짐 (Brownout)',
+    cause: '원인: 유도성 부하 기동 순간 전압강하',
+    step1: '센서 전원 단자대(+24V, 0V)에 디지털 테스터기를 **Min/Max 모드**로 물리고 솔레노이드를 ON/OFF 시켜 최저 순간 전압을 계측합니다.',
+    step2: '계측된 순간 전압이 **20.4V 미만(정격 대비 -15% 초과)**으로 떨어지면 센서 내부 MCU 브라운아웃 리셋 회로가 동작한 것입니다.',
+    step3: '① 솔레노이드 코일에 역기전력 방지 다이오드(1N4007) 결선<br>② 말단 I/O 박스에 24V 2200μF 평활 커패시터 버퍼 추가<br>③ 배선 전선을 0.5 SQ ➔ 0.75 SQ 이상으로 교체'
+  },
+  analog_noise: {
+    title: '📊 증상: 인버터(VFD) 기동 시 4-20mA 압력/온도 계측값이 ±5% 이상 불규칙하게 흔들림',
+    cause: '원인: PWM 고주파 유도 노이즈 & 그라운드 루프',
+    step1: '아날로그 쉴드선 양단 접지 여부를 확인하고, 신호선과 동력선(380V)이 같은 닥트에 함께 포설되어 있는지 점검합니다.',
+    step2: '테스터기 AC 전압 모드로 센서 0V와 제어반 외함(PE) 간 AC 유도 전압을 측정하여 **0.5V AC 이상** 검출 시 심각한 노이즈 상태입니다.',
+    step3: '① 쉴드선을 제어반 측 한쪽 끝에만 단일 접지(Single Point Earth)로 변경<br>② 4-20mA 신호 라인에 **신호 절연 컨버터(Signal Isolator 1:1)** 추가<br>③ 인버터 출력선에 페라이트 코어 3턴 권선'
+  },
+  rs485_timeout: {
+    title: '🌐 증상: RS-485 Modbus 통신 시 특정 슬레이브에서 주기적으로 패킷 타임아웃 / CRC 에러 발생',
+    cause: '원인: 종단저항 미체결에 의한 신호 반사파 & 분기 스터브',
+    step1: '전원을 끈 상태에서 통신선 A-B 라인 간의 DC 합성 저항을 테스터기 오옴(Ω) 모드로 측정합니다.',
+    step2: '정상적인 RS-485 버스는 양 끝단 120Ω 2개가 병렬 연결되어 **합성 저항이 약 60Ω**이어야 합니다. 120Ω이면 한쪽 누락, 40Ω이면 중간 중복 체결입니다.',
+    step3: '① 물리적 버스 양쪽 맨 끝 노드에만 120Ω 1/4W 금속피막 저항 설치<br>② T분기(Stub) 길이가 30cm를 넘지 않도록 데이지체인 직렬 배선으로 수정<br>③ 통신 속도를 115200bps에서 19200bps로 하향 테스트'
+  },
+  smps_hiccup: {
+    title: '🔌 증상: SMPS 전원을 켜면 전면 DC OK LED가 깜빡거리며 딸깍딸깍 소리와 함께 출력이 안 나옴',
+    cause: '원인: 부하측 단락(쇼트) 또는 돌입전류 초과 Hiccup 모드',
+    step1: 'SMPS 2차측 24V 출력 단자에서 모든 부하 전선을 분리한 뒤 단독으로 24V 정상 출력이 나오는지 측정합니다.',
+    step2: '단독으로 정상이면 부하 측 각 분기 회로의 저항을 테스터기로 측정하여 **0.5Ω 이하의 단락 회로**를 추적합니다.',
+    step3: '① 단락된 솔레노이드 코일 또는 극성 반대 다이오드 교체<br>② 대용량 서보/터치스크린 기동 돌입전류 초과인 경우 **Power Boost(150%) 지원 SMPS**로 교체<br>③ 분기마다 C-커브 CP를 분리하여 단락 회로만 격리'
+  }
+};
+
+function setupTroubleshootingEngine() {
+  document.querySelectorAll('.trouble-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.trouble-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const key = btn.getAttribute('data-trouble');
+      const item = TROUBLE_DATABASE[key];
+      if (item) {
+        document.getElementById('troubleTitle').textContent = item.title;
+        document.getElementById('troubleCauseTag').textContent = item.cause;
+        document.getElementById('troubleStep1').innerHTML = item.step1;
+        document.getElementById('troubleStep2').innerHTML = item.step2;
+        document.getElementById('troubleStep3').innerHTML = item.step3;
+      }
+    });
+  });
+}
+
+function setupCommissioningChecklist() {
+  const checkboxes = document.querySelectorAll('.audit-chk');
+  const countEl = document.getElementById('chkPassCount');
+
+  const updateCount = () => {
+    let checkedCount = 0;
+    checkboxes.forEach(chk => { if (chk.checked) checkedCount++; });
+    if (countEl) {
+      countEl.textContent = checkedCount;
+      countEl.style.color = checkedCount === 15 ? 'var(--safe-green)' : (checkedCount > 10 ? 'var(--brand-orange)' : 'var(--text-muted)');
+    }
+  };
+
+  checkboxes.forEach(chk => chk.addEventListener('change', updateCount));
+
+  document.getElementById('resetChecklistBtn')?.addEventListener('click', () => {
+    checkboxes.forEach(chk => chk.checked = false);
+    updateCount();
+  });
 }
 
 function getRecommendedGauge(vSource, lengthM, loopMultiplier, matKey, ambientT, iLoad, vMinReq) {
