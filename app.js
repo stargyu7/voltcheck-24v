@@ -598,10 +598,8 @@ function calculateVoltageDrop() {
   // Update AI 6-Point Comprehensive Safety Audit [KILLER FEATURE]
   updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource, vTerm, topology);
 
-  // Render Interactive Voltage Drop Chart Canvas [NEW VISUALIZER]
-  drawVoltageDropChart(vSource, vTerm, vMinReq, lengthM, vDrop);
-
-  if (window.lucide) window.lucide.createIcons();
+  // Render Interactive Voltage Drop Chart Canvas [NEW VISUALIZER - High Performance RAF]
+  queueDrawVoltageDropChart(vSource, vTerm, vMinReq, lengthM, vDrop);
 }
 
 function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource, vTerm, topology) {
@@ -1038,10 +1036,8 @@ function calculateRS485() {
   document.getElementById('rs485BitTimeVal').textContent = `${bitTimeUs.toFixed(2)} µs`;
   document.getElementById('rs485CapacitanceTotal').textContent = `총 정전용량: ${totalCapNf.toFixed(1)} nF`;
 
-  // Draw RS-485 Signal Waveform [NEW VISUALIZER]
-  drawRs485Waveform(baud, lengthM, isPass);
-
-  if (window.lucide) window.lucide.createIcons();
+  // Draw RS-485 Signal Waveform [High Performance RAF]
+  queueDrawRs485Waveform(baud, lengthM, isPass);
 }
 
 // ==========================================================================
@@ -1135,8 +1131,8 @@ function calculateDuctFill() {
   document.getElementById('resDuctTotalArea').textContent = `${Math.round(ductArea)} mm²`;
   if (fillBar) fillBar.style.width = `${Math.min(100, (fillPct / 50.0) * 100)}%`;
 
-  // Draw 2D Duct Cross-Section Packing [NEW VISUALIZER]
-  drawDuctCrossSection(w, h, qty, dia, fillPct);
+  // Draw 2D Duct Cross-Section Packing [High Performance RAF]
+  queueDrawDuctCrossSection(w, h, qty, dia, fillPct);
 }
 
 // ==========================================================================
@@ -1480,23 +1476,31 @@ function exportTableAsCsv() {
 }
 
 // ==========================================================================
-// 8. URL Hash State Synchronization & Sharing [NEW]
+// 8. URL Hash State Synchronization & Sharing [High-Performance Debounced]
 // ==========================================================================
+let updateHashTimeout = null;
 function updateUrlHash() {
-  const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'tab-voltagedrop';
-  const l = document.getElementById('wireLength')?.value || '40';
-  const g = document.getElementById('wireGaugeValue')?.value || 'AWG 24';
-  const i = document.getElementById('loadCurrent')?.value || '0.5';
-  const v = document.getElementById('sourceVoltage')?.value || '24.0';
+  clearTimeout(updateHashTimeout);
+  updateHashTimeout = setTimeout(() => {
+    const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'tab-voltagedrop';
+    const l = document.getElementById('wireLength')?.value || '40';
+    const g = document.getElementById('wireGaugeValue')?.value || 'AWG 24';
+    const i = document.getElementById('loadCurrent')?.value || '0.5';
+    const v = document.getElementById('sourceVoltage')?.value || '24.0';
 
-  const params = new URLSearchParams();
-  params.set('tab', activeTab);
-  params.set('L', l);
-  params.set('gauge', g);
-  params.set('I', i);
-  params.set('V', v);
+    const params = new URLSearchParams();
+    params.set('tab', activeTab);
+    params.set('L', l);
+    params.set('gauge', g);
+    params.set('I', i);
+    params.set('V', v);
 
-  history.replaceState(null, '', '#' + params.toString());
+    try {
+      history.replaceState(null, '', '#' + params.toString());
+    } catch (e) {
+      // Ignore security throttling error
+    }
+  }, 400);
 }
 
 function restoreStateFromUrlHash() {
@@ -2367,8 +2371,32 @@ function applyLanguage(lang) {
 }
 
 // ==========================================================================
-// 16. Interactive HTML5 Canvas Engineering Visualizers [KILLER FEATURE]
+// 16. Interactive HTML5 Canvas Engineering Visualizers [High-Performance RAF]
 // ==========================================================================
+
+let rafVd = null;
+function queueDrawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
+  if (rafVd) cancelAnimationFrame(rafVd);
+  rafVd = requestAnimationFrame(() => {
+    drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop);
+  });
+}
+
+let rafDuct = null;
+function queueDrawDuctCrossSection(ductW, ductH, cableQty, cableDia, fillPct) {
+  if (rafDuct) cancelAnimationFrame(rafDuct);
+  rafDuct = requestAnimationFrame(() => {
+    drawDuctCrossSection(ductW, ductH, cableQty, cableDia, fillPct);
+  });
+}
+
+let rafRs485 = null;
+function queueDrawRs485Waveform(baud, lengthM, isPass) {
+  if (rafRs485) cancelAnimationFrame(rafRs485);
+  rafRs485 = requestAnimationFrame(() => {
+    drawRs485Waveform(baud, lengthM, isPass);
+  });
+}
 
 function drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
   const canvas = document.getElementById('vdChartCanvas');
@@ -2633,11 +2661,16 @@ function drawRs485Waveform(baud, lengthM, isPass) {
   ctx.fillText(isEn ? `RX (${lengthM}m @ ${baud.toLocaleString()} bps)` : `수신단 (${lengthM}m @ ${baud.toLocaleString()} bps)`, 35, h - 8);
 }
 
-// Window resize handler for canvas crispness
+// High-Performance Debounced Window Resize Handler
+let resizeTimeout = null;
 window.addEventListener('resize', () => {
-  calculateVoltageDrop();
-  calculateDuctFill();
-  calculateRS485();
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    calculateVoltageDrop();
+    calculateDuctFill();
+    calculateRS485();
+  }, 100);
 });
+
 
 
