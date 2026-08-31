@@ -7,10 +7,23 @@
   <meta name="description" content="공장 자동화(FA), 반도체/배터리 팹 전장설계용 DC 24V 케이블 전압강하, 4-20mA 아날로그 루프 마진, SMPS 전원 용량 계산, 제어반 발열 쿨링, AWG 허용전류, RS-485 통신선로, 공압 소모량 통합 엔지니어링 웹 도구.">
   <meta name="keywords" content="볼트체크, DC 24V 전압강하 계산기, 4-20mA 전압강하, SMPS 용량 계산, 제어반 발열량 계산기, 제어반 에어컨 용량, AWG 허용전류표, RS485 종단저항, 공압 실린더 소모량">
   
-  <!-- Open Graph -->
+  <link rel="canonical" href="https://stargyu7.github.io/voltcheck-24v/">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="author" content="VoltCheck Engineering Lab">
+
+  <!-- Open Graph / Facebook / KakaoTalk -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="볼트체크 24V (VoltCheck) - 산업용 전장설계 통합 엔지니어링 툴킷">
-  <meta property="og:description" content="장거리 배선 전압강하, 4-20mA 루프, SMPS 전원 용량, 제어반 쿨링 용량을 즉시 검증하고 A4 검토서를 출력하세요.">
+  <meta property="og:url" content="https://stargyu7.github.io/voltcheck-24v/">
+  <meta property="og:site_name" content="볼트체크 24V (VoltCheck Pro)">
+  <meta property="og:title" content="볼트체크 24V | 산업용 제어선로 전압강하 & 센서 마진 검증기">
+  <meta property="og:description" content="공장 자동화(FA), 반도체/배터리 팹 전장설계용 DC 24V 케이블 전압강하, 4-20mA 아날로그 루프 마진, SMPS 전원 용량 계산, 제어반 발열 쿨링, AWG 허용전류, RS-485 통신선로, 공압 소모량 통합 엔지니어링 웹 도구.">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://stargyu7.github.io/voltcheck-24v/">
+  <meta name="twitter:title" content="볼트체크 24V | 산업용 제어선로 전압강하 & 센서 마진 검증기">
+  <meta name="twitter:description" content="DC 24V 전압강하, 4-20mA 루프, SMPS 용량, 제어반 쿨링, AWG 허용전류 조견표 및 A4 기술검토서 즉시 출력.">
   
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23ea580c'/><path d='M30 65 L48 25 L55 46 L74 46' stroke='%23ffffff' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><circle cx='74' cy='46' r='5' fill='%23fef08a'/></svg>">
@@ -29,21 +42,55 @@
 
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Structured Data for SEO -->
+  <!-- Structured Data for Google Rich Snippets (WebApplication + FAQPage) -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "VoltCheck 24V - Industrial Automation Engineering Toolkit",
-    "applicationCategory": "EngineeringApplication",
-    "operatingSystem": "All",
-    "description": "DC 24V industrial cable voltage drop, 4-20mA loop margin, SMPS power budget, enclosure heat dissipation, and fieldbus calculations for automation engineers.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "KRW"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "볼트체크 24V (VoltCheck Pro)",
+      "url": "https://stargyu7.github.io/voltcheck-24v/",
+      "applicationCategory": "EngineeringApplication",
+      "operatingSystem": "All",
+      "description": "DC 24V industrial cable voltage drop, 4-20mA loop margin, SMPS power budget, enclosure heat dissipation, and fieldbus calculations for automation engineers.",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "DC 24V 센서 전원선에서 허용되는 최대 전압강하는 얼마인가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "IEC 60204-1 및 NFPA 79 규격에 따라 정상 운전 시 최대 허용 전압강하는 5.0%(24V 기준 1.2V 강하, 말단 전압 22.8V 이상)를 권장하며, 센서의 최저 동작 전압(통상 21.6V 또는 20.4V) 대비 최소 1.0V 이상의 안전 마진을 확보해야 합니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "4-20mA 전송 시 왜 250Ω 저항을 사용하나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "오옴의 법칙(V=I×R)에 의해 4mA일 때 1V (0.004×250=1.0V), 20mA일 때 5V (0.020×250=5.0V)로 정밀 변환되어 PLC의 1~5V 아날로그 입력 모듈에서 직관적으로 처리할 수 있기 때문입니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "제어반 쿨링팬과 에어컨은 언제 구분해서 쓰나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "공장 내부 최고 외기온도가 30°C 이하이고 내부 목표온도가 40°C 수준이면 환기팬(Filter Fan)으로 충분하지만, 여름철 공장 온도가 35°C 이상으로 올라가거나 분진/절삭유 차단을 위해 완전 밀폐(IP54)해야 하는 경우엔 반드시 제어반 에어컨을 설치해야 합니다."
+          }
+        }
+      ]
     }
-  }
+  ]
   </script>
 </head>
 <body class="theme-precision">
