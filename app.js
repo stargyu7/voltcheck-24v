@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   calculateCabinetCooling();
   calculateRS485();
   calculatePneumatics();
+  calculateDuctFill();
 });
 
 function bindEvents() {
@@ -220,6 +221,24 @@ function bindEvents() {
   ['pneuBore', 'pneuStroke', 'pneuPressure', 'pneuCpm', 'pneuQuantity', 'pneuTubingLen'].forEach(id => {
     document.getElementById(id)?.addEventListener('change', calculatePneumatics);
     document.getElementById(id)?.addEventListener('input', calculatePneumatics);
+  });
+
+  // Tab 8 (Duct Fill Ratio) Listeners
+  const ductQtyNum = document.getElementById('ductCableQty');
+  const ductQtyRange = document.getElementById('ductCableQtyRange');
+  if (ductQtyNum && ductQtyRange) {
+    ductQtyNum.addEventListener('input', () => {
+      ductQtyRange.value = ductQtyNum.value;
+      calculateDuctFill();
+    });
+    ductQtyRange.addEventListener('input', () => {
+      ductQtyNum.value = ductQtyRange.value;
+      calculateDuctFill();
+    });
+  }
+  ['ductWidth', 'ductHeight', 'ductCableType'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', calculateDuctFill);
+    document.getElementById(id)?.addEventListener('change', calculateDuctFill);
   });
 
   // Search in table
@@ -789,7 +808,58 @@ function calculatePneumatics() {
 }
 
 // ==========================================================================
-// 7. Reference Table & CSV Export
+// 7. Duct Fill Ratio Calculation [NEW]
+// ==========================================================================
+function calculateDuctFill() {
+  const w = parseFloat(document.getElementById('ductWidth')?.value) || 60;
+  const h = parseFloat(document.getElementById('ductHeight')?.value) || 60;
+  const dia = parseFloat(document.getElementById('ductCableType')?.value) || 6.0;
+  const qty = parseInt(document.getElementById('ductCableQty')?.value) || 28;
+
+  const ductArea = w * h;
+  const singleCableArea = Math.PI * Math.pow(dia / 2.0, 2);
+  const totalCableArea = singleCableArea * qty;
+  const fillPct = (totalCableArea / ductArea) * 100.0;
+
+  const badge = document.getElementById('ductFillBadge');
+  const badgeText = document.getElementById('ductFillBadgeText');
+  const statusText = document.getElementById('ductFillStatusText');
+  const fillBar = document.getElementById('ductFillBar');
+
+  if (fillPct <= 40.0) {
+    if (badge) badge.className = 'verdict-stamp stamp-pass';
+    if (badgeText) badgeText.textContent = '적합 (PASS)';
+    if (statusText) {
+      statusText.textContent = '여유 있음 (안전 규격 준수)';
+      statusText.className = 'font-mono text-safe';
+      statusText.style.color = 'var(--safe-green)';
+    }
+  } else if (fillPct <= 50.0) {
+    if (badge) badge.className = 'verdict-stamp stamp-warn';
+    if (badgeText) badgeText.textContent = '주의 (CAUTION)';
+    if (statusText) {
+      statusText.textContent = '최대 한계 (주의 요망)';
+      statusText.className = 'font-mono text-warn';
+      statusText.style.color = 'var(--warn-amber)';
+    }
+  } else {
+    if (badge) badge.className = 'verdict-stamp stamp-fail';
+    if (badgeText) badgeText.textContent = '초과 (FAIL)';
+    if (statusText) {
+      statusText.textContent = '규격 초과 (덕트 규격 상향 필수)';
+      statusText.className = 'font-mono text-warn';
+      statusText.style.color = 'var(--fail-crimson)';
+    }
+  }
+
+  document.getElementById('resDuctFillPct').textContent = fillPct.toFixed(1);
+  document.getElementById('resDuctCableArea').textContent = `${Math.round(totalCableArea)} mm²`;
+  document.getElementById('resDuctTotalArea').textContent = `${Math.round(ductArea)} mm²`;
+  if (fillBar) fillBar.style.width = `${Math.min(100, (fillPct / 50.0) * 100)}%`;
+}
+
+// ==========================================================================
+// 8. Reference Table & CSV Export
 // ==========================================================================
 function renderReferenceTable(query = '') {
   const tbody = document.getElementById('cableTableBody');

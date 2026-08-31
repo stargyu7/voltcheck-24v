@@ -96,6 +96,10 @@
           <i data-lucide="wind"></i>
           <span>공압 소모량</span>
         </button>
+        <button class="tab-btn" data-tab="tab-ductutility" role="tab">
+          <i data-lucide="wrench"></i>
+          <span>덕트점유·실무유틸</span>
+        </button>
         <button class="tab-btn" data-tab="tab-articles" role="tab">
           <i data-lucide="book-open"></i>
           <span>기술 노트</span>
@@ -1106,6 +1110,185 @@
               <strong class="s-val font-mono" id="pneuThrustVal">402 N</strong>
               <span class="s-sub" id="pneuThrustKg">약 41.0 kgf</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 8: 배선 덕트 점유율 & 실무 유틸리티 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-ductutility" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">배선 덕트·전선관 점유율 계산기 & 전장 실무 유틸리티</h2>
+          <p class="main-desc">NEC / IEC 60204-1 기준 배선 덕트 점유율(40% Rule) 산정, NPN/PNP 센서 극성 판별 및 전압강하 5대 현장 처방전을 제공합니다.</p>
+        </div>
+      </div>
+
+      <!-- Grid 1: Duct Fill Ratio Calculator -->
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>배선 덕트 & 전선관 사양 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="ductWidth">덕트 폭 (Width)</label>
+                <div class="val-input-group">
+                  <input type="number" id="ductWidth" value="60" step="10" min="20" max="300" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="ductHeight">덕트 높이 (Height)</label>
+                <div class="val-input-group">
+                  <input type="number" id="ductHeight" value="60" step="10" min="20" max="300" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-box mt-2">
+              <div class="field-header">
+                <label for="ductCableType">포설 케이블 종류 및 외경</label>
+              </div>
+              <select id="ductCableType" class="select-precision font-mono">
+                <option value="4.0">M12 4심 센서선 (Φ 4.0 mm)</option>
+                <option value="6.0" selected>M12 차폐 8심 센서선 (Φ 6.0 mm)</option>
+                <option value="6.5">UTP/STP Cat.5e 이더넷 (Φ 6.5 mm)</option>
+                <option value="8.0">RS-485 Belden 9841 차폐선 (Φ 8.0 mm)</option>
+                <option value="10.5">서보 모터 4심 동력선 (Φ 10.5 mm)</option>
+                <option value="2.5">단심 제어선 0.75 SQ (Φ 2.5 mm)</option>
+                <option value="3.5">단심 전원선 1.5 SQ (Φ 3.5 mm)</option>
+              </select>
+            </div>
+
+            <div class="field-box mt-2">
+              <div class="field-header">
+                <label for="ductCableQty">포설 케이블 수량</label>
+                <div class="val-input-group">
+                  <input type="number" id="ductCableQty" value="28" min="1" max="500" class="input-val font-mono">
+                  <span class="val-unit">가닥</span>
+                </div>
+              </div>
+              <input type="range" id="ductCableQtyRange" min="1" max="100" value="28" class="precision-slider">
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>덕트 점유율 검증 결과</h3>
+            </div>
+            <div id="ductFillBadge" class="verdict-stamp stamp-pass">
+              <span id="ductFillBadgeText">적합 (PASS)</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">DUCT FILL RATIO (덕트 점유율)</span>
+                <span class="gauge-target">MAX ALLOWABLE: 40% ~ 50%</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resDuctFillPct" class="digit-value">22.0</span>
+                <span class="digit-unit">%</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>케이블 총 단면적:</span>
+                  <strong id="resDuctCableArea">792 mm²</strong>
+                </div>
+                <div class="g-stat">
+                  <span>덕트 내부 단면적:</span>
+                  <strong id="resDuctTotalArea">3,600 mm²</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="voltage-level-card mt-2">
+            <div class="level-meta">
+              <span>덕트 수용률 게이지</span>
+              <span id="ductFillStatusText" class="font-mono text-safe">여유 있음 (안전)</span>
+            </div>
+            <div class="level-gradient-track">
+              <div id="ductFillBar" class="level-fill-bar" style="width: 44%;"></div>
+            </div>
+            <div class="level-scale-ticks font-mono mt-1">
+              <span>0%</span>
+              <span class="text-safe">30% (권장)</span>
+              <span class="text-warn">40% (한계)</span>
+              <span style="color:var(--fail-crimson);">50%+ (발열 위험)</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-2">
+            <i data-lucide="info" class="note-icon"></i>
+            <div class="note-content" id="ductRecNote">
+              <strong>규격 소견:</strong> NEC 및 IEC 60204-1에 따라 제어반 내 배선 덕트 점유율은 발열 방산과 유지보수를 위해 <strong>40% 이내(최대 50%)</strong>를 유지해야 합니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid 2: NPN vs PNP Sensor Polarity & Voltage Drop Interactive Card -->
+      <div class="standard-matrix-container mt-4">
+        <h3><i data-lucide="split"></i> NPN (Sink) vs PNP (Source) 센서 극성 및 전압강하 비교</h3>
+        <p class="guide-note mb-2">센서 출력단 트랜지스터 포화 전압강하(V_CE(sat) 약 0.7V~1.5V)와 국가별 표준 결선 방식을 시각화합니다.</p>
+        
+        <div class="tech-card-grid">
+          <div class="tech-article-item">
+            <div class="tech-badge" style="background:#eff6ff; color:#2563eb; border-color:#bfdbfe;">아시아/일본 표준</div>
+            <h3>NPN 오픈 컬렉터 (Sink 출력)</h3>
+            <p>• <strong>부하(PLC 입력) 연결:</strong> 전원(+24V)과 센서 신호선(OUT) 사이에 부하를 연결.<br>
+            • <strong>동작 원리:</strong> 센서 감지 시 트랜지스터가 ON되어 신호선을 0V(GND)로 Sink(당김).<br>
+            • <strong>전압 특성:</strong> ON 시 신호선 전압은 $0\text{V} + V_{CE(sat)} \approx 0.7\text{V}\sim1.2\text{V}$가 측정됨.<br>
+            • <strong>주요 제조사:</strong> 키엔스(Keyence), 오므론(Omron), 파나소닉, 미쓰비시 PLC 기본 채택.</p>
+          </div>
+
+          <div class="tech-article-item">
+            <div class="tech-badge" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">유럽/글로벌 안전 표준</div>
+            <h3>PNP 오픈 컬렉터 (Source 출력)</h3>
+            <p>• <strong>부하(PLC 입력) 연결:</strong> 센서 신호선(OUT)과 전원(0V/GND) 사이에 부하를 연결.<br>
+            • <strong>동작 원리:</strong> 센서 감지 시 트랜지스터가 ON되어 +24V 전원을 신호선으로 Source(공급).<br>
+            • <strong>안전성 장점:</strong> 신호선이 기계 프레임(접지)에 <strong>단락(Short)되어도 센서가 오작동(False ON)하지 않아 안전성 우수</strong>.<br>
+            • <strong>주요 제조사:</strong> 지멘스(Siemens), 벡호프(Beckhoff), 발루프, 터크, 유럽 자동차 팹 표준.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid 3: 5 Engineering Remedies for Excessive Voltage Drop -->
+      <div class="standard-matrix-container mt-4">
+        <h3><i data-lucide="shield-check"></i> 케이블을 더 굵게 못 바꿀 때 전압강하를 극복하는 5대 현장 처방전</h3>
+        <div class="tech-card-grid mt-2">
+          <div class="tech-article-item">
+            <span class="tech-badge">처방 1</span>
+            <h4>SMPS V.ADJ 트리밍 승압 (+5% ~ +10%)</h4>
+            <p>파워서플라이 전면 볼륨 저항(V.ADJ)을 돌려 출력 전압을 <strong>24.0V → 25.0V~25.5V</strong>로 승압하면, 1.5V 강하가 발생해도 말단 기기는 24.0V 정격을 그대로 수전합니다.</p>
+          </div>
+          <div class="tech-article-item">
+            <span class="tech-badge">처방 2</span>
+            <h4>4선식 원격 감지 (Remote Sense) 결선</h4>
+            <p>SMPS의 +S / -S 센싱 단자를 말단 기기 수전부까지 연결하면, SMPS가 선로 전압강하를 실시간 피드백 받아 <strong>출력 전압을 스스로 실시간 보상</strong>합니다.</p>
+          </div>
+          <div class="tech-article-item">
+            <span class="tech-badge">처방 3</span>
+            <h4>4선식 병렬 페어 (+,- 각 2가닥 묶음)</h4>
+            <p>기존 4심 케이블(흑/백/적/녹) 중 2가닥씩 병렬 결선하면 합성 단면적이 2배가 되어 <strong>선로 저항과 전압강하가 즉시 50% 절감</strong>됩니다.</p>
+          </div>
+          <div class="tech-article-item">
+            <span class="tech-badge">처방 4</span>
+            <h4>분산 I/O (IO-Link / IP67 모듈) 현장 전진 배치</h4>
+            <p>제어반에서 80m 끌어오던 배선을 기계 프레임에 IP67 방수 모듈을 장착하여 <strong>센서 배선 거리를 5m 이내로 단축</strong>하고 필드버스 통신으로 변환합니다.</p>
           </div>
         </div>
       </div>
