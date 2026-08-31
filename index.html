@@ -98,103 +98,110 @@
   </script>
 </head>
 <body class="theme-precision">
-  <!-- Top Global Header -->
+  <!-- Top Global Header (2-Tier Enterprise Architecture) -->
   <header class="top-nav">
-    <div class="nav-container">
-      <div class="nav-brand-group">
-        <a href="#" class="brand-link">
-          <div class="brand-symbol">
-            <span class="symbol-v">V</span>
-            <span class="symbol-dot"></span>
-          </div>
-          <div class="brand-titles">
-            <div class="brand-main">
-              <span class="brand-name">볼트체크 24V</span>
-              <span class="brand-en">VoltCheck Pro</span>
+    <!-- Row 1: Brand Info & Utility Actions -->
+    <div class="nav-top-bar">
+      <div class="nav-container">
+        <div class="nav-brand-group">
+          <a href="#" class="brand-link">
+            <div class="brand-symbol">
+              <span class="symbol-v">V</span>
+              <span class="symbol-dot"></span>
             </div>
-            <span class="brand-tagline">산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷</span>
-          </div>
-        </a>
+            <div class="brand-titles">
+              <div class="brand-main">
+                <span class="brand-name">볼트체크 24V</span>
+                <span class="brand-en">VoltCheck Pro</span>
+              </div>
+              <span class="brand-tagline">산업용 제어선로 전압강하 &amp; 전장설계 엔지니어링 툴킷</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Right Utility Actions -->
+        <div class="nav-utils">
+          <button id="openUnitConverterBtn" class="btn-util" title="산업용 단위 환산기">
+            <i data-lucide="scale"></i>
+            <span>단위 환산</span>
+          </button>
+          <button id="openHistoryModalBtn" class="btn-util" title="내 계산 이력 및 북마크 보관함">
+            <i data-lucide="bookmark"></i>
+            <span>내 보관함</span>
+          </button>
+          <button id="themeToggleBtn" class="btn-util" title="다크 모드 / 라이트 모드 전환">
+            <i data-lucide="moon" id="themeIcon"></i>
+            <span id="themeText">다크</span>
+          </button>
+          <button id="shareUrlBtn" class="btn-util" title="현재 계산 조건 링크 복사">
+            <i data-lucide="share-2"></i>
+            <span>조건 공유</span>
+          </button>
+          <button id="langToggleBtn" class="btn-util" title="Language Switch">
+            <i data-lucide="globe"></i>
+            <span id="currentLangText">KO</span>
+          </button>
+          <button id="printReportBtn" class="btn-print" title="A4 기술 검토서 출력">
+            <i data-lucide="printer"></i>
+            <span>검토서 인쇄</span>
+          </button>
+        </div>
       </div>
+    </div>
 
-      <!-- Segmented Navigation Menu -->
-      <nav class="nav-tabs-segmented" role="tablist">
-        <button class="tab-btn active" data-tab="tab-voltagedrop" role="tab">
-          <i data-lucide="activity"></i>
-          <span>24V 전압강하</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-analogloop" role="tab">
-          <i data-lucide="gauge"></i>
-          <span>4-20mA 루프</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-smpsbudget" role="tab">
-          <i data-lucide="cpu"></i>
-          <span>SMPS·CP 용량</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-cabinetcooling" role="tab">
-          <i data-lucide="thermometer-snowflake"></i>
-          <span>제어반 쿨링</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-cabletable" role="tab">
-          <i data-lucide="table"></i>
-          <span>AWG 조견표</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-rs485" role="tab">
-          <i data-lucide="git-commit"></i>
-          <span>RS-485 통신</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-pneumatics" role="tab">
-          <i data-lucide="wind"></i>
-          <span>공압 소모량</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-ductutility" role="tab">
-          <i data-lucide="wrench"></i>
-          <span>덕트 점유율</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-plcscaling" role="tab">
-          <i data-lucide="binary"></i>
-          <span>PLC 스케일링</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-motorcalc" role="tab">
-          <i data-lucide="zap"></i>
-          <span>3상 모터·MC</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-bendingradius" role="tab">
-          <i data-lucide="move"></i>
-          <span>케이블 베어</span>
-        </button>
-        <button class="tab-btn" data-tab="tab-articles" role="tab">
-          <i data-lucide="book-open"></i>
-          <span>기술 노트</span>
-        </button>
-      </nav>
-
-      <!-- Right Utility Actions -->
-      <div class="nav-utils">
-        <button id="openUnitConverterBtn" class="btn-util" title="산업용 단위 환산기">
-          <i data-lucide="scale"></i>
-          <span>단위 환산</span>
-        </button>
-        <button id="openHistoryModalBtn" class="btn-util" title="내 계산 이력 및 북마크 보관함">
-          <i data-lucide="bookmark"></i>
-          <span>내 보관함</span>
-        </button>
-        <button id="themeToggleBtn" class="btn-util" title="다크 모드 / 라이트 모드 전환">
-          <i data-lucide="moon" id="themeIcon"></i>
-          <span id="themeText">다크</span>
-        </button>
-        <button id="shareUrlBtn" class="btn-util" title="현재 계산 조건 링크 복사">
-          <i data-lucide="share-2"></i>
-          <span>조건 공유</span>
-        </button>
-        <button id="langToggleBtn" class="btn-util" title="Language Switch">
-          <i data-lucide="globe"></i>
-          <span id="currentLangText">KO</span>
-        </button>
-        <button id="printReportBtn" class="btn-print" title="A4 기술 검토서 출력">
-          <i data-lucide="printer"></i>
-          <span>검토서 인쇄</span>
-        </button>
+    <!-- Row 2: Full-Width 11-Tool Segmented Menu -->
+    <div class="nav-menu-bar">
+      <div class="nav-container nav-container-menu">
+        <nav class="nav-tabs-segmented" role="tablist">
+          <button class="tab-btn active" data-tab="tab-voltagedrop" role="tab">
+            <i data-lucide="activity"></i>
+            <span>24V 전압강하</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-analogloop" role="tab">
+            <i data-lucide="gauge"></i>
+            <span>4-20mA 루프</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-smpsbudget" role="tab">
+            <i data-lucide="cpu"></i>
+            <span>SMPS·CP 용량</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-cabinetcooling" role="tab">
+            <i data-lucide="thermometer-snowflake"></i>
+            <span>제어반 쿨링</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-cabletable" role="tab">
+            <i data-lucide="table"></i>
+            <span>AWG 조견표</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-rs485" role="tab">
+            <i data-lucide="git-commit"></i>
+            <span>RS-485 통신</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-pneumatics" role="tab">
+            <i data-lucide="wind"></i>
+            <span>공압 소모량</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-ductutility" role="tab">
+            <i data-lucide="wrench"></i>
+            <span>덕트 점유율</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-plcscaling" role="tab">
+            <i data-lucide="binary"></i>
+            <span>PLC 스케일링</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-motorcalc" role="tab">
+            <i data-lucide="zap"></i>
+            <span>3상 모터·MC</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-bendingradius" role="tab">
+            <i data-lucide="move"></i>
+            <span>케이블 베어</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-articles" role="tab">
+            <i data-lucide="book-open"></i>
+            <span>기술 노트</span>
+          </button>
+        </nav>
       </div>
     </div>
   </header>
