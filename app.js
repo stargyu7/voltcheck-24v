@@ -332,9 +332,19 @@ function bindEvents() {
   // Print Report
   document.getElementById('printReportBtn')?.addEventListener('click', generateAndPrintReport);
 
-  // Copy Summary & Markdown Table
-  document.getElementById('copyResultSummaryBtn')?.addEventListener('click', copySummaryToClipboard);
-  document.getElementById('copyMarkdownBtn')?.addEventListener('click', copyMarkdownSummary);
+  // Glossary Live Search Filter
+  document.getElementById('glossarySearchInput')?.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('#glossaryContainer .glossary-card').forEach(card => {
+      const term = (card.getAttribute('data-term') || '').toLowerCase();
+      const text = card.textContent.toLowerCase();
+      if (!q || term.includes(q) || text.includes(q)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
 
   // Unit Converter Modal
   setupUnitConverter();
@@ -1585,36 +1595,79 @@ function handleQuoteSubmit() {
 // ==========================================================================
 const POLICIES = {
   privacy: {
-    title: '개인정보처리방침 (Privacy Policy)',
-    content: `
-      <h4>1. 개인정보 처리 목적</h4>
-      <p>볼트체크 24V는 공학 계산 기능을 별도의 회원가입 없이 익명으로 무료 제공합니다.</p>
-      <h4>2. 제3자 쿠키 및 광고 서비스 안내</h4>
-      <p>본 사이트는 Google AdSense 등 제3자 광고 서비스를 이용하며, 맞춤형 광고 게재를 위해 쿠키가 활용될 수 있습니다. 이용자는 언제든지 브라우저 설정에서 쿠키 사용을 거부할 수 있습니다.</p>
+    title_ko: '개인정보처리방침 (Privacy Policy)',
+    title_en: 'Privacy Policy',
+    content_ko: `
+      <h4>1. 개인정보 수집 및 처리 목적</h4>
+      <p>볼트체크 24V(이하 "서비스")는 별도의 회원가입 없이 익명으로 모든 공학 계산 도구를 무료 제공합니다. 사용자가 입력하는 설계 파라미터(전압, 전류, 거리 등)는 브라우저 로컬 저장소(LocalStorage) 및 URL 해시에만 임시 보관되며 당사 서버로 일체 전송되거나 수집되지 않습니다.</p>
+      <h4>2. 제3자 쿠키 및 Google AdSense 광고 게재 안내</h4>
+      <p>본 서비스는 사이트 운영을 위해 Google AdSense 등 제3자 광고 서비스를 이용하고 있습니다. Google을 포함한 타사 공급업체는 쿠키를 사용하여 사용자의 이전 방문 기록을 바탕으로 맞춤형 광고를 게재합니다.</p>
+      <p>사용자는 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google 광고 설정</a>에서 맞춤형 광고를 비활성화하거나, 웹 브라우저 쿠키 차단 기능을 통해 쿠키 저장을 거부할 수 있습니다.</p>
+      <h4>3. 데이터 보호 책임자 및 연락처</h4>
+      <p>이메일: contact@voltcheck24v.engineering | 관리: 볼트체크 엔지니어링 랩</p>
+    `,
+    content_en: `
+      <h4>1. Data Collection & Purpose</h4>
+      <p>VoltCheck 24V provides all engineering tools completely free without registration. Design parameters (voltage, distance, wire gauge, etc.) are processed locally in your browser (LocalStorage / URL Hash) and are never transmitted to or stored on our servers.</p>
+      <h4>2. Third-Party Cookies & Google AdSense Compliance</h4>
+      <p>This website utilizes third-party advertising vendors including Google AdSense. Google uses cookies (such as the DoubleClick cookie) to serve relevant ads based on prior visits to this or other websites.</p>
+      <p>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ad Settings</a> or by configuring browser cookie permissions.</p>
+      <h4>3. Data Protection Officer & Inquiries</h4>
+      <p>Email: contact@voltcheck24v.engineering | Operator: VoltCheck Engineering Labs</p>
     `
   },
   terms: {
-    title: '이용약관 및 엔지니어링 면책조항',
-    content: `
-      <h4>기술 계산에 대한 면책 고지 (Disclaimer)</h4>
-      <p>본 계산 결과는 IEC 60228, NFPA 79 등 공인된 공학 이론식에 기반하여 산출되었으나, 실제 설비 현장의 노이즈, 접촉 저항, 배선 환경에 따라 차이가 발생할 수 있습니다.</p>
-      <p>따라서 <strong>본 결과는 설계 검토용 참고 자료로 활용되어야 하며, 최종 설계 승인 시 부품 제조사 데이터시트를 반드시 확인하시기 바랍니다.</strong></p>
+    title_ko: '이용약관 및 엔지니어링 면책조항 (Terms & Disclaimer)',
+    title_en: 'Terms of Service & Engineering Disclaimer',
+    content_ko: `
+      <h4>1. 공학적 면책 고지 (Engineering Disclaimer)</h4>
+      <p>본 사이트의 모든 수치 계산 알고리즘은 IEC 60204-1, NFPA 79, KEC, IEC 60364-5-52 등 공인된 국제 전기 공학 표준 규격에 따라 설계 및 검증되었습니다.</p>
+      <p>그러나 실제 산업 현장의 주변 온도 극단값, 전원 노이즈, 단자대 체결 불량, 케이블 제조사별 실제 도체 순도 오차에 따라 실제 계측치와 차이가 발생할 수 있습니다.</p>
+      <p>따라서 <strong>본 서비스의 결과물은 전장설계 및 감리 사전 검토용 참고 자료로 사용되어야 하며, 최종 설계 확정 및 장비 발주 시에는 해당 부품 제조사의 공인 데이터시트를 반드시 최종 확인하시기 바랍니다.</strong></p>
+    `,
+    content_en: `
+      <h4>1. Engineering Disclaimer</h4>
+      <p>All calculations on VoltCheck 24V are developed in accordance with international electrical standards (IEC 60204-1, NFPA 79, UL 508A, KEC).</p>
+      <p>However, actual field performance may vary depending on ambient thermal peaks, electromagnetic interference (EMI), terminal contact resistance, and manufacturer wire tolerances.</p>
+      <p><strong>Results are provided for design review and preliminary verification purposes. Engineers must verify critical safety parameters against official component datasheets prior to commissioning.</strong></p>
     `
   },
   about: {
-    title: '사이트 소개 및 기술 기준',
-    content: `
-      <h4>볼트체크 24V (VoltCheck Pro) 소개</h4>
-      <p>자동화 설비, 반도체 및 2차전지 라인 셋업 현장에서 배선 길이와 케이블 굵기에 따른 전압강하, 4-20mA 루프, SMPS 용량, 제어반 쿨링을 쉽고 빠르게 검증할 수 있도록 제작된 통합 엔지니어링 툴킷입니다.</p>
-      <h4>참조 표준</h4>
-      <p>• IEC 60204-1 (산업용 기계 전기 안전)<br>• NFPA 79 (미국 산업 기계 전기 표준)<br>• EIA/TIA-485-A (RS-485 통신 표준)<br>• IEC 60890 (제어반 발열 및 환기 기준)</p>
+    title_ko: '엔지니어링 기술 기준 및 개발진 소개 (About Us)',
+    title_en: 'About Us & Engineering Editorial Standards',
+    content_ko: `
+      <h4>볼트체크 24V (VoltCheck Pro) 미션</h4>
+      <p>반도체, 2차전지, 자동차 조립, 스마트팩토리 공장자동화 현장의 전기/전장 및 OT 개발 엔지니어가 번거로운 수작업 계산 없이 1초 만에 최적의 케이블 규격, SMPS 용량, 통신 신뢰성을 검증할 수 있도록 돕는 개방형 엔지니어링 스위트입니다.</p>
+      <h4>준용 엔지니어링 표준</h4>
+      <p>• IEC 60204-1 (Safety of machinery - Electrical equipment of machines)<br>
+      • NFPA 79 (Electrical Standard for Industrial Machinery 2024)<br>
+      • UL 508A (Standard for Industrial Control Panels)<br>
+      • KEC (2024 한국전기설비규정 저압 배선 전압강하 허용 기준)<br>
+      • NAMUR NE 43 (Standardization of signal level for failure information)</p>
+    `,
+    content_en: `
+      <h4>VoltCheck 24V Mission</h4>
+      <p>Our mission is to empower industrial automation, semiconductor, EV battery, and robotics control engineers worldwide with instant, accurate electrical and OT sizing tools.</p>
+      <h4>Referenced International Engineering Standards</h4>
+      <p>• IEC 60204-1 (Safety of machinery - Electrical equipment of machines)<br>
+      • NFPA 79 (Electrical Standard for Industrial Machinery 2024 Edition)<br>
+      • UL 508A (Standard for Industrial Control Panels)<br>
+      • KEC & IEC 60364-5-52 (Conductor Ampacity & Voltage Drop Regulations)<br>
+      • NAMUR NE 43 (Instrumentation Failure Diagnostics)</p>
     `
   },
   contact: {
-    title: '문의하기 (Contact)',
-    content: `
-      <h4>기술 지원 및 제휴 문의</h4>
-      <p>이메일: contact@voltcheck24v.engineering<br>운영: 볼트체크 엔지니어링 랩</p>
+    title_ko: '기술 자문 및 제휴 문의 (Contact Us)',
+    title_en: 'Contact Us & Engineering Feedback',
+    content_ko: `
+      <h4>피드백 및 기술 제휴</h4>
+      <p>새로운 계산 모듈 건의, 현장 특수 조건 반영, 기업 전장 표준 연동 문의는 아래로 연락 주시기 바랍니다.</p>
+      <p>• 이메일: contact@voltcheck24v.engineering<br>• 운영: 볼트체크 엔지니어링 랩</p>
+    `,
+    content_en: `
+      <h4>Engineering Inquiries & Feedback</h4>
+      <p>For technical feedback, algorithm enhancement requests, or enterprise partnerships, please contact:</p>
+      <p>• Email: contact@voltcheck24v.engineering<br>• Team: VoltCheck Engineering Labs</p>
     `
   }
 };
@@ -1623,9 +1676,10 @@ function openPolicyModal(type) {
   const modal = document.getElementById('policyModal');
   const title = document.getElementById('policyModalTitle');
   const body = document.getElementById('policyModalContent');
+  const isEn = currentLanguage === 'en';
   if (modal && POLICIES[type]) {
-    title.textContent = POLICIES[type].title;
-    body.innerHTML = POLICIES[type].content;
+    title.textContent = isEn ? POLICIES[type].title_en : POLICIES[type].title_ko;
+    body.innerHTML = isEn ? POLICIES[type].content_en : POLICIES[type].content_ko;
     modal.classList.remove('hidden');
   }
 }
