@@ -61,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Restore URL state if hash exists
   restoreStateFromUrlHash();
 
+  // Initialize theme from storage
+  initTheme();
+
   // Initial calculations for all tools
   calculateVoltageDrop();
   calculateAnalogLoop();
@@ -69,6 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
   calculateRS485();
   calculatePneumatics();
   calculateDuctFill();
+  calculatePlcScaling();
+  calculateMotorSpecs();
+  calculateBendingRadius();
+  renderSavedCalculations();
 });
 
 function bindEvents() {
@@ -236,10 +243,54 @@ function bindEvents() {
       calculateDuctFill();
     });
   }
-  ['ductWidth', 'ductHeight', 'ductCableType'].forEach(id => {
-    document.getElementById(id)?.addEventListener('input', calculateDuctFill);
-    document.getElementById(id)?.addEventListener('change', calculateDuctFill);
+  // Tab 9: PLC Scaling Listeners
+  const plcTestEuVal = document.getElementById('plcTestEuVal');
+  const plcTestEuRange = document.getElementById('plcTestEuRange');
+  if (plcTestEuVal && plcTestEuRange) {
+    plcTestEuVal.addEventListener('input', () => {
+      plcTestEuRange.value = plcTestEuVal.value;
+      calculatePlcScaling();
+    });
+    plcTestEuRange.addEventListener('input', () => {
+      plcTestEuVal.value = plcTestEuRange.value;
+      calculatePlcScaling();
+    });
+  }
+  document.getElementById('plcMakerSelect')?.addEventListener('change', (e) => {
+    applyPlcVendorPreset(e.target.value);
+    calculatePlcScaling();
   });
+  ['plcRawMin', 'plcRawMax', 'plcSignalType', 'plcEuMin', 'plcEuMax'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', calculatePlcScaling);
+    document.getElementById(id)?.addEventListener('change', calculatePlcScaling);
+  });
+
+  // Tab 10: 3-Phase Motor Sizing Listeners
+  ['motorPowerKw', 'motorVoltage', 'motorEfficiency', 'motorPowerFactor', 'motorStartMethod'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', calculateMotorSpecs);
+    document.getElementById(id)?.addEventListener('change', calculateMotorSpecs);
+  });
+
+  // Tab 11: Cable Bending Radius Listeners
+  const bendDiaNum = document.getElementById('bendCableDia');
+  const bendDiaRange = document.getElementById('bendCableDiaRange');
+  if (bendDiaNum && bendDiaRange) {
+    bendDiaNum.addEventListener('input', () => {
+      bendDiaRange.value = bendDiaNum.value;
+      calculateBendingRadius();
+    });
+    bendDiaRange.addEventListener('input', () => {
+      bendDiaNum.value = bendDiaRange.value;
+      calculateBendingRadius();
+    });
+  }
+  document.getElementById('bendApplication')?.addEventListener('change', calculateBendingRadius);
+
+  // Theme Toggle
+  document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
+
+  // Calculation History / Bookmark Modal
+  setupHistoryModal();
 
   // Search in table
   document.getElementById('cableTableSearch')?.addEventListener('input', (e) => {
@@ -859,7 +910,296 @@ function calculateDuctFill() {
 }
 
 // ==========================================================================
-// 8. Reference Table & CSV Export
+// 8. PLC Analog Scaling Calculation [NEW]
+// ==========================================================================
+function applyPlcVendorPreset(preset) {
+  const minEl = document.getElementById('plcRawMin');
+  const maxEl = document.getElementById('plcRawMax');
+  if (!minEl || !maxEl) return;
+
+  switch (preset) {
+    case 'siemens':
+      minEl.value = 0; maxEl.value = 27648; break;
+    case 'mitsubishi_12':
+      minEl.value = 0; maxEl.value = 4000; break;
+    case 'mitsubishi_16':
+      minEl.value = 0; maxEl.value = 12000; break;
+    case 'ls_16000':
+      minEl.value = 0; maxEl.value = 16000; break;
+    case 'ls_32000':
+      minEl.value = 0; maxEl.value = 32000; break;
+    case 'omron':
+      minEl.value = 0; maxEl.value = 4000; break;
+  }
+}
+
+function calculatePlcScaling() {
+  const dMin = parseFloat(document.getElementById('plcRawMin')?.value) || 0;
+  const dMax = parseFloat(document.getElementById('plcRawMax')?.value) || 27648;
+  const euMin = parseFloat(document.getElementById('plcEuMin')?.value) || 0.0;
+  const euMax = parseFloat(document.getElementById('plcEuMax')?.value) || 1.0;
+  const sigType = document.getElementById('plcSignalType')?.value || '4-20';
+  const testEu = parseFloat(document.getElementById('plcTestEuVal')?.value) || 0.5;
+
+  const rangeSpan = euMax - euMin;
+  const fraction = rangeSpan === 0 ? 0 : (testEu - euMin) / rangeSpan;
+  const clampedFraction = Math.max(0, Math.min(1, fraction));
+  const rawCount = Math.round(dMin + clampedFraction * (dMax - dMin));
+  const pct = clampedFraction * 100.0;
+
+  // Signal Equivalent
+  let sigText = '';
+  if (sigType === '4-20') {
+    const ma = 4.0 + clampedFraction * 16.0;
+    sigText = `신호값: ${ma.toFixed(2)} mA (${pct.toFixed(1)}%)`;
+  } else if (sigType === '0-20') {
+    const ma = clampedFraction * 20.0;
+    sigText = `신호값: ${ma.toFixed(2)} mA (${pct.toFixed(1)}%)`;
+  } else if (sigType === '0-10') {
+    const v = clampedFraction * 10.0;
+    sigText = `신호값: ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
+  } else if (sigType === '1-5') {
+    const v = 1.0 + clampedFraction * 4.0;
+    sigText = `신호값: ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
+  } else if (sigType === '-10-10') {
+    const v = -10.0 + clampedFraction * 20.0;
+    sigText = `신호값: ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
+  }
+
+  document.getElementById('resPlcRawValue').textContent = rawCount.toLocaleString();
+  document.getElementById('resPlcEuFormatted').textContent = `${testEu.toFixed(3)}`;
+  document.getElementById('resPlcPctFormatted').textContent = `${pct.toFixed(1)} %`;
+  document.getElementById('plcSignalEquivalent').textContent = sigText;
+
+  // Formula String
+  const formula = `EU = ((Raw - ${dMin}) / (${dMax} - ${dMin})) * (${euMax} - ${euMin}) + ${euMin}`;
+  document.getElementById('plcFormulaBox').textContent = formula;
+  document.getElementById('plcStSnippet').innerHTML = `// Structured Text (ST)<br>fScaledValue := ((INT_TO_REAL(iRawInput) - ${dMin}.0) / ${dMax - dMin}.0) * ${(euMax - euMin).toFixed(2)} + ${euMin.toFixed(2)};`;
+}
+
+// ==========================================================================
+// 9. 3-Phase Motor Sizing Calculation [NEW]
+// ==========================================================================
+function calculateMotorSpecs() {
+  const pKw = parseFloat(document.getElementById('motorPowerKw')?.value) || 5.5;
+  const volt = parseFloat(document.getElementById('motorVoltage')?.value) || 380.0;
+  const eta = parseFloat(document.getElementById('motorEfficiency')?.value) || 0.88;
+  const pf = parseFloat(document.getElementById('motorPowerFactor')?.value) || 0.85;
+  const method = document.getElementById('motorStartMethod')?.value || 'dol';
+
+  // Full Load Amps: I = P * 1000 / (sqrt(3) * V * eta * pf)
+  const fla = (pKw * 1000.0) / (Math.sqrt(3) * volt * eta * pf);
+
+  // Inrush Multiplier
+  let inrushMult = 6.5;
+  let methodLabel = '직입기동 돌입';
+  if (method === 'stardelta') {
+    inrushMult = 2.2;
+    methodLabel = 'Y-Δ 기동 돌입';
+  } else if (method === 'inverter') {
+    inrushMult = 1.2;
+    methodLabel = '인버터 기동 전류';
+  }
+  const inrushA = fla * inrushMult;
+
+  // MC Rating & Model
+  let mcModel = 'MC-9b (9A급)';
+  if (fla > 85) mcModel = 'MC-130a (130A급)';
+  else if (fla > 65) mcModel = 'MC-85a (85A급)';
+  else if (fla > 50) mcModel = 'MC-65a (65A급)';
+  else if (fla > 32) mcModel = 'MC-50a (50A급)';
+  else if (fla > 22) mcModel = 'MC-32a (32A급)';
+  else if (fla > 18) mcModel = 'MC-22b (22A급)';
+  else if (fla > 12) mcModel = 'MC-18b (18A급)';
+  else if (fla > 9) mcModel = 'MC-12b (12A급)';
+
+  // MCCB Breaker
+  let mccbModel = '30AF / 15A';
+  const breakerTarget = fla * (method === 'dol' ? 2.0 : 1.5);
+  if (breakerTarget > 75) mccbModel = '100AF / 100A';
+  else if (breakerTarget > 50) mccbModel = '100AF / 75A';
+  else if (breakerTarget > 40) mccbModel = '50AF / 50A';
+  else if (breakerTarget > 30) mccbModel = '50AF / 40A';
+  else if (breakerTarget > 20) mccbModel = '30AF / 30A';
+  else if (breakerTarget > 15) mccbModel = '30AF / 20A';
+
+  // Wire Sizing
+  let wireSize = '1.5 mm² (AWG 16)';
+  if (fla > 70) wireSize = '35 mm² (AWG 2)';
+  else if (fla > 50) wireSize = '25 mm² (AWG 4)';
+  else if (fla > 35) wireSize = '16 mm² (AWG 6)';
+  else if (fla > 24) wireSize = '10 mm² (AWG 8)';
+  else if (fla > 16) wireSize = '6.0 mm² (AWG 10)';
+  else if (fla > 10) wireSize = '4.0 mm² (AWG 12)';
+  else if (fla > 6) wireSize = '2.5 mm² (AWG 14)';
+
+  document.getElementById('resMotorFla').textContent = fla.toFixed(1);
+  document.getElementById('motorInrushLabel').textContent = `${methodLabel}: 약 ${inrushA.toFixed(1)} A (${inrushMult}배)`;
+  document.getElementById('resMotorMc').textContent = mcModel;
+  document.getElementById('resMotorMccb').textContent = mccbModel;
+  document.getElementById('resMotorEocr').textContent = `${fla.toFixed(1)} ~ ${(fla * 1.15).toFixed(1)} A (1.05~1.15배)`;
+  document.getElementById('resMotorWire').textContent = `${wireSize} 이상`;
+}
+
+// ==========================================================================
+// 10. Cable Bending Radius Calculation [NEW]
+// ==========================================================================
+function calculateBendingRadius() {
+  const dia = parseFloat(document.getElementById('bendCableDia')?.value) || 12.0;
+  const factor = parseFloat(document.getElementById('bendApplication')?.value) || 10.0;
+
+  const rMin = dia * factor;
+  const loopHeight = 2.0 * rMin + dia;
+
+  let carrierClass = 'R 125 or R 150';
+  if (rMin <= 38) carrierClass = 'R 38 or R 50';
+  else if (rMin <= 75) carrierClass = 'R 75 or R 100';
+  else if (rMin <= 100) carrierClass = 'R 100 or R 125';
+  else if (rMin <= 150) carrierClass = 'R 150 or R 175';
+  else if (rMin <= 200) carrierClass = 'R 200 or R 250';
+  else carrierClass = `R ${Math.ceil(rMin / 50) * 50}`;
+
+  document.getElementById('resBendRadius').textContent = Math.round(rMin);
+  document.getElementById('resBendHeight').textContent = `${Math.round(loopHeight)} mm`;
+  document.getElementById('resBendCarrierClass').textContent = carrierClass;
+}
+
+// ==========================================================================
+// 11. Dark Mode / High-Contrast Theme [NEW]
+// ==========================================================================
+function initTheme() {
+  const savedTheme = localStorage.getItem('voltcheck_theme') || 'light';
+  if (savedTheme === 'dark') {
+    document.body.classList.add('theme-dark');
+    updateThemeButton(true);
+  } else {
+    document.body.classList.remove('theme-dark');
+    updateThemeButton(false);
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('theme-dark');
+  localStorage.setItem('voltcheck_theme', isDark ? 'dark' : 'light');
+  updateThemeButton(isDark);
+}
+
+function updateThemeButton(isDark) {
+  const text = document.getElementById('themeText');
+  const icon = document.getElementById('themeIcon');
+  if (text) text.textContent = isDark ? '라이트' : '다크';
+  if (icon) icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+  if (window.lucide) window.lucide.createIcons();
+}
+
+// ==========================================================================
+// 12. Calculation Bookmarks & History Storage [NEW]
+// ==========================================================================
+function setupHistoryModal() {
+  const modal = document.getElementById('historyModal');
+  document.getElementById('openHistoryModalBtn')?.addEventListener('click', () => {
+    renderSavedCalculations();
+    modal?.classList.remove('hidden');
+  });
+  document.getElementById('closeHistoryModalBtn')?.addEventListener('click', () => modal?.classList.add('hidden'));
+  document.getElementById('saveCurrentCalcBtn')?.addEventListener('click', saveCurrentCalculation);
+}
+
+function saveCurrentCalculation() {
+  const titleInput = document.getElementById('saveCalcTitle');
+  const title = titleInput?.value.trim() || `설계 검토 #${new Date().toLocaleTimeString('ko-KR')}`;
+  const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'tab-voltagedrop';
+
+  const item = {
+    id: Date.now(),
+    title: title,
+    tab: activeTab,
+    date: new Date().toLocaleDateString('ko-KR'),
+    data: {
+      length: document.getElementById('wireLength')?.value,
+      gauge: document.getElementById('wireGaugeValue')?.value,
+      current: document.getElementById('loadCurrent')?.value,
+      voltage: document.getElementById('sourceVoltage')?.value
+    }
+  };
+
+  const list = JSON.parse(localStorage.getItem('voltcheck_saved_calcs') || '[]');
+  list.unshift(item);
+  if (list.length > 15) list.pop(); // Keep 15 items
+  localStorage.setItem('voltcheck_saved_calcs', JSON.stringify(list));
+
+  if (titleInput) titleInput.value = '';
+  renderSavedCalculations();
+  alert(`[보관함 저장 완료]\n\n"${title}" 계산 세팅이 보관함에 안전하게 저장되었습니다.`);
+}
+
+function renderSavedCalculations() {
+  const container = document.getElementById('savedCalculationsList');
+  if (!container) return;
+
+  const list = JSON.parse(localStorage.getItem('voltcheck_saved_calcs') || '[]');
+  if (list.length === 0) {
+    container.innerHTML = `<div class="empty-hint-box text-center p-3 text-muted">아직 저장된 계산 이력이 없습니다. 현재 설계 조건을 상단에 이름 붙여 저장해 보세요.</div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+  list.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'saved-item';
+    div.innerHTML = `
+      <div>
+        <div class="saved-item-title">${item.title}</div>
+        <div class="saved-item-meta font-mono">${item.date} • ${item.tab.replace('tab-', '')} • ${item.data.length || 40}m (${item.data.gauge || 'AWG 24'})</div>
+      </div>
+      <div class="saved-item-actions">
+        <button type="button" class="btn-item-load" onclick="loadSavedCalcItem(${item.id})">불러오기</button>
+        <button type="button" class="btn-item-del" onclick="deleteSavedCalcItem(${item.id})">&times;</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+window.loadSavedCalcItem = function(id) {
+  const list = JSON.parse(localStorage.getItem('voltcheck_saved_calcs') || '[]');
+  const item = list.find(x => x.id === id);
+  if (!item) return;
+
+  if (item.data.length && document.getElementById('wireLength')) {
+    document.getElementById('wireLength').value = item.data.length;
+    document.getElementById('wireLengthRange').value = item.data.length;
+  }
+  if (item.data.gauge && document.getElementById('wireGaugeValue')) {
+    document.getElementById('wireGaugeValue').value = item.data.gauge;
+  }
+  if (item.data.current && document.getElementById('loadCurrent')) {
+    document.getElementById('loadCurrent').value = item.data.current;
+  }
+  if (item.data.voltage && document.getElementById('sourceVoltage')) {
+    document.getElementById('sourceVoltage').value = item.data.voltage;
+  }
+
+  // Switch Tab
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const targetBtn = document.querySelector(`[data-tab="${item.tab}"]`);
+  targetBtn?.classList.add('active');
+  document.getElementById(item.tab)?.classList.add('active');
+
+  calculateVoltageDrop();
+  document.getElementById('historyModal')?.classList.add('hidden');
+};
+
+window.deleteSavedCalcItem = function(id) {
+  let list = JSON.parse(localStorage.getItem('voltcheck_saved_calcs') || '[]');
+  list = list.filter(x => x.id !== id);
+  localStorage.setItem('voltcheck_saved_calcs', JSON.stringify(list));
+  renderSavedCalculations();
+};
+
+// ==========================================================================
+// 13. Reference Table & CSV Export
 // ==========================================================================
 function renderReferenceTable(query = '') {
   const tbody = document.getElementById('cableTableBody');

@@ -1754,6 +1754,172 @@ body.theme-precision {
 }
 
 /* ==========================================================================
+   Dark Mode High-Contrast Engineering Theme
+   ========================================================================== */
+body.theme-dark {
+  --bg-canvas: #090d16;
+  --bg-surface: #111827;
+  --bg-surface-subtle: #1e293b;
+  --bg-inset: #0b1120;
+  --border-main: #334155;
+  --border-light: #1e293b;
+  --text-main: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --navy-dark: #f8fafc;
+  --navy-primary: #38bdf8;
+  --brand-orange: #fb923c;
+  background-color: #090d16;
+  color: #f8fafc;
+}
+
+body.theme-dark .top-nav {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+body.theme-dark .nav-tabs-segmented {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+body.theme-dark .tab-btn {
+  color: #94a3b8;
+}
+
+body.theme-dark .tab-btn:hover {
+  background: #374151;
+  color: #ffffff;
+}
+
+body.theme-dark .tab-btn.active {
+  background: #0b1120;
+  color: #38bdf8;
+  border: 1px solid #334155;
+}
+
+body.theme-dark .btn-util {
+  background: #1f2937;
+  border-color: #374151;
+  color: #e2e8f0;
+}
+
+body.theme-dark .workbench-card,
+body.theme-dark .meter-readout-panel,
+body.theme-dark .voltage-level-card,
+body.theme-dark .standard-matrix-container,
+body.theme-dark .tech-article-item,
+body.theme-dark .modal-card,
+body.theme-dark .converter-box,
+body.theme-dark .circuit-strip,
+body.theme-dark .data-table-frame,
+body.theme-dark .app-footer,
+body.theme-dark .catalog-item {
+  background: #111827;
+  border-color: #1f2937;
+  color: #f8fafc;
+}
+
+body.theme-dark .input-precision,
+body.theme-dark .input-val,
+body.theme-dark .select-precision {
+  background: #0b1120;
+  border-color: #374151;
+  color: #ffffff;
+}
+
+body.theme-dark .conv-res {
+  background: #0b1120;
+  border-color: #374151;
+  color: #f8fafc;
+}
+
+body.theme-dark .precision-table th {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+body.theme-dark .precision-table td {
+  border-color: #1e293b;
+  color: #e2e8f0;
+}
+
+body.theme-dark .sponsor-strip {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.theme-dark .showcase-card {
+  background: #111827;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+/* Saved History Modal Items */
+.saved-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.saved-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0.85rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+
+.saved-item:hover {
+  border-color: var(--brand-orange);
+}
+
+.saved-item-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--navy-dark);
+}
+
+.saved-item-meta {
+  font-size: 0.725rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.saved-item-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.btn-item-load {
+  background: var(--brand-orange);
+  color: #ffffff;
+  border: none;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-item-del {
+  background: transparent;
+  color: var(--fail-crimson);
+  border: 1px solid var(--border-main);
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+/* ==========================================================================
    Print A4 Specific
    ========================================================================== */
 .print-only-report {

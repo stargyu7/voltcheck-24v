@@ -151,6 +151,18 @@
           <i data-lucide="wrench"></i>
           <span>덕트 점유율</span>
         </button>
+        <button class="tab-btn" data-tab="tab-plcscaling" role="tab">
+          <i data-lucide="binary"></i>
+          <span>PLC 스케일링</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-motorcalc" role="tab">
+          <i data-lucide="zap"></i>
+          <span>3상 모터·MC</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-bendingradius" role="tab">
+          <i data-lucide="move"></i>
+          <span>케이블 베어</span>
+        </button>
         <button class="tab-btn" data-tab="tab-articles" role="tab">
           <i data-lucide="book-open"></i>
           <span>기술 노트</span>
@@ -162,6 +174,14 @@
         <button id="openUnitConverterBtn" class="btn-util" title="산업용 단위 환산기">
           <i data-lucide="scale"></i>
           <span>단위 환산</span>
+        </button>
+        <button id="openHistoryModalBtn" class="btn-util" title="내 계산 이력 및 북마크 보관함">
+          <i data-lucide="bookmark"></i>
+          <span>내 보관함</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-util" title="다크 모드 / 라이트 모드 전환">
+          <i data-lucide="moon" id="themeIcon"></i>
+          <span id="themeText">다크</span>
         </button>
         <button id="shareUrlBtn" class="btn-util" title="현재 계산 조건 링크 복사">
           <i data-lucide="share-2"></i>
@@ -1346,6 +1366,330 @@
     </section>
 
     <!-- ========================================================================= -->
+    <!-- TAB: PLC 아날로그 12-bit / 16-bit ADC 스케일링 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-plcscaling" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">PLC 아날로그 12-bit / 16-bit ADC 스케일링 계산기</h2>
+          <p class="main-desc">지멘스, 미쓰비시, LS산전, 오므론 PLC의 아날로그 신호(4-20mA, 0-10V)와 물리량(℃, MPa, RPM) 간 선형 변환 수식 및 디지털 Raw Count를 즉시 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>PLC 메이커 및 센서 물리량 범위 설정</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="plcMakerSelect">PLC 제조사 및 아날로그 모듈 분해능 (Raw Count)</label>
+              <select id="plcMakerSelect" class="select-precision font-mono">
+                <option value="siemens" selected>지멘스 (Siemens S7-1200/1500) • 0 ~ 27,648</option>
+                <option value="mitsubishi_12">미쓰비시 (Mitsubishi Q/iQ-R 12-bit) • 0 ~ 4,000</option>
+                <option value="mitsubishi_16">미쓰비시 (Mitsubishi Q/iQ-R 16-bit) • 0 ~ 12,000</option>
+                <option value="ls_16000">LS ELECTRIC (XGB/XGK) • 0 ~ 16,000</option>
+                <option value="ls_32000">LS ELECTRIC (XGK/XGI 고분해능) • 0 ~ 32,000</option>
+                <option value="omron">오므론 (Omron CJ/NJ) • 0 ~ 4,000 / 8,000</option>
+                <option value="custom">사용자 정의 (Custom Digital Range)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="plcRawMin">디지털 Raw 하한 (D_min)</label>
+                <input type="number" id="plcRawMin" value="0" class="input-val font-mono">
+              </div>
+              <div class="adv-col">
+                <label for="plcRawMax">디지털 Raw 상한 (D_max)</label>
+                <input type="number" id="plcRawMax" value="27648" class="input-val font-mono">
+              </div>
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="plcSignalType">아날로그 입력 신호 형식</label>
+              <select id="plcSignalType" class="select-precision font-mono">
+                <option value="4-20" selected>DC 4 ~ 20 mA (전류 루프)</option>
+                <option value="0-20">DC 0 ~ 20 mA</option>
+                <option value="0-10">DC 0 ~ 10 V (전압)</option>
+                <option value="1-5">DC 1 ~ 5 V (250Ω Shunt)</option>
+                <option value="-10-10">DC -10 ~ +10 V (바이폴라)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="plcEuMin">물리량 최소값 (EU_min)</label>
+                <div class="val-input-group">
+                  <input type="number" id="plcEuMin" value="0.0" step="0.1" class="input-val font-mono">
+                  <span class="val-unit" id="plcEuUnitLabel">MPa</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="plcEuMax">물리량 최대값 (EU_max)</label>
+                <div class="val-input-group">
+                  <input type="number" id="plcEuMax" value="1.0" step="0.1" class="input-val font-mono">
+                  <span class="val-unit" id="plcEuUnitLabel2">MPa</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-box mt-2">
+              <div class="field-header">
+                <label for="plcTestEuVal">테스트 입력 물리량 (Engineering Value)</label>
+                <div class="val-input-group">
+                  <input type="number" id="plcTestEuVal" value="0.5" step="0.05" class="input-val font-mono">
+                  <span class="val-unit" id="plcEuUnitLabel3">MPa</span>
+                </div>
+              </div>
+              <input type="range" id="plcTestEuRange" min="0" max="1" step="0.01" value="0.5" class="precision-slider">
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>스케일링 연산 및 PLC 코드 결과</h3>
+            </div>
+            <div class="verdict-stamp stamp-pass">
+              <span>정상 스케일링</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">PLC DIGITAL RAW VALUE (D)</span>
+                <span class="gauge-target" id="plcSignalEquivalent">신호값: 12.00 mA (50.0%)</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resPlcRawValue" class="digit-value">13,824</span>
+                <span class="digit-unit">Count</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>변환 물리량 (EU):</span>
+                  <strong id="resPlcEuFormatted">0.500 MPa</strong>
+                </div>
+                <div class="g-stat">
+                  <span>신호 백분율 (%):</span>
+                  <strong id="resPlcPctFormatted">50.0 %</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="standard-matrix-container mt-2">
+            <h5 class="font-bold text-highlight"><i data-lucide="code"></i> PLC 래더(ST) 선형 변환 수식</h5>
+            <div class="formula-box font-mono mt-1" id="plcFormulaBox">
+              EU = ((Raw - 0) / (27648 - 0)) * (1.0 - 0.0) + 0.0
+            </div>
+            <div class="font-mono mt-1" style="font-size:0.75rem; color:var(--text-muted);" id="plcStSnippet">
+              // Structured Text (ST)<br>
+              fScaledValue := ((INT_TO_REAL(iRawInput) - 0.0) / 27648.0) * 1.0;
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB: 3상 AC 220V/380V/440V 모터 정격전류 & 마그네트(MC)/EOCR 선정기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-motorcalc" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">3상 유도전동기 정격전류 & 마그네트(MC)·EOCR 차단기 선정기</h2>
+          <p class="main-desc">3상 AC 220V / 380V / 440V 모터 용량(kW/HP)에 따른 전부하 정격전류(FLA), 직입기동 돌입전류, 배선 굵기 및 전자접촉기·EOCR 정정치를 즉시 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>모터 사양 및 사용 전압 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="motorPowerKw">모터 정격 출력 (kW / HP)</label>
+              <select id="motorPowerKw" class="select-precision font-mono">
+                <option value="0.4">0.4 kW (0.5 HP)</option>
+                <option value="0.75">0.75 kW (1.0 HP)</option>
+                <option value="1.5">1.5 kW (2.0 HP)</option>
+                <option value="2.2">2.2 kW (3.0 HP)</option>
+                <option value="3.7">3.7 kW (5.0 HP)</option>
+                <option value="5.5" selected>5.5 kW (7.5 HP)</option>
+                <option value="7.5">7.5 kW (10 HP)</option>
+                <option value="11.0">11.0 kW (15 HP)</option>
+                <option value="15.0">15.0 kW (20 HP)</option>
+                <option value="22.0">22.0 kW (30 HP)</option>
+                <option value="37.0">37.0 kW (50 HP)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="motorVoltage">공급 전압 (3상 AC)</label>
+                <select id="motorVoltage" class="select-precision font-mono">
+                  <option value="380" selected>3상 380V (한국 공장 표준)</option>
+                  <option value="220">3상 220V</option>
+                  <option value="440">3상 440V (플랜트/선박)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="motorEfficiency">모터 효율 (η)</label>
+                <input type="number" id="motorEfficiency" value="0.88" step="0.01" min="0.7" max="0.98" class="input-val font-mono">
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="motorPowerFactor">역률 (cos θ)</label>
+                <input type="number" id="motorPowerFactor" value="0.85" step="0.01" min="0.6" max="0.99" class="input-val font-mono">
+              </div>
+              <div class="adv-col">
+                <label for="motorStartMethod">기동 방식</label>
+                <select id="motorStartMethod" class="select-precision font-mono">
+                  <option value="dol" selected>직입 기동 (Direct-On-Line)</option>
+                  <option value="stardelta">Y-Δ (와이델타 기동)</option>
+                  <option value="inverter">인버터 / VFD (Soft Start)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>모터 정격전류 & 차단기·MC 선정표</h3>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">MOTOR FULL LOAD AMPS (전부하 정격전류)</span>
+                <span class="gauge-target" id="motorInrushLabel">기동 돌입전류: 약 70.4 A (6.5배)</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resMotorFla" class="digit-value">11.1</span>
+                <span class="digit-unit">A</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>추천 마그네트(MC):</span>
+                  <strong id="resMotorMc">MC-18b (18A급)</strong>
+                </div>
+                <div class="g-stat">
+                  <span>추천 차단기(MCCB):</span>
+                  <strong id="resMotorMccb">30AF / 20A</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label">EOCR 정정 범위 (과부하)</span>
+              <strong class="s-val font-mono" id="resMotorEocr">11.1 ~ 13.3 A (1.1~1.2배)</strong>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">추천 3상 동력선 굵기</span>
+              <strong class="s-val font-mono" id="resMotorWire">2.5 mm² (AWG 14) 이상</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB: 케이블 가동 베어 벤딩 반경 & 최소 곡률 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-bendingradius" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">케이블 가동 베어(Cable Carrier) 벤딩 반경 & 곡률 계산기</h2>
+          <p class="main-desc">로봇 암 및 자동화 설비 케이블베어 내부 포설 시 단선 방지를 위한 최소 곡률 반경(R)과 설치 높이(H)를 산정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>케이블 외경 및 포설 환경 설정</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <div class="field-header">
+                <label for="bendCableDia">포설 케이블 중 최대 외경 (Maximum Diameter d)</label>
+                <div class="val-input-group">
+                  <input type="number" id="bendCableDia" value="12.0" step="0.5" min="2" max="60" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+              <input type="range" id="bendCableDiaRange" min="2" max="40" step="0.5" value="12" class="precision-slider">
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="bendApplication">배선 포설 환경 및 케이블 등급</label>
+              <select id="bendApplication" class="select-precision font-mono">
+                <option value="10" selected>가동용 케이블베어 (Cable Carrier) • 10 × d 권장</option>
+                <option value="12">초고굴곡 로봇 암 (Robot Torsion / High-Flex) • 12 × d</option>
+                <option value="6">유연 트레이 이동 배선 (Flexible Tray) • 6 × d</option>
+                <option value="4">고정 배선 (Fixed Installation) • 4 × d</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>최소 곡률 반경 & 베어 설치 높이</h3>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">MINIMUM BENDING RADIUS (최소 벤딩 반경 R)</span>
+                <span class="gauge-target">IEC 60204-1 & DIN EN 60811</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resBendRadius" class="digit-value">120</span>
+                <span class="digit-unit">mm</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>베어 설치 필요 높이 (H = 2R + d):</span>
+                  <strong id="resBendHeight">252 mm</strong>
+                </div>
+                <div class="g-stat">
+                  <span>추천 케이블베어 벤딩 반경:</span>
+                  <strong id="resBendCarrierClass">R 125 or R 150</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
     <!-- TAB 8: 기술 자료 & 실무 가이드 -->
     <!-- ========================================================================= -->
     <section id="tab-articles" class="tab-panel">
@@ -1451,6 +1795,41 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Connector Pinout Cheat Sheet & IP Protection Rating -->
+      <div class="standard-matrix-container mt-4">
+        <h3><i data-lucide="cpu"></i> 산업용 센서·통신 커넥터 핀맵(Pinout) &amp; IP 방수방진 등급</h3>
+        <p class="guide-note mb-2">현장 배선 작업 및 제어반 설계 시 가장 자주 참조하는 표준 핀 배열과 방수 등급입니다.</p>
+
+        <div class="tech-card-grid">
+          <div class="tech-article-item">
+            <div class="tech-badge">센서 핀맵</div>
+            <h4>M12 4핀 / 5핀 A-Coded 표준 배선</h4>
+            <p>• <strong>Pin 1 (갈색, BN):</strong> DC +24V 전원<br>
+            • <strong>Pin 2 (백색, WH):</strong> 2번 출력 (NC / Diagnostic)<br>
+            • <strong>Pin 3 (청색, BU):</strong> DC 0V (GND 전원)<br>
+            • <strong>Pin 4 (흑색, BK):</strong> 1번 메인 출력 (NO / Switching)<br>
+            • <strong>Pin 5 (회색, GY):</strong> 기능성 접지(FE) 또는 실드</p>
+          </div>
+
+          <div class="tech-article-item">
+            <div class="tech-badge">시리얼 통신</div>
+            <h4>D-Sub 9핀 RS-232 / RS-485 핀배열</h4>
+            <p>• <strong>RS-232:</strong> Pin 2 (RxD 수신), Pin 3 (TxD 송신), Pin 5 (GND 접지)<br>
+            • <strong>RS-485 2선식:</strong> Pin 3 (B / Data+), Pin 8 (A / Data-), Pin 5 (ISO GND)<br>
+            • <strong>Profinet/EtherCAT:</strong> RJ45 T568B (1:주황백, 2:주황, 3:녹백, 6:녹)</p>
+          </div>
+
+          <div class="tech-article-item">
+            <div class="tech-badge">환경 보호</div>
+            <h4>IP 방진방수 등급 (Ingress Protection)</h4>
+            <p>• <strong>IP54:</strong> 분진 제한 차단 / 전방향 생활 물튀김 (일반 제어반 내부)<br>
+            • <strong>IP65:</strong> 완전 분진 방지 / 노즐 분사 방수 (기계 외부 제어박스)<br>
+            • <strong>IP67:</strong> 1m 수심 30분 침수 방수 (현장 분산 IO 및 센서)<br>
+            • <strong>IP69K:</strong> 80°C 고온 100bar 고압 세척 방수 (식품/배터리 팹)</p>
+          </div>
         </div>
       </div>
 
@@ -1715,6 +2094,35 @@
               <span class="conv-eq">=</span>
               <span id="convPowerHp" class="conv-res font-mono">1.34 HP</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculation Bookmark & History Modal -->
+  <div id="historyModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h4><i data-lucide="bookmark"></i> 내 계산 이력 및 북마크 보관함 (Saved Calculations)</h4>
+        <button type="button" id="closeHistoryModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="save-current-box">
+          <div class="form-row-2">
+            <input type="text" id="saveCalcTitle" placeholder="예: 2공장 A라인 솔레노이드 전압강하 검토" class="input-precision">
+            <button type="button" id="saveCurrentCalcBtn" class="btn-primary-action">
+              <i data-lucide="plus-circle"></i>
+              <span>현재 계산 세팅 저장하기</span>
+            </button>
+          </div>
+        </div>
+
+        <h5 class="mt-3 font-bold text-highlight">저장된 계산 목록</h5>
+        <div id="savedCalculationsList" class="saved-list-container mt-2">
+          <!-- Dynamically populated -->
+          <div class="empty-hint-box text-center p-3 text-muted">
+            아직 저장된 계산 이력이 없습니다. 현재 설계 조건을 상단에 이름 붙여 저장해 보세요.
           </div>
         </div>
       </div>
