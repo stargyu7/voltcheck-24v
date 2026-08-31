@@ -357,6 +357,14 @@
                     <option value="4wire_parallel">4선식 병렬 페어 (+,- 각 2가닥 병렬 결선)</option>
                   </select>
                 </div>
+
+                <div class="adv-col full-span">
+                  <label for="wireTopology">부하 배선 토폴로지 (배선 형태)</label>
+                  <select id="wireTopology" class="select-precision">
+                    <option value="end" selected>선로 말단 집중 부하 (Single End Load • 보수적 검토)</option>
+                    <option value="distributed">등간격 분산 부하 (Distributed Multi-Drop • 실효 50% 강하 적용)</option>
+                  </select>
+                </div>
               </div>
             </div>
           </form>
@@ -1613,6 +1621,10 @@
             <div class="spec-cell">
               <span class="s-label">추천 3상 동력선 굵기</span>
               <strong class="s-val font-mono" id="resMotorWire">2.5 mm² (AWG 14) 이상</strong>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">KEC 보호접지선 (PE)</span>
+              <strong class="s-val font-mono" id="resMotorPeWire">2.5 mm² 이상</strong>
             </div>
           </div>
         </div>

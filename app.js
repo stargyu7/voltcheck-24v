@@ -187,7 +187,7 @@ function bindEvents() {
   // Tab 1 Field Event Listeners
   const vdFieldIds = [
     'wireGaugeValue', 'loadCurrent', 'sourceVoltage', 'minDeviceVoltage',
-    'ambientTemp', 'conductorMaterial', 'wiringSystem'
+    'ambientTemp', 'conductorMaterial', 'wiringSystem', 'wireTopology'
   ];
   vdFieldIds.forEach(id => {
     const el = document.getElementById(id);
@@ -438,7 +438,11 @@ function calculateVoltageDrop() {
   let loopMultiplier = 2.0;
   if (wiringScheme === '4wire_parallel') loopMultiplier = 1.0;
 
-  const totalLoopR = rTPerM * lengthM * loopMultiplier;
+  // Real-world Topology factor: Distributed loads along trunk produce ~50% effective drop
+  const topology = document.getElementById('wireTopology')?.value || 'end';
+  const topoFactor = topology === 'distributed' ? 0.50 : 1.0;
+
+  const totalLoopR = rTPerM * lengthM * loopMultiplier * topoFactor;
   const vDrop = iLoad * totalLoopR;
   const vDropPct = (vDrop / vSource) * 100.0;
   const vTerm = Math.max(0, vSource - vDrop);
@@ -1025,13 +1029,14 @@ function calculateMotorSpecs() {
 
   // Wire Sizing
   let wireSize = '1.5 mm² (AWG 16)';
-  if (fla > 70) wireSize = '35 mm² (AWG 2)';
-  else if (fla > 50) wireSize = '25 mm² (AWG 4)';
-  else if (fla > 35) wireSize = '16 mm² (AWG 6)';
-  else if (fla > 24) wireSize = '10 mm² (AWG 8)';
-  else if (fla > 16) wireSize = '6.0 mm² (AWG 10)';
-  else if (fla > 10) wireSize = '4.0 mm² (AWG 12)';
-  else if (fla > 6) wireSize = '2.5 mm² (AWG 14)';
+  let peWire = '1.5 mm²';
+  if (fla > 70) { wireSize = '35 mm² (AWG 2)'; peWire = '16 mm²'; }
+  else if (fla > 50) { wireSize = '25 mm² (AWG 4)'; peWire = '16 mm²'; }
+  else if (fla > 35) { wireSize = '16 mm² (AWG 6)'; peWire = '16 mm²'; }
+  else if (fla > 24) { wireSize = '10 mm² (AWG 8)'; peWire = '10 mm²'; }
+  else if (fla > 16) { wireSize = '6.0 mm² (AWG 10)'; peWire = '6.0 mm²'; }
+  else if (fla > 10) { wireSize = '4.0 mm² (AWG 12)'; peWire = '4.0 mm²'; }
+  else if (fla > 6) { wireSize = '2.5 mm² (AWG 14)'; peWire = '2.5 mm²'; }
 
   document.getElementById('resMotorFla').textContent = fla.toFixed(1);
   document.getElementById('motorInrushLabel').textContent = `${methodLabel}: 약 ${inrushA.toFixed(1)} A (${inrushMult}배)`;
@@ -1039,6 +1044,9 @@ function calculateMotorSpecs() {
   document.getElementById('resMotorMccb').textContent = mccbModel;
   document.getElementById('resMotorEocr').textContent = `${fla.toFixed(1)} ~ ${(fla * 1.15).toFixed(1)} A (1.05~1.15배)`;
   document.getElementById('resMotorWire').textContent = `${wireSize} 이상`;
+  if (document.getElementById('resMotorPeWire')) {
+    document.getElementById('resMotorPeWire').textContent = `${peWire} 이상 (KEC)`;
+  }
 }
 
 // ==========================================================================
