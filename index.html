@@ -462,8 +462,21 @@
             </div>
           </div>
 
+          <!-- Interactive Voltage Drop & Gradient Curve Canvas [NEW VISUALIZER] -->
+          <div class="interactive-chart-box mt-2">
+            <div class="chart-header">
+              <span class="chart-title"><i data-lucide="trending-down"></i> <span data-i18n="lbl_vd_chart_title">선로 거리별 전압 강하 구배 곡선 (Voltage Gradient Curve)</span></span>
+              <span class="chart-legend font-mono">
+                <span class="leg-item leg-v">■ 선로 전압 곡선</span>
+                <span class="leg-item leg-min">--- 최저 전압 (V_min)</span>
+                <span class="leg-item leg-danger">■ 브라운아웃 위험선 (18V)</span>
+              </span>
+            </div>
+            <canvas id="vdChartCanvas" class="interactive-canvas" width="600" height="170"></canvas>
+          </div>
+
           <!-- Engineering Specs Grid -->
-          <div class="specs-mini-grid">
+          <div class="specs-mini-grid mt-2">
             <div class="spec-cell">
               <span class="s-label">왕복 선로 저항</span>
               <strong class="s-val font-mono" id="resLoopR">6.74 Ω</strong>
@@ -1131,6 +1144,18 @@
             </div>
           </div>
 
+          <!-- Interactive RS-485 Waveform & Reflection Visualizer [NEW] -->
+          <div class="interactive-chart-box mt-2">
+            <div class="chart-header">
+              <span class="chart-title"><i data-lucide="activity"></i> <span data-i18n="lbl_rs485_chart_title">RS-485 차동 신호 파형 &amp; 반사파 시뮬레이터 (Signal Waveform)</span></span>
+              <span class="chart-legend font-mono">
+                <span class="leg-item leg-v">■ 송신 구형파</span>
+                <span class="leg-item leg-safe">■ 수신단 정상파 (120Ω On)</span>
+              </span>
+            </div>
+            <canvas id="rs485Canvas" class="interactive-canvas" width="600" height="130"></canvas>
+          </div>
+
           <div class="standard-guide-card mt-2">
             <h4><i data-lucide="git-branch"></i> RS-485 배선 원칙</h4>
             <p class="guide-note">
@@ -1383,6 +1408,18 @@
               <span class="text-warn">40% (한계)</span>
               <span style="color:var(--fail-crimson);">50%+ (발열 위험)</span>
             </div>
+          </div>
+
+          <!-- Interactive Duct Cross-Section 2D Packing Visualizer [NEW] -->
+          <div class="interactive-chart-box mt-2">
+            <div class="chart-header">
+              <span class="chart-title"><i data-lucide="layout-grid"></i> <span data-i18n="lbl_duct_chart_title">제어반 닥트 단면 실시간 케이블 수용 시뮬레이터 (Duct 2D Cross-Section)</span></span>
+              <span class="chart-legend font-mono">
+                <span class="leg-item leg-v">■ 포설 케이블 가닥</span>
+                <span class="leg-item leg-safe">■ 여유 열방산 공간</span>
+              </span>
+            </div>
+            <canvas id="ductCanvas" class="interactive-canvas" width="600" height="180"></canvas>
           </div>
 
           <div class="engineer-note-box mt-2">

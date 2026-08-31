@@ -598,6 +598,9 @@ function calculateVoltageDrop() {
   // Update AI 6-Point Comprehensive Safety Audit [KILLER FEATURE]
   updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource, vTerm, topology);
 
+  // Render Interactive Voltage Drop Chart Canvas [NEW VISUALIZER]
+  drawVoltageDropChart(vSource, vTerm, vMinReq, lengthM, vDrop);
+
   if (window.lucide) window.lucide.createIcons();
 }
 
@@ -1035,6 +1038,9 @@ function calculateRS485() {
   document.getElementById('rs485BitTimeVal').textContent = `${bitTimeUs.toFixed(2)} µs`;
   document.getElementById('rs485CapacitanceTotal').textContent = `총 정전용량: ${totalCapNf.toFixed(1)} nF`;
 
+  // Draw RS-485 Signal Waveform [NEW VISUALIZER]
+  drawRs485Waveform(baud, lengthM, isPass);
+
   if (window.lucide) window.lucide.createIcons();
 }
 
@@ -1128,6 +1134,9 @@ function calculateDuctFill() {
   document.getElementById('resDuctCableArea').textContent = `${Math.round(totalCableArea)} mm²`;
   document.getElementById('resDuctTotalArea').textContent = `${Math.round(ductArea)} mm²`;
   if (fillBar) fillBar.style.width = `${Math.min(100, (fillPct / 50.0) * 100)}%`;
+
+  // Draw 2D Duct Cross-Section Packing [NEW VISUALIZER]
+  drawDuctCrossSection(w, h, qty, dia, fillPct);
 }
 
 // ==========================================================================
@@ -2356,4 +2365,279 @@ function applyLanguage(lang) {
 
   if (window.lucide) window.lucide.createIcons();
 }
+
+// ==========================================================================
+// 16. Interactive HTML5 Canvas Engineering Visualizers [KILLER FEATURE]
+// ==========================================================================
+
+function drawVoltageDropChart(vSource, vTerm, vMin, lengthM, vDrop) {
+  const canvas = document.getElementById('vdChartCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = (rect.width || 600) * dpr;
+  canvas.height = (rect.height || 170) * dpr;
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width || 600;
+  const h = rect.height || 170;
+  const isDark = document.body.classList.contains('theme-dark');
+  const isEn = currentLanguage === 'en';
+
+  ctx.clearRect(0, 0, w, h);
+
+  const padLeft = 45;
+  const padRight = 30;
+  const padTop = 20;
+  const padBottom = 30;
+  const plotW = w - padLeft - padRight;
+  const plotH = h - padTop - padBottom;
+
+  const yMinV = 16.0;
+  const yMaxV = Math.max(25.0, vSource + 0.5);
+
+  const getY = (v) => padTop + plotH * (1 - (v - yMinV) / (yMaxV - yMinV));
+  const getX = (m) => padLeft + plotW * (m / lengthM);
+
+  // 1. Grid Lines
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+  ctx.font = '10px JetBrains Mono, monospace';
+
+  [18, 20, 22, 24].forEach(v => {
+    if (v >= yMinV && v <= yMaxV) {
+      const y = getY(v);
+      ctx.beginPath();
+      ctx.moveTo(padLeft, y);
+      ctx.lineTo(w - padRight, y);
+      ctx.stroke();
+      ctx.fillText(`${v}V`, 10, y + 3);
+    }
+  });
+
+  // 2. Brownout Danger Zone (<18V)
+  const y18 = getY(18.0);
+  ctx.fillStyle = isDark ? 'rgba(239, 68, 68, 0.15)' : 'rgba(239, 68, 68, 0.08)';
+  ctx.fillRect(padLeft, y18, plotW, getY(yMinV) - y18);
+  ctx.fillStyle = '#ef4444';
+  ctx.fillText(isEn ? 'Brownout Risk (<18V)' : '센서 리셋 위험구역 (<18V)', padLeft + 10, getY(yMinV) - 8);
+
+  // 3. V_min Threshold Dashed Line
+  const yMinLine = getY(vMin);
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(padLeft, yMinLine);
+  ctx.lineTo(w - padRight, yMinLine);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f59e0b';
+  ctx.fillText(`V_min: ${vMin.toFixed(1)}V`, w - padRight - 75, yMinLine - 4);
+
+  // 4. Voltage Gradient Curve Line & Gradient Area
+  const grad = ctx.createLinearGradient(padLeft, padTop, padLeft, h - padBottom);
+  grad.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+  grad.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+  ctx.beginPath();
+  ctx.moveTo(padLeft, getY(vSource));
+  for (let m = 0; m <= lengthM; m += lengthM / 40) {
+    const vAtM = vSource - (vDrop * (m / lengthM));
+    ctx.lineTo(getX(m), getY(vAtM));
+  }
+  ctx.lineTo(w - padRight, getY(vTerm));
+  ctx.lineTo(w - padRight, h - padBottom);
+  ctx.lineTo(padLeft, h - padBottom);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Draw Stroke
+  ctx.beginPath();
+  ctx.strokeStyle = vTerm >= vMin ? '#3b82f6' : '#ef4444';
+  ctx.lineWidth = 2.5;
+  ctx.moveTo(padLeft, getY(vSource));
+  for (let m = 0; m <= lengthM; m += lengthM / 40) {
+    const vAtM = vSource - (vDrop * (m / lengthM));
+    ctx.lineTo(getX(m), getY(vAtM));
+  }
+  ctx.lineTo(w - padRight, getY(vTerm));
+  ctx.stroke();
+
+  // Nodes
+  ctx.fillStyle = '#3b82f6';
+  ctx.beginPath();
+  ctx.arc(padLeft, getY(vSource), 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = isDark ? '#ffffff' : '#0f172a';
+  ctx.fillText(`SMPS: ${vSource.toFixed(1)}V`, padLeft + 6, getY(vSource) - 6);
+
+  ctx.fillStyle = vTerm >= vMin ? '#10b981' : '#ef4444';
+  ctx.beginPath();
+  ctx.arc(w - padRight, getY(vTerm), 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillText(`${vTerm.toFixed(2)}V (${lengthM}m)`, w - padRight - 80, getY(vTerm) - 6);
+
+  // X Axis Labels
+  ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+  ctx.fillText('0m', padLeft, h - 10);
+  ctx.fillText(`${Math.round(lengthM / 2)}m`, padLeft + plotW / 2 - 10, h - 10);
+  ctx.fillText(`${lengthM}m`, w - padRight - 20, h - 10);
+}
+
+function drawDuctCrossSection(ductW, ductH, cableQty, cableDia, fillPct) {
+  const canvas = document.getElementById('ductCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = (rect.width || 600) * dpr;
+  canvas.height = (rect.height || 180) * dpr;
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width || 600;
+  const h = rect.height || 180;
+  const isDark = document.body.classList.contains('theme-dark');
+  const isEn = currentLanguage === 'en';
+
+  ctx.clearRect(0, 0, w, h);
+
+  const maxDuctDim = Math.max(ductW, ductH);
+  const scale = Math.min((w - 140) / maxDuctDim, (h - 40) / maxDuctDim);
+  const dw = ductW * scale;
+  const dh = ductH * scale;
+  const dx = (w - dw) / 2;
+  const dy = (h - dh) / 2;
+
+  // Outer Wall
+  ctx.fillStyle = isDark ? '#1e293b' : '#e2e8f0';
+  ctx.fillRect(dx - 6, dy - 6, dw + 12, dh + 12);
+
+  // Inner Space
+  ctx.fillStyle = isDark ? '#090d16' : '#ffffff';
+  ctx.fillRect(dx, dy, dw, dh);
+
+  // Side Slotted Slots
+  ctx.strokeStyle = isDark ? '#475569' : '#94a3b8';
+  ctx.lineWidth = 2;
+  const slotCount = 6;
+  for (let i = 1; i < slotCount; i++) {
+    const sy = dy + (dh / slotCount) * i;
+    ctx.strokeRect(dx - 5, sy - 3, 5, 6);
+    ctx.strokeRect(dx + dw, sy - 3, 5, 6);
+  }
+
+  // Pack Cables
+  const cableR = Math.max(2, (cableDia / 2) * scale);
+  let curX = dx + cableR + 4;
+  let curY = dy + dh - cableR - 4;
+  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
+
+  for (let i = 0; i < cableQty; i++) {
+    if (curX + cableR > dx + dw - 4) {
+      curX = dx + cableR + 4;
+      curY -= (cableR * 2 + 2);
+    }
+    if (curY - cableR < dy) break;
+
+    ctx.beginPath();
+    ctx.arc(curX, curY, cableR, 0, Math.PI * 2);
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+    ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    curX += cableR * 2 + 2;
+  }
+
+  // Dimensions & Status
+  ctx.fillStyle = isDark ? '#e2e8f0' : '#1e293b';
+  ctx.font = 'bold 11px JetBrains Mono, monospace';
+  ctx.fillText(`${ductW} mm`, dx + dw / 2 - 20, dy - 10);
+  ctx.fillText(`${ductH} mm`, dx + dw + 12, dy + dh / 2 + 4);
+
+  const statusColor = fillPct <= 30 ? '#10b981' : (fillPct <= 40 ? '#f59e0b' : '#ef4444');
+  ctx.fillStyle = statusColor;
+  ctx.fillText(`Fill: ${fillPct.toFixed(1)}% (${fillPct <= 40 ? (isEn ? 'PASS' : '적합') : (isEn ? 'OVERFILL' : '초과 과열')})`, dx + 8, dy + 18);
+}
+
+function drawRs485Waveform(baud, lengthM, isPass) {
+  const canvas = document.getElementById('rs485Canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = (rect.width || 600) * dpr;
+  canvas.height = (rect.height || 130) * dpr;
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width || 600;
+  const h = rect.height || 130;
+  const isDark = document.body.classList.contains('theme-dark');
+  const isEn = currentLanguage === 'en';
+
+  ctx.clearRect(0, 0, w, h);
+
+  const midY = h / 2;
+  const amp = 35;
+
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(30, midY);
+  ctx.lineTo(w - 20, midY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // TX Ideal Square Wave (Blue)
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const stepW = (w - 60) / 8;
+  let high = true;
+  for (let i = 0; i < 8; i++) {
+    const x1 = 30 + i * stepW;
+    const x2 = x1 + stepW;
+    const y = high ? midY - amp : midY + amp;
+    if (i === 0) ctx.moveTo(x1, y);
+    else ctx.lineTo(x1, y);
+    ctx.lineTo(x2, y);
+    high = !high;
+  }
+  ctx.stroke();
+
+  // RX Received Waveform (Green/Red)
+  ctx.strokeStyle = isPass ? '#10b981' : '#ef4444';
+  ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  high = true;
+  for (let i = 0; i < 8; i++) {
+    const x1 = 30 + i * stepW;
+    const x2 = x1 + stepW;
+    const targetY = high ? midY - amp * 0.9 : midY + amp * 0.9;
+    if (i === 0) ctx.moveTo(x1, targetY);
+    else ctx.quadraticCurveTo(x1 + 4, targetY + (high ? -5 : 5), x1 + 10, targetY);
+    ctx.lineTo(x2, targetY);
+    high = !high;
+  }
+  ctx.stroke();
+
+  ctx.fillStyle = '#3b82f6';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.fillText('TX (+2.5V / -2.5V)', 35, 18);
+  ctx.fillStyle = isPass ? '#10b981' : '#ef4444';
+  ctx.fillText(isEn ? `RX (${lengthM}m @ ${baud.toLocaleString()} bps)` : `수신단 (${lengthM}m @ ${baud.toLocaleString()} bps)`, 35, h - 8);
+}
+
+// Window resize handler for canvas crispness
+window.addEventListener('resize', () => {
+  calculateVoltageDrop();
+  calculateDuctFill();
+  calculateRS485();
+});
+
 

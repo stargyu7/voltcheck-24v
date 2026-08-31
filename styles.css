@@ -2399,3 +2399,63 @@ body.theme-dark .showcase-card {
   100% { left: 100%; }
 }
 
+/* ========================================================================== */
+/* Interactive Canvas Chart & Visualizer Styles                               */
+/* ========================================================================== */
+.interactive-chart-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.85rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chart-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chart-title i {
+  width: 15px;
+  height: 15px;
+  color: var(--accent-blue);
+}
+
+.chart-legend {
+  font-size: 0.7rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.leg-item.leg-v { color: #3b82f6; }
+.leg-item.leg-min { color: #f59e0b; }
+.leg-item.leg-danger { color: #ef4444; }
+.leg-item.leg-safe { color: #10b981; }
+
+.interactive-canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #0f172a;
+  border-radius: 6px;
+  border: 1px solid #1e293b;
+}
+
+body:not(.theme-dark) .interactive-canvas {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+
