@@ -76,6 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
   calculatePlcScaling();
   calculateMotorSpecs();
   calculateBendingRadius();
+  calculateOtEthernet();
+  calculateServoRegen();
   renderSavedCalculations();
 });
 
@@ -286,6 +288,32 @@ function bindEvents() {
     });
   }
   document.getElementById('bendApplication')?.addEventListener('change', calculateBendingRadius);
+
+  // Tab 13: OT Ethernet & Subnet Listeners
+  ['otIpAddress', 'otSubnetMask', 'otProfinetName'].forEach(id => {
+    const el = document.getElementById(id);
+    el?.addEventListener('input', calculateOtEthernet);
+    el?.addEventListener('change', calculateOtEthernet);
+  });
+
+  // Tab 14: Servo Regen Braking Resistor Listeners
+  const servoInertiaNum = document.getElementById('servoInertia');
+  const servoInertiaRange = document.getElementById('servoInertiaRange');
+  if (servoInertiaNum && servoInertiaRange) {
+    servoInertiaNum.addEventListener('input', () => {
+      servoInertiaRange.value = servoInertiaNum.value;
+      calculateServoRegen();
+    });
+    servoInertiaRange.addEventListener('input', () => {
+      servoInertiaNum.value = servoInertiaRange.value;
+      calculateServoRegen();
+    });
+  }
+  ['servoMaxRpm', 'servoDecelTime', 'servoDcBusVolt', 'servoBusCap'].forEach(id => {
+    const el = document.getElementById(id);
+    el?.addEventListener('input', calculateServoRegen);
+    el?.addEventListener('change', calculateServoRegen);
+  });
 
   // Theme Toggle
   document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
@@ -1910,16 +1938,255 @@ function toggleLanguage() {
   applyLanguage(currentLanguage);
 }
 
+// ==========================================================================
+// 14. OT Industrial Ethernet & Profinet Calculator [NEW]
+// ==========================================================================
+function calculateOtEthernet() {
+  const ipStr = document.getElementById('otIpAddress')?.value.trim() || '192.168.1.10';
+  const cidr = parseInt(document.getElementById('otSubnetMask')?.value) || 24;
+  const profinetName = document.getElementById('otProfinetName')?.value.trim() || 'plc-cell1-drive01';
+  const isEn = currentLanguage === 'en';
+
+  const ipParts = ipStr.split('.').map(x => parseInt(x, 10));
+  if (ipParts.length !== 4 || ipParts.some(x => isNaN(x) || x < 0 || x > 255)) {
+    return;
+  }
+
+  const maskNum = -1 << (32 - cidr);
+  const ipNum = (ipParts[0] << 24) | (ipParts[1] << 16) | (ipParts[2] << 8) | ipParts[3];
+  const netNum = ipNum & maskNum;
+  const bcastNum = netNum | ~maskNum;
+
+  const numToIp = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+
+  const netIp = numToIp(netNum);
+  const bcastIp = numToIp(bcastNum);
+  const firstHost = numToIp(netNum + 1);
+  const lastHost = numToIp(bcastNum - 1);
+  const hostCount = Math.max(0, Math.pow(2, 32 - cidr) - 2);
+
+  document.getElementById('resOtHostCount').textContent = hostCount.toLocaleString();
+  document.getElementById('resOtNetId').textContent = netIp;
+  document.getElementById('resOtBcast').textContent = bcastIp;
+  document.getElementById('resOtIpStart').textContent = firstHost;
+  document.getElementById('resOtIpEnd').textContent = lastHost;
+  document.getElementById('resOtGateway').textContent = `${firstHost} (or ${lastHost})`;
+
+  // Profinet Station Name Validation (RFC 5890 / IEC 61158-6-10)
+  const profinetRegex = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/;
+  const isValidProfinet = profinetRegex.test(profinetName) && profinetName.length <= 240 && !profinetName.includes('_');
+  const statusEl = document.getElementById('otProfinetStatus');
+  if (statusEl) {
+    if (isValidProfinet) {
+      statusEl.textContent = isEn ? 'Profinet Name: VALID (RFC 5890)' : 'Profinet Name: 정상 (규격 준수)';
+      statusEl.style.color = 'var(--safe-green)';
+    } else {
+      statusEl.textContent = isEn ? 'Profinet Name: INVALID (No capitals/underscores)' : 'Profinet Name: 규격 오류 (소문자/하이픈만 허용)';
+      statusEl.style.color = 'var(--fail-crimson)';
+    }
+  }
+}
+
+// ==========================================================================
+// 15. Servo Kinetic Energy & Regenerative Braking Resistor [NEW]
+// ==========================================================================
+function calculateServoRegen() {
+  const jCm2 = parseFloat(document.getElementById('servoInertia')?.value) || 5.0;
+  const rpm = parseFloat(document.getElementById('servoMaxRpm')?.value) || 3000.0;
+  const tDec = parseFloat(document.getElementById('servoDecelTime')?.value) || 0.2;
+  const vBus = parseFloat(document.getElementById('servoDcBusVolt')?.value) || 24.0;
+  const capUf = parseFloat(document.getElementById('servoBusCap')?.value) || 1000.0;
+  const isEn = currentLanguage === 'en';
+
+  const jKgM2 = jCm2 * 1e-4; // kg*cm^2 to kg*m^2
+  const omega = (2.0 * Math.PI * rpm) / 60.0; // rad/s
+  const eKinetic = 0.5 * jKgM2 * Math.pow(omega, 2); // Joules
+
+  // Bus Capacitor absorption threshold
+  const vRegenTrip = vBus * 1.35; // 35% overvoltage margin
+  const cFarad = capUf * 1e-6;
+  const eCap = 0.5 * cFarad * (Math.pow(vRegenTrip, 2) - Math.pow(vBus, 2)); // Joules
+
+  const eSurplus = Math.max(0, eKinetic - eCap);
+  const peakPower = tDec > 0 ? eKinetic / tDec : 0;
+
+  // Recommended Resistor Ohms & Watts
+  const rOhm = Math.max(5, Math.round(Math.pow(vRegenTrip, 2) / (peakPower * 1.2 || 10)));
+  const rWatt = eSurplus > 0 ? Math.max(50, Math.ceil(eSurplus * 3.0 / 10) * 10) : 0;
+
+  document.getElementById('resServoKineticE').textContent = eKinetic.toFixed(2);
+  document.getElementById('resServoCapE').textContent = `${eCap.toFixed(2)} J`;
+  document.getElementById('resServoSurplusE').textContent = `${eSurplus.toFixed(2)} J`;
+  document.getElementById('resServoPeakPower').textContent = `${peakPower.toFixed(1)} W`;
+
+  const statusEl = document.getElementById('servoRegenStatus');
+  const resOhmEl = document.getElementById('resServoResOhm');
+  const resWattEl = document.getElementById('resServoResWatt');
+
+  if (eSurplus <= 0) {
+    if (statusEl) {
+      statusEl.textContent = isEn ? 'Capacitor Absorbed (No External Resistor Needed)' : '내부 커패시터 흡수 가능 (외장 저항 불필요)';
+      statusEl.style.color = 'var(--safe-green)';
+    }
+    if (resOhmEl) resOhmEl.textContent = isEn ? 'Internal OK' : '내부 흡수 완료';
+    if (resWattEl) resWattEl.textContent = isEn ? '0 W (Not Required)' : '외장 저항 불필요';
+  } else {
+    if (statusEl) {
+      statusEl.textContent = isEn ? `Regen Resistor Required (${eSurplus.toFixed(1)}J Surplus)` : `외장 회생저항 장착 필수 (잉여 ${eSurplus.toFixed(1)}J 방전)`;
+      statusEl.style.color = 'var(--warn-amber)';
+    }
+    if (resOhmEl) resOhmEl.textContent = `${rOhm} Ω`;
+    if (resWattEl) resWattEl.textContent = `${rWatt} W 이상`;
+  }
+}
+
+// ==========================================================================
+// 11. Global Multi-Language (i18n) Engine [COMPREHENSIVE]
+// ==========================================================================
+const I18N = {
+  ko: {
+    brand_name: '볼트체크 24V',
+    brand_en: 'VoltCheck Pro',
+    brand_tagline: '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷',
+    sponsor_text: '산업용 고굴곡 가동 케이블, 24V DIN레일 SMPS, 제어반 쿨링 에어컨 & 4-20mA 절연 배리어',
+    sponsor_btn: '기술 카탈로그 & 핸드북 다운로드 →',
+    btn_unit: '단위 환산',
+    btn_history: '내 보관함',
+    btn_dark: '다크',
+    btn_light: '라이트',
+    btn_share: '조건 공유',
+    btn_print: '검토서 인쇄',
+    tab_vd: '24V 전압강하',
+    tab_loop: '4-20mA 루프',
+    tab_smps: 'SMPS·CP 용량',
+    tab_cool: '제어반 쿨링',
+    tab_awg: 'AWG 조견표',
+    tab_rs485: 'RS-485 통신',
+    tab_pneu: '공압 소모량',
+    tab_duct: '덕트 점유율',
+    tab_plc: 'PLC 스케일링',
+    tab_motor: '3상 모터·MC',
+    tab_bend: '케이블 베어',
+    tab_ot: 'OT 이더넷·IP',
+    tab_servo: '서보 회생저항',
+    tab_notes: '기술 노트',
+    
+    // Tab 1
+    t1_title: 'DC 24V 선로 전압강하 및 말단 전원 마진 검토',
+    t1_desc: '배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.',
+    t1_p1: '포토/근접센서 (35mA)',
+    t1_p2: '솔레노이드 밸브 (0.45A)',
+    t1_p3: 'IO-Link 마스터 (2.0A)',
+    t1_p4: '서보 브레이크 (1.2A)',
+    t1_p5: '비전 조명 (3.5A)',
+    t1_c1_title: '설계 파라미터 입력',
+    t1_adv_btn: '상세 환경 설정',
+    t1_lbl_len: '선로 편도 배선 거리 (L)',
+    t1_lbl_gauge: '케이블 도선 규격',
+    t1_lbl_cur: '말단 부하 소비전류 (I)',
+    t1_lbl_topo: '부하 배선 토폴로지 (배선 형태)',
+    t1_c2_title: '검증 판정 및 계측치',
+    t1_meter_term: '말단 센서 수전 전압 (V_term)',
+    t1_meter_drop: '선로 전압강하:',
+    t1_meter_margin: '전원 안전마진:',
+    t1_gauge_title: '전압 마진 레벨 게이지 (Voltage Margin Gauge)',
+    t1_flow_title: '선로 전위 분포',
+    t1_s1: '왕복 선로 저항',
+    t1_s2: '선로 발열 손실 (I²R)',
+    t1_s3: '허용전류 사용률',
+    t1_s4: '추천 최소 규격',
+    t1_ai_badge: 'AI 스마트 진단',
+    t1_ai_title: 'FA 전장설계 6대 항목 종합 안전 진단서',
+    btn_copy_summary: '요약 복사',
+    btn_copy_md: '마크다운 복사',
+    btn_req_quote: '부품 견적 요청 (BOM)'
+  },
+  en: {
+    brand_name: 'VoltCheck 24V',
+    brand_en: 'VoltCheck Pro',
+    brand_tagline: 'Industrial Cable Voltage Drop & Control Panel Engineering Suite',
+    sponsor_text: 'Flexible Robotic Cables, 24V DIN-Rail SMPS, Enclosure Air Conditioners & Signal Isolators',
+    sponsor_btn: 'Download Technical Catalog & Handbook →',
+    btn_unit: 'Unit Converter',
+    btn_history: 'Saved Calcs',
+    btn_dark: 'Dark',
+    btn_light: 'Light',
+    btn_share: 'Share Link',
+    btn_print: 'Print Report',
+    tab_vd: '24V Volt Drop',
+    tab_loop: '4-20mA Loop',
+    tab_smps: 'SMPS & CP',
+    tab_cool: 'Cabinet Cooler',
+    tab_awg: 'AWG Table',
+    tab_rs485: 'RS-485 Bus',
+    tab_pneu: 'Pneumatics',
+    tab_duct: 'Duct Fill',
+    tab_plc: 'PLC Scaling',
+    tab_motor: '3-Ph Motor·MC',
+    tab_bend: 'Cable Carrier',
+    tab_ot: 'OT Ethernet·IP',
+    tab_servo: 'Servo Regen',
+    tab_notes: 'Tech Notes',
+    
+    // Tab 1
+    t1_title: 'DC 24V Cable Voltage Drop & Sensor Power Margin',
+    t1_desc: 'Calculate cable loop resistance, voltage drop, and sensor brownout margin in real-time according to distance, wire gauge, and load current.',
+    t1_p1: 'Photo Sensor (35mA)',
+    t1_p2: 'Solenoid Valve (0.45A)',
+    t1_p3: 'IO-Link Master (2.0A)',
+    t1_p4: 'Servo Brake (1.2A)',
+    t1_p5: 'Vision Light (3.5A)',
+    t1_c1_title: 'Design Parameters Input',
+    t1_adv_btn: 'Advanced Settings',
+    t1_lbl_len: 'One-Way Cable Distance (L)',
+    t1_lbl_gauge: 'Wire Gauge Specification',
+    t1_lbl_cur: 'Load Operating Current (I)',
+    t1_lbl_topo: 'Wiring Load Topology',
+    t1_c2_title: 'Verification Verdict & Readouts',
+    t1_meter_term: 'Terminal Operating Voltage (V_term)',
+    t1_meter_drop: 'Line Voltage Drop:',
+    t1_meter_margin: 'Safety Margin:',
+    t1_gauge_title: 'Voltage Margin Level Gauge',
+    t1_flow_title: 'Line Potential Profile',
+    t1_s1: 'Total Loop Resistance',
+    t1_s2: 'Line Thermal Loss (I²R)',
+    t1_s3: 'Ampacity Usage Ratio',
+    t1_s4: 'Recommended Gauge',
+    t1_ai_badge: 'AI Smart Audit',
+    t1_ai_title: '6-Point Comprehensive Engineering Safety Audit',
+    btn_copy_summary: 'Copy Summary',
+    btn_copy_md: 'Copy Markdown',
+    btn_req_quote: 'Request BOM Quote'
+  }
+};
+
+function initLanguage() {
+  const savedLang = localStorage.getItem('voltcheck_lang') || 'ko';
+  currentLanguage = savedLang;
+  applyLanguage(currentLanguage);
+}
+
+function toggleLanguage() {
+  currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
+  localStorage.setItem('voltcheck_lang', currentLanguage);
+  applyLanguage(currentLanguage);
+}
+
 function applyLanguage(lang) {
   const dict = I18N[lang] || I18N.ko;
+  const isEn = lang === 'en';
   const langText = document.getElementById('currentLangText');
   if (langText) langText.textContent = lang.toUpperCase();
 
-  // Brand Info
+  // Brand Info & Sponsor
   const brandName = document.querySelector('.brand-name');
   if (brandName) brandName.textContent = dict.brand_name;
   const brandTag = document.querySelector('.brand-tagline');
   if (brandTag) brandTag.textContent = dict.brand_tagline;
+  const spText = document.querySelector('.sponsor-text');
+  if (spText) spText.textContent = dict.sponsor_text;
+  const spBtn = document.querySelector('#openCatalogModalBtn');
+  if (spBtn) spBtn.textContent = dict.sponsor_btn;
 
   // Nav Utils
   const u1 = document.querySelector('#openUnitConverterBtn span');
@@ -1931,7 +2198,14 @@ function applyLanguage(lang) {
   const u4 = document.querySelector('#printReportBtn span');
   if (u4) u4.textContent = dict.btn_print;
 
-  // 12 Tabs
+  // Update Dark/Light button text
+  const isDark = document.body.classList.contains('theme-dark');
+  const thText = document.getElementById('themeText');
+  if (thText) {
+    thText.textContent = isDark ? (isEn ? 'Light' : '라이트') : (isEn ? 'Dark' : '다크');
+  }
+
+  // 14 Tabs
   const tabMap = {
     'tab-voltagedrop': dict.tab_vd,
     'tab-analogloop': dict.tab_loop,
@@ -1944,6 +2218,8 @@ function applyLanguage(lang) {
     'tab-plcscaling': dict.tab_plc,
     'tab-motorcalc': dict.tab_motor,
     'tab-bendingradius': dict.tab_bend,
+    'tab-otethernet': dict.tab_ot,
+    'tab-servoregen': dict.tab_servo,
     'tab-articles': dict.tab_notes
   };
 
@@ -1952,31 +2228,39 @@ function applyLanguage(lang) {
     if (btn) btn.textContent = tabMap[tabId];
   });
 
-  // Tab Titles & Descriptions
-  const titles = [
-    { id: 'tab-voltagedrop', t: dict.t1_title, d: dict.t1_desc },
-    { id: 'tab-analogloop', t: dict.t2_title, d: dict.t2_desc },
-    { id: 'tab-smpsbudget', t: dict.t3_title, d: dict.t3_desc },
-    { id: 'tab-cabinetcooling', t: dict.t4_title, d: dict.t4_desc },
-    { id: 'tab-cabletable', t: dict.t5_title, d: dict.t5_desc },
-    { id: 'tab-rs485', t: dict.t6_title, d: dict.t6_desc },
-    { id: 'tab-pneumatics', t: dict.t7_title, d: dict.t7_desc },
-    { id: 'tab-ductutility', t: dict.t8_title, d: dict.t8_desc },
-    { id: 'tab-plcscaling', t: dict.t9_title, d: dict.t9_desc },
-    { id: 'tab-motorcalc', t: dict.t10_title, d: dict.t10_desc },
-    { id: 'tab-bendingradius', t: dict.t11_title, d: dict.t11_desc },
-    { id: 'tab-articles', t: dict.t12_title, d: dict.t12_desc }
-  ];
+  // Tab 1 Full Card & Form Labels
+  const h1Title = document.querySelector('#tab-voltagedrop .main-title');
+  if (h1Title) h1Title.textContent = dict.t1_title;
+  const h1Desc = document.querySelector('#tab-voltagedrop .main-desc');
+  if (h1Desc) h1Desc.textContent = dict.t1_desc;
 
-  titles.forEach(item => {
-    const p = document.getElementById(item.id);
-    if (p) {
-      const h2 = p.querySelector('.main-title');
-      if (h2) h2.textContent = item.t;
-      const desc = p.querySelector('.main-desc');
-      if (desc) desc.textContent = item.d;
-    }
-  });
+  const c1Heading = document.querySelector('#tab-voltagedrop .workbench-card .caption-left h3');
+  if (c1Heading) c1Heading.textContent = dict.t1_c1_title;
+  const advBtn = document.getElementById('advModeBtnText');
+  if (advBtn) advBtn.textContent = dict.t1_adv_btn;
+
+  const lLen = document.querySelector('label[for="wireLength"]');
+  if (lLen) lLen.textContent = dict.t1_lbl_len;
+  const lGauge = document.querySelector('label[for="wireGaugeValue"]');
+  if (lGauge) lGauge.textContent = dict.t1_lbl_gauge;
+  const lCur = document.querySelector('label[for="loadCurrent"]');
+  if (lCur) lCur.textContent = dict.t1_lbl_cur;
+  const lTopo = document.querySelector('label[for="wireTopology"]');
+  if (lTopo) lTopo.textContent = dict.t1_lbl_topo;
+
+  const c2Heading = document.querySelector('#tab-voltagedrop .meter-readout-panel .caption-left h3');
+  if (c2Heading) c2Heading.textContent = dict.t1_c2_title;
+
+  const flowHeader = document.querySelector('#tab-voltagedrop .circuit-strip .strip-header > span:first-child');
+  if (flowHeader) flowHeader.textContent = dict.t1_flow_title;
+
+  const specLabels = document.querySelectorAll('#tab-voltagedrop .specs-mini-grid .spec-cell .s-label');
+  if (specLabels.length >= 4) {
+    specLabels[0].textContent = dict.t1_s1;
+    specLabels[1].textContent = dict.t1_s2;
+    specLabels[2].textContent = dict.t1_s3;
+    specLabels[3].textContent = dict.t1_s4;
+  }
 
   // Presets in Tab 1
   const pBtns = document.querySelectorAll('#tab-voltagedrop .pill-btn');
@@ -2013,6 +2297,8 @@ function applyLanguage(lang) {
   calculatePlcScaling();
   calculateMotorSpecs();
   calculateBendingRadius();
+  calculateOtEthernet();
+  calculateServoRegen();
 
   if (window.lucide) window.lucide.createIcons();
 }

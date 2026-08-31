@@ -195,11 +195,19 @@
           </button>
           <button class="tab-btn" data-tab="tab-bendingradius" role="tab">
             <i data-lucide="move"></i>
-            <span>케이블 베어</span>
+            <span data-i18n="tab_bend">케이블 베어</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-otethernet" role="tab">
+            <i data-lucide="network"></i>
+            <span data-i18n="tab_ot">OT 이더넷·IP</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-servoregen" role="tab">
+            <i data-lucide="rotate-ccw"></i>
+            <span data-i18n="tab_servo">서보 회생저항</span>
           </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
-            <span>기술 노트</span>
+            <span data-i18n="tab_notes">기술 노트</span>
           </button>
         </nav>
       </div>
@@ -1762,6 +1770,227 @@
                   <strong id="resBendCarrierClass">R 125 or R 150</strong>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 13: OT 산업용 이더넷 IP 서브넷 & Profinet/Modbus 주소 계산기 [NEW OT TOOL] -->
+    <!-- ========================================================================= -->
+    <section id="tab-otethernet" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title" data-i18n="t13_title">OT 산업용 이더넷 IP 서브넷 &amp; Profinet/Modbus 주소 플래너</h2>
+          <p class="main-desc" data-i18n="t13_desc">PLC, HMI, 인버터, 비전 카메라 분산 제어망 IP 대역 분할, 서브넷 마스크, Profinet 네임 적합성 및 Modbus 레지스터 주소 맵을 자동 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3 data-i18n="ot_c1_title">OT 네트워크 파라미터 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="otIpAddress" data-i18n="lbl_ot_ip">기기 기본 IP 주소 (Device IP)</label>
+              <input type="text" id="otIpAddress" value="192.168.1.10" class="input-precision font-mono">
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="otSubnetMask" data-i18n="lbl_ot_subnet">서브넷 마스크 (Subnet Mask / Prefix)</label>
+              <select id="otSubnetMask" class="select-precision font-mono">
+                <option value="24" selected>/24 (255.255.255.0 • 254대 호스트 - 표준 FA망)</option>
+                <option value="25">/25 (255.255.255.128 • 126대 호스트)</option>
+                <option value="26">/26 (255.255.255.192 • 62대 호스트)</option>
+                <option value="27">/27 (255.255.255.224 • 30대 호스트 - 소형 셀망)</option>
+                <option value="28">/28 (255.255.255.240 • 14대 호스트 - 독립 머신망)</option>
+                <option value="16">/16 (255.255.0.0 • 65,534대 호스트 - 플랜트 메인망)</option>
+              </select>
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="otProfinetName" data-i18n="lbl_ot_profinet">Profinet 디바이스 네임 (Device Station Name)</label>
+              <input type="text" id="otProfinetName" value="plc-cell1-drive01" class="input-precision font-mono">
+              <span class="field-caption" data-i18n="cap_profinet">※ 소문자, 숫자, 하이픈(-)만 허용 (대문자 및 언더바 '_' 사용 불가 - RFC 5890)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3 data-i18n="ot_c2_title">서브넷 할당 범위 &amp; 통신 적합성 검증</h3>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label" data-i18n="lbl_ot_usable_hosts">USABLE OT HOST DEVICES (사용 가능 기기 수)</span>
+                <span class="gauge-target" id="otProfinetStatus">Profinet Name: 정상 (VALID)</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resOtHostCount" class="digit-value">254</span>
+                <span class="digit-unit">대 (Hosts)</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>Network ID:</span>
+                  <strong id="resOtNetId">192.168.1.0</strong>
+                </div>
+                <div class="g-stat">
+                  <span>Broadcast:</span>
+                  <strong id="resOtBcast">192.168.1.255</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label" data-i18n="lbl_ot_ip_start">첫 번째 기기 IP (Start)</span>
+              <strong class="s-val font-mono" id="resOtIpStart">192.168.1.1</strong>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label" data-i18n="lbl_ot_ip_end">마지막 기기 IP (End)</span>
+              <strong class="s-val font-mono" id="resOtIpEnd">192.168.1.254</strong>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label" data-i18n="lbl_ot_gateway">추천 게이트웨이 IP</span>
+              <strong class="s-val font-mono text-highlight" id="resOtGateway">192.168.1.1 (or .254)</strong>
+            </div>
+          </div>
+
+          <div class="code-preview-box mt-2">
+            <span class="code-box-title" data-i18n="lbl_ot_modbus_map">Modbus-TCP &amp; OPC-UA 표준 주소 맵 매핑</span>
+            <div class="code-st-snippet font-mono" id="otModbusMapSnippet">
+              // 40001 ~ 40010 : Drive Control &amp; Speed Command (Holding Reg - R/W)<br>
+              // 30001 ~ 30010 : Actual Torque, Current, Error Code (Input Reg - ReadOnly)<br>
+              // 00001 ~ 00016 : Digital Output Run/Stop/Reset Coils (Coil - R/W)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 14: 24V/48V 서보·스텝모터 회생저항 & 제동 에너지 계산기 [NEW OT/SERVO TOOL] -->
+    <!-- ========================================================================= -->
+    <section id="tab-servoregen" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title" data-i18n="t14_title">24V/48V DC 서보·스텝모터 회생 제동 저항(Regen Resistor) 계산기</h2>
+          <p class="main-desc" data-i18n="t14_desc">AGV/AMR 물류 로봇 및 직교 로봇 급감속 시 모터에서 역류하는 회생 운동 에너지를 계산하고 외장 회생저항(Ω, W) 필요 여부를 판정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3 data-i18n="servo_c1_title">모터 및 부하 기구 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <div class="field-header">
+                <label for="servoInertia" data-i18n="lbl_servo_inertia">총 부하 관성 모멘트 (Total Inertia J_total)</label>
+                <div class="val-input-group">
+                  <input type="number" id="servoInertia" value="5.0" step="0.5" min="0.1" max="200" class="input-val font-mono">
+                  <span class="val-unit">kg·cm²</span>
+                </div>
+              </div>
+              <input type="range" id="servoInertiaRange" min="0.5" max="50" step="0.5" value="5.0" class="precision-slider">
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="servoMaxRpm" data-i18n="lbl_servo_rpm">감속 직전 최고 회전수 (N)</label>
+                <div class="val-input-group">
+                  <input type="number" id="servoMaxRpm" value="3000" step="100" min="100" max="10000" class="input-val font-mono">
+                  <span class="val-unit">RPM</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="servoDecelTime" data-i18n="lbl_servo_dec">급감속 시간 (t_dec)</label>
+                <div class="val-input-group">
+                  <input type="number" id="servoDecelTime" value="0.20" step="0.05" min="0.01" max="10" class="input-val font-mono">
+                  <span class="val-unit">s</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="servoDcBusVolt" data-i18n="lbl_servo_vbus">DC 버스 정격 전압 (V_bus)</label>
+                <select id="servoDcBusVolt" class="select-precision font-mono">
+                  <option value="24" selected>DC 24V (소형 배터리 / 로봇)</option>
+                  <option value="48">DC 48V (AGV/AMR 대용량)</option>
+                  <option value="310">DC 310V (AC 220V 단상 정류)</option>
+                  <option value="540">DC 540V (AC 380V 3상 정류)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="servoBusCap" data-i18n="lbl_servo_cap">드라이브 내부 평활 커패시터</label>
+                <div class="val-input-group">
+                  <input type="number" id="servoBusCap" value="1000" step="100" min="100" max="20000" class="input-val font-mono">
+                  <span class="val-unit">μF</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3 data-i18n="servo_c2_title">회생 에너지 &amp; 제동 저항 산정</h3>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label" data-i18n="lbl_servo_kinetic">PEAK KINETIC ENERGY (감속 운동 에너지)</span>
+                <span class="gauge-target" id="servoRegenStatus">내부 커패시터 흡수 가능 (저항 불필요)</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resServoKineticE" class="digit-value">2.47</span>
+                <span class="digit-unit">Joules (J)</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>Capacitor 흡수량:</span>
+                  <strong id="resServoCapE">4.32 J</strong>
+                </div>
+                <div class="g-stat">
+                  <span>잉여 방전 에너지:</span>
+                  <strong id="resServoSurplusE" class="text-safe">0.00 J</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label" data-i18n="lbl_servo_res_ohm">추천 회생 저항값 (R_regen)</span>
+              <strong class="s-val font-mono text-highlight" id="resServoResOhm">20 ~ 50 Ω</strong>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label" data-i18n="lbl_servo_res_watt">추천 저항 용량 (Power W)</span>
+              <strong class="s-val font-mono" id="resServoResWatt">50 W 이상</strong>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label" data-i18n="lbl_servo_peak_w">순간 피크 전력 (Peak Power)</span>
+              <strong class="s-val font-mono" id="resServoPeakPower">12.3 W</strong>
             </div>
           </div>
         </div>
