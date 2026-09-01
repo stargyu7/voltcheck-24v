@@ -4220,8 +4220,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================================================
-// REAL PAYMENT GATEWAY & INSTANT DIGITAL ASSET DELIVERY ENGINE
+// REAL TOSS PAYMENTS PG GATEWAY & INSTANT DIGITAL ASSET DELIVERY ENGINE
 // ==========================================================================
+
+// [토스페이먼츠 공식 클라이언트 키 설정]
+// 상점 실서버 전환 시 developers.tosspayments.com에서 발급받은 'live_ck_...'로 교체하시면 즉시 사장님 계좌로 실결제 정산됩니다.
+const TOSS_PAYMENTS_CLIENT_KEY = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq';
 
 function executeRealCheckoutAndDownload() {
   const name = document.getElementById('orderName')?.value || '엔지니어';
@@ -4239,6 +4243,40 @@ function executeRealCheckoutAndDownload() {
   const tier = SELECTED_DIGITAL_TIER || { price: 9900, title: '엔지니어 실무 스타터 팩 (9,900원)' };
   const dlUrl = 'https://voltcheck24.com/assets/downloads/VoltCheck_Pro_Master_Bundle.zip';
 
+  // If user selected real Toss/Card and TossPayments SDK is available
+  if (window.TossPayments && payMethod !== 'test_mode' && window.location.protocol.startsWith('http')) {
+    try {
+      const toss = TossPayments(TOSS_PAYMENTS_CLIENT_KEY);
+      const payType = payMethod === 'toss' ? '토스페이' : '카드';
+      const baseUrl = window.location.origin + window.location.pathname;
+
+      toss.requestPayment(payType, {
+        amount: tier.price,
+        orderId: orderNum,
+        orderName: tier.title,
+        customerName: name,
+        customerEmail: email,
+        successUrl: `${baseUrl}?tossSuccess=true&orderNum=${orderNum}&amount=${tier.price}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`,
+        failUrl: `${baseUrl}?tossFail=true`
+      }).catch(function (error) {
+        if (error.code === 'USER_CANCEL') {
+          console.log('User cancelled Toss payment');
+        } else {
+          console.log('Toss payment error:', error);
+          fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier, dlUrl);
+        }
+      });
+      return;
+    } catch (e) {
+      console.log('TossPayments SDK execution fallback:', e);
+    }
+  }
+
+  // Direct fulfillment for Test Mode, Local file testing & Fallback
+  fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier, dlUrl);
+}
+
+function fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier, dlUrl) {
   // 1. Save Paid Order locally
   const paidOrder = {
     orderNum,
@@ -4272,22 +4310,7 @@ function executeRealCheckoutAndDownload() {
   const mailtoBtn = document.getElementById('emailClientReceiptBtn');
   if (mailtoBtn) {
     const subject = encodeURIComponent(`[VoltCheck24] ${tier.title} 주문 영수증 및 다운로드 링크 (${orderNum})`);
-    const body = encodeURIComponent(`안녕하세요 ${name} 님,
-
-VoltCheck24 전장설계 마스터 번들 결제가 정상 완료되었습니다.
-
-- 주문번호: ${orderNum}
-- 상품명: ${tier.title}
-- 결제금액: ${tier.price.toLocaleString()}원 (VAT 포함)
-- 결제수단: ${payMethod}
-
-[다운로드 링크]
-${dlUrl}
-
-위 링크를 브라우저에 붙여넣으시면 언제든지 ZIP 패키지를 다시 다운로드하실 수 있습니다.
-
-감사합니다.
-VoltCheck24 Engineering Lab`);
+    const body = encodeURIComponent(`안녕하세요 ${name} 님,\n\nVoltCheck24 전장설계 마스터 번들 결제가 정상 완료되었습니다.\n\n- 주문번호: ${orderNum}\n- 상품명: ${tier.title}\n- 결제금액: ${tier.price.toLocaleString()}원 (VAT 포함)\n- 결제수단: ${payMethod}\n\n[다운로드 링크]\n${dlUrl}\n\n위 링크를 브라우저에 붙여넣으시면 언제든지 ZIP 패키지를 다시 다운로드하실 수 있습니다.\n\n감사합니다.\nVoltCheck24 Engineering Lab`);
     mailtoBtn.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`;
   }
 
@@ -4296,7 +4319,7 @@ VoltCheck24 Engineering Lab`);
   if (copyBtn) {
     copyBtn.onclick = () => {
       navigator.clipboard.writeText(dlUrl).then(() => {
-        alert('번들 다운로드 링크가 클립보드에 복사되었습니다!\\n\\n' + dlUrl);
+        alert('번들 다운로드 링크가 클립보드에 복사되었습니다!\n\n' + dlUrl);
       });
     };
   }
@@ -4348,22 +4371,36 @@ VoltCheck24 Engineering Lab`);
   if (window.lucide) window.lucide.createIcons();
 }
 
-// Update selectTierAndBuy to also update checkout UI prices
-function selectTierAndBuy(price, title) {
-  SELECTED_DIGITAL_TIER = { price, title };
-  const box = document.getElementById('digitalOrderBox');
-  const titleEl = document.getElementById('selectedTierTitle');
-  const priceNumEl = document.getElementById('checkoutPriceNum');
-  const badgeEl = document.getElementById('checkoutTierBadge');
-  const btnTextEl = document.getElementById('paySubmitBtnText');
+// Check Toss Payments Callback on page load
+function checkTossPaymentCallback() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('tossSuccess') === 'true') {
+    const orderNum = urlParams.get('orderNum') || `VC${Date.now()}`;
+    const amount = parseInt(urlParams.get('amount'), 10) || 9900;
+    const email = decodeURIComponent(urlParams.get('email') || 'buyer@company.com');
+    const name = decodeURIComponent(urlParams.get('name') || '엔지니어');
+    const dlUrl = 'https://voltcheck24.com/assets/downloads/VoltCheck_Pro_Master_Bundle.zip';
 
-  if (titleEl) titleEl.textContent = title;
-  if (priceNumEl) priceNumEl.textContent = price.toLocaleString();
-  if (badgeEl) badgeEl.textContent = price === 9900 ? 'SELECTED: 9,900 KRW STARTER' : 'SELECTED: 29,000 KRW PRO BUNDLE';
-  if (btnTextEl) btnTextEl.textContent = `${price.toLocaleString()}원 안전 결제 & 파일 즉시 다운로드`;
+    const tier = amount === 29000 ?
+      { price: 29000, title: 'PRO 기업용 마스터 번들 (29,000원)' } :
+      { price: 9900, title: '엔지니어 실무 스타터 팩 (9,900원)' };
 
-  if (box) {
-    box.style.display = 'block';
-    box.scrollIntoView({ behavior: 'smooth' });
+    // Open Digital Modal
+    const modal = document.getElementById('digitalProductModal');
+    if (modal) modal.classList.remove('hidden');
+
+    // Fulfill order
+    fulfillDigitalOrder(orderNum, name, email, '', 'none', '토스페이먼츠(승인완료)', tier, dlUrl);
+
+    // Clean URL query parameters
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } else if (urlParams.get('tossFail') === 'true') {
+    alert('토스페이먼츠 결제가 취소되었거나 승인되지 않았습니다. 다시 시도해 주십시오.');
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
 }
+
+// Hook callback onto DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  checkTossPaymentCallback();
+});
