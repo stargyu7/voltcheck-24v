@@ -1987,295 +1987,386 @@ function calculateServoRegen() {
 // ==========================================================================
 // 11. Global Multi-Language (i18n) Engine [COMPREHENSIVE]
 // ==========================================================================
-const I18N = {
+// ==========================================================================
+// 100% COMPREHENSIVE 21-TAB FA ENGINEERING MULTI-LANGUAGE SUITE
+// ==========================================================================
+
+const TAB_I18N_DATA = {
   ko: {
-    brand_name: '볼트체크 24V',
-    brand_en: 'VoltCheck Pro',
-    brand_tagline: '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷',
-    sponsor_text: '산업용 고굴곡 가동 케이블, 24V DIN레일 SMPS, 제어반 쿨링 에어컨 & 4-20mA 절연 배리어',
-    sponsor_btn: '기술 카탈로그 & 핸드북 다운로드 →',
-    btn_digital_pack: '실무 엑셀·CAD 팩',
-    btn_unit: '단위 환산',
-    btn_history: '내 보관함',
-    btn_dark: '다크',
-    btn_light: '라이트',
-    btn_share: '조건 공유',
-    btn_print: '검토서 인쇄',
-    btn_updates: '규정 알림',
-    btn_about: '소개',
-    
-    // Tab Names
-    tab_vd: '24V 전압강하',
-    tab_loop: '4-20mA 루프',
-    tab_smps: 'SMPS·CP 용량',
-    tab_cool: '제어반 쿨링',
-    tab_awg: 'AWG 조견표',
-    tab_rs485: 'RS-485 통신',
-    tab_pneu: '공압 소모량',
-    tab_duct: '덕트 점유율',
-    tab_plc: 'PLC 스케일링',
-    tab_motor: '3상 모터·MC',
-    tab_bend: '케이블 베어',
-    tab_ot: 'OT 이더넷·IP',
-    tab_servo: '서보 회생저항',
-    tab_copper: '구리시세·원가',
-    tab_sld: '단선결선도 CAD',
-    tab_iolink: 'IO-Link·안전회로',
-    tab_ground: '접지(PE)·EMC실드',
-    tab_npnpnp: 'NPN·PNP 결선',
-    tab_flyback: '역기전력 서지',
-    tab_inrush: '돌입전류·트립',
-    tab_notes: '기술 노트',
-    
-    // RS-485 Tab (Tab 6)
-    rs485_title: 'RS-485 / Modbus 통신선로 & 120Ω 종단저항 검토',
-    rs485_desc: '통신 보레이트(Baud Rate)와 배선 길이에 따른 최대 허용 거리, 종단저항 체결 여부, T자 분기(Stub) 한계를 계산합니다.',
-    rs485_c1_title: '통신 선로 사양',
-    rs485_lbl_baud: '통신 보레이트 (Baud Rate)',
-    rs485_lbl_len: '전체 버스 배선 길이',
-    rs485_lbl_cable: '케이블 종류',
-    rs485_lbl_slaves: '연결 슬레이브 수',
-    rs485_lbl_stub: '분기(Stub) 길이',
-    rs485_c2_title: '통신 신호 무결성 검증',
-    rs485_s1: '해당 속도 최대 거리',
-    rs485_s2: '120Ω 종단저항',
-    rs485_s3: '분기(Stub) 길이 한계',
-    rs485_s4: '1비트 전송 시간',
-    rs485_wave_title: 'RS-485 차동 신호 파형 & 반사파 시뮬레이터 (Signal Waveform)',
-    rs485_rules_title: 'RS-485 배선 원칙',
-    rs485_rule1: '1. 스타(Star) 결선은 반사파를 유발하므로 일자형 데이지 체인(Daisy-Chain)으로 결선하십시오.',
-    rs485_rule2: '2. 실드선(Shield)은 그라운드 루프 방지를 위해 제어반 한쪽 끝에서만 단일 접지(PE)하십시오.',
-    
-    // Sponsored Cards
-    sp_header: 'SPONSORED AUTOMATION COMPONENTS',
-    sp1_tag: 'SMPS 전원',
-    sp1_title: '초박형 DIN레일 24V 파워서플라이',
-    sp1_desc: '전압강하 보상 V.ADJ 내장, 94% 고효율, 글로벌 인증',
-    sp2_tag: '제어반 쿨링',
-    sp2_title: '산업용 밀폐형 제어반 에어컨',
-    sp2_desc: '500W~3000W 슬림형, IP54 분진방수, 디지털 제어',
-    sp3_tag: '필드버스',
-    sp3_title: 'RS-485 절연 통신 리피터',
-    sp3_desc: '최대 1.2km 장거리 확장, 2.5kV 서지 절연 보호'
+    'tab-voltagedrop': {
+      title: 'DC 24V 선로 전압강하 및 말단 전원 마진 검토',
+      desc: '배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.',
+      c1: '설계 파라미터 입력',
+      c2: '검증 판정 및 계측치'
+    },
+    'tab-analogloop': {
+      title: '4-20mA 아날로그 전류 루프 수신기 마진 검토',
+      desc: '2선식/4선식 트랜스미터의 전원 전압, 선로 저항, 수신기 Shunt 저항에 따른 루프 전압 마진을 계산합니다.',
+      c1: '루프 전원 및 트랜스미터 사양',
+      c2: '루프 전압 마진 & 수신 전압 검증'
+    },
+    'tab-smpsbudget': {
+      title: 'DC 24V SMPS 전원 용량 및 서킷 프로텍터(CP) 선정',
+      desc: '부하 총 전류와 안전 여유율(30%), 돌입 전류를 고려하여 최적의 SMPS 용량 및 분기 CP 정격을 산정합니다.',
+      c1: '부하 목록 및 동시 사용률 설정',
+      c2: 'SMPS 추천 용량 & 차단기 사양'
+    },
+    'tab-cabinetcooling': {
+      title: '제어반 밀폐형 에어컨 & 열교환기 쿨링 용량 계산',
+      desc: '제어반 외형 치수, 내부 발열량, 최고 주위 온도(Ta)를 기반으로 필요 냉각 용량(W, kcal/h)을 산출합니다.',
+      c1: '제어반 외형 및 열원 조건',
+      c2: '필요 쿨링 용량 & 선정 가이드'
+    },
+    'tab-cabletable': {
+      title: '산업용 케이블 규격별 허용전류 & 도체저항 조견표',
+      desc: 'AWG 및 Metric(SQ) 도선의 단면적, 상온 도체 저항, 공기 중/닥트 내 포설 시 허용전류를 비교 검토합니다.',
+      c1: '케이블 도선 규격 필터링',
+      c2: '도선 상세 물리 사양'
+    },
+    'tab-rs485': {
+      title: 'RS-485 / Modbus 통신선로 & 120Ω 종단저항 검토',
+      desc: '통신 보레이트(Baud Rate)와 배선 길이에 따른 최대 허용 거리, 종단저항 체결 여부, T자 분기(Stub) 한계를 계산합니다.',
+      c1: '통신 선로 사양',
+      c2: '통신 신호 무결성 검증'
+    },
+    'tab-pneumatics': {
+      title: '공압 실린더 공기 소모량 & 컴프레셔 마력(HP) 산출',
+      desc: '실린더 튜브 내경, 스트로크, 작동 횟수를 기준으로 분당 공기 소모량(Nℓ/min)과 필요 컴프레셔 용량을 산정합니다.',
+      c1: '공압 액추에이터 사양',
+      c2: '필요 유량 & 컴프레셔 추천'
+    },
+    'tab-ductutility': {
+      title: '제어반 배선 닥트(Duct) 점유율 40% 한계 계산기',
+      desc: 'NFPA 79 및 KEC 규정에 따른 배선 닥트 규격별 최대 수용 전선 가닥수와 40% 권장 점유율 여부를 검증합니다.',
+      c1: '닥트 규격 및 케이블 구성',
+      c2: '닥트 단면 점유율 판정'
+    },
+    'tab-plcscaling': {
+      title: 'PLC 아날로그 12-bit / 16-bit ADC 스케일링 계산기',
+      desc: '지멘스, 미쓰비시, LS산전, 오므론 PLC의 아날로그 신호(4-20mA, 0-10V)와 물리량(°C, MPa, RPM) 간 선형 변환 수식 및 디지털 Raw Count를 즉시 산출합니다.',
+      c1: 'PLC 메이커 및 센서 물리량 범위 설정',
+      c2: '스케일링 연산 및 PLC 코드 결과'
+    },
+    'tab-motorcalc': {
+      title: '3상 유도전동기(380V/220V) 정격전류 & 마그네트(MC) 선정',
+      desc: '모터 정격 출력(kW/HP)과 전압에 따른 정격 전류, 차단기(MCCB), 전자개폐기(MC), 열동형 과부하계전기(EOCR)를 산출합니다.',
+      c1: '모터 사양 및 운전 조건',
+      c2: '추천 전장 제어기기 사양'
+    },
+    'tab-bendingradius': {
+      title: '케이블 베어(Cable Carrier) 최소 곡률반경 & 체결 계산기',
+      desc: '가동형 로봇 케이블의 외경(OD)과 이동 스트로크에 따른 케이블 베어 최소 곡률 반경(R) 및 필요 체인 링크 수를 계산합니다.',
+      c1: '케이블 사양 및 주행 조건',
+      c2: '케이블 베어 사양 및 링크 수'
+    },
+    'tab-otethernet': {
+      title: '산업용 OT 이더넷 대역폭 & IP 서브넷 마스크 계산기',
+      desc: 'EtherNet/IP, PROFINET, Modbus-TCP 패킷 주기(RPI)에 따른 네트워크 대역폭 점유율과 서브넷 IP 범위를 산출합니다.',
+      c1: '산업용 네트워크 구성',
+      c2: '대역폭 점유율 & IP 서브넷'
+    },
+    'tab-servoregen': {
+      title: '서보 모터 감속 회생 에너지 & 외장 회생저항 계산기',
+      desc: '부하 관성 모멘트(J), 최고 회전수(RPM), 감속 시간에 따른 회생 제동 전력(W)과 필요 외장 저항 규격을 산출합니다.',
+      c1: '서보 부하 및 감속 운전 패턴',
+      c2: '회생 제동 에너지 & 저항 선정'
+    },
+    'tab-coppercost': {
+      title: '구리 시세(LME) 연동 케이블 실시간 원가 & 중량 계산기',
+      desc: '런던금속거래소(LME) 국제 구리 시세를 반영하여 전선 규격(SQ) 및 길이에 따른 순수 구리 원자재비와 케이블 원가를 산출합니다.',
+      c1: '케이블 사양 및 시세 조건',
+      c2: '구리 원자재비 & 중량 산출'
+    },
+    'tab-sldgenerator': {
+      title: '단선결선도(SLD) CAD 자동 생성기 (AutoCAD / EPLAN 호환)',
+      desc: '24V 전원단, 차단기, 케이블 선로, 단자대 및 말단 부하 기기를 포함하는 표준 단선도를 실시간 생성하고 CAD(DXF) 도면으로 내보냅니다.',
+      c1: '단선결선 회로 파라미터',
+      c2: 'SLD 단선도 실시간 프리뷰'
+    },
+    'tab-iolinksafety': {
+      title: 'IO-Link 마스터 파워 버짓 & PLe/SIL3 안전회로 루프 검증기',
+      desc: '스마트 팩토리 IO-Link 필드 허브 포트별 전력 버짓, M12 Class A/B 전압강하 및 ISO 13849-1 E-Stop 안전회로 OSSD 배선 한계를 산출합니다.',
+      c1: 'IO-Link 마스터 & 안전 루프 사양',
+      c2: '전력 버짓 & 안전 루프 적합 판정'
+    },
+    'tab-grounding': {
+      title: '제어반 보호접지선(PE) 최소 규격 & 고주파 EMC 노이즈 실드 계산기',
+      desc: 'KEC 제140조 및 IEC 60364-5-54 단열온도 상승식(Adiabatic Equation)을 기반으로 고장 단락전류 차단 시 보호도체(PE) 최소 단면적과 인버터 실드 접지를 검증합니다.',
+      c1: '단락 고장 전류 및 접지 조건',
+      c2: '보호접지(PE) 최소 단면적 검증'
+    },
+    'tab-npnpnp': {
+      title: 'PLC I/O 싱크(NPN) vs 소스(PNP) 배선 인터페이스 & 센서 결선 검증기',
+      desc: '국내/일본(NPN Sink) 및 유럽/글로벌(PNP Source) PLC 입력 모듈과 3선식/2선식 센서의 공통(Common) 결선 오배선 및 출력단 소손을 방지합니다.',
+      c1: 'PLC 모듈 및 센서 인터페이스 사양',
+      c2: 'I/O 공통 전위 및 결선 다이어그램'
+    },
+    'tab-flybacksurge': {
+      title: 'DC 24V 유도성 코일 역기전력(Flyback) 서지 보호 & 다이오드·바리스터 계산기',
+      desc: '솔레노이드 밸브, 릴레이 코일, 모터 브레이크 OFF 시 발생하는 -300V~-1000V 역기전력 스파이크 에너지를 흡수하여 PLC 출력단 파손 및 CPU 리셋을 방지합니다.',
+      c1: '유도성 부하(코일) 전기적 특성',
+      c2: '역기전력 스파이크 및 억제 소자 선정'
+    },
+    'tab-inrushbreaker': {
+      title: 'SMPS 전원 투입 돌입전류(Inrush) & 차단기 C/D 커브 오동작 판정기',
+      desc: '제어반 메인 전원 투입 시 다수의 SMPS 입력단 평활 커패시터 충전으로 발생하는 20~40배 돌입전류와 배선차단기(MCCB/CP) 순시 트립 오동작을 검증합니다.',
+      c1: 'SMPS 구성 및 메인 전원 사양',
+      c2: '돌입전류 피크 & 차단기 트립 마진'
+    },
+    'tab-articles': {
+      title: '전장설계 기술 자료 & 실무 가이드',
+      desc: 'KEC, IEC 60204-1, NFPA 79 규정 및 노이즈 방지 실무 가이드라인을 제공합니다.',
+      c1: '기술 문서 목차',
+      c2: '상세 가이드 본문'
+    }
   },
   en: {
-    brand_name: 'VoltCheck 24V',
-    brand_en: 'VoltCheck Pro',
-    brand_tagline: 'Industrial Cable Voltage Drop & Control Panel Engineering Suite',
-    sponsor_text: 'Flexible Robotic Cables, 24V DIN-Rail SMPS, Enclosure Air Conditioners & Signal Isolators',
-    sponsor_btn: 'Download Technical Catalog & Handbook →',
-    btn_digital_pack: 'Pro Excel·CAD Pack',
-    btn_unit: 'Unit Converter',
-    btn_history: 'Saved Calcs',
-    btn_dark: 'Dark',
-    btn_light: 'Light',
-    btn_share: 'Share Link',
-    btn_print: 'Print Report',
-    btn_updates: 'Standards Updates',
-    btn_about: 'About',
-    
-    // Tab Names
-    tab_vd: '24V Volt Drop',
-    tab_loop: '4-20mA Loop',
-    tab_smps: 'SMPS & CP',
-    tab_cool: 'Cabinet Cooler',
-    tab_awg: 'AWG Table',
-    tab_rs485: 'RS-485 Bus',
-    tab_pneu: 'Pneumatics',
-    tab_duct: 'Duct Fill',
-    tab_plc: 'PLC Scaling',
-    tab_motor: '3-Ph Motor·MC',
-    tab_bend: 'Cable Carrier',
-    tab_ot: 'OT Ethernet·IP',
-    tab_servo: 'Servo Regen',
-    tab_copper: 'Copper Cost',
-    tab_sld: 'SLD CAD',
-    tab_iolink: 'IO-Link·Safety',
-    tab_ground: 'Grounding·EMC',
-    tab_npnpnp: 'NPN·PNP Wiring',
-    tab_flyback: 'Flyback Surge',
-    tab_inrush: 'Inrush·Trip',
-    tab_notes: 'Tech Notes',
-    
-    // RS-485 Tab (Tab 6)
-    rs485_title: 'RS-485 / Modbus Bus Line & 120Ω Termination Analysis',
-    rs485_desc: 'Calculate maximum allowable distance, 120Ω termination requirements, and stub branch limits based on baud rate and cable length.',
-    rs485_c1_title: 'Bus Line Specifications',
-    rs485_lbl_baud: 'Baud Rate',
-    rs485_lbl_len: 'Total Bus Cable Length',
-    rs485_lbl_cable: 'Cable Type',
-    rs485_lbl_slaves: 'Connected Slave Devices',
-    rs485_lbl_stub: 'Stub Branch Length',
-    rs485_c2_title: 'Signal Integrity Verification',
-    rs485_s1: 'Max Distance at Speed',
-    rs485_s2: '120Ω Termination',
-    rs485_s3: 'Stub Length Limit',
-    rs485_s4: '1-Bit Transmission Time',
-    rs485_wave_title: 'RS-485 Differential Signal Waveform & Reflection Simulator',
-    rs485_rules_title: 'RS-485 Wiring Rules',
-    rs485_rule1: '1. Avoid star topology. Always wire in a linear daisy-chain topology to prevent reflections.',
-    rs485_rule2: '2. Connect cable shield to PE ground at one end only (master cabinet) to prevent ground loops.',
-    
-    // Sponsored Cards
-    sp_header: 'SPONSORED AUTOMATION COMPONENTS',
-    sp1_tag: 'SMPS POWER',
-    sp1_title: 'Ultra-Slim DIN-Rail 24V Power Supply',
-    sp1_desc: 'Built-in V.ADJ voltage drop compensation, 94% high efficiency, global certs',
-    sp2_tag: 'ENCLOSURE COOLING',
-    sp2_title: 'Industrial Sealed Enclosure Cooler',
-    sp2_desc: '500W~3000W slimline, IP54 dust/waterproof, digital temperature control',
-    sp3_tag: 'FIELDBUS & OT',
-    sp3_title: 'RS-485 Galvanic Isolated Repeater',
-    sp3_desc: 'Extends distance up to 1.2km, 2.5kV surge isolation protection'
+    'tab-voltagedrop': {
+      title: 'DC 24V Cable Voltage Drop & Sensor Power Margin',
+      desc: 'Calculate cable loop resistance, voltage drop, and sensor brownout margin in real-time according to distance, wire gauge, and load current.',
+      c1: 'Design Parameters Input',
+      c2: 'Verification Verdict & Readouts'
+    },
+    'tab-analogloop': {
+      title: '4-20mA Analog Current Loop Margin Verification',
+      desc: 'Calculate loop operating margins based on transmitter supply voltage, cable loop resistance, and PLC receiver shunt resistance.',
+      c1: 'Loop Power & Transmitter Specs',
+      c2: 'Loop Voltage Margin & Readouts'
+    },
+    'tab-smpsbudget': {
+      title: 'DC 24V SMPS Power Supply & Circuit Protector Sizing',
+      desc: 'Sizing SMPS wattage and branch circuit protector ratings considering total steady-state load, 30% safety margin, and inrush currents.',
+      c1: 'Load Profile & Coincidence Factor',
+      c2: 'Recommended SMPS Capacity & CP Specs'
+    },
+    'tab-cabinetcooling': {
+      title: 'Control Panel Enclosure Air Conditioner & Cooling Sizing',
+      desc: 'Calculate required cooling capacity (W, kcal/h) according to panel dimensions, internal heat generation, and ambient temperature (Ta).',
+      c1: 'Enclosure Dimensions & Thermal Load',
+      c2: 'Required Cooling Capacity & Sizing Guide'
+    },
+    'tab-cabletable': {
+      title: 'Industrial Cable Ampacity & Conductor Resistance Table',
+      desc: 'Compare cross-sectional area, DC resistance at 20°C, and ampacity in open air vs enclosed raceways for AWG and Metric SQ wires.',
+      c1: 'Conductor Size Filter',
+      c2: 'Detailed Physical Specifications'
+    },
+    'tab-rs485': {
+      title: 'RS-485 / Modbus Bus Line & 120Ω Termination Analysis',
+      desc: 'Calculate maximum allowable distance, 120Ω termination requirements, and stub branch limits based on baud rate and cable length.',
+      c1: 'Bus Line Specifications',
+      c2: 'Signal Integrity Verification'
+    },
+    'tab-pneumatics': {
+      title: 'Pneumatic Cylinder Air Consumption & Compressor HP Sizing',
+      desc: 'Calculate air consumption per minute (Nℓ/min) and required compressor HP based on cylinder bore, stroke, and cycle frequency.',
+      c1: 'Pneumatic Actuator Specs',
+      c2: 'Required Flow & Compressor Sizing'
+    },
+    'tab-ductutility': {
+      title: 'Control Panel Wiring Duct 40% Fill Ratio Calculator',
+      desc: 'Verify maximum allowable cable counts and 40% raceway fill limit according to NFPA 79 and KEC regulations.',
+      c1: 'Duct Dimensions & Cable Schedule',
+      c2: 'Cross-Sectional Fill Verdict'
+    },
+    'tab-plcscaling': {
+      title: 'PLC Analog 12-bit / 16-bit ADC Scaling Calculator',
+      desc: 'Calculates linear scaling formulas, PLC ladder/ST logic, and digital raw counts between analog signals (4-20mA, 0-10V) and engineering units (°C, MPa, RPM) for Siemens, Mitsubishi, LS, and Omron PLCs.',
+      c1: 'PLC Maker & Engineering Unit Range',
+      c2: 'Scaling Calculation & PLC Code Output'
+    },
+    'tab-motorcalc': {
+      title: '3-Phase Induction Motor Rated Current & Contactor (MC) Sizing',
+      desc: 'Calculate full-load current, circuit breaker (MCCB), magnetic contactor (MC), and overload relay (EOCR) according to motor power (kW/HP) and voltage.',
+      c1: 'Motor Specs & Operating Conditions',
+      c2: 'Recommended Control Gear Specs'
+    },
+    'tab-bendingradius': {
+      title: 'Cable Carrier Minimum Bending Radius & Chain Sizing',
+      desc: 'Calculate minimum bending radius (R) and required chain link count based on flexible cable outer diameter (OD) and travel stroke.',
+      c1: 'Cable Specs & Travel Stroke',
+      c2: 'Carrier Specs & Link Count'
+    },
+    'tab-otethernet': {
+      title: 'Industrial OT Ethernet Bandwidth & IP Subnet Calculator',
+      desc: 'Calculate bandwidth utilization and subnet IP ranges based on cyclic packet rates (RPI) for EtherNet/IP, PROFINET, and Modbus-TCP.',
+      c1: 'Industrial Network Configuration',
+      c2: 'Bandwidth Utilization & IP Subnet'
+    },
+    'tab-servoregen': {
+      title: 'Servo Motor Deceleration Regenerative Energy & Braking Resistor Sizing',
+      desc: 'Calculate regenerative braking energy and external resistor wattage based on load inertia (J), peak RPM, and deceleration time.',
+      c1: 'Servo Load & Deceleration Profile',
+      c2: 'Regenerative Braking & Resistor Sizing'
+    },
+    'tab-coppercost': {
+      title: 'LME Copper Spot Price & Cable Raw Material Cost Estimator',
+      desc: 'Calculate pure copper raw material cost and cable manufacturing price based on London Metal Exchange (LME) spot rates and wire cross-section.',
+      c1: 'Cable Specs & Market Pricing',
+      c2: 'Raw Copper Cost & Weight'
+    },
+    'tab-sldgenerator': {
+      title: 'Single-Line Diagram (SLD) CAD Auto-Generator',
+      desc: 'Generates parametric single-line diagrams for 24V power circuits, breakers, cable runs, terminal blocks, and load devices, and exports standard AutoCAD/EPLAN DXF files.',
+      c1: 'Single-Line Circuit Parameters',
+      c2: 'Real-Time SLD Diagram Preview'
+    },
+    'tab-iolinksafety': {
+      title: 'IO-Link Master Power Budget & ISO 13849-1 Safety Loop Verifier',
+      desc: 'Calculate fieldbus port power budgets, M12 Class A/B voltage drop, and ISO 13849-1 E-Stop OSSD safety wiring limits.',
+      c1: 'IO-Link Master & Safety Loop Specs',
+      c2: 'Power Budget & Safety Compliance'
+    },
+    'tab-grounding': {
+      title: 'Control Panel Protective Earth (PE) & High-Frequency EMC Shield Calculator',
+      desc: 'Verify minimum protective earth (PE) cross-section and inverter shield bonding based on KEC Art. 140 and IEC 60364-5-54 adiabatic equations.',
+      c1: 'Short-Circuit Fault & Grounding Specs',
+      c2: 'Minimum PE Conductor Sizing'
+    },
+    'tab-npnpnp': {
+      title: 'PLC I/O Sink (NPN) vs Source (PNP) Wiring & Sensor Interface Verifier',
+      desc: 'Prevent wiring errors and transistor burnout between Japanese/Korean (NPN Sink) and European/Global (PNP Source) PLC modules and 3-wire DC sensors.',
+      c1: 'PLC Module & Sensor Specifications',
+      c2: 'I/O Common Voltage & Wiring Diagram'
+    },
+    'tab-flybacksurge': {
+      title: 'DC 24V Inductive Coil Flyback Surge & Diode/Varistor Calculator',
+      desc: 'Absorb -300V~-1000V inductive flyback voltage spikes when turning off solenoid valves, relays, and motor brakes to protect PLC transistor outputs.',
+      c1: 'Inductive Load (Coil) Parameters',
+      c2: 'Flyback Voltage Spike & Snubber Sizing'
+    },
+    'tab-inrushbreaker': {
+      title: 'SMPS Power-On Inrush Peak & Breaker Trip Curve Calculator',
+      desc: 'Verify 20x~40x inrush peak currents from charging SMPS filter capacitors at startup and prevent nuisance tripping on B/C/D curve circuit breakers.',
+      c1: 'SMPS Configuration & AC Input Specs',
+      c2: 'Inrush Peak & Breaker Trip Margin'
+    },
+    'tab-articles': {
+      title: 'Engineering Technical Reference & Field Notes',
+      desc: 'Standards compliance reference and noise suppression field guidelines.',
+      c1: 'Technical Index',
+      c2: 'Detailed Engineering Guides'
+    }
   }
 };
 
 function applyLanguage(lang) {
-  const dict = I18N[lang] || I18N.ko;
+  currentLanguage = lang;
   const isEn = lang === 'en';
+  const data = TAB_I18N_DATA[lang] || TAB_I18N_DATA.ko;
   const langText = document.getElementById('currentLangText');
   if (langText) langText.textContent = lang.toUpperCase();
 
-  // Top Nav Buttons & Brand
+  // 1. Top Nav Buttons & Brand
   const digitalBtn = document.querySelector('#openDigitalProductBtn span:first-of-type');
-  if (digitalBtn) digitalBtn.textContent = dict.btn_digital_pack;
+  if (digitalBtn) digitalBtn.textContent = isEn ? 'Pro Excel·CAD Pack' : '실무 엑셀·CAD 팩';
 
   const u1 = document.querySelector('#openUnitConverterBtn span');
-  if (u1) u1.textContent = dict.btn_unit;
+  if (u1) u1.textContent = isEn ? 'Unit Converter' : '단위 환산';
   const u2 = document.querySelector('#openHistoryModalBtn span');
-  if (u2) u2.textContent = dict.btn_history;
+  if (u2) u2.textContent = isEn ? 'Saved Calcs' : '내 보관함';
   const u3 = document.querySelector('#shareUrlBtn span');
-  if (u3) u3.textContent = dict.btn_share;
+  if (u3) u3.textContent = isEn ? 'Share Link' : '조건 공유';
   const u4 = document.querySelector('#printReportBtn span');
-  if (u4) u4.textContent = dict.btn_print;
+  if (u4) u4.textContent = isEn ? 'Print Report' : '검토서 인쇄';
 
-  // 21 Tab Buttons
-  const tabMap = {
-    'tab-voltagedrop': dict.tab_vd,
-    'tab-analogloop': dict.tab_loop,
-    'tab-smpsbudget': dict.tab_smps,
-    'tab-cabinetcooling': dict.tab_cool,
-    'tab-cabletable': dict.tab_awg,
-    'tab-rs485': dict.tab_rs485,
-    'tab-pneumatics': dict.tab_pneu,
-    'tab-ductutility': dict.tab_duct,
-    'tab-plcscaling': dict.tab_plc,
-    'tab-motorcalc': dict.tab_motor,
-    'tab-bendingradius': dict.tab_bend,
-    'tab-otethernet': dict.tab_ot,
-    'tab-servoregen': dict.tab_servo,
-    'tab-coppercost': dict.tab_copper,
-    'tab-sldgenerator': dict.tab_sld,
-    'tab-iolinksafety': dict.tab_iolink,
-    'tab-grounding': dict.tab_ground,
-    'tab-npnpnp': dict.tab_npnpnp,
-    'tab-flybacksurge': dict.tab_flyback,
-    'tab-inrushbreaker': dict.tab_inrush,
-    'tab-articles': dict.tab_notes
+  // 2. All 21 Tab Navigation Buttons
+  const tabBtnNames = {
+    'tab-voltagedrop': isEn ? '24V Volt Drop' : '24V 전압강하',
+    'tab-analogloop': isEn ? '4-20mA Loop' : '4-20mA 루프',
+    'tab-smpsbudget': isEn ? 'SMPS & CP' : 'SMPS·CP 용량',
+    'tab-cabinetcooling': isEn ? 'Cabinet Cooler' : '제어반 쿨링',
+    'tab-cabletable': isEn ? 'AWG Table' : 'AWG 조견표',
+    'tab-rs485': isEn ? 'RS-485 Bus' : 'RS-485 통신',
+    'tab-pneumatics': isEn ? 'Pneumatics' : '공압 소모량',
+    'tab-ductutility': isEn ? 'Duct Fill' : '덕트 점유율',
+    'tab-plcscaling': isEn ? 'PLC Scaling' : 'PLC 스케일링',
+    'tab-motorcalc': isEn ? '3-Ph Motor·MC' : '3상 모터·MC',
+    'tab-bendingradius': isEn ? 'Cable Carrier' : '케이블 베어',
+    'tab-otethernet': isEn ? 'OT Ethernet·IP' : 'OT 이더넷·IP',
+    'tab-servoregen': isEn ? 'Servo Regen' : '서보 회생저항',
+    'tab-coppercost': isEn ? 'Copper Cost' : '구리시세·원가',
+    'tab-sldgenerator': isEn ? 'SLD CAD' : '단선결선도 CAD',
+    'tab-iolinksafety': isEn ? 'IO-Link·Safety' : 'IO-Link·안전회로',
+    'tab-grounding': isEn ? 'Grounding·EMC' : '접지(PE)·EMC실드',
+    'tab-npnpnp': isEn ? 'NPN·PNP Wiring' : 'NPN·PNP 결선',
+    'tab-flybacksurge': isEn ? 'Flyback Surge' : '역기전력 서지',
+    'tab-inrushbreaker': isEn ? 'Inrush·Trip' : '돌입전류·트립',
+    'tab-articles': isEn ? 'Tech Notes' : '기술 노트'
   };
 
-  Object.keys(tabMap).forEach(tabId => {
+  Object.keys(tabBtnNames).forEach(tabId => {
     const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"] span`);
-    if (btn) btn.textContent = tabMap[tabId];
+    if (btn) btn.textContent = tabBtnNames[tabId];
   });
 
-  // Tab 6: RS-485 Bus Line (As in user screenshot)
-  const rsTitle = document.querySelector('#tab-rs485 .main-title');
-  if (rsTitle) rsTitle.textContent = dict.rs485_title;
-  const rsDesc = document.querySelector('#tab-rs485 .main-desc');
-  if (rsDesc) rsDesc.textContent = dict.rs485_desc;
+  // 3. Systematically Translate All 21 Tab Header Titles & Card Captions
+  Object.keys(data).forEach(tabId => {
+    const tabEl = document.getElementById(tabId);
+    if (!tabEl) return;
 
-  const rsC1 = document.querySelector('#tab-rs485 .workbench-card .caption-left h3');
-  if (rsC1) rsC1.textContent = dict.rs485_c1_title;
+    const titleEl = tabEl.querySelector('.main-title');
+    if (titleEl) titleEl.textContent = data[tabId].title;
 
-  const lBaud = document.querySelector('label[for="rs485BaudRate"]');
-  if (lBaud) lBaud.textContent = dict.rs485_lbl_baud;
-  const lRsLen = document.querySelector('label[for="rs485Length"]');
-  if (lRsLen) lRsLen.textContent = dict.rs485_lbl_len;
-  const lRsCable = document.querySelector('label[for="rs485CableType"]');
-  if (lRsCable) lRsCable.textContent = dict.rs485_lbl_cable;
-  const lSlaves = document.querySelector('label[for="rs485Nodes"]');
-  if (lSlaves) lSlaves.textContent = dict.rs485_lbl_slaves;
-  const lStub = document.querySelector('label[for="rs485MaxStub"]');
-  if (lStub) lStub.textContent = dict.rs485_lbl_stub;
+    const descEl = tabEl.querySelector('.main-desc');
+    if (descEl) descEl.textContent = data[tabId].desc;
 
-  // Translate RS-485 select options
-  const baudSelect = document.getElementById('rs485BaudRate');
-  if (baudSelect && baudSelect.options.length >= 7) {
-    baudSelect.options[0].text = isEn ? '9,600 bps (Standard Temp/Inverter)' : '9,600 bps (기본 온도컨트롤러/인버터)';
-    baudSelect.options[1].text = isEn ? '19,200 bps (Standard Modbus RTU)' : '19,200 bps (표준 Modbus RTU)';
-    baudSelect.options[2].text = isEn ? '38,400 bps (PLC Distributed I/O)' : '38,400 bps (PLC 분산 I/O)';
-    baudSelect.options[3].text = '57,600 bps';
-    baudSelect.options[4].text = isEn ? '115,200 bps (High-Speed Servo/Sensor)' : '115,200 bps (고속 서보/센서 통신)';
-    baudSelect.options[5].text = '500,000 bps (0.5 Mbps)';
-    baudSelect.options[6].text = '1,000,000 bps (1.0 Mbps)';
+    const c1El = tabEl.querySelector('.workbench-card .caption-left h3');
+    if (c1El) c1El.textContent = data[tabId].c1;
+
+    const c2El = tabEl.querySelector('.meter-readout-panel .caption-left h3');
+    if (c2El) c2El.textContent = data[tabId].c2;
+  });
+
+  // 4. Tab 9: PLC Scaling Specific Labels & Code Output (As in user screenshot)
+  const plcLabels = {
+    'label[for="plcMakerSelect"]': isEn ? 'PLC Manufacturer & Resolution (Raw Count)' : 'PLC 제조사 및 아날로그 모듈 분해능 (Raw Count)',
+    'label[for="plcRawMin"]': isEn ? 'Digital Raw Min (D_min)' : '디지털 Raw 하한 (D_min)',
+    'label[for="plcRawMax"]': isEn ? 'Digital Raw Max (D_max)' : '디지털 Raw 상한 (D_max)',
+    'label[for="plcSignalType"]': isEn ? 'Analog Signal Type' : '아날로그 입력 신호 형식',
+    'label[for="plcEuMin"]': isEn ? 'Engineering Unit Min (EU_min)' : '물리량 최소값 (EU_min)',
+    'label[for="plcEuMax"]': isEn ? 'Engineering Unit Max (EU_max)' : '물리량 최대값 (EU_max)',
+    'label[for="plcInputVal"]': isEn ? 'Test Engineering Value' : '테스트 입력 물리량 (Engineering Value)'
+  };
+  Object.keys(plcLabels).forEach(sel => {
+    const el = document.querySelector(`#tab-plcscaling ${sel}`);
+    if (el) el.textContent = plcLabels[sel];
+  });
+
+  const plcCodeHeader = document.querySelector('#tab-plcscaling .code-title-bar span');
+  if (plcCodeHeader) {
+    plcCodeHeader.textContent = isEn ? 'PLC Structured Text (ST) Linear Scaling Formula' : 'PLC 래더(ST) 선형 변환 수식';
   }
 
-  const cableSelect = document.getElementById('rs485CableType');
-  if (cableSelect && cableSelect.options.length >= 3) {
-    cableSelect.options[0].text = isEn ? '120Ω Shielded Twisted Pair (Belden 9841 equiv. - Recommended)' : '120Ω 차폐 트위스트 페어 (Belden 9841 동등 - 권장)';
-    cableSelect.options[1].text = isEn ? 'UTP / STP Cat.5e (100Ω Twisted Pair)' : 'UTP / STP Cat.5e (100Ω 트위스트 페어)';
-    cableSelect.options[2].text = isEn ? 'Generic Unshielded Cable (VCTF - Not recommended)' : '일반 비차폐 제어선 (VCTF - 장거리 비권장)';
-  }
-
-  const rsC2 = document.querySelector('#tab-rs485 .meter-readout-panel .caption-left h3');
-  if (rsC2) rsC2.textContent = dict.rs485_c2_title;
-
-  const rsSpecs = document.querySelectorAll('#tab-rs485 .specs-mini-grid .spec-cell .s-label');
-  if (rsSpecs.length >= 4) {
-    rsSpecs[0].textContent = dict.rs485_s1;
-    rsSpecs[1].textContent = dict.rs485_s2;
-    rsSpecs[2].textContent = dict.rs485_s3;
-    rsSpecs[3].textContent = dict.rs485_s4;
-  }
-
-  const rsWaveTitle = document.querySelector('#tab-rs485 .chart-title span[data-i18n="lbl_rs485_chart_title"]');
-  if (rsWaveTitle) rsWaveTitle.textContent = dict.rs485_wave_title;
-
-  const rsLegendItems = document.querySelectorAll('#tab-rs485 .chart-legend .leg-item');
-  if (rsLegendItems.length >= 2) {
-    rsLegendItems[0].textContent = isEn ? '■ TX Square Wave' : '■ 송신 구형파';
-    rsLegendItems[1].textContent = isEn ? '■ RX Terminated Wave (120Ω On)' : '■ 수신단 정상파 (120Ω On)';
-  }
-
-  const rsRulesCard = document.querySelector('#tab-rs485 .standard-guide-card');
-  if (rsRulesCard) {
-    const rulesTitle = rsRulesCard.querySelector('h4');
-    if (rulesTitle) rulesTitle.innerHTML = `<i data-lucide="git-branch"></i> ${dict.rs485_rules_title}`;
-    const ruleP = rsRulesCard.querySelector('.guide-note');
-    if (ruleP) {
-      ruleP.innerHTML = isEn ?
-        '1. Avoid star topology. Always wire in a <strong>linear daisy-chain</strong> topology to prevent reflections.<br>2. Connect cable shield to <strong>PE ground at one end only (master cabinet)</strong> to prevent ground loops.' :
-        '1. 스타(Star) 결선은 반사파를 유발하므로 <strong>일자형 데이지 체인(Daisy-Chain)</strong>으로 결선하십시오.<br>2. 쉴드선(Shield)은 그라운드 루프 방지를 위해 <strong>제어반 한쪽 끝에서만 단일 접지(PE)</strong>하십시오.';
-    }
-  }
-
-  // Sponsored Automation Cards
+  // 5. Sponsored Automation Cards
   const spHeader = document.querySelector('.bottom-showcase-bar .sponsor-tag');
-  if (spHeader) spHeader.textContent = dict.sp_header;
+  if (spHeader) spHeader.textContent = isEn ? 'SPONSORED AUTOMATION COMPONENTS' : 'SPONSORED AUTOMATION COMPONENTS';
 
   const spCards = document.querySelectorAll('.showcase-card');
   if (spCards.length >= 3) {
-    const t0 = spCards[0].querySelector('.sc-tag'); if (t0) t0.textContent = dict.sp1_tag;
-    const h0 = spCards[0].querySelector('h5'); if (h0) h0.textContent = dict.sp1_title;
-    const p0 = spCards[0].querySelector('p'); if (p0) p0.textContent = dict.sp1_desc;
+    const t0 = spCards[0].querySelector('.sc-tag'); if (t0) t0.textContent = isEn ? 'SMPS POWER' : 'SMPS 전원';
+    const h0 = spCards[0].querySelector('h5'); if (h0) h0.textContent = isEn ? 'Ultra-Slim DIN-Rail 24V Power Supply' : '초박형 DIN레일 24V 파워서플라이';
+    const p0 = spCards[0].querySelector('p'); if (p0) p0.textContent = isEn ? 'Built-in V.ADJ voltage drop compensation, 94% high efficiency, global certs' : '전압강하 보상 V.ADJ 내장, 94% 고효율, 글로벌 인증';
 
-    const t1 = spCards[1].querySelector('.sc-tag'); if (t1) t1.textContent = dict.sp2_tag;
-    const h1 = spCards[1].querySelector('h5'); if (h1) h1.textContent = dict.sp2_title;
-    const p1 = spCards[1].querySelector('p'); if (p1) p1.textContent = dict.sp2_desc;
+    const t1 = spCards[1].querySelector('.sc-tag'); if (t1) t1.textContent = isEn ? 'ENCLOSURE COOLING' : '제어반 쿨링';
+    const h1 = spCards[1].querySelector('h5'); if (h1) h1.textContent = isEn ? 'Industrial Sealed Enclosure Cooler' : '산업용 밀폐형 제어반 에어컨';
+    const p1 = spCards[1].querySelector('p'); if (p1) p1.textContent = isEn ? '500W~3000W slimline, IP54 dust/waterproof, digital temperature control' : '500W~3000W 슬림형, IP54 분진방수, 디지털 제어';
 
-    const t2 = spCards[2].querySelector('.sc-tag'); if (t2) t2.textContent = dict.sp3_tag;
-    const h2 = spCards[2].querySelector('h5'); if (h2) h2.textContent = dict.sp3_title;
-    const p2 = spCards[2].querySelector('p'); if (p2) p2.textContent = dict.sp3_desc;
+    const t2 = spCards[2].querySelector('.sc-tag'); if (t2) t2.textContent = isEn ? 'FIELDBUS & OT' : '필드버스';
+    const h2 = spCards[2].querySelector('h5'); if (h2) h2.textContent = isEn ? 'RS-485 Galvanic Isolated Repeater' : 'RS-485 절연 통신 리피터';
+    const p2 = spCards[2].querySelector('p'); if (p2) p2.textContent = isEn ? 'Extends distance up to 1.2km, 2.5kV surge isolation protection' : '최대 1.2km 장거리 확장, 2.5kV 서지 절연 보호';
   }
 
-  // Refresh active calculation
+  // 6. Recalculate Active Tab
   const activeTab = document.querySelector('.tab-panel.active')?.id || 'tab-voltagedrop';
   if (activeTab === 'tab-voltagedrop') calculateVoltageDrop();
   else if (activeTab === 'tab-rs485') calculateRS485();
   else if (activeTab === 'tab-analogloop') calculateAnalogLoop();
   else if (activeTab === 'tab-smpsbudget') calculateSmpsBudget();
   else if (activeTab === 'tab-cabinetcooling') calculateCabinetCooling();
+  else if (activeTab === 'tab-plcscaling') calculatePlcScaling();
+  else if (activeTab === 'tab-pneumatics') calculatePneumatics();
+  else if (activeTab === 'tab-ductutility') calculateDuctFill();
 
   if (window.lucide) window.lucide.createIcons();
 }
@@ -2292,11 +2383,6 @@ function toggleLanguage() {
   applyLanguage(currentLanguage);
 }
 
-
-
-// ==========================================================================
-// 16. Interactive HTML5 Canvas Engineering Visualizers [Zero-Lag GPU Accelerated]
-// ==========================================================================
 
 function initAllCanvases() {
   const dpr = window.devicePixelRatio || 1;
