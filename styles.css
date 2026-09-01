@@ -3125,3 +3125,176 @@ body:not(.theme-dark) .interactive-canvas {
 .tier-features li {
   line-height: 1.4;
 }
+
+
+/* ==========================================================================
+   GLOBAL GDPR COOKIE BANNER & LEGAL MODAL STYLES
+   ========================================================================== */
+
+.cookie-consent-banner {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2.5rem);
+  max-width: 860px;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  animation: slideUpFade 0.3s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.cookie-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #f8fafc;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.cookie-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.cookie-text strong {
+  color: #ffffff;
+}
+
+.cookie-text a {
+  color: #fb923c;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cookie-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-cookie-accept {
+  background: var(--brand-orange);
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cookie-accept:hover {
+  background: var(--brand-orange-hover);
+  transform: translateY(-1px);
+}
+
+.btn-cookie-learn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cookie-learn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Global Payment Selector Grid */
+.global-pay-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.global-pay-chip {
+  background: #ffffff;
+  border: 1.5px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+  transition: all 0.15s ease;
+}
+
+.global-pay-chip:hover, .global-pay-chip.active {
+  border-color: var(--brand-orange);
+  background: var(--brand-orange-subtle);
+  color: var(--brand-orange);
+}
+
+/* Legal Modal Tabs */
+.legal-tab-nav {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 1rem;
+}
+
+.legal-tab-btn {
+  background: none;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+}
+
+.legal-tab-btn.active {
+  color: var(--brand-orange);
+  border-bottom-color: var(--brand-orange);
+}
+
+.legal-content-pane {
+  display: none;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.legal-content-pane.active {
+  display: block;
+}
+
+.legal-content-pane h5 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin: 1.25rem 0 0.4rem 0;
+}
+
+.legal-content-pane h5:first-child {
+  margin-top: 0;
+}

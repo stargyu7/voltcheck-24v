@@ -8,6 +8,10 @@
   <meta name="keywords" content="볼트체크, DC 24V 전압강하 계산기, 4-20mA 전압강하, SMPS 용량 계산, 제어반 발열량 계산기, 제어반 에어컨 용량, AWG 허용전류표, RS485 종단저항, 공압 실린더 소모량">
   
   <link rel="canonical" href="https://voltcheck24.com/">
+  <!-- Global Multilingual SEO (hreflang) -->
+  <link rel="alternate" hreflang="ko" href="https://voltcheck24.com/?lang=ko">
+  <link rel="alternate" hreflang="en" href="https://voltcheck24.com/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://voltcheck24.com/">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="author" content="VoltCheck Engineering Lab">
 
@@ -3982,14 +3986,14 @@
 
         <!-- Dual Tier Pricing Option Cards -->
         <div class="pricing-tiers-grid mt-3">
-          <!-- Tier 1: 9,900 KRW Individual Starter -->
+          <!-- Tier 1: 9,900 KRW Individual Starter ($9.99 USD) -->
           <div class="pricing-tier-card tier-popular">
-            <div class="tier-badge">🔥 실무자 최다 선택 (커피 2잔 가격)</div>
+            <div class="tier-badge" id="tier1Badge">🔥 실무자 최다 선택 (커피 2잔 가격)</div>
             <div class="tier-header">
-              <h4>엔지니어 실무 스타터 팩</h4>
+              <h4 id="tier1Title">엔지니어 실무 스타터 팩</h4>
               <div class="tier-price">
-                <span class="t-num">9,900</span>
-                <span class="t-unit">원 (VAT 포함)</span>
+                <span class="t-num" id="tier1PriceNum">9,900</span>
+                <span class="t-unit" id="tier1PriceUnit">원 (VAT 포함)</span>
               </div>
             </div>
             <ul class="tier-features font-mono">
@@ -3997,19 +4001,19 @@
               <li>✓ FA 전장설계 표준 규정 핸드북 80p PDF</li>
               <li>✓ 개인 PC / 모바일 평생 영구 소장</li>
             </ul>
-            <button type="button" class="btn-primary-action w-100 mt-2" onclick="selectTierAndBuy(9900, '엔지니어 실무 스타터 팩 (9,900원)')">
-              <i data-lucide="download"></i> 9,900원 즉시 소장하기
+            <button type="button" class="btn-primary-action w-100 mt-2" id="tier1BuyBtn" onclick="selectTierAndBuy(9900, '엔지니어 실무 스타터 팩 (9,900원)')">
+              <i data-lucide="download"></i> <span>9,900원 즉시 소장하기</span>
             </button>
           </div>
 
-          <!-- Tier 2: 29,000 KRW Team / Pro Package -->
+          <!-- Tier 2: 29,000 KRW Team / Pro Package ($19.99 USD) -->
           <div class="pricing-tier-card">
-            <div class="tier-badge" style="background:#3b82f6;">🏢 팀 / 기업용 라이선스</div>
+            <div class="tier-badge" id="tier2Badge" style="background:#3b82f6;">🏢 팀 / 기업용 라이선스</div>
             <div class="tier-header">
-              <h4>PRO 기업용 마스터 번들</h4>
+              <h4 id="tier2Title">PRO 기업용 마스터 번들</h4>
               <div class="tier-price">
-                <span class="t-num">29,000</span>
-                <span class="t-unit">원 (VAT 포함)</span>
+                <span class="t-num" id="tier2PriceNum">29,000</span>
+                <span class="t-unit" id="tier2PriceUnit">원 (VAT 포함)</span>
               </div>
             </div>
             <ul class="tier-features font-mono">
@@ -4017,8 +4021,8 @@
               <li>✓ <strong>AutoCAD/EPLAN 전기 CAD 심볼 200종 (DWG/DXF)</strong></li>
               <li>✓ 사내 폐쇄망 무제한 복제 및 세금계산서/지출증빙 발행</li>
             </ul>
-            <button type="button" class="btn-secondary-action w-100 mt-2" onclick="selectTierAndBuy(29000, 'PRO 기업용 마스터 번들 (29,000원)')">
-              <i data-lucide="building"></i> 29,000원 법인/팀 구매
+            <button type="button" class="btn-secondary-action w-100 mt-2" id="tier2BuyBtn" onclick="selectTierAndBuy(29000, 'PRO 기업용 마스터 번들 (29,000원)')">
+              <i data-lucide="building"></i> <span>29,000원 법인/팀 구매</span>
             </button>
           </div>
         </div>
@@ -4036,8 +4040,8 @@
             </div>
           </div>
 
-          <!-- Official Bank Transfer & KakaoPay Box -->
-          <div class="bank-transfer-card" style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.25rem;">
+          <!-- Payment Gateway Selection Container (Bilingual: Korea Bank/Toss + Global MoR Cards) -->
+          <div id="domesticBankBox" class="bank-transfer-card" style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.25rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
               <div style="font-size:0.88rem; font-weight:800; color:#92400e;">
                 <i data-lucide="wallet"></i> 입금 전용 계좌 안내 (수수료 0원)
@@ -4057,6 +4061,25 @@
                 <i data-lucide="copy"></i> 계좌번호 복사
               </button>
             </div>
+          </div>
+
+          <!-- Global MoR Card & Express Checkout Box (Visible in EN Mode) -->
+          <div id="globalPayBox" class="bank-transfer-card" style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.25rem; display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <div style="font-size:0.88rem; font-weight:800; color:#166534;">
+                <i data-lucide="globe"></i> Global Secure Checkout (Instant Digital Delivery)
+              </div>
+              <span class="font-mono" style="font-size:0.75rem; color:#15803d; background:#dcfce7; padding:0.15rem 0.4rem; border-radius:3px;">256-Bit SSL Encrypted</span>
+            </div>
+            <div class="global-pay-grid mt-2">
+              <div class="global-pay-chip active">💳 Credit / Debit Card</div>
+              <div class="global-pay-chip">🅿️ PayPal</div>
+              <div class="global-pay-chip">🍎 Apple / Google Pay</div>
+              <div class="global-pay-chip">⚡ Instant ZIP Download</div>
+            </div>
+            <p style="font-size:0.78rem; color:#166534; margin-top:0.6rem; line-height:1.4;">
+              ✓ Instant automated download upon submission &bull; Official commercial VAT receipt issued via email &bull; Zero international transaction markup
+            </p>
           </div>
 
           <!-- Customer Info Form -->
@@ -4166,10 +4189,10 @@
       </div>
       <div class="footer-links-col">
         <div class="f-nav-links">
-          <a href="privacy-policy.html">개인정보처리방침</a>
-          <a href="terms.html">이용약관 및 면책조항</a>
-          <a href="about.html">기술 기준 &amp; 운영진 소개</a>
-          <a href="contact.html">문의하기</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('privacy')" id="fLinkPrivacy">개인정보처리방침 (Privacy)</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('terms')" id="fLinkTerms">이용약관 &amp; 규격 면책 (Terms)</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('refund')" id="fLinkRefund">디지털 배송/환불 규정 (Refund)</a>
+          <a href="contact.html" id="fLinkContact">문의하기 (Contact)</a>
         </div>
         <p class="copyright-text">&copy; 2026 VoltCheck. All calculations based on IEC & UL standards.</p>
       </div>
@@ -4222,6 +4245,76 @@
             <i data-lucide="inbox"></i>
             <p>보관함에 담긴 계산 항목이 없습니다.<br>각 계산기 결과 화면의 <strong>[+ 프로젝트에 담기]</strong> 버튼을 눌러 항목을 추가하세요.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Global GDPR Cookie Consent Banner -->
+  <div id="cookieConsentBanner" class="cookie-consent-banner" style="display:none;">
+    <div class="cookie-content">
+      <span class="cookie-icon">🍪</span>
+      <div class="cookie-text" id="cookieBannerText">
+        <strong>VoltCheck Privacy Notice:</strong> We use essential cookies to maintain engineering calculation states and deliver high-performance offline tooling. By browsing, you agree to our <a onclick="openLegalModal('privacy')">Privacy Policy</a>.
+      </div>
+    </div>
+    <div class="cookie-actions">
+      <button type="button" class="btn-cookie-learn" onclick="openLegalModal('terms')" id="cookieLearnBtn">Terms</button>
+      <button type="button" class="btn-cookie-accept" onclick="acceptCookies()" id="cookieAcceptBtn">Accept &amp; Continue</button>
+    </div>
+  </div>
+
+  <!-- Global Legal & Compliance Modal (Terms of Service, GDPR Privacy Policy, Digital Refund) -->
+  <div id="legalModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i data-lucide="scale" class="text-highlight"></i>
+          <div>
+            <h4 id="legalModalTitle">Terms of Service &amp; Privacy Policy</h4>
+            <span class="modal-subtitle font-mono">IEC 60204-1 / NFPA 79 Standards Compliance &bull; GDPR/CCPA Protected</span>
+          </div>
+        </div>
+        <button type="button" id="closeLegalModalBtn" class="btn-close" onclick="closeLegalModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="legal-tab-nav">
+          <button type="button" class="legal-tab-btn active" onclick="switchLegalTab('terms')" id="ltBtnTerms">Terms of Service</button>
+          <button type="button" class="legal-tab-btn" onclick="switchLegalTab('privacy')" id="ltBtnPrivacy">Privacy Policy (GDPR)</button>
+          <button type="button" class="legal-tab-btn" onclick="switchLegalTab('refund')" id="ltBtnRefund">Digital Delivery &amp; Refund</button>
+        </div>
+
+        <!-- Tab 1: Terms of Service -->
+        <div id="paneTerms" class="legal-content-pane active">
+          <h5>1. Engineering Accuracy &amp; Standards Conformance</h5>
+          <p>VoltCheck 24V is an open engineering suite designed in strict compliance with international standards, including <strong>IEC 60204-1</strong> (Safety of machinery - Electrical equipment of machines), <strong>NFPA 79</strong> (Electrical Standard for Industrial Machinery), and <strong>ISO 13849-1</strong> (Safety-related parts of control systems). All formulas (voltage drop, loop impedance, thermal dissipation, breaker inrush trip curves) utilize standard copper resistivity at standard ambient reference temperatures (20°C / 40°C).</p>
+          
+          <h5>2. Professional Engineering Disclaimer</h5>
+          <p>Calculations and verification reports generated by this application are provided for technical sizing reference and optimization purposes. Final project engineering sign-offs should verify specific plant site conditions, ambient derating factors, terminal contact resistances, and manufacturer-specific equipment tolerance data.</p>
+          
+          <h5>3. Intellectual Property &amp; License Scope</h5>
+          <p>The calculation algorithms, web application architecture, and exported master CAD symbols/Excel templates are proprietary intellectual property. Purchasers of the Pro Master Bundle are granted a perpetual, royalty-free commercial license for internal corporate engineering use across unlimited project panels.</p>
+        </div>
+
+        <!-- Tab 2: GDPR Privacy Policy -->
+        <div id="panePrivacy" class="legal-content-pane">
+          <h5>1. Zero Personal Data Tracking Commitment</h5>
+          <p>VoltCheck 24V operates with a strict <strong>Privacy-by-Design</strong> architecture. 100% of engineering calculations (wire lengths, currents, SMPS budgets, motor formulas) are computed entirely within your local web browser sandbox. No proprietary circuit parameters, PLC tag names, or factory load data are ever transmitted to or stored on external servers.</p>
+          
+          <h5>2. GDPR &amp; CCPA Compliance</h5>
+          <p>We comply with the EU General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). Essential browser cookies (such as UI preferences, metric unit selections, and saved calculation snapshots in your browser's localStorage) are retained strictly locally on your device.</p>
+          
+          <h5>3. Secure Order Processing</h5>
+          <p>For digital package purchases, customer emails and order records are handled strictly through encrypted, PCI-DSS compliant billing gateways solely for digital file delivery and tax receipt issuance. We never sell, rent, or distribute user information to third-party advertisers.</p>
+        </div>
+
+        <!-- Tab 3: Digital Delivery & Refund -->
+        <div id="paneRefund" class="legal-content-pane">
+          <h5>1. Instant Automated File Fulfillment</h5>
+          <p>Upon completing checkout or confirming bank transfer, the complete master ZIP bundle (Excel calculation workbooks, AutoCAD DXF library, engineering PDF guides) is delivered immediately via direct in-browser download and permanent email link.</p>
+          
+          <h5>2. Statutory Digital Content Policy</h5>
+          <p>In accordance with Article 17, Paragraph 2 of the E-Commerce Consumer Protection Act and international digital goods regulations, digital content that begins delivery immediately upon purchase is non-refundable once downloaded. However, lifetime free version updates and calculation revision support are provided indefinitely.</p>
         </div>
       </div>
     </div>

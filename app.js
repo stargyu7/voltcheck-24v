@@ -52,6 +52,7 @@ const FA_PRESETS = {
 // Initialization & URL State Restore
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initCookieConsent();
   if (window.lucide) window.lucide.createIcons();
 
   populateGaugeSelect();
@@ -2679,6 +2680,58 @@ function applyLanguage(lang) {
   const reqQuoteBtn = document.querySelector('#openQuoteModalBtn span');
   if (reqQuoteBtn) reqQuoteBtn.textContent = isEn ? 'Request BOM Quote' : '부품 견적 요청 (BOM)';
 
+  // Dual Currency Tier Updates
+  const t1Badge = document.getElementById('tier1Badge');
+  if (t1Badge) t1Badge.textContent = isEn ? '⚡ Individual Engineer License (Popular)' : '⚡ 엔지니어 개인 실무용 (인기)';
+
+  const t1Title = document.getElementById('tier1Title');
+  if (t1Title) t1Title.textContent = isEn ? 'Engineering Starter Pack' : '엔지니어 실무 스타터 팩';
+
+  const t1PriceNum = document.getElementById('tier1PriceNum');
+  if (t1PriceNum) t1PriceNum.textContent = isEn ? '9.99' : '9,900';
+
+  const t1PriceUnit = document.getElementById('tier1PriceUnit');
+  if (t1PriceUnit) t1PriceUnit.textContent = isEn ? 'USD (VAT Incl.)' : '원 (VAT 포함)';
+
+  const t1BuyBtn = document.querySelector('#tier1BuyBtn span');
+  if (t1BuyBtn) t1BuyBtn.textContent = isEn ? 'Get Starter Pack for $9.99' : '9,900원 즉시 소장하기';
+
+  const t2Badge = document.getElementById('tier2Badge');
+  if (t2Badge) t2Badge.textContent = isEn ? '🏢 Corporate / Team License' : '🏢 팀 / 기업용 라이선스';
+
+  const t2Title = document.getElementById('tier2Title');
+  if (t2Title) t2Title.textContent = isEn ? 'PRO Enterprise Master Bundle' : 'PRO 기업용 마스터 번들';
+
+  const t2PriceNum = document.getElementById('tier2PriceNum');
+  if (t2PriceNum) t2PriceNum.textContent = isEn ? '19.99' : '29,000';
+
+  const t2PriceUnit = document.getElementById('tier2PriceUnit');
+  if (t2PriceUnit) t2PriceUnit.textContent = isEn ? 'USD (VAT Incl.)' : '원 (VAT 포함)';
+
+  const t2BuyBtn = document.querySelector('#tier2BuyBtn span');
+  if (t2BuyBtn) t2BuyBtn.textContent = isEn ? 'Get PRO Master Bundle for $19.99' : '29,000원 법인/팀 구매';
+
+  // Toggle Domestic Bank vs Global Pay Gateway
+  const dBank = document.getElementById('domesticBankBox');
+  const gPay = document.getElementById('globalPayBox');
+  if (dBank && gPay) {
+    if (isEn) {
+      dBank.style.display = 'none';
+      gPay.style.display = 'block';
+    } else {
+      dBank.style.display = 'block';
+      gPay.style.display = 'none';
+    }
+  }
+
+  // Update Footer Legal Links
+  const flPriv = document.getElementById('fLinkPrivacy');
+  if (flPriv) flPriv.textContent = isEn ? 'Privacy Policy (GDPR)' : '개인정보처리방침 (Privacy)';
+  const flTerms = document.getElementById('fLinkTerms');
+  if (flTerms) flTerms.textContent = isEn ? 'Terms & Disclaimers' : '이용약관 & 규격 면책 (Terms)';
+  const flRef = document.getElementById('fLinkRefund');
+  if (flRef) flRef.textContent = isEn ? 'Digital Delivery & Refund Policy' : '디지털 배송/환불 규정 (Refund)';
+
   // 5. Tab 9: PLC Scaling Specific Labels
   const plcLabels = {
     'label[for="plcMakerSelect"]': isEn ? 'PLC Manufacturer & Resolution (Raw Count)' : 'PLC 제조사 및 아날로그 모듈 분해능 (Raw Count)',
@@ -4742,18 +4795,30 @@ const VOLTCHECK_BANK_INFO = {
 
 function selectTierAndBuy(price, title) {
   SELECTED_DIGITAL_TIER = { price, title };
+  const isEn = currentLanguage === 'en';
   const box = document.getElementById('digitalOrderBox');
   const titleEl = document.getElementById('selectedTierTitle');
   const priceNumEl = document.getElementById('checkoutPriceNum');
+  const priceUnitEl = document.querySelector('#digitalOrderBox .tier-price .t-unit');
   const badgeEl = document.getElementById('checkoutTierBadge');
   const btnTextEl = document.getElementById('paySubmitBtnText');
   const bankAmountEl = document.getElementById('bankAmountText');
 
-  if (titleEl) titleEl.textContent = title;
-  if (priceNumEl) priceNumEl.textContent = price.toLocaleString();
-  if (bankAmountEl) bankAmountEl.textContent = `${price.toLocaleString()}원`;
-  if (badgeEl) badgeEl.textContent = price === 9900 ? 'SELECTED: 9,900 KRW STARTER' : 'SELECTED: 29,000 KRW PRO BUNDLE';
-  if (btnTextEl) btnTextEl.textContent = `${price.toLocaleString()}원 송금 완료 & 파일 즉시 다운로드`;
+  if (isEn) {
+    const usdAmount = price === 29000 ? 19.99 : 9.99;
+    if (titleEl) titleEl.textContent = price === 29000 ? 'PRO Enterprise Master Bundle ($19.99)' : 'Engineering Starter Pack ($9.99)';
+    if (priceNumEl) priceNumEl.textContent = usdAmount.toFixed(2);
+    if (priceUnitEl) priceUnitEl.textContent = 'USD (VAT Incl.)';
+    if (badgeEl) badgeEl.textContent = `SELECTED: $${usdAmount.toFixed(2)} USD TIER`;
+    if (btnTextEl) btnTextEl.textContent = `Pay $${usdAmount.toFixed(2)} & Instant Download ZIP Bundle`;
+  } else {
+    if (titleEl) titleEl.textContent = title;
+    if (priceNumEl) priceNumEl.textContent = price.toLocaleString();
+    if (priceUnitEl) priceUnitEl.textContent = '원 (VAT 포함)';
+    if (bankAmountEl) bankAmountEl.textContent = `${price.toLocaleString()}원`;
+    if (badgeEl) badgeEl.textContent = price === 9900 ? 'SELECTED: 9,900 KRW STARTER' : 'SELECTED: 29,000 KRW PRO BUNDLE';
+    if (btnTextEl) btnTextEl.textContent = `${price.toLocaleString()}원 송금 완료 & 파일 즉시 다운로드`;
+  }
 
   // Setup Account Number Copy Button
   const copyBankBtn = document.getElementById('copyBankBtn');
@@ -4761,7 +4826,7 @@ function selectTierAndBuy(price, title) {
     copyBankBtn.onclick = () => {
       const accText = `${VOLTCHECK_BANK_INFO.bank} ${VOLTCHECK_BANK_INFO.account} ${VOLTCHECK_BANK_INFO.owner}`;
       navigator.clipboard.writeText(accText).then(() => {
-        alert(`[계좌번호 복사 완료]\n\n${accText}\n\n입금 금액: ${price.toLocaleString()}원`);
+        alert(isEn ? `[Account Info Copied]\n\n${accText}\n\nAmount: ₩${price.toLocaleString()}` : `[계좌번호 복사 완료]\n\n${accText}\n\n입금 금액: ${price.toLocaleString()}원`);
       });
     };
   }
@@ -4964,3 +5029,61 @@ function checkTossPaymentCallback() {
 document.addEventListener('DOMContentLoaded', () => {
   checkTossPaymentCallback();
 });
+
+
+// ==========================================================================
+// GLOBAL GDPR COOKIE CONSENT & LEGAL COMPLIANCE MODAL LOGIC
+// ==========================================================================
+
+function initCookieConsent() {
+  try {
+    const consent = localStorage.getItem('voltcheck_cookie_consent');
+    const banner = document.getElementById('cookieConsentBanner');
+    if (!consent && banner) {
+      setTimeout(() => {
+        banner.style.display = 'flex';
+      }, 1000);
+    }
+  } catch (e) { console.error(e); }
+}
+
+function acceptCookies() {
+  try {
+    localStorage.setItem('voltcheck_cookie_consent', 'accepted');
+  } catch (e) {}
+  const banner = document.getElementById('cookieConsentBanner');
+  if (banner) banner.style.display = 'none';
+}
+
+function openLegalModal(tab = 'terms') {
+  const modal = document.getElementById('legalModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    switchLegalTab(tab);
+  }
+}
+
+function closeLegalModal() {
+  const modal = document.getElementById('legalModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+}
+
+function switchLegalTab(tab) {
+  const tabs = ['terms', 'privacy', 'refund'];
+  tabs.forEach(t => {
+    const btn = document.getElementById('ltBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+    const pane = document.getElementById('pane' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (btn) {
+      if (t === tab) btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+    if (pane) {
+      if (t === tab) pane.classList.add('active');
+      else pane.classList.remove('active');
+    }
+  });
+}
