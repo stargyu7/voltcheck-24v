@@ -1,7 +1,7 @@
 {
-  "name": "볼트체크 24V (VoltCheck Pro) - 42대 종합 공학 슈퍼 스위트",
+  "name": "볼트체크 24V (VoltCheck Pro) - 48대 전 산업 토털 엔지니어링 마스터 스위트",
   "short_name": "VoltCheck",
-  "description": "공장 자동화, 기계/전기/유체/열역학/구조역학 42대 종합 공학 계산 도구 및 표준 가이드",
+  "description": "반도체, 2차전지, 자동차, 플랜트, 전력망, HVAC 48대 종합 공학 계산 도구 및 표준 가이드",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f172a",

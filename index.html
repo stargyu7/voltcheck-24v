@@ -173,17 +173,17 @@
     <div class="nav-menu-bar">
       <!-- Centered Global Tool Search & Category Filter Ribbon -->
       <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0.75rem; max-width:1600px; margin:0 auto; padding:0.25rem 0.75rem;">
-        <div class="quick-search-wrapper" style="max-width:480px;">
+        <div class="quick-search-wrapper" style="max-width:490px;">
           <i data-lucide="search" class="quick-search-icon"></i>
-          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="42대 종합 공학 도구 검색 (예: 24V, 펌프양정, 볼트토크, 열교환기, 빔처짐...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
+          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="48대 전 산업 토털 공학 도구 검색 (예: 진공, 배터리발열, 역률, 유압, 송풍기, 스팀...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 42종 (All)</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기·SPD·PV</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·볼트·빔처짐</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·방폭·열교환기</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 펌프양정·트레이·조도</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 48종 (All)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·역률·변압기·PV</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·유압·배터리발열</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 진공·방폭·열교환기</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 펌프·송풍기·스팀·트레이</button>
         </div>
       </div>
 
@@ -356,6 +356,30 @@
           <button class="tab-btn" data-tab="tab-beamdeflection" data-category="motion" role="tab">
             <i data-lucide="box"></i>
             <span>보처짐·구조모멘트</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-vacuumchamber" data-category="signal" role="tab">
+            <i data-lucide="gauge"></i>
+            <span>반도체·진공챔버</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-batterythermal" data-category="motion" role="tab">
+            <i data-lucide="battery-charging"></i>
+            <span>배터리·팩발열량</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-powerfactor" data-category="power" role="tab">
+            <i data-lucide="sparkles"></i>
+            <span>역률개선·콘덴서</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-hydraulics" data-category="motion" role="tab">
+            <i data-lucide="layers"></i>
+            <span>고압유압·실린더</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-hvacblower" data-category="specs" role="tab">
+            <i data-lucide="fan"></i>
+            <span>공조덕트·송풍기</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-steampipe" data-category="specs" role="tab">
+            <i data-lucide="flame"></i>
+            <span>스팀배관·보일러</span>
           </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -5484,6 +5508,541 @@
       </div>
     </section>
 
+
+    <!-- ========================================================================= -->
+    <!-- TAB 43: 반도체 진공 챔버 배기 시간 & 진공 펌프 Sizer [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-vacuumchamber" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">반도체 / 디스플레이 진공 챔버 배기 시간(Pumping Down Time) &amp; 진공도 계산기</h2>
+          <p class="main-desc">챔버 체적(m³), 목표 진공도(Pa/Torr), 드라이/루츠 펌프 유효 배기속도(m³/h)에 따른 러핑 배기 시간과 적정 진공 펌프 용량을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>진공 챔버 및 펌프 배기 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="vcChamberVol">챔버 체적 (Chamber Volume V)</label>
+                <div class="val-input-group">
+                  <input type="number" id="vcChamberVol" value="1.5" step="0.2" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m³</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="vcPumpSpeed">펌프 유효 배기속도 (Speed S)</label>
+                <div class="val-input-group">
+                  <input type="number" id="vcPumpSpeed" value="180" step="20" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">m³/h</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="vcTargetPressure">목표 도달 압력 (Target P2)</label>
+                <select id="vcTargetPressure" class="select-precision font-mono">
+                  <option value="10">10 Pa (0.075 Torr / 중진공 러핑)</option>
+                  <option value="1" selected>1.0 Pa (0.0075 Torr / 고진공 전환점)</option>
+                  <option value="0.1">0.1 Pa (7.5e-4 Torr / 극저압 챔버)</option>
+                  <option value="100">100 Pa (0.75 Torr / 클린 질소 퍼지)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="vcGasLoadFactor">아웃개싱 안전 계수 (Gas Load)</label>
+                <div class="val-input-group">
+                  <input type="number" id="vcGasLoadFactor" value="1.3" step="0.1" min="1.0" max="3.0" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">배</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>목표 진공도 도달 시간 &amp; 러핑 판정</h3>
+            </div>
+            <span id="vcVerdictBadge" class="badge-pill badge-safe">PUMP DOWN OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">ESTIMATED EVACUATION TIME (t_rough)</span>
+            <div class="terminal-voltage-big font-mono" id="resVcTimeSec">5.98 분 (359초)</div>
+            <div class="tv-sub" id="resVcPumpVerdict">대기압(101.3 kPa) &rarr; 1.0 Pa 도달 • 러핑 펌프 속도 적정 (5~10분 이내)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="gauge"></i>
+            <div>
+              <strong>반도체 진공 수칙:</strong> 챔버 러핑 배기 시간은 생산 택트타임(Tact Time) 유지를 위해 5~10분 이내가 표준이며, 1 Pa 이하에서는 터보 분자 펌프(TMP)로 전환해야 합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-vacuumchamber')">
+              <i data-lucide="copy"></i> <span>진공 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 44: 2차전지 배터리 팩 C-rate 발열량 & 칠러 쿨링 Sizer [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-batterythermal" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">2차전지 / 전기차(EV) 배터리 팩 C-rate 충방전 내부발열량(W) &amp; 수냉 칠러 쿨링 용량 계산기</h2>
+          <p class="main-desc">배터리 팩 용량(kWh), 충방전율(C-rate), 내부 저항(mΩ)에 따른 총 줄열 발열량과 과열 방지용 수냉 칠러(kW) 및 냉각수 유량을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>배터리 팩 사양 및 C-rate 충방전 조건</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="btPackCapKwh">배터리 팩 용량 (Pack Capacity)</label>
+                <div class="val-input-group">
+                  <input type="number" id="btPackCapKwh" value="75" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kWh</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="btPackVolt">팩 공칭 전압 (Pack Voltage V)</label>
+                <div class="val-input-group">
+                  <input type="number" id="btPackVolt" value="400" step="50" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">V</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="btCrateRate">충방전율 (C-rate)</label>
+                <select id="btCrateRate" class="select-precision font-mono">
+                  <option value="1.0">1.0 C (표준 충방전 / 1시간 완충)</option>
+                  <option value="2.0" selected>2.0 C (급속 충전 / 30분 완충)</option>
+                  <option value="3.0">3.0 C (초급속 충전 / 고발열 위험)</option>
+                  <option value="0.5">0.5 C (완속 충전 / 저발열)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="btPackInternalR">팩 총 내부저항 (Internal R)</label>
+                <div class="val-input-group">
+                  <input type="number" id="btPackInternalR" value="35" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mΩ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>팩 총 발열량 &amp; 필요 수냉 칠러 용량</h3>
+            </div>
+            <span id="btVerdictBadge" class="badge-pill badge-safe">THERMAL CONTROL OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">TOTAL HEAT GENERATION (Q_heat)</span>
+            <div class="terminal-voltage-big font-mono" id="resBtHeatWatts">4,922 W (4.92 kW)</div>
+            <div class="tv-sub" id="resBtChillerKw">추천 수냉 칠러: 6.15 kW (안전마진 1.25배) • 냉각수 유량: 17.6 L/min</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="battery-charging"></i>
+            <div>
+              <strong>배터리 열관리(BTMS) 수칙:</strong> 배터리 셀 온도가 45°C를 넘으면 수명이 급격히 단축되고 60°C 이상에선 열폭주 위험이 있으므로 급속 충전 시 칠러 냉각수 입구 온도를 20~25°C로 제어하십시오.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-batterythermal')">
+              <i data-lucide="copy"></i> <span>배터리 발열 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 45: 역률(Power Factor) 개선 콘덴서 & 전기요금 절감 Sizer [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-powerfactor" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">수배전반 역률(Power Factor) 개선 전력용 콘덴서(Capacitor Bank kVAR) &amp; 전기요금 절감 계산기</h2>
+          <p class="main-desc">유효전력(kW), 현재 역률 및 목표 역률(95~98%)에 따른 소요 진상용 콘덴서 용량(kVAR)과 한전 기본요금 할인 절감액을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>수전 유효전력 및 현재/목표 역률</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="pfActiveKw">수전 유효전력 (Active Power P)</label>
+                <div class="val-input-group">
+                  <input type="number" id="pfActiveKw" value="250" step="25" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kW</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="pfCurrentVal">현재 부하 역률 (Current PF)</label>
+                <div class="val-input-group">
+                  <input type="number" id="pfCurrentVal" value="0.80" step="0.02" min="0.5" max="0.95" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">lag</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="pfTargetVal">목표 개선 역률 (Target PF)</label>
+                <select id="pfTargetVal" class="select-precision font-mono">
+                  <option value="0.95" selected>0.95 (95% / 한전 기본요금 할인 기준)</option>
+                  <option value="0.98">0.98 (98% / 초정밀 고효율 운전)</option>
+                  <option value="0.90">0.90 (90% / 법적 기준 한계)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="pfGridVolt">수전 전압 (Grid Voltage)</label>
+                <select id="pfGridVolt" class="select-precision font-mono">
+                  <option value="380" selected>380 V (3상 저압)</option>
+                  <option value="220">220 V (3상 저압)</option>
+                  <option value="6600">6,600 V (고압 수전)</option>
+                  <option value="22900">22,900 V (특고압 수전)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>필요 콘덴서 용량 &amp; 기본요금 절감액</h3>
+            </div>
+            <span id="pfVerdictBadge" class="badge-pill badge-safe">PF OPTIMIZED (95%)</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">REQUIRED CAPACITOR BANK (Q_c)</span>
+            <div class="terminal-voltage-big font-mono" id="resPfCapKvar">105.3 kVAR</div>
+            <div class="tv-sub" id="resPfBillSave">추천 콘덴서: 125 kVAR 뱅크 • 한전 기본요금 월 약 112,500원 추가 절감 (5% 할인)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="sparkles"></i>
+            <div>
+              <strong>한전 역률 요금 수칙:</strong> 역률이 90% 이상이면 1%당 기본요금의 0.2%를 할인받고(최대 95%까지), 90% 미달 시 1%당 0.2%의 가산금이 부과되므로 95% 유지가 가장 경제적입니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-powerfactor')">
+              <i data-lucide="copy"></i> <span>역률 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 46: 210bar 고압 유압(Hydraulics) 실린더 추력 & 펌프 kW Sizer [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-hydraulics" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">제철 / 중공업 210bar 고압 유압(Hydraulics) 실린더 추력(Ton) &amp; 유압 펌프 모터(kW) 계산기</h2>
+          <p class="main-desc">유압 작동 압력(bar), 실린더 피스톤 내경(mm), 작동 속도에 따른 유압 실린더 압출력(Ton)과 유압 유니트 펌프 모터 소요 동력을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>유압 작동 압력 및 실린더 규격</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="hydPressureBar">유압 작동 압력 (Pressure P)</label>
+                <select id="hydPressureBar" class="select-precision font-mono">
+                  <option value="140">140 bar (14.0 MPa / 일반 중압 유압)</option>
+                  <option value="210" selected>210 bar (21.0 MPa / 중공업/제철 표준)</option>
+                  <option value="70">70 bar (7.0 MPa / 저압 공작기계)</option>
+                  <option value="280">280 bar (28.0 MPa / 초고압 프레스)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="hydBoreDia">피스톤 튜브 내경 (Bore D)</label>
+                <select id="hydBoreDia" class="select-precision font-mono">
+                  <option value="63">Φ63 mm</option>
+                  <option value="80">Φ80 mm</option>
+                  <option value="100" selected>Φ100 mm (표준 플랜트형)</option>
+                  <option value="125">Φ125 mm</option>
+                  <option value="160">Φ160 mm (대형 프레스)</option>
+                  <option value="200">Φ200 mm (초대형)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="hydStrokeSpeed">실린더 전진 속도 (Speed V)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hydStrokeSpeed" value="50" step="5" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">mm/s</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="hydQuantity">동시 작동 실린더 수량</label>
+                <div class="val-input-group">
+                  <input type="number" id="hydQuantity" value="2" step="1" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">대</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>실린더 압출력 &amp; 유압 펌프 모터 출력</h3>
+            </div>
+            <span id="hydVerdictBadge" class="badge-pill badge-safe">HIGH POWER HYDRAULIC OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">CYLINDER EXTENSION THRUST (F_thrust)</span>
+            <div class="terminal-voltage-big font-mono" id="resHydThrustTon">16.82 Ton (165.0 kN)</div>
+            <div class="tv-sub" id="resHydMotorKw">추천 유압 펌프 모터: 11.0 kW (15.0 HP) • 필요 유량: 47.1 L/min</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="layers"></i>
+            <div>
+              <strong>유압 설계 수칙:</strong> 유압 배관 압력 손실과 펌프 기계 효율(통상 85%)을 고려하여 모터 용량은 계산된 이론 수동력 대비 1.25~1.3배의 여유율을 적용하십시오.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-hydraulics')">
+              <i data-lucide="copy"></i> <span>유압 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 47: HVAC 공조 덕트 압력손실 & 송풍기 모터 Sizer [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-hvacblower" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">HVAC 공조 / 클린룸 환기 덕트 압력손실(Pa) &amp; 급배기 송풍기(Fan/Blower) 모터(kW) 계산기</h2>
+          <p class="main-desc">설계 풍량(CMH), 덕트 규격(사각/원형), 배관 길이에 따른 덕트 마찰 압력 손실(Pa)과 송풍기 필요 전압/풍압 및 모터 동력을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>풍량 및 덕트 규격 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="fanAirFlowCmh">설계 환기 풍량 (Airflow Q)</label>
+                <div class="val-input-group">
+                  <input type="number" id="fanAirFlowCmh" value="3600" step="200" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">m³/h (CMH)</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="fanDuctDiameter">덕트 직경 / 등가직경 (Duct D)</label>
+                <select id="fanDuctDiameter" class="select-precision font-mono">
+                  <option value="250">Φ250 mm (원형 스파이럴)</option>
+                  <option value="350" selected>Φ350 mm (사각 300x350 상당)</option>
+                  <option value="500">Φ500 mm (대형 메인 덕트)</option>
+                  <option value="200">Φ200 mm (소형 분기 덕트)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="fanDuctLength">총 덕트 배관 길이 (Duct L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="fanDuctLength" value="40" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="fanFilterLossPa">필터/댐퍼 정압 손실 (Static Loss)</label>
+                <div class="val-input-group">
+                  <input type="number" id="fanFilterLossPa" value="150" step="20" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">Pa</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>총 정압 손실 &amp; 송풍기 모터 마력</h3>
+            </div>
+            <span id="fanVerdictBadge" class="badge-pill badge-safe">HVAC BLOWER OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">TOTAL SYSTEM PRESSURE LOSS (Delta P)</span>
+            <div class="terminal-voltage-big font-mono" id="resFanTotalPa">242 Pa (24.7 mmAq)</div>
+            <div class="tv-sub" id="resFanMotorKw">추천 송풍기 모터: 0.75 kW (1.0 HP) • 덕트 풍속: 10.4 m/s (공조 적정)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="fan"></i>
+            <div>
+              <strong>공조 덕트 풍속 기준:</strong> 일반 사무실/공조 메인 덕트는 6~10 m/s, 공장/배기 덕트는 10~15 m/s 이하를 유지해야 풍절음과 진동 소음을 억제할 수 있습니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-hvacblower')">
+              <i data-lucide="copy"></i> <span>공조 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 48: 화학/플랜트 포화 증기(Steam) 배관 & 보일러 Sizer [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-steampipe" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">화학 / 제약 / 바이오 포화 증기(Steam) 배관 관경(DN) &amp; 보일러 증발량(kg/h) 계산기</h2>
+          <p class="main-desc">스팀 사용 압력(MPa/bar), 요구 가열 열량(kW) 또는 증기 유량에 따른 포화 증기 배관 적정 관경과 보일러 증기 발생 부하를 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>스팀 압력 및 공정 요구 열량</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="stmPressureMpa">포화 증기 공급 압력 (Steam P)</label>
+                <select id="stmPressureMpa" class="select-precision font-mono">
+                  <option value="0.3">0.3 MPa (3.0 bar / 저압 증기 - 잠열 2163 kJ/kg)</option>
+                  <option value="0.7" selected>0.7 MPa (7.0 bar / 플랜트 표준 - 잠열 2048 kJ/kg)</option>
+                  <option value="1.0">1.0 MPa (10.0 bar / 고압 가열 - 잠열 1999 kJ/kg)</option>
+                  <option value="0.1">0.1 MPa (1.0 bar / 초저압 살균)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="stmHeatDutyKw">공정 요구 열량 (Heat Duty Q)</label>
+                <div class="val-input-group">
+                  <input type="number" id="stmHeatDutyKw" value="300" step="25" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kW</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="stmTargetVelocity">스팀 권장 유속 (Velocity V)</label>
+                <select id="stmTargetVelocity" class="select-precision font-mono">
+                  <option value="25" selected>25 m/s (포화 증기 표준 권장치)</option>
+                  <option value="30">30 m/s (고속 배관)</option>
+                  <option value="20">20 m/s (저소음 정밀 배관)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="stmBoilerMargin">보일러 여유율 (Safety Margin)</label>
+                <div class="val-input-group">
+                  <input type="number" id="stmBoilerMargin" value="1.20" step="0.05" min="1.0" max="1.5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">배</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>추천 증기 배관경 &amp; 보일러 증발량</h3>
+            </div>
+            <span id="stmVerdictBadge" class="badge-pill badge-safe">STEAM PIPE SIZING OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">RECOMMENDED STEAM PIPE SIZE (DN)</span>
+            <div class="terminal-voltage-big font-mono" id="resStmPipeSize">50A (2인치 / ID 52.9mm)</div>
+            <div class="tv-sub" id="resStmBoilerFlow">스팀 소모량: 527 kg/h • 추천 보일러 용량: 0.63 Ton/h (633 kg/h)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="flame"></i>
+            <div>
+              <strong>스팀 배관 수칙:</strong> 증기 배관은 유속이 35 m/s를 초과하면 워터해머 및 침식 손상이 발생하므로 25~30 m/s 이내로 유지하고, 배관 하부에 스팀 트랩을 30~50m 간격으로 설치하십시오.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-steampipe')">
+              <i data-lucide="copy"></i> <span>스팀 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -6089,7 +6648,7 @@
         <div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="badge-pill font-mono" style="background: #f59e0b; color: #000; font-weight: 800; font-size: 0.68rem;">OFFLINE MASTER BUNDLE</span>
-            <h5 style="margin: 0; font-size: 0.98rem; font-weight: 800; color: #f8fafc;">42대 전 도구 오프라인 자동연산 엑셀(XLSX) &amp; 전기 CAD 심볼 200종</h5>
+            <h5 style="margin: 0; font-size: 0.98rem; font-weight: 800; color: #f8fafc;">48대 전 도구 오프라인 자동연산 엑셀(XLSX) &amp; 전기 CAD 심볼 200종</h5>
           </div>
           <p style="margin: 0.25rem 0 0 0; font-size: 0.77rem; color: #94a3b8;">사내 보안 폐쇄망(인터넷 불가 연구소/공장)에서 평생 영구 소장하여 즉시 활용하는 실무 엔지니어 필수 번들</p>
         </div>
@@ -7128,6 +7687,30 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-beamdeflection')">
           <div class="drawer-tool-icon"><i data-lucide="box"></i></div>
           <span class="drawer-tool-name" id="dtn42">구조보 굽힘 처짐량</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-vacuumchamber')">
+          <div class="drawer-tool-icon"><i data-lucide="gauge"></i></div>
+          <span class="drawer-tool-name" id="dtn43">반도체 진공 챔버 배기</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-batterythermal')">
+          <div class="drawer-tool-icon"><i data-lucide="battery-charging"></i></div>
+          <span class="drawer-tool-name" id="dtn44">배터리 팩 C-rate 발열</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-powerfactor')">
+          <div class="drawer-tool-icon"><i data-lucide="sparkles"></i></div>
+          <span class="drawer-tool-name" id="dtn45">역률 개선 전력용 콘덴서</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-hydraulics')">
+          <div class="drawer-tool-icon"><i data-lucide="layers"></i></div>
+          <span class="drawer-tool-name" id="dtn46">고압 유압 실린더 추력</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-hvacblower')">
+          <div class="drawer-tool-icon"><i data-lucide="fan"></i></div>
+          <span class="drawer-tool-name" id="dtn47">공조 환기 덕트 송풍기</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-steampipe')">
+          <div class="drawer-tool-icon"><i data-lucide="flame"></i></div>
+          <span class="drawer-tool-name" id="dtn48">스팀 배관 및 보일러 부하</span>
         </div>
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>

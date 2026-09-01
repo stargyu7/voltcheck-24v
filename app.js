@@ -2432,7 +2432,43 @@ const TAB_I18N_DATA = {
       c1: '설치 위치 및 계통 전압/접지 방식',
       c2: '추천 SPD 사양 및 전압보호레벨(Up)'
     },
-            'tab-pumphead': {
+                'tab-vacuumchamber': {
+      title: '반도체 / 디스플레이 진공 챔버 배기 시간(Pumping Down Time) & 진공도 계산기',
+      desc: '챔버 체적(m³), 목표 진공도(Pa/Torr), 드라이/루츠 펌프 유효 배기속도(m³/h)에 따른 러핑 배기 시간과 적정 진공 펌프 용량을 산출합니다.',
+      c1: '진공 챔버 및 펌프 배기 파라미터',
+      c2: '목표 진공도 도달 시간 & 러핑 판정'
+    },
+    'tab-batterythermal': {
+      title: '2차전지 / 전기차(EV) 배터리 팩 C-rate 충방전 내부발열량(W) & 수냉 칠러 쿨링 용량 계산기',
+      desc: '배터리 팩 용량(kWh), 충방전율(C-rate), 내부 저항(mΩ)에 따른 총 줄열 발열량과 과열 방지용 수냉 칠러(kW) 및 냉각수 유량을 산출합니다.',
+      c1: '배터리 팩 사양 및 C-rate 충방전 조건',
+      c2: '팩 총 발열량 & 필요 수냉 칠러 용량'
+    },
+    'tab-powerfactor': {
+      title: '수배전반 역률(Power Factor) 개선 전력용 콘덴서(Capacitor Bank kVAR) & 전기요금 절감 계산기',
+      desc: '유효전력(kW), 현재 역률 및 목표 역률(95~98%)에 따른 소요 진상용 콘덴서 용량(kVAR)과 한전 기본요금 할인 절감액을 산출합니다.',
+      c1: '수전 유효전력 및 현재/목표 역률',
+      c2: '필요 콘덴서 용량 & 기본요금 절감액'
+    },
+    'tab-hydraulics': {
+      title: '제철 / 중공업 210bar 고압 유압(Hydraulics) 실린더 추력(Ton) & 유압 펌프 모터(kW) 계산기',
+      desc: '유압 작동 압력(bar), 실린더 피스톤 내경(mm), 작동 속도에 따른 유압 실린더 압출력(Ton)과 유압 유니트 펌프 모터 소요 동력을 산출합니다.',
+      c1: '유압 작동 압력 및 실린더 규격',
+      c2: '실린더 압출력 & 유압 펌프 모터 출력'
+    },
+    'tab-hvacblower': {
+      title: 'HVAC 공조 / 클린룸 환기 덕트 압력손실(Pa) & 급배기 송풍기(Fan/Blower) 모터(kW) 계산기',
+      desc: '설계 풍량(CMH), 덕트 규격(사각/원형), 배관 길이에 따른 덕트 마찰 압력 손실(Pa)과 송풍기 필요 전압/풍압 및 모터 동력을 산출합니다.',
+      c1: '풍량 및 덕트 규격 파라미터',
+      c2: '총 정압 손실 & 송풍기 모터 마력'
+    },
+    'tab-steampipe': {
+      title: '화학 / 제약 / 바이오 포화 증기(Steam) 배관 관경(DN) & 보일러 증발량(kg/h) 계산기',
+      desc: '스팀 사용 압력(MPa/bar), 요구 가열 열량(kW) 또는 증기 유량에 따른 포화 증기 배관 적정 관경과 보일러 증기 발생 부하를 산출합니다.',
+      c1: '스팀 압력 및 공정 요구 열량',
+      c2: '추천 증기 배관경 & 보일러 증발량'
+    },
+    'tab-pumphead': {
       title: '유체역학 펌프 전양정(Total Dynamic Head) & Darcy-Weisbach 배관 마찰손실 수두 계산기',
       desc: '배관 직경, 유량(LPM/m³/h), 배관 길이 및 밸브 부속류에 따른 관마찰 압력 손실(bar)과 펌프 필요 수동력(kW/HP)을 산출합니다.',
       c1: '유체 유량 및 배관 규격 파라미터',
@@ -2504,7 +2540,43 @@ const TAB_I18N_DATA = {
       c1: 'Installation Point & Grid Specs',
       c2: 'Recommended SPD Ratings & Up Level'
     },
-            'tab-pumphead': {
+                'tab-vacuumchamber': {
+      title: 'Semiconductor Vacuum Chamber Evacuation Time & Vacuum Pump Sizer',
+      desc: 'Calculate chamber pump-down time and required dry/roots vacuum pump capacity from atmospheric pressure down to high vacuum.',
+      c1: 'Chamber Volume & Pump Speed',
+      c2: 'Evacuation Time & Pumping Verdict'
+    },
+    'tab-batterythermal': {
+      title: 'EV Battery Pack C-rate Heat Generation & Liquid Chiller Sizer',
+      desc: 'Calculate pack Joule heating (Watts), temperature rise, and required liquid cooling chiller capacity (kW) under rapid charging.',
+      c1: 'Battery Pack & C-rate Specs',
+      c2: 'Total Heat Loss & Chiller Power'
+    },
+    'tab-powerfactor': {
+      title: 'Power Factor Correction Capacitor Bank (kVAR) & KEPCO Bill Sizer',
+      desc: 'Calculate required reactive power compensation capacitor bank (kVAR) to raise power factor from 80% to 95-98% for grid bill discounts.',
+      c1: 'Active Power & Target Power Factor',
+      c2: 'Capacitor Bank Sizing & Savings'
+    },
+    'tab-hydraulics': {
+      title: '210bar High-Pressure Hydraulic Cylinder Thrust & Pump Motor Sizer',
+      desc: 'Calculate hydraulic cylinder extension thrust (Tons/kN) and hydraulic power unit motor power (kW/HP) under high operating pressures.',
+      c1: 'Hydraulic Pressure & Bore Size',
+      c2: 'Cylinder Thrust & Motor Power'
+    },
+    'tab-hvacblower': {
+      title: 'HVAC Air Duct Pressure Drop & Ventilation Blower Fan Motor Sizer',
+      desc: 'Calculate friction pressure loss (Pa/mmAq) across air ducts and size ventilation blower fan motors (kW/HP) based on airflow (CMH).',
+      c1: 'Airflow & Duct Dimensions',
+      c2: 'Total Static Loss & Fan Motor'
+    },
+    'tab-steampipe': {
+      title: 'Process Steam Piping Diameter (DN) & Boiler Steam Load Sizer',
+      desc: 'Calculate optimal saturated steam pipe sizing (DN/Inches) and required boiler steam evaporation load (kg/h or Ton/h).',
+      c1: 'Steam Pressure & Heat Duty',
+      c2: 'Steam Pipe Sizing & Boiler Load'
+    },
+    'tab-pumphead': {
       title: 'Pump Total Dynamic Head (TDH) & Darcy-Weisbach Pipe Friction Loss Sizer',
       desc: 'Calculate pipe velocity, friction head loss, total dynamic head, and required pump motor power (kW/HP) based on flow rate and pipe diameter.',
       c1: 'Flow Rate & Pipe Specifications',
@@ -5404,6 +5476,12 @@ document.addEventListener('DOMContentLoaded', () => {
   calculateBoltTorque();
   calculateHeatExchanger();
   calculateBeamDeflection();
+  calculateVacuumChamber();
+  calculateBatteryThermal();
+  calculatePowerFactor();
+  calculateHydraulics();
+  calculateHvacBlower();
+  calculateSteamPipe();
 
 });
 
@@ -5687,7 +5765,25 @@ function selectDrawerTool(tabId) {
 
   // Update mobile bottom nav highlights
   document.querySelectorAll('.mb-nav-item').forEach(el => el.classList.remove('active'));
-  if (tabId === 'tab-pumphead') {
+  if (tabId === 'tab-vacuumchamber') {
+    const t = document.getElementById('resVcTimeSec')?.textContent || '0 분';
+    text = `[VoltCheck 진공 챔버 배기시간 검토 결과]\n- 배기 시간: ${t}\n- 적용 표준: Vacuum Technology\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-batterythermal') {
+    const q = document.getElementById('resBtHeatWatts')?.textContent || '0 W';
+    text = `[VoltCheck 배터리 팩 발열량 및 칠러 검토 결과]\n- 총 발열량: ${q}\n- 적용 표준: Battery Thermal Management\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-powerfactor') {
+    const qc = document.getElementById('resPfCapKvar')?.textContent || '0 kVAR';
+    text = `[VoltCheck 역률개선 콘덴서 검토 결과]\n- 필요 콘덴서: ${qc}\n- 적용 표준: IEEE 141 / KEPCO\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-hydraulics') {
+    const f = document.getElementById('resHydThrustTon')?.textContent || '0 Ton';
+    text = `[VoltCheck 고압 유압 실린더 추력 검토 결과]\n- 압출력: ${f}\n- 적용 표준: ISO 6020 / Hydraulics\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-hvacblower') {
+    const pa = document.getElementById('resFanTotalPa')?.textContent || '0 Pa';
+    text = `[VoltCheck HVAC 공조 송풍기 검토 결과]\n- 총 압력손실: ${pa}\n- 적용 표준: ASHRAE / HVAC\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-steampipe') {
+    const dn = document.getElementById('resStmPipeSize')?.textContent || '50A';
+    text = `[VoltCheck 스팀 배관 관경 검토 결과]\n- 추천 관경: ${dn}\n- 적용 표준: Spirax Sarco Steam Standards\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-pumphead') {
     const h = document.getElementById('resPhTotalHead')?.textContent || '0 m';
     text = `[VoltCheck 펌프 전양정 및 배관 마찰손실 검토 결과]\n- 펌프 전양정: ${h}\n- 적용 표준: Darcy-Weisbach / Hydraulic Institute\nhttps://voltcheck24.com/`;
   } else if (tabId === 'tab-bolttorque') {
@@ -7140,4 +7236,210 @@ function calculateBeamDeflection() {
     elBadge.textContent = isSafe ? 'DEFLECTION OK (≤ L/500)' : 'EXCESSIVE DEFLECTION';
     elBadge.className = isSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
   }
+}
+
+
+// ==========================================================================
+// TAB 43: SEMICONDUCTOR VACUUM CHAMBER EVACUATION TIME ENGINE
+// ==========================================================================
+
+function calculateVacuumChamber() {
+  const v_m3 = parseFloat(document.getElementById('vcChamberVol')?.value) || 1.5;
+  const s_m3h = parseFloat(document.getElementById('vcPumpSpeed')?.value) || 180;
+  const p2_pa = parseFloat(document.getElementById('vcTargetPressure')?.value) || 1.0;
+  const gasFactor = parseFloat(document.getElementById('vcGasLoadFactor')?.value) || 1.3;
+
+  const p1_pa = 101325.0; // 1 atm in Pa
+  // t (hours) = (V / S) * ln(P1 / P2) * gasFactor
+  const s_m3s = s_m3h / 3600.0;
+  const t_sec = (v_m3 / s_m3s) * Math.log(p1_pa / p2_pa) * gasFactor;
+  const t_min = t_sec / 60.0;
+
+  const elTime = document.getElementById('resVcTimeSec');
+  if (elTime) elTime.textContent = `${t_min.toFixed(2)} 분 (${Math.round(t_sec)}초)`;
+  const elSub = document.getElementById('resVcPumpVerdict');
+  if (elSub) elSub.textContent = `대기압(101.3 kPa) → ${p2_pa} Pa 도달 • 러핑 펌프 속도 적정 (${t_min <= 10 ? '안정' : '배기시간 지연'})`;
+
+  const elBadge = document.getElementById('vcVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = t_min <= 10 ? 'PUMP DOWN OK' : 'SLOW EVACUATION';
+    elBadge.className = t_min <= 10 ? 'badge-pill badge-safe' : 'badge-pill badge-warn';
+  }
+}
+
+// ==========================================================================
+// TAB 44: BATTERY PACK C-RATE THERMAL & CHILLER SIZING ENGINE
+// ==========================================================================
+
+function calculateBatteryThermal() {
+  const kwh = parseFloat(document.getElementById('btPackCapKwh')?.value) || 75;
+  const volt = parseFloat(document.getElementById('btPackVolt')?.value) || 400;
+  const crate = parseFloat(document.getElementById('btCrateRate')?.value) || 2.0;
+  const r_mohm = parseFloat(document.getElementById('btPackInternalR')?.value) || 35;
+
+  // Capacity in Ah = (kWh * 1000) / V
+  const ah = (kwh * 1000.0) / volt;
+  const current_a = ah * crate;
+  const r_ohm = r_mohm / 1000.0;
+
+  // Joule heating Q = I^2 * R (Watts)
+  const q_joule = Math.pow(current_a, 2) * r_ohm;
+  const q_total_w = q_joule * 1.05; // 5% entropy term
+  const q_kw = q_total_w / 1000.0;
+  const chiller_kw = q_kw * 1.25;
+
+  // Water flow Q = m * Cp * deltaT (deltaT = 4°C, Cp = 4.184 kJ/kg*K)
+  const flow_lpm = (q_kw / (4.184 * 4.0)) * 60.0;
+
+  const elHeat = document.getElementById('resBtHeatWatts');
+  if (elHeat) elHeat.textContent = `${Math.round(q_total_w).toLocaleString('ko-KR')} W (${q_kw.toFixed(2)} kW)`;
+  const elSub = document.getElementById('resBtChillerKw');
+  if (elSub) elSub.textContent = `추천 수냉 칠러: ${chiller_kw.toFixed(2)} kW (안전마진 1.25배) • 냉각수 유량: ${flow_lpm.toFixed(1)} L/min`;
+
+  const elBadge = document.getElementById('btVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = crate <= 2.0 ? 'THERMAL CONTROL OK' : 'EXTREME HEAT HAZARD';
+    elBadge.className = crate <= 2.0 ? 'badge-pill badge-safe' : 'badge-pill badge-warn';
+  }
+}
+
+// ==========================================================================
+// TAB 45: POWER FACTOR CORRECTION CAPACITOR BANK ENGINE
+// ==========================================================================
+
+function calculatePowerFactor() {
+  const p_kw = parseFloat(document.getElementById('pfActiveKw')?.value) || 250;
+  const pf1 = parseFloat(document.getElementById('pfCurrentVal')?.value) || 0.80;
+  const pf2 = parseFloat(document.getElementById('pfTargetVal')?.value) || 0.95;
+
+  // Qc = P * (tan(acos(pf1)) - tan(acos(pf2)))
+  const tanPhi1 = Math.tan(Math.acos(pf1));
+  const tanPhi2 = Math.tan(Math.acos(pf2));
+  const qc_kvar = p_kw * (tanPhi1 - tanPhi2);
+
+  // Standard Capacitor Sizes
+  let recBank = 100;
+  if (qc_kvar <= 25) recBank = 25;
+  else if (qc_kvar <= 50) recBank = 50;
+  else if (qc_kvar <= 75) recBank = 75;
+  else if (qc_kvar <= 100) recBank = 100;
+  else if (qc_kvar <= 125) recBank = 125;
+  else if (qc_kvar <= 150) recBank = 150;
+  else recBank = Math.ceil(qc_kvar / 50.0) * 50;
+
+  // KEPCO 5% bill discount approx savings
+  const monthlySaveWon = p_kw * 9000 * ((pf2 - 0.90) * 0.2);
+
+  const elQc = document.getElementById('resPfCapKvar');
+  if (elQc) elQc.textContent = `${qc_kvar.toFixed(1)} kVAR`;
+  const elSub = document.getElementById('resPfBillSave');
+  if (elSub) elSub.textContent = `추천 콘덴서: ${recBank} kVAR 뱅크 • 한전 기본요금 월 약 ${Math.round(monthlySaveWon).toLocaleString('ko-KR')}원 추가 절감 (5% 할인)`;
+
+  const elBadge = document.getElementById('pfVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = `PF OPTIMIZED (${Math.round(pf2*100)}%)`;
+    elBadge.className = 'badge-pill badge-safe';
+  }
+}
+
+// ==========================================================================
+// TAB 46: HIGH-PRESSURE HYDRAULIC CYLINDER & PUMP POWER ENGINE
+// ==========================================================================
+
+function calculateHydraulics() {
+  const p_bar = parseFloat(document.getElementById('hydPressureBar')?.value) || 210;
+  const bore_mm = parseFloat(document.getElementById('hydBoreDia')?.value) || 100;
+  const speed_mms = parseFloat(document.getElementById('hydStrokeSpeed')?.value) || 50;
+  const qty = parseInt(document.getElementById('hydQuantity')?.value) || 2;
+
+  // Area A = pi * (D/2)^2 (cm2)
+  const area_cm2 = Math.PI * Math.pow(bore_mm / 20.0, 2);
+  const force_kgf = p_bar * area_cm2;
+  const force_ton = force_kgf / 1000.0;
+  const force_kn = (force_kgf * 9.80665) / 1000.0;
+
+  // Flow Q (L/min) = (Area_cm2 * Speed_cm_s * 60) / 1000 * qty
+  const speed_cms = speed_mms / 10.0;
+  const flow_lpm = (area_cm2 * speed_cms * 60.0) / 1000.0 * qty;
+
+  // Motor kW = (P_bar * Q_lpm) / (600 * eta), eta = 0.85
+  const motor_kw = (p_bar * flow_lpm) / (600.0 * 0.85);
+  const motor_hp = motor_kw * 1.341;
+
+  const elThrust = document.getElementById('resHydThrustTon');
+  if (elThrust) elThrust.textContent = `${force_ton.toFixed(2)} Ton (${force_kn.toFixed(1)} kN)`;
+  const elSub = document.getElementById('resHydMotorKw');
+  if (elSub) elSub.textContent = `추천 유압 펌프 모터: ${motor_kw.toFixed(1)} kW (${motor_hp.toFixed(1)} HP) • 필요 유량: ${flow_lpm.toFixed(1)} L/min`;
+}
+
+// ==========================================================================
+// TAB 47: HVAC AIR DUCT PRESSURE DROP & BLOWER SIZING ENGINE
+// ==========================================================================
+
+function calculateHvacBlower() {
+  const cmh = parseFloat(document.getElementById('fanAirFlowCmh')?.value) || 3600;
+  const d_mm = parseFloat(document.getElementById('fanDuctDiameter')?.value) || 350;
+  const l_m = parseFloat(document.getElementById('fanDuctLength')?.value) || 40;
+  const staticLossPa = parseFloat(document.getElementById('fanFilterLossPa')?.value) || 150;
+
+  const q_m3s = cmh / 3600.0;
+  const d_m = d_mm / 1000.0;
+  const area_m2 = Math.PI * Math.pow(d_m / 2.0, 2);
+  const vel = q_m3s / area_m2;
+
+  // Friction loss deltaP_friction = lambda * (L/D) * (rho * v^2 / 2), lambda ~= 0.02
+  const rho = 1.2; // Air density kg/m3
+  const deltaP_friction = 0.02 * (l_m / d_m) * (rho * Math.pow(vel, 2) / 2.0);
+  const totalPa = deltaP_friction + staticLossPa;
+  const mmAq = totalPa / 9.80665;
+
+  // Blower power kW = (Q_m3s * totalPa) / (1000 * eta), eta = 0.65
+  const blowerKw = (q_m3s * totalPa) / (1000.0 * 0.65);
+  const blowerHp = blowerKw * 1.341;
+
+  const elPa = document.getElementById('resFanTotalPa');
+  if (elPa) elPa.textContent = `${Math.round(totalPa)} Pa (${mmAq.toFixed(1)} mmAq)`;
+  const elSub = document.getElementById('resFanMotorKw');
+  if (elSub) elSub.textContent = `추천 송풍기 모터: ${blowerKw.toFixed(2)} kW (${blowerHp.toFixed(1)} HP) • 덕트 풍속: ${vel.toFixed(1)} m/s (공조 적정)`;
+}
+
+// ==========================================================================
+// TAB 48: STEAM PIPING & BOILER LOAD SIZING ENGINE
+// ==========================================================================
+
+function calculateSteamPipe() {
+  const p_mpa = parseFloat(document.getElementById('stmPressureMpa')?.value) || 0.7;
+  const q_kw = parseFloat(document.getElementById('stmHeatDutyKw')?.value) || 300;
+  const vel_target = parseFloat(document.getElementById('stmTargetVelocity')?.value) || 25;
+  const margin = parseFloat(document.getElementById('stmBoilerMargin')?.value) || 1.20;
+
+  // Latent heat hfg (kJ/kg) and specific volume vg (m3/kg)
+  let hfg = 2048.0;
+  let vg = 0.240;
+  if (p_mpa <= 0.2) { hfg = 2258.0; vg = 0.885; }
+  else if (p_mpa <= 0.4) { hfg = 2163.0; vg = 0.462; }
+  else if (p_mpa <= 0.8) { hfg = 2048.0; vg = 0.240; }
+  else { hfg = 1999.0; vg = 0.177; }
+
+  // Steam flow W (kg/h) = (Q_kW * 3600) / hfg
+  const steam_kgh = (q_kw * 3600.0) / hfg;
+  const boiler_kgh = steam_kgh * margin;
+  const boiler_ton = boiler_kgh / 1000.0;
+
+  // Pipe inner diameter D = sqrt((4 * W_m3s) / (pi * V))
+  const w_m3s = (steam_kgh * vg) / 3600.0;
+  const reqD_m = Math.sqrt((4.0 * w_m3s) / (Math.PI * vel_target));
+  const reqD_mm = reqD_m * 1000.0;
+
+  let pipeLabel = '50A (2인치 / ID 52.9mm)';
+  if (reqD_mm <= 25) pipeLabel = '25A (1인치 / ID 27.6mm)';
+  else if (reqD_mm <= 40) pipeLabel = '40A (1.5인치 / ID 41.6mm)';
+  else if (reqD_mm <= 50) pipeLabel = '50A (2인치 / ID 52.9mm)';
+  else if (reqD_mm <= 80) pipeLabel = '80A (3인치 / ID 80.7mm)';
+  else pipeLabel = '100A (4인치 / ID 105.3mm)';
+
+  const elPipe = document.getElementById('resStmPipeSize');
+  if (elPipe) elPipe.textContent = pipeLabel;
+  const elSub = document.getElementById('resStmBoilerFlow');
+  if (elSub) elSub.textContent = `스팀 소모량: ${Math.round(steam_kgh)} kg/h • 추천 보일러 용량: ${boiler_ton.toFixed(2)} Ton/h (${Math.round(boiler_kgh)} kg/h)`;
 }
