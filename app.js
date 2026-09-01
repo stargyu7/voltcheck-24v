@@ -4201,11 +4201,39 @@ let SELECTED_DIGITAL_TIER = {
   title: '엔지니어 실무 스타터 팩 (9,900원)'
 };
 
+// Bank Transfer Master Account Configuration
+const VOLTCHECK_BANK_INFO = {
+  bank: '카카오뱅크',
+  account: '3333-01-2345678', // 사장님 계좌번호로 즉시 반영
+  owner: '이규정'
+};
+
 function selectTierAndBuy(price, title) {
   SELECTED_DIGITAL_TIER = { price, title };
   const box = document.getElementById('digitalOrderBox');
   const titleEl = document.getElementById('selectedTierTitle');
-  if (titleEl) titleEl.textContent = `선택된 상품: ${title}`;
+  const priceNumEl = document.getElementById('checkoutPriceNum');
+  const badgeEl = document.getElementById('checkoutTierBadge');
+  const btnTextEl = document.getElementById('paySubmitBtnText');
+  const bankAmountEl = document.getElementById('bankAmountText');
+
+  if (titleEl) titleEl.textContent = title;
+  if (priceNumEl) priceNumEl.textContent = price.toLocaleString();
+  if (bankAmountEl) bankAmountEl.textContent = `${price.toLocaleString()}원`;
+  if (badgeEl) badgeEl.textContent = price === 9900 ? 'SELECTED: 9,900 KRW STARTER' : 'SELECTED: 29,000 KRW PRO BUNDLE';
+  if (btnTextEl) btnTextEl.textContent = `${price.toLocaleString()}원 송금 완료 & 파일 즉시 다운로드`;
+
+  // Setup Account Number Copy Button
+  const copyBankBtn = document.getElementById('copyBankBtn');
+  if (copyBankBtn) {
+    copyBankBtn.onclick = () => {
+      const accText = `${VOLTCHECK_BANK_INFO.bank} ${VOLTCHECK_BANK_INFO.account} ${VOLTCHECK_BANK_INFO.owner}`;
+      navigator.clipboard.writeText(accText).then(() => {
+        alert(`[계좌번호 복사 완료]\n\n${accText}\n\n입금 금액: ${price.toLocaleString()}원`);
+      });
+    };
+  }
+
   if (box) {
     box.style.display = 'block';
     box.scrollIntoView({ behavior: 'smooth' });
