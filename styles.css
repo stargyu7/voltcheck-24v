@@ -4363,3 +4363,58 @@ body, h1, h2, h3, h4, h5, p, span, div, label, li {
   color: #64748b;
   margin-top: 0.4rem;
 }
+
+
+/* ==========================================================================
+   GLOBAL INSTANT TOOL SEARCH BAR & ENHANCED PALETTE
+   ========================================================================== */
+
+.quick-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 480px;
+  width: 100%;
+  margin: 0.2rem 0;
+}
+
+.quick-search-input {
+  width: 100%;
+  background: #ffffff;
+  border: 1.5px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 2rem 0.4rem 2.2rem;
+  font-size: 0.78rem;
+  font-family: inherit;
+  color: var(--navy-dark);
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.quick-search-input:focus {
+  outline: none;
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+}
+
+.quick-search-icon {
+  position: absolute;
+  left: 0.65rem;
+  color: #94a3b8;
+  width: 15px;
+  height: 15px;
+  pointer-events: none;
+}
+
+.quick-search-kbd {
+  position: absolute;
+  right: 0.65rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: #64748b;
+  padding: 1px 4px;
+  pointer-events: none;
+}

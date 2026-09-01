@@ -3,18 +3,19 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://voltcheck24.com/</loc>
-    <lastmod>2026-09-01T20:20:00+09:00</lastmod>
+    <lastmod>2026-09-01T21:07:00+09:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://voltcheck24.com/?lang=ko"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://voltcheck24.com/?lang=en"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://voltcheck24.com/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://voltcheck24.com/?lang=es"/>
     <xhtml:link rel="alternate" hreflang="zh" href="https://voltcheck24.com/?lang=zh"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://voltcheck24.com/"/>
   </url>
   <url>
     <loc>https://voltcheck24.com/about.html</loc>
-    <lastmod>2026-09-01T20:20:00+09:00</lastmod>
+    <lastmod>2026-09-01T21:07:00+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

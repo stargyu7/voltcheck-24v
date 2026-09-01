@@ -2426,6 +2426,30 @@ const TAB_I18N_DATA = {
       c1: '부스바 도체 규격 및 단락 조건',
       c2: '연속 허용전류 및 단락 전자력 판정'
     },
+        'tab-spd': {
+      title: 'IEC 61643 서지보호기(SPD) Type 1/2/3 정격 & 방전전류 선정기',
+      desc: '수전 인입반(Type 1), 분전반(Type 2), 제어반(Type 3)의 접지 계통(TN/TT/IT)에 따른 최대연속사용전압(Uc) 및 방전용량을 산출합니다.',
+      c1: '설치 위치 및 계통 전압/접지 방식',
+      c2: '추천 SPD 사양 및 전압보호레벨(Up)'
+    },
+    'tab-hoistcrane': {
+      title: '갠트리/크레인 호이스트 권상 모터 출력(kW) & 와이어로프 안전율 계산기',
+      desc: '정격 인양 하중(Ton), 권상 속도(m/min), 기계 효율에 따른 모터 필요 출력(kW)과 와이어로프 안전율을 산출합니다.',
+      c1: '인양 하중 및 기구 파라미터',
+      c2: '필요 모터 권상 동력 & 로프 안전율 판정'
+    },
+        'tab-spd': {
+      title: 'IEC 61643 Surge Protective Device (SPD) Type 1/2/3 Sizer',
+      desc: 'Calculate maximum continuous operating voltage (Uc), discharge rating (In/Iimp), and Up levels based on earthing systems (TN/TT/IT).',
+      c1: 'Installation Point & Grid Specs',
+      c2: 'Recommended SPD Ratings & Up Level'
+    },
+    'tab-hoistcrane': {
+      title: 'Gantry / Crane Hoist Motor Power (kW) & Wire Rope Safety Factor Sizer',
+      desc: 'Calculate required hoist motor power (kW), rope tensile safety factor (>= 5), and holding brake torque based on load capacity and lifting speed.',
+      c1: 'Hoist Load & Mechanical Params',
+      c2: 'Required Motor Power & Rope Verdict'
+    },
     'tab-cleanesd': {
       title: 'ANSI/ESD S20.20 & IEC 61340 반도체/클린룸 정전기 감쇠 & 표면저항 판정기',
       desc: '반도체/2차전지 클린룸 EPA 제전 매트, 바닥재, 이오나이저의 정전기 감쇠 시간(1000V→100V ≤ 2.0s) 및 표면 저항 적합성을 판정합니다.',
@@ -2651,6 +2675,116 @@ const TAB_I18N_DATA = {
       desc: '動力電源から制御電源への降圧時、定常負荷と突入ピークを考慮した変圧器容量と保護機器を算出します。',
       c1: '変圧器仕様入力',
       c2: '推奨容量＆遮断器定格'
+    }
+  },
+    es: {
+    'tab-voltagedrop': {
+      title: 'Calculadora de Caída de Tensión en Cable DC 24V y Margen de Sensores',
+      desc: 'Calcule la resistencia de bucle, la caída de tensión y el margen contra reinicios de sensores en tiempo real según la distancia y calibre.',
+      c1: 'Parámetros de Diseño',
+      c2: 'Veredicto de Verificación'
+    },
+    'tab-analogloop': {
+      title: 'Verificación de Margen en Bucle de Corriente Analógica 4-20mA',
+      desc: 'Evalúe los márgenes de tensión considerando la fuente del transmisor, resistencia del cable y shunt receptor de 250 ohmios.',
+      c1: 'Alimentación y Transmisor',
+      c2: 'Margen de Tensión'
+    },
+    'tab-smpsbudget': {
+      title: 'Dimensionamiento de Fuente SMPS DC 24V y Protector de Circuito (CP)',
+      desc: 'Calcule la potencia óptima de la fuente SMPS y la corriente nominal del protector considerando cargas estables y picos de arranque.',
+      c1: 'Perfil de Cargas',
+      c2: 'Capacidad Recomendada'
+    },
+    'tab-cabinetcooling': {
+      title: 'Cálculo de Refrigeración y Climatizador para Cuadros Eléctricos',
+      desc: 'Calcule la potencia frigorífica requerida (W, kcal/h) según las dimensiones del armario y la disipación térmica de los componentes.',
+      c1: 'Dimensiones y Calor Interno',
+      c2: 'Capacidad de Refrigeración'
+    },
+    'tab-cabletable': {
+      title: 'Tabla de Capacidad de Corriente (Ampacidad) y Resistencia de Cables',
+      desc: 'Compare la sección transversal, resistencia a 20°C y ampacidad al aire libre vs canalizaciones cerradas para calibres AWG y métricos.',
+      c1: 'Filtro de Conductor',
+      c2: 'Especificaciones Físicas'
+    },
+    'tab-rs485': {
+      title: 'Línea de Bus RS-485 / Modbus y Resistencia de Terminación de 120Ω',
+      desc: 'Calcule la distancia máxima permitida y la necesidad de terminadores de 120Ω según la tasa de baudios y longitud del cable.',
+      c1: 'Parámetros del Bus',
+      c2: 'Integridad de Señal'
+    },
+    'tab-safetylight': {
+      title: 'Distancia Mínima de Seguridad para Barreras Ópticas ISO 13855 (S)',
+      desc: 'Calcule la distancia legal de seguridad (S) según la resolución del haz óptico, tiempo de respuesta y parada de máquina.',
+      c1: 'Parámetros de Seguridad',
+      c2: 'Veredicto ISO 13855'
+    },
+    'tab-transformer': {
+      title: 'Transformador de Control (kVA) y Protecciones Primario/Secundario',
+      desc: 'Dimensione transformadores de maniobra considerando cargas continuas, picos de electroválvulas y margen de seguridad.',
+      c1: 'Tensiones y Cargas',
+      c2: 'Capacidad Recomendada'
+    },
+    'tab-shortcircuit': {
+      title: 'Corriente de Cortocircuito Simétrica (Isc) según %Z del Transformador',
+      desc: 'Calcule la corriente de cortocircuito trifásica (kA) y verifique el poder de corte de los interruptores según IEC 60909.',
+      c1: 'Transformador y Cable',
+      c2: 'Isc y Poder de Corte'
+    },
+    'tab-motioninertia': {
+      title: 'Inercia de Carga Mecánica (JL) y Relación de Inercia del Servomotor',
+      desc: 'Calcule la inercia para husillos de bolas, correas dentadas y platos giratorios, evaluando la relación JL/JM.',
+      c1: 'Mecanismo y Motor',
+      c2: 'Relación de Inercia'
+    },
+    'tab-tempconversion': {
+      title: 'Conversor de Temperatura IEC 60751 PT100 (RTD) y Termopares (K/J/T)',
+      desc: 'Conversión precisa temperatura a resistencia/mV con compensación de error de resistencia de línea a 3 hilos.',
+      c1: 'Sensor y Cableado',
+      c2: 'Valor y Compensación'
+    },
+    'tab-valvecv': {
+      title: 'Coeficiente de Caudal de Válvulas de Control (Cv / Kv) ISA-75.01',
+      desc: 'Calcule el coeficiente Cv/Kv, velocidad del fluido y diámetro nominal (DN) según caudal y presión diferencial (ΔP).',
+      c1: 'Propiedades del Fluido',
+      c2: 'Cv y Diámetro Recomendado'
+    },
+    'tab-agvbattery': {
+      title: 'Autonomía de Batería y Cargador Rápido para Robots AGV / AMR',
+      desc: 'Calcule la autonomía real en horas (DoD 80%), consumo energético en kWh y tiempo de carga rápida para robots móviles.',
+      c1: 'Batería y Potencia',
+      c2: 'Autonomía y Carga'
+    },
+    'tab-busbar': {
+      title: 'Capacidad de Corriente en Pletinas de Cobre (Busbar) DIN 43671',
+      desc: 'Calcule la ampacidad continua (A) y fuerza electromecánica máxima de cortocircuito (N/m) entre fases de embarrados.',
+      c1: 'Pletina y Cortocircuito',
+      c2: 'Ampacidad y Fuerza N/m'
+    },
+    'tab-cleanesd': {
+      title: 'Verificador de Descarga Electrostática (ESD) en Salas Limpias',
+      desc: 'Verifique el tiempo de decaimiento estático (<= 2.0s) y resistividad superficial según ANSI/ESD S20.20.',
+      c1: 'Tensión y Resistencia',
+      c2: 'Veredicto ANSI/ESD'
+    },
+    'tab-spd': {
+      title: 'Protector de Sobretensiones (SPD) Tipo 1/2/3 según IEC 61643',
+      desc: 'Dimensione la tensión máxima de operación Uc y capacidad de descarga In/Iimp según el régimen de neutro (TN/TT/IT).',
+      c1: 'Punto de Instalación',
+      c2: 'Capacidad SPD y Nivel Up'
+    },
+    'tab-hoistcrane': {
+      title: 'Potencia de Motor de Elevación (kW) y Factor de Seguridad del Cable',
+      desc: 'Calcule la potencia del motor de elevación (kW) y factor de seguridad a tracción (>= 5) para puentes grúa.',
+      c1: 'Carga y Mecanismo',
+      c2: 'Potencia y Seguridad'
+    },
+    'tab-articles': {
+      title: 'Biblioteca Técnica y Guía de Normativas Industriales',
+      desc: 'Normas internacionales IEC 60204-1, NFPA 79, esquemas y compatibilidad electromagnética (EMC).',
+      c1: 'Índice de Temas',
+      c2: 'Guía de Consulta'
     }
   },
   zh: {
@@ -5137,6 +5271,8 @@ document.addEventListener('DOMContentLoaded', () => {
   calculateAgvBattery();
   calculateBusbar();
   calculateCleanESD();
+  calculateSPD();
+  calculateCraneHoist();
 
 });
 
@@ -6067,5 +6203,157 @@ function calculateCleanESD() {
   if (elBadge) {
     elBadge.textContent = isCompliant ? 'EPA PASS (정전기 안전)' : 'EPA HAZARD (정전기 위험)';
     elBadge.className = isCompliant ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+}
+
+
+// ==========================================================================
+// REAL-TIME INSTANT TOOL SEARCH & KEYBOARD SHORTCUT ENGINE [Ctrl+K]
+// ==========================================================================
+
+function filterToolsSearch(query) {
+  const q = (query || '').trim().toLowerCase();
+  const tabBtns = document.querySelectorAll('.tab-btn[data-tab]');
+  let firstMatch = null;
+
+  tabBtns.forEach(btn => {
+    const text = (btn.textContent || '').toLowerCase();
+    const tabId = (btn.getAttribute('data-tab') || '').toLowerCase();
+    if (!q || text.includes(q) || tabId.includes(q)) {
+      btn.style.display = 'inline-flex';
+      if (!firstMatch) firstMatch = btn;
+    } else {
+      btn.style.display = 'none';
+    }
+  });
+
+  if (firstMatch && q.length >= 3) {
+    // Smoothly scroll into view
+    firstMatch.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+}
+
+// Global Ctrl+K / Cmd+K Shortcut
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    const searchInput = document.getElementById('globalToolSearch');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.select();
+    }
+  }
+});
+
+
+// ==========================================================================
+// TAB 31: SPD SURGE PROTECTIVE DEVICE SIZER ENGINE (IEC 61643)
+// ==========================================================================
+
+function calculateSPD() {
+  const spdType = document.getElementById('spdTypeClass')?.value || 't2';
+  const grid = document.getElementById('spdGridSystem')?.value || 'tn_s';
+  const un = parseFloat(document.getElementById('spdLineVoltage')?.value) || 380;
+  const risk = document.getElementById('spdRiskLevel')?.value || 'medium';
+
+  // Phase voltage U0
+  const u0 = un / Math.sqrt(3);
+
+  // Maximum Continuous Operating Voltage Uc
+  let uc = 275;
+  if (grid === 'it') uc = Math.round(un * 1.15);
+  else if (grid === 'tt') uc = Math.round(u0 * 1.15);
+  else uc = Math.round(u0 * 1.15); // TN
+
+  // Discharge rating
+  let capText = 'In 20 kA / Imax 40 kA';
+  let upText = '≤ 1.5 kV';
+  let backupText = '32A gG 퓨즈 / 32A C-curve MCB';
+
+  if (spdType === 't1') {
+    capText = risk === 'high' ? 'Iimp 25 kA (10/350µs) / In 50 kA' : 'Iimp 12.5 kA (10/350µs) / In 25 kA';
+    upText = '≤ 2.5 kV';
+    backupText = '63A ~ 125A gG 퓨즈';
+  } else if (spdType === 't3') {
+    capText = 'Uoc 6 kV / In 3 kA (8/20µs)';
+    upText = '≤ 1.0 kV (정밀 기기 보호)';
+    backupText = '16A gG 퓨즈';
+  } else {
+    if (risk === 'high') capText = 'In 40 kA / Imax 80 kA';
+    else if (risk === 'low') capText = 'In 10 kA / Imax 20 kA';
+    else capText = 'In 20 kA / Imax 40 kA';
+  }
+
+  // Update UI
+  const elCap = document.getElementById('resSpdCapacity');
+  if (elCap) elCap.textContent = capText;
+  const elUc = document.getElementById('resSpdUcSubText');
+  if (elUc) elUc.textContent = `최대연속운전전압 Uc ≥ ${uc}V (${grid.toUpperCase()} ${Math.round(u0)}V 상전압 × 1.15 계수 만족)`;
+  const elUp = document.getElementById('resSpdUp');
+  if (elUp) elUp.textContent = upText;
+  const elBk = document.getElementById('resSpdBackup');
+  if (elBk) elBk.textContent = backupText;
+}
+
+// ==========================================================================
+// TAB 32: GANTRY / CRANE HOIST MOTOR & ROPE SIZER ENGINE
+// ==========================================================================
+
+function calculateCraneHoist() {
+  const ton = parseFloat(document.getElementById('hcLoadTon')?.value) || 5.0;
+  const speed_mpm = parseFloat(document.getElementById('hcHoistSpeed')?.value) || 7.5;
+  const falls = parseInt(document.getElementById('hcFallsCount')?.value) || 4;
+  const eff_pct = parseFloat(document.getElementById('hcEfficiency')?.value) || 82;
+  const rope_break_kn = parseFloat(document.getElementById('hcRopeBreaking')?.value) || 85;
+
+  // Power P = (W_kg * 9.81 * V_m_s) / (1000 * eta)
+  const w_kg = ton * 1000.0;
+  const v_ms = speed_mpm / 60.0;
+  const eta = eff_pct / 100.0;
+
+  const p_kw = (w_kg * 9.81 * v_ms) / (1000.0 * eta);
+  const p_hp = p_kw * 1.341;
+
+  // Standard motor recommendation
+  let recKw = 7.5;
+  if (p_kw <= 2.2) recKw = 2.2;
+  else if (p_kw <= 3.7) recKw = 3.7;
+  else if (p_kw <= 5.5) recKw = 5.5;
+  else if (p_kw <= 7.5) recKw = 7.5;
+  else if (p_kw <= 11.0) recKw = 11.0;
+  else if (p_kw <= 15.0) recKw = 15.0;
+  else if (p_kw <= 22.0) recKw = 22.0;
+  else recKw = Math.ceil(p_kw * 1.2);
+
+  // Rope tension per fall T = (W_kN) / falls
+  const total_kn = (w_kg * 9.81) / 1000.0;
+  const rope_tension_kn = total_kn / falls;
+
+  // Safety factor SF = Breaking / Tension
+  const sf = rope_tension_kn > 0 ? (rope_break_kn / rope_tension_kn) : 0;
+  const isSfSafe = sf >= 5.0;
+
+  // Holding Brake Torque Tb = 1.5 * (W * D_drum / 2*i) ~= 1.5 * motor torque
+  const brake_nm = (p_kw * 9550 / (1500 / 1)) * 1.5;
+
+  // Update UI
+  const elKw = document.getElementById('resHcMotorKw');
+  if (elKw) elKw.textContent = `${p_kw.toFixed(2)} kW`;
+  const elSub = document.getElementById('resHcMotorHpSub');
+  if (elSub) elSub.textContent = `권장 표준 모터: ${recKw} kW (${(recKw * 1.341).toFixed(1)} HP) 3상 유도전동기 (안전율 반영)`;
+  const elTen = document.getElementById('resHcRopeTension');
+  if (elTen) elTen.textContent = `${rope_tension_kn.toFixed(2)} kN`;
+  const elSf = document.getElementById('resHcSafetyFactor');
+  if (elSf) {
+    elSf.textContent = `${sf.toFixed(2)} 배 (${isSfSafe ? '기준 5배 이상 만족' : '기준 5배 미달 위험'})`;
+    elSf.className = isSfSafe ? 'summary-val font-mono text-safe' : 'summary-val font-mono text-danger';
+  }
+  const elBrk = document.getElementById('resHcBrakeTorque');
+  if (elBrk) elBrk.textContent = `${Math.round(brake_nm)} N·m`;
+
+  const elBadge = document.getElementById('hcVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isSfSafe ? 'SAFETY FACTOR OK' : 'ROPE HAZARD';
+    elBadge.className = isSfSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
   }
 }

@@ -171,8 +171,21 @@
 
     <!-- Row 2: Full-Width 11-Tool Segmented Menu -->
     <div class="nav-menu-bar">
-      <!-- Quick Category Filter Pills -->
-      <div class="category-filter-strip" id="categoryFilterStrip">
+      <!-- Quick Global Tool Search & Category Filter Pills -->
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; max-width:1520px; margin:0 auto; padding:0.25rem 0.75rem;">
+        <div class="quick-search-wrapper">
+          <i data-lucide="search" class="quick-search-icon"></i>
+          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="32대 공학 도구 실시간 검색 (예: 24V, 밸브, SPD, 부스바, 모터, AGV...)" oninput="filterToolsSearch(this.value)">
+          <span class="quick-search-kbd">Ctrl+K</span>
+        </div>
+        <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 32종 (All)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기·SPD</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·로봇·호이스트</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·통신·계측</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 밸브·클린룸·규격</button>
+        </div>
+      </div>
         <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 26종 (All)</button>
         <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기 (Power &amp; TR)</button>
         <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·안전 (Motion &amp; Safety)</button>
@@ -298,9 +311,17 @@
             <i data-lucide="layers"></i>
             <span>부스바 허용전류</span>
           </button>
-          <button class="tab-btn" data-tab="tab-cleanesd" role="tab">
+          <button class="tab-btn" data-tab="tab-cleanesd" data-category="specs" role="tab">
             <i data-lucide="sparkles"></i>
             <span>클린룸 정전기(ESD)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-spd" data-category="power" role="tab">
+            <i data-lucide="zap"></i>
+            <span>서지보호기(SPD)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-hoistcrane" data-category="motion" role="tab">
+            <i data-lucide="anchor"></i>
+            <span>크레인·호이스트</span>
           </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -4219,6 +4240,213 @@
       </div>
     </section>
 
+
+    <!-- ========================================================================= -->
+    <!-- TAB 31: 서지보호기(SPD) Type 1/2/3 선정 & 방전용량 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-spd" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">IEC 61643 / KS C IEC 61643 서지보호기(SPD) Type 1/2/3 정격 &amp; 방전전류 선정기</h2>
+          <p class="main-desc">수전 인입반(Type 1), 분전반(Type 2), 제어반 정밀기기(Type 3)의 접지 계통(TN/TT/IT)과 뇌서지 노출 등급에 따른 최대연속사용전압(Uc) 및 공칭방전전류(In/Iimp)를 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>설치 위치 및 계통 전압/접지 방식</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="spdTypeClass">SPD 설치 등급 (Class Type)</label>
+                <select id="spdTypeClass" class="select-precision font-mono">
+                  <option value="t2" selected>Type 2 (분전반 / 유도뢰 방전 In)</option>
+                  <option value="t1">Type 1 (메인 인입반 / 직격뢰 Iimp 10/350µs)</option>
+                  <option value="t3">Type 3 (PLC/센서 전원단 정밀 서지 Uoc)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="spdGridSystem">계통 접지 방식 (Earthing)</label>
+                <select id="spdGridSystem" class="select-precision font-mono">
+                  <option value="tn_s" selected>TN-S (중성선 N과 접지 PE 완전 분리)</option>
+                  <option value="tn_c">TN-C (PEN 겸용 도체)</option>
+                  <option value="tt">TT (독립 기기 접지)</option>
+                  <option value="it">IT (비접지 / 절연 계통)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="spdLineVoltage">공칭 선간 전압 (Un)</label>
+                <select id="spdLineVoltage" class="select-precision font-mono">
+                  <option value="380" selected>380 V (3상 4선식 220/380V)</option>
+                  <option value="440">440 V (3상 3선식)</option>
+                  <option value="480">480 V (NFPA 미국 표준)</option>
+                  <option value="220">220 V (단상/3상)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="spdRiskLevel">낙뢰 노출 위험도</label>
+                <select id="spdRiskLevel" class="select-precision font-mono">
+                  <option value="medium" selected>보통 (일반 산업단지/공장)</option>
+                  <option value="high">높음 (산간/해안 플랜트, 피뢰침 설비)</option>
+                  <option value="low">낮음 (도심 빌딩 내부)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>추천 SPD 사양 및 전압보호레벨(Up)</h3>
+            </div>
+            <span id="spdVerdictBadge" class="badge-pill badge-safe">IEC 61643 정합</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">RECOMMENDED DISCHARGE CAPACITY (In / Imax)</span>
+            <div class="terminal-voltage-big font-mono" id="resSpdCapacity">In 20 kA / Imax 40 kA</div>
+            <div class="tv-sub" id="resSpdUcSubText">최대연속운전전압 Uc &ge; 275V (TN-S 220V 상전압 &times; 1.15 안전계수 만족)</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">전압 보호 레벨 (Up)</span>
+              <strong class="summary-val font-mono text-safe" id="resSpdUp">&le; 1.5 kV</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">백업 퓨즈/차단기</span>
+              <strong class="summary-val font-mono text-highlight" id="resSpdBackup">32A gG 퓨즈</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">최대 배선 연결 길이</span>
+              <strong class="summary-val font-mono">&le; 0.5 m (L1+L2)</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">적용 국제 표준</span>
+              <strong class="summary-val font-mono">IEC 61643-11</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 32: 갠트리/크레인 호이스트 모터 권상 출력(kW) & 로프 장력 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-hoistcrane" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">갠트리/오버헤드 크레인 호이스트 권상 모터 출력(kW) &amp; 와이어로프 안전율 계산기</h2>
+          <p class="main-desc">정격 인양 하중(Ton), 권상 속도(m/min), 기계 효율 및 로프 시브 도르래 수에 따른 모터 필요 출력(kW)과 와이어로프 인장 하중 안전율을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>인양 하중 및 기구 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="hcLoadTon">정격 인양 하중 (Load W)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hcLoadTon" value="5.0" step="0.5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">Ton</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="hcHoistSpeed">권상 속도 (Hoist Speed V)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hcHoistSpeed" value="7.5" step="0.5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m/min</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="hcFallsCount">로프 걸림 줄수 (Falls n)</label>
+                <select id="hcFallsCount" class="select-precision font-mono">
+                  <option value="2">2 줄 걸림 (2-Fall)</option>
+                  <option value="4" selected>4 줄 걸림 (4-Fall / 2-Sheave)</option>
+                  <option value="8">8 줄 걸림 (8-Fall)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="hcEfficiency">기계 총 효율 (&eta; %)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hcEfficiency" value="82" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="hcRopeBreaking">로프 파단 하중 (Breaking Force)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hcRopeBreaking" value="85" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kN</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="hcAccelTime">가속 시간 (t_acc)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hcAccelTime" value="1.5" step="0.1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>필요 모터 권상 동력 &amp; 로프 안전율 판정</h3>
+            </div>
+            <span id="hcVerdictBadge" class="badge-pill badge-safe">SAFETY FACTOR OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">REQUIRED HOIST MOTOR POWER (kW)</span>
+            <div class="terminal-voltage-big font-mono" id="resHcMotorKw">7.48 kW</div>
+            <div class="tv-sub" id="resHcMotorHpSub">표준 모터 추천: 7.5 kW (10 HP) 3상 유도전동기</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">와이어로프 1선 장력</span>
+              <strong class="summary-val font-mono" id="resHcRopeTension">12.26 kN</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">로프 안전율 (SF)</span>
+              <strong class="summary-val font-mono text-safe" id="resHcSafetyFactor">6.93 배 (기준 5배 이상)</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">필요 제동 토크 (Tb)</span>
+              <strong class="summary-val font-mono text-highlight" id="resHcBrakeTorque">71.4 N&middot;m</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">적용 안전 규격</span>
+              <strong class="summary-val font-mono">KOSHA / ISO 4301</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -5789,6 +6017,14 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cleanesd')">
           <div class="drawer-tool-icon"><i data-lucide="sparkles"></i></div>
           <span class="drawer-tool-name" id="dtn30">클린룸 정전기(ESD)</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-spd')">
+          <div class="drawer-tool-icon"><i data-lucide="zap"></i></div>
+          <span class="drawer-tool-name" id="dtn31">서지보호기(SPD)</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-hoistcrane')">
+          <div class="drawer-tool-icon"><i data-lucide="anchor"></i></div>
+          <span class="drawer-tool-name" id="dtn32">크레인·호이스트</span>
         </div>
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>
