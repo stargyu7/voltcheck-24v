@@ -1068,22 +1068,47 @@ function calculateRS485() {
 
   const stubLimitM = Math.max(0.1, (0.05 * bitTimeUs * 200) / 10).toFixed(2);
   const isPass = lengthM <= maxDistanceM && stubM <= parseFloat(stubLimitM);
+  const isEn = currentLanguage === 'en';
 
   const statusBadge = document.getElementById('rs485StatusBadge');
   if (statusBadge) {
     statusBadge.className = `verdict-stamp ${isPass ? 'stamp-pass' : 'stamp-fail'}`;
-    document.getElementById('rs485StatusText').textContent = isPass ? '적합 (PASS)' : '한계 초과 (FAIL)';
+    const statusTextEl = document.getElementById('rs485StatusText');
+    if (statusTextEl) {
+      statusTextEl.textContent = isPass ? (isEn ? 'PASS (Compliant)' : '적합 (PASS)') : (isEn ? 'FAIL (Exceeded)' : '한계 초과 (FAIL)');
+    }
   }
 
-  document.getElementById('rs485MaxLenVal').textContent = `${maxDistanceM.toLocaleString()} m`;
+  const maxLenEl = document.getElementById('rs485MaxLenVal');
+  if (maxLenEl) maxLenEl.textContent = `${maxDistanceM.toLocaleString()} m`;
   const distUsagePct = Math.round((lengthM / maxDistanceM) * 100);
-  document.getElementById('rs485DistanceUsage').textContent = `설정 거리(${lengthM}m)는 한계의 ${distUsagePct}%`;
+  const distUsageEl = document.getElementById('rs485DistanceUsage');
+  if (distUsageEl) {
+    distUsageEl.textContent = isEn ? `Set distance (${lengthM}m) is ${distUsagePct}% of limit` : `설정 거리(${lengthM}m)는 한계의 ${distUsagePct}%`;
+  }
 
-  document.getElementById('rs485TermResVal').textContent = lengthM > 10 ? '필수 (양단 2개소)' : '권장';
-  document.getElementById('rs485StubLimitVal').textContent = `${stubLimitM} m`;
-  document.getElementById('rs485StubStatus').textContent = stubM <= parseFloat(stubLimitM) ? `현재 ${stubM}m 설정 적합` : `경고: ${stubM}m는 반사파 유발`;
-  document.getElementById('rs485BitTimeVal').textContent = `${bitTimeUs.toFixed(2)} µs`;
-  document.getElementById('rs485CapacitanceTotal').textContent = `총 정전용량: ${totalCapNf.toFixed(1)} nF`;
+  const termResEl = document.getElementById('rs485TermResVal');
+  if (termResEl) {
+    termResEl.textContent = lengthM > 10 ? (isEn ? 'Required (Both ends)' : '필수 (양단 2개소)') : (isEn ? 'Recommended' : '권장');
+  }
+
+  const stubLimitEl = document.getElementById('rs485StubLimitVal');
+  if (stubLimitEl) stubLimitEl.textContent = `${stubLimitM} m`;
+
+  const stubStatusEl = document.getElementById('rs485StubStatus');
+  if (stubStatusEl) {
+    stubStatusEl.textContent = stubM <= parseFloat(stubLimitM) ?
+      (isEn ? `Current ${stubM}m setting is adequate` : `현재 ${stubM}m 설정 적합`) :
+      (isEn ? `Warning: ${stubM}m causes reflection` : `경고: ${stubM}m는 반사파 유발`);
+  }
+
+  const bitTimeEl = document.getElementById('rs485BitTimeVal');
+  if (bitTimeEl) bitTimeEl.textContent = `${bitTimeUs.toFixed(2)} µs`;
+
+  const capTotalEl = document.getElementById('rs485CapacitanceTotal');
+  if (capTotalEl) {
+    capTotalEl.textContent = isEn ? `Total Capacitance: ${totalCapNf.toFixed(1)} nF` : `총 정전용량: ${totalCapNf.toFixed(1)} nF`;
+  }
 
   // Draw RS-485 Signal Waveform [High Performance RAF]
   queueDrawRs485Waveform(baud, lengthM, isPass);
@@ -1969,12 +1994,17 @@ const I18N = {
     brand_tagline: '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷',
     sponsor_text: '산업용 고굴곡 가동 케이블, 24V DIN레일 SMPS, 제어반 쿨링 에어컨 & 4-20mA 절연 배리어',
     sponsor_btn: '기술 카탈로그 & 핸드북 다운로드 →',
+    btn_digital_pack: '실무 엑셀·CAD 팩',
     btn_unit: '단위 환산',
     btn_history: '내 보관함',
     btn_dark: '다크',
     btn_light: '라이트',
     btn_share: '조건 공유',
     btn_print: '검토서 인쇄',
+    btn_updates: '규정 알림',
+    btn_about: '소개',
+    
+    // Tab Names
     tab_vd: '24V 전압강하',
     tab_loop: '4-20mA 루프',
     tab_smps: 'SMPS·CP 용량',
@@ -1988,37 +2018,45 @@ const I18N = {
     tab_bend: '케이블 베어',
     tab_ot: 'OT 이더넷·IP',
     tab_servo: '서보 회생저항',
+    tab_copper: '구리시세·원가',
+    tab_sld: '단선결선도 CAD',
+    tab_iolink: 'IO-Link·안전회로',
+    tab_ground: '접지(PE)·EMC실드',
+    tab_npnpnp: 'NPN·PNP 결선',
+    tab_flyback: '역기전력 서지',
+    tab_inrush: '돌입전류·트립',
     tab_notes: '기술 노트',
     
-    // Tab 1
-    t1_title: 'DC 24V 선로 전압강하 및 말단 전원 마진 검토',
-    t1_desc: '배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.',
-    t1_p1: '포토/근접센서 (35mA)',
-    t1_p2: '솔레노이드 밸브 (0.45A)',
-    t1_p3: 'IO-Link 마스터 (2.0A)',
-    t1_p4: '서보 브레이크 (1.2A)',
-    t1_p5: '비전 조명 (3.5A)',
-    t1_c1_title: '설계 파라미터 입력',
-    t1_adv_btn: '상세 환경 설정',
-    t1_lbl_len: '선로 편도 배선 거리 (L)',
-    t1_lbl_gauge: '케이블 도선 규격',
-    t1_lbl_cur: '말단 부하 소비전류 (I)',
-    t1_lbl_topo: '부하 배선 토폴로지 (배선 형태)',
-    t1_c2_title: '검증 판정 및 계측치',
-    t1_meter_term: '말단 센서 수전 전압 (V_term)',
-    t1_meter_drop: '선로 전압강하:',
-    t1_meter_margin: '전원 안전마진:',
-    t1_gauge_title: '전압 마진 레벨 게이지 (Voltage Margin Gauge)',
-    t1_flow_title: '선로 전위 분포',
-    t1_s1: '왕복 선로 저항',
-    t1_s2: '선로 발열 손실 (I²R)',
-    t1_s3: '허용전류 사용률',
-    t1_s4: '추천 최소 규격',
-    t1_ai_badge: 'AI 스마트 진단',
-    t1_ai_title: 'FA 전장설계 6대 항목 종합 안전 진단서',
-    btn_copy_summary: '요약 복사',
-    btn_copy_md: '마크다운 복사',
-    btn_req_quote: '부품 견적 요청 (BOM)'
+    // RS-485 Tab (Tab 6)
+    rs485_title: 'RS-485 / Modbus 통신선로 & 120Ω 종단저항 검토',
+    rs485_desc: '통신 보레이트(Baud Rate)와 배선 길이에 따른 최대 허용 거리, 종단저항 체결 여부, T자 분기(Stub) 한계를 계산합니다.',
+    rs485_c1_title: '통신 선로 사양',
+    rs485_lbl_baud: '통신 보레이트 (Baud Rate)',
+    rs485_lbl_len: '전체 버스 배선 길이',
+    rs485_lbl_cable: '케이블 종류',
+    rs485_lbl_slaves: '연결 슬레이브 수',
+    rs485_lbl_stub: '분기(Stub) 길이',
+    rs485_c2_title: '통신 신호 무결성 검증',
+    rs485_s1: '해당 속도 최대 거리',
+    rs485_s2: '120Ω 종단저항',
+    rs485_s3: '분기(Stub) 길이 한계',
+    rs485_s4: '1비트 전송 시간',
+    rs485_wave_title: 'RS-485 차동 신호 파형 & 반사파 시뮬레이터 (Signal Waveform)',
+    rs485_rules_title: 'RS-485 배선 원칙',
+    rs485_rule1: '1. 스타(Star) 결선은 반사파를 유발하므로 일자형 데이지 체인(Daisy-Chain)으로 결선하십시오.',
+    rs485_rule2: '2. 실드선(Shield)은 그라운드 루프 방지를 위해 제어반 한쪽 끝에서만 단일 접지(PE)하십시오.',
+    
+    // Sponsored Cards
+    sp_header: 'SPONSORED AUTOMATION COMPONENTS',
+    sp1_tag: 'SMPS 전원',
+    sp1_title: '초박형 DIN레일 24V 파워서플라이',
+    sp1_desc: '전압강하 보상 V.ADJ 내장, 94% 고효율, 글로벌 인증',
+    sp2_tag: '제어반 쿨링',
+    sp2_title: '산업용 밀폐형 제어반 에어컨',
+    sp2_desc: '500W~3000W 슬림형, IP54 분진방수, 디지털 제어',
+    sp3_tag: '필드버스',
+    sp3_title: 'RS-485 절연 통신 리피터',
+    sp3_desc: '최대 1.2km 장거리 확장, 2.5kV 서지 절연 보호'
   },
   en: {
     brand_name: 'VoltCheck 24V',
@@ -2026,12 +2064,17 @@ const I18N = {
     brand_tagline: 'Industrial Cable Voltage Drop & Control Panel Engineering Suite',
     sponsor_text: 'Flexible Robotic Cables, 24V DIN-Rail SMPS, Enclosure Air Conditioners & Signal Isolators',
     sponsor_btn: 'Download Technical Catalog & Handbook →',
+    btn_digital_pack: 'Pro Excel·CAD Pack',
     btn_unit: 'Unit Converter',
     btn_history: 'Saved Calcs',
     btn_dark: 'Dark',
     btn_light: 'Light',
     btn_share: 'Share Link',
     btn_print: 'Print Report',
+    btn_updates: 'Standards Updates',
+    btn_about: 'About',
+    
+    // Tab Names
     tab_vd: '24V Volt Drop',
     tab_loop: '4-20mA Loop',
     tab_smps: 'SMPS & CP',
@@ -2045,51 +2088,47 @@ const I18N = {
     tab_bend: 'Cable Carrier',
     tab_ot: 'OT Ethernet·IP',
     tab_servo: 'Servo Regen',
+    tab_copper: 'Copper Cost',
+    tab_sld: 'SLD CAD',
+    tab_iolink: 'IO-Link·Safety',
+    tab_ground: 'Grounding·EMC',
+    tab_npnpnp: 'NPN·PNP Wiring',
+    tab_flyback: 'Flyback Surge',
+    tab_inrush: 'Inrush·Trip',
     tab_notes: 'Tech Notes',
     
-    // Tab 1
-    t1_title: 'DC 24V Cable Voltage Drop & Sensor Power Margin',
-    t1_desc: 'Calculate cable loop resistance, voltage drop, and sensor brownout margin in real-time according to distance, wire gauge, and load current.',
-    t1_p1: 'Photo Sensor (35mA)',
-    t1_p2: 'Solenoid Valve (0.45A)',
-    t1_p3: 'IO-Link Master (2.0A)',
-    t1_p4: 'Servo Brake (1.2A)',
-    t1_p5: 'Vision Light (3.5A)',
-    t1_c1_title: 'Design Parameters Input',
-    t1_adv_btn: 'Advanced Settings',
-    t1_lbl_len: 'One-Way Cable Distance (L)',
-    t1_lbl_gauge: 'Wire Gauge Specification',
-    t1_lbl_cur: 'Load Operating Current (I)',
-    t1_lbl_topo: 'Wiring Load Topology',
-    t1_c2_title: 'Verification Verdict & Readouts',
-    t1_meter_term: 'Terminal Operating Voltage (V_term)',
-    t1_meter_drop: 'Line Voltage Drop:',
-    t1_meter_margin: 'Safety Margin:',
-    t1_gauge_title: 'Voltage Margin Level Gauge',
-    t1_flow_title: 'Line Potential Profile',
-    t1_s1: 'Total Loop Resistance',
-    t1_s2: 'Line Thermal Loss (I²R)',
-    t1_s3: 'Ampacity Usage Ratio',
-    t1_s4: 'Recommended Gauge',
-    t1_ai_badge: 'AI Smart Audit',
-    t1_ai_title: '6-Point Comprehensive Engineering Safety Audit',
-    btn_copy_summary: 'Copy Summary',
-    btn_copy_md: 'Copy Markdown',
-    btn_req_quote: 'Request BOM Quote'
+    // RS-485 Tab (Tab 6)
+    rs485_title: 'RS-485 / Modbus Bus Line & 120Ω Termination Analysis',
+    rs485_desc: 'Calculate maximum allowable distance, 120Ω termination requirements, and stub branch limits based on baud rate and cable length.',
+    rs485_c1_title: 'Bus Line Specifications',
+    rs485_lbl_baud: 'Baud Rate',
+    rs485_lbl_len: 'Total Bus Cable Length',
+    rs485_lbl_cable: 'Cable Type',
+    rs485_lbl_slaves: 'Connected Slave Devices',
+    rs485_lbl_stub: 'Stub Branch Length',
+    rs485_c2_title: 'Signal Integrity Verification',
+    rs485_s1: 'Max Distance at Speed',
+    rs485_s2: '120Ω Termination',
+    rs485_s3: 'Stub Length Limit',
+    rs485_s4: '1-Bit Transmission Time',
+    rs485_wave_title: 'RS-485 Differential Signal Waveform & Reflection Simulator',
+    rs485_rules_title: 'RS-485 Wiring Rules',
+    rs485_rule1: '1. Avoid star topology. Always wire in a linear daisy-chain topology to prevent reflections.',
+    rs485_rule2: '2. Connect cable shield to PE ground at one end only (master cabinet) to prevent ground loops.',
+    
+    // Sponsored Cards
+    sp_header: 'SPONSORED AUTOMATION COMPONENTS',
+    sp1_tag: 'SMPS POWER',
+    sp1_title: 'Ultra-Slim DIN-Rail 24V Power Supply',
+    sp1_desc: 'Built-in V.ADJ voltage drop compensation, 94% high efficiency, global certs',
+    sp2_tag: 'ENCLOSURE COOLING',
+    sp2_title: 'Industrial Sealed Enclosure Cooler',
+    sp2_desc: '500W~3000W slimline, IP54 dust/waterproof, digital temperature control',
+    sp3_tag: 'FIELDBUS & OT',
+    sp3_title: 'RS-485 Galvanic Isolated Repeater',
+    sp3_desc: 'Extends distance up to 1.2km, 2.5kV surge isolation protection'
   }
 };
-
-function initLanguage() {
-  const savedLang = localStorage.getItem('voltcheck_lang') || 'ko';
-  currentLanguage = savedLang;
-  applyLanguage(currentLanguage);
-}
-
-function toggleLanguage() {
-  currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
-  localStorage.setItem('voltcheck_lang', currentLanguage);
-  applyLanguage(currentLanguage);
-}
 
 function applyLanguage(lang) {
   const dict = I18N[lang] || I18N.ko;
@@ -2097,17 +2136,10 @@ function applyLanguage(lang) {
   const langText = document.getElementById('currentLangText');
   if (langText) langText.textContent = lang.toUpperCase();
 
-  // Brand Info & Sponsor
-  const brandName = document.querySelector('.brand-name');
-  if (brandName) brandName.textContent = dict.brand_name;
-  const brandTag = document.querySelector('.brand-tagline');
-  if (brandTag) brandTag.textContent = dict.brand_tagline;
-  const spText = document.querySelector('.sponsor-text');
-  if (spText) spText.textContent = dict.sponsor_text;
-  const spBtn = document.querySelector('#openCatalogModalBtn');
-  if (spBtn) spBtn.textContent = dict.sponsor_btn;
+  // Top Nav Buttons & Brand
+  const digitalBtn = document.querySelector('#openDigitalProductBtn span:first-of-type');
+  if (digitalBtn) digitalBtn.textContent = dict.btn_digital_pack;
 
-  // Nav Utils
   const u1 = document.querySelector('#openUnitConverterBtn span');
   if (u1) u1.textContent = dict.btn_unit;
   const u2 = document.querySelector('#openHistoryModalBtn span');
@@ -2117,14 +2149,7 @@ function applyLanguage(lang) {
   const u4 = document.querySelector('#printReportBtn span');
   if (u4) u4.textContent = dict.btn_print;
 
-  // Update Dark/Light button text
-  const isDark = document.body.classList.contains('theme-dark');
-  const thText = document.getElementById('themeText');
-  if (thText) {
-    thText.textContent = isDark ? (isEn ? 'Light' : '라이트') : (isEn ? 'Dark' : '다크');
-  }
-
-  // 14 Tabs
+  // 21 Tab Buttons
   const tabMap = {
     'tab-voltagedrop': dict.tab_vd,
     'tab-analogloop': dict.tab_loop,
@@ -2139,6 +2164,13 @@ function applyLanguage(lang) {
     'tab-bendingradius': dict.tab_bend,
     'tab-otethernet': dict.tab_ot,
     'tab-servoregen': dict.tab_servo,
+    'tab-coppercost': dict.tab_copper,
+    'tab-sldgenerator': dict.tab_sld,
+    'tab-iolinksafety': dict.tab_iolink,
+    'tab-grounding': dict.tab_ground,
+    'tab-npnpnp': dict.tab_npnpnp,
+    'tab-flybacksurge': dict.tab_flyback,
+    'tab-inrushbreaker': dict.tab_inrush,
     'tab-articles': dict.tab_notes
   };
 
@@ -2147,80 +2179,120 @@ function applyLanguage(lang) {
     if (btn) btn.textContent = tabMap[tabId];
   });
 
-  // Tab 1 Full Card & Form Labels
-  const h1Title = document.querySelector('#tab-voltagedrop .main-title');
-  if (h1Title) h1Title.textContent = dict.t1_title;
-  const h1Desc = document.querySelector('#tab-voltagedrop .main-desc');
-  if (h1Desc) h1Desc.textContent = dict.t1_desc;
+  // Tab 6: RS-485 Bus Line (As in user screenshot)
+  const rsTitle = document.querySelector('#tab-rs485 .main-title');
+  if (rsTitle) rsTitle.textContent = dict.rs485_title;
+  const rsDesc = document.querySelector('#tab-rs485 .main-desc');
+  if (rsDesc) rsDesc.textContent = dict.rs485_desc;
 
-  const c1Heading = document.querySelector('#tab-voltagedrop .workbench-card .caption-left h3');
-  if (c1Heading) c1Heading.textContent = dict.t1_c1_title;
-  const advBtn = document.getElementById('advModeBtnText');
-  if (advBtn) advBtn.textContent = dict.t1_adv_btn;
+  const rsC1 = document.querySelector('#tab-rs485 .workbench-card .caption-left h3');
+  if (rsC1) rsC1.textContent = dict.rs485_c1_title;
 
-  const lLen = document.querySelector('label[for="wireLength"]');
-  if (lLen) lLen.textContent = dict.t1_lbl_len;
-  const lGauge = document.querySelector('label[for="wireGaugeValue"]');
-  if (lGauge) lGauge.textContent = dict.t1_lbl_gauge;
-  const lCur = document.querySelector('label[for="loadCurrent"]');
-  if (lCur) lCur.textContent = dict.t1_lbl_cur;
-  const lTopo = document.querySelector('label[for="wireTopology"]');
-  if (lTopo) lTopo.textContent = dict.t1_lbl_topo;
+  const lBaud = document.querySelector('label[for="rs485BaudRate"]');
+  if (lBaud) lBaud.textContent = dict.rs485_lbl_baud;
+  const lRsLen = document.querySelector('label[for="rs485Length"]');
+  if (lRsLen) lRsLen.textContent = dict.rs485_lbl_len;
+  const lRsCable = document.querySelector('label[for="rs485CableType"]');
+  if (lRsCable) lRsCable.textContent = dict.rs485_lbl_cable;
+  const lSlaves = document.querySelector('label[for="rs485Nodes"]');
+  if (lSlaves) lSlaves.textContent = dict.rs485_lbl_slaves;
+  const lStub = document.querySelector('label[for="rs485MaxStub"]');
+  if (lStub) lStub.textContent = dict.rs485_lbl_stub;
 
-  const c2Heading = document.querySelector('#tab-voltagedrop .meter-readout-panel .caption-left h3');
-  if (c2Heading) c2Heading.textContent = dict.t1_c2_title;
-
-  const flowHeader = document.querySelector('#tab-voltagedrop .circuit-strip .strip-header > span:first-child');
-  if (flowHeader) flowHeader.textContent = dict.t1_flow_title;
-
-  const specLabels = document.querySelectorAll('#tab-voltagedrop .specs-mini-grid .spec-cell .s-label');
-  if (specLabels.length >= 4) {
-    specLabels[0].textContent = dict.t1_s1;
-    specLabels[1].textContent = dict.t1_s2;
-    specLabels[2].textContent = dict.t1_s3;
-    specLabels[3].textContent = dict.t1_s4;
+  // Translate RS-485 select options
+  const baudSelect = document.getElementById('rs485BaudRate');
+  if (baudSelect && baudSelect.options.length >= 7) {
+    baudSelect.options[0].text = isEn ? '9,600 bps (Standard Temp/Inverter)' : '9,600 bps (기본 온도컨트롤러/인버터)';
+    baudSelect.options[1].text = isEn ? '19,200 bps (Standard Modbus RTU)' : '19,200 bps (표준 Modbus RTU)';
+    baudSelect.options[2].text = isEn ? '38,400 bps (PLC Distributed I/O)' : '38,400 bps (PLC 분산 I/O)';
+    baudSelect.options[3].text = '57,600 bps';
+    baudSelect.options[4].text = isEn ? '115,200 bps (High-Speed Servo/Sensor)' : '115,200 bps (고속 서보/센서 통신)';
+    baudSelect.options[5].text = '500,000 bps (0.5 Mbps)';
+    baudSelect.options[6].text = '1,000,000 bps (1.0 Mbps)';
   }
 
-  // Presets in Tab 1
-  const pBtns = document.querySelectorAll('#tab-voltagedrop .pill-btn');
-  if (pBtns.length >= 5) {
-    pBtns[0].textContent = dict.t1_p1;
-    pBtns[1].textContent = dict.t1_p2;
-    pBtns[2].textContent = dict.t1_p3;
-    pBtns[3].textContent = dict.t1_p4;
-    pBtns[4].textContent = dict.t1_p5;
+  const cableSelect = document.getElementById('rs485CableType');
+  if (cableSelect && cableSelect.options.length >= 3) {
+    cableSelect.options[0].text = isEn ? '120Ω Shielded Twisted Pair (Belden 9841 equiv. - Recommended)' : '120Ω 차폐 트위스트 페어 (Belden 9841 동등 - 권장)';
+    cableSelect.options[1].text = isEn ? 'UTP / STP Cat.5e (100Ω Twisted Pair)' : 'UTP / STP Cat.5e (100Ω 트위스트 페어)';
+    cableSelect.options[2].text = isEn ? 'Generic Unshielded Cable (VCTF - Not recommended)' : '일반 비차폐 제어선 (VCTF - 장거리 비권장)';
   }
 
-  // Buttons in Tab 1
-  const copySumBtn = document.querySelector('#copyResultSummaryBtn span');
-  if (copySumBtn) copySumBtn.textContent = dict.btn_copy_summary;
-  const copyMdBtn = document.querySelector('#copyMarkdownBtn span');
-  if (copyMdBtn) copyMdBtn.textContent = dict.btn_copy_md;
-  const reqQuoteBtn = document.querySelector('#openQuoteModalBtn span');
-  if (reqQuoteBtn) reqQuoteBtn.textContent = dict.btn_req_quote;
+  const rsC2 = document.querySelector('#tab-rs485 .meter-readout-panel .caption-left h3');
+  if (rsC2) rsC2.textContent = dict.rs485_c2_title;
 
-  // AI Audit Title
-  const aiBadge = document.querySelector('.audit-badge');
-  if (aiBadge) aiBadge.innerHTML = `<i data-lucide="shield-check"></i> ${dict.t1_ai_badge}`;
-  const aiH4 = document.querySelector('.audit-title-group h4');
-  if (aiH4) aiH4.textContent = dict.t1_ai_title;
+  const rsSpecs = document.querySelectorAll('#tab-rs485 .specs-mini-grid .spec-cell .s-label');
+  if (rsSpecs.length >= 4) {
+    rsSpecs[0].textContent = dict.rs485_s1;
+    rsSpecs[1].textContent = dict.rs485_s2;
+    rsSpecs[2].textContent = dict.rs485_s3;
+    rsSpecs[3].textContent = dict.rs485_s4;
+  }
 
-  // Recalculate everything to update verdicts and notes in current language
-  calculateVoltageDrop();
-  calculateAnalogLoop();
-  calculateSmpsBudget();
-  calculateCabinetCooling();
-  calculateRS485();
-  calculatePneumatics();
-  calculateDuctFill();
-  calculatePlcScaling();
-  calculateMotorSpecs();
-  calculateBendingRadius();
-  calculateOtEthernet();
-  calculateServoRegen();
+  const rsWaveTitle = document.querySelector('#tab-rs485 .chart-title span[data-i18n="lbl_rs485_chart_title"]');
+  if (rsWaveTitle) rsWaveTitle.textContent = dict.rs485_wave_title;
+
+  const rsLegendItems = document.querySelectorAll('#tab-rs485 .chart-legend .leg-item');
+  if (rsLegendItems.length >= 2) {
+    rsLegendItems[0].textContent = isEn ? '■ TX Square Wave' : '■ 송신 구형파';
+    rsLegendItems[1].textContent = isEn ? '■ RX Terminated Wave (120Ω On)' : '■ 수신단 정상파 (120Ω On)';
+  }
+
+  const rsRulesCard = document.querySelector('#tab-rs485 .standard-guide-card');
+  if (rsRulesCard) {
+    const rulesTitle = rsRulesCard.querySelector('h4');
+    if (rulesTitle) rulesTitle.innerHTML = `<i data-lucide="git-branch"></i> ${dict.rs485_rules_title}`;
+    const ruleP = rsRulesCard.querySelector('.guide-note');
+    if (ruleP) {
+      ruleP.innerHTML = isEn ?
+        '1. Avoid star topology. Always wire in a <strong>linear daisy-chain</strong> topology to prevent reflections.<br>2. Connect cable shield to <strong>PE ground at one end only (master cabinet)</strong> to prevent ground loops.' :
+        '1. 스타(Star) 결선은 반사파를 유발하므로 <strong>일자형 데이지 체인(Daisy-Chain)</strong>으로 결선하십시오.<br>2. 쉴드선(Shield)은 그라운드 루프 방지를 위해 <strong>제어반 한쪽 끝에서만 단일 접지(PE)</strong>하십시오.';
+    }
+  }
+
+  // Sponsored Automation Cards
+  const spHeader = document.querySelector('.bottom-showcase-bar .sponsor-tag');
+  if (spHeader) spHeader.textContent = dict.sp_header;
+
+  const spCards = document.querySelectorAll('.showcase-card');
+  if (spCards.length >= 3) {
+    const t0 = spCards[0].querySelector('.sc-tag'); if (t0) t0.textContent = dict.sp1_tag;
+    const h0 = spCards[0].querySelector('h5'); if (h0) h0.textContent = dict.sp1_title;
+    const p0 = spCards[0].querySelector('p'); if (p0) p0.textContent = dict.sp1_desc;
+
+    const t1 = spCards[1].querySelector('.sc-tag'); if (t1) t1.textContent = dict.sp2_tag;
+    const h1 = spCards[1].querySelector('h5'); if (h1) h1.textContent = dict.sp2_title;
+    const p1 = spCards[1].querySelector('p'); if (p1) p1.textContent = dict.sp2_desc;
+
+    const t2 = spCards[2].querySelector('.sc-tag'); if (t2) t2.textContent = dict.sp3_tag;
+    const h2 = spCards[2].querySelector('h5'); if (h2) h2.textContent = dict.sp3_title;
+    const p2 = spCards[2].querySelector('p'); if (p2) p2.textContent = dict.sp3_desc;
+  }
+
+  // Refresh active calculation
+  const activeTab = document.querySelector('.tab-panel.active')?.id || 'tab-voltagedrop';
+  if (activeTab === 'tab-voltagedrop') calculateVoltageDrop();
+  else if (activeTab === 'tab-rs485') calculateRS485();
+  else if (activeTab === 'tab-analogloop') calculateAnalogLoop();
+  else if (activeTab === 'tab-smpsbudget') calculateSmpsBudget();
+  else if (activeTab === 'tab-cabinetcooling') calculateCabinetCooling();
 
   if (window.lucide) window.lucide.createIcons();
 }
+
+function initLanguage() {
+  const savedLang = localStorage.getItem('voltcheck_lang') || 'ko';
+  currentLanguage = savedLang;
+  applyLanguage(currentLanguage);
+}
+
+function toggleLanguage() {
+  currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
+  localStorage.setItem('voltcheck_lang', currentLanguage);
+  applyLanguage(currentLanguage);
+}
+
+
 
 // ==========================================================================
 // 16. Interactive HTML5 Canvas Engineering Visualizers [Zero-Lag GPU Accelerated]
@@ -4204,7 +4276,7 @@ let SELECTED_DIGITAL_TIER = {
 // Bank Transfer Master Account Configuration
 const VOLTCHECK_BANK_INFO = {
   bank: '카카오뱅크',
-  account: '3333-01-2345678', // 사장님 계좌번호로 즉시 반영
+  account: '3333-12-0080848',
   owner: '이규정'
 };
 
