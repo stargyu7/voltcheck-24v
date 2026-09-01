@@ -2370,6 +2370,36 @@ const TAB_I18N_DATA = {
       c1: 'SMPS 구성 및 메인 전원 사양',
       c2: '돌입전류 피크 & 차단기 트립 마진'
     },
+    'tab-safetylight': {
+      title: 'ISO 13855 / EN ISO 13849-1 안전 라이트커튼 최소 안전거리(S) 계산기',
+      desc: '로봇 셀, 프레스 및 자동화 설비의 안전 라이트커튼 광축 분해능, 센서 응답시간, 기계 브레이크 정지시간에 따른 법적 최소 이격거리(S)를 판정합니다.',
+      c1: '안전 파라미터 및 응답 시간 설정',
+      c2: 'ISO 13855 법적 최소 안전거리 판정'
+    },
+    'tab-transformer': {
+      title: '제어용 변압기(TR) 용량(kVA) 및 1차/2차 차단기 선정기',
+      desc: '메인 동력 전원(380V/440V/480V)에서 제어 전원(220V/110V) 변환 시 상시 부하율과 솔레노이드/MC 돌입 피크를 고려한 변압기 용량 및 보호기를 자동 산출합니다.',
+      c1: '변압기 전압 사양 및 부하 입력',
+      c2: '변압기 추천 용량 및 1차/2차 보호 정격'
+    },
+    'tab-shortcircuit': {
+      title: 'IEC 60909 변압기 %Z 기반 최대 단락전류(Isc) & 차단용량(kA) 판정기',
+      desc: '변압기 용량, 임피던스(%Z), 전선 길이에 따른 3상 대칭 단락전류를 산출하고 인입 차단기의 정격 차단용량(kA_IC / Icu) 적합성을 검증합니다.',
+      c1: '수전 변압기 및 배선 파라미터',
+      c2: '단락전류 계산 및 차단기 차단용량 판정'
+    },
+    'tab-motioninertia': {
+      title: '기계 메커니즘 부하 관성 모멘트(JL) & 서보모터 관성비 계산기',
+      desc: '볼스크류, 타이밍 벨트, 로터리 턴테이블 기구부의 관성 모멘트(JL)와 감속비에 따른 서보모터 관성비(JL/JM) 및 가속 토크를 산출합니다.',
+      c1: '기구 메커니즘 및 모터 파라미터',
+      c2: '부하 관성비 및 가속 토크 판정'
+    },
+    'tab-tempconversion': {
+      title: 'IEC 60751 PT100 (RTD) & 써모커플(TC K/J/T) 온도-저항/기전력 상호 변환기',
+      desc: '산업용 PT100 측온저항체(RTD) 및 K/J/T 열전대의 정밀 온도 변환과 장거리 2선식/3선식 배선 저항 오차 보정치를 산출합니다.',
+      c1: '온도 센서 종류 및 배선 환경',
+      c2: '변환 저항/기전력 및 배선 오차 보정치'
+    },
     'tab-articles': {
       title: '전장설계 기술 자료 & 실무 가이드',
       desc: 'KEC, IEC 60204-1, NFPA 79 규정 및 노이즈 방지 실무 가이드라인을 제공합니다.',
@@ -2498,6 +2528,36 @@ const TAB_I18N_DATA = {
       c1: 'SMPS Configuration & AC Input Specs',
       c2: 'Inrush Peak & Breaker Trip Margin'
     },
+    'tab-safetylight': {
+      title: 'ISO 13855 Safety Light Curtain Minimum Distance Calculator',
+      desc: 'Calculate mandatory minimum safety distance (S) according to optical beam resolution, sensor response, and machine brake stopping time.',
+      c1: 'Safety Parameters & Response Times',
+      c2: 'ISO 13855 Minimum Distance Verdict'
+    },
+    'tab-transformer': {
+      title: 'Control Power Transformer (kVA) & Protection Sizing',
+      desc: 'Sizing transformer kVA ratings and primary/secondary circuit breakers considering steady load and solenoid/MC inrush peaks.',
+      c1: 'Voltage Specs & Load Profile',
+      c2: 'Recommended Capacity & Protection Specs'
+    },
+    'tab-shortcircuit': {
+      title: 'IEC 60909 Symmetrical Short Circuit Current (kA) Verifier',
+      desc: 'Calculate maximum fault short-circuit current (Isc) based on transformer %Z and cable distance, and verify breaker interrupting capacity (Icu).',
+      c1: 'Transformer & Cable Run Parameters',
+      c2: 'Short-Circuit Current & Breaker Verdict'
+    },
+    'tab-motioninertia': {
+      title: 'Mechanism Load Inertia (JL) & Servo Motor Sizing',
+      desc: 'Calculate reflected load inertia (JL) and inertia ratio (JL/JM) for ball screws, timing belts, and rotary tables.',
+      c1: 'Mechanism & Motor Specifications',
+      c2: 'Inertia Ratio & Acceleration Torque'
+    },
+    'tab-tempconversion': {
+      title: 'IEC 60751 PT100 (RTD) & Thermocouple (TC) Converter',
+      desc: 'Precision conversion between temperature, resistance (PT100/1000), and thermo-voltage (K/J/T) with 3-wire lead compensation.',
+      c1: 'Sensor Type & Wiring Configuration',
+      c2: 'Converted Value & Cable Compensation'
+    },
     'tab-articles': {
       title: 'Engineering Technical Reference & Field Notes',
       desc: 'Standards compliance reference and noise suppression field guidelines.',
@@ -2555,6 +2615,11 @@ function applyLanguage(lang) {
     'tab-npnpnp': isEn ? 'NPN·PNP Wiring' : 'NPN·PNP 결선',
     'tab-flybacksurge': isEn ? 'Flyback Surge' : '역기전력 서지',
     'tab-inrushbreaker': isEn ? 'Inrush·Trip' : '돌입전류·트립',
+    'tab-safetylight': isEn ? 'Safety Light' : '안전 라이트커튼',
+    'tab-transformer': isEn ? 'Transformer TR' : '제어용 변압기',
+    'tab-shortcircuit': isEn ? 'Short Circuit kA' : '단락전류(kA)',
+    'tab-motioninertia': isEn ? 'Load Inertia' : '기계부하 관성',
+    'tab-tempconversion': isEn ? 'PT100·TC' : 'PT100·열전대',
     'tab-articles': isEn ? 'Tech Notes' : '기술 노트'
   };
 
@@ -4898,6 +4963,44 @@ document.addEventListener('DOMContentLoaded', () => {
   initNpnPnpCalculator();
   initFlybackSurgeCalculator();
   initInrushBreakerCalculator();
+
+  // Hook Tab 22 ~ Tab 26 Inputs
+  ['slApproachType', 'slResolution', 'slSensorTime', 'slPlcTime', 'slMachineStopTime', 'slActualDist'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', calculateSafetyLight);
+    if (el) el.addEventListener('change', calculateSafetyLight);
+  });
+
+  ['trPhaseType', 'trPrimaryV', 'trSecondaryV', 'trSteadyVA', 'trInrushVA', 'trSafetyMargin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', calculateTransformer);
+    if (el) el.addEventListener('change', calculateTransformer);
+  });
+
+  ['scTrKva', 'scPercentZ', 'scVoltage', 'scBreakerIcu', 'scCableDist', 'scCableSq'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', calculateShortCircuit);
+    if (el) el.addEventListener('change', calculateShortCircuit);
+  });
+
+  ['miMechType', 'miTotalMass', 'miLeadOrDia', 'miGearRatio', 'miMotorJ', 'miAccelTime', 'miMaxRpm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', calculateMotionInertia);
+    if (el) el.addEventListener('change', calculateMotionInertia);
+  });
+
+  ['tcSensorType', 'tcInputTemp', 'tcWireType', 'tcCableLen', 'tcCableGauge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', calculateTempConversion);
+    if (el) el.addEventListener('change', calculateTempConversion);
+  });
+
+  calculateSafetyLight();
+  calculateTransformer();
+  calculateShortCircuit();
+  calculateMotionInertia();
+  calculateTempConversion();
+
 });
 
 // ==========================================================================
@@ -5245,3 +5348,331 @@ copySummaryToClipboard = function() {
     originalCopySummary();
   }
 };
+
+
+// ==========================================================================
+// TAB 22: ISO 13855 SAFETY LIGHT CURTAIN DISTANCE ENGINE
+// ==========================================================================
+
+function calculateSafetyLight() {
+  const approachType = document.getElementById('slApproachType')?.value || 'hand';
+  const resolution = parseFloat(document.getElementById('slResolution')?.value || '14');
+  const t1 = parseFloat(document.getElementById('slSensorTime')?.value || '20'); // ms
+  const t2 = parseFloat(document.getElementById('slPlcTime')?.value || '15'); // ms
+  const t3 = parseFloat(document.getElementById('slMachineStopTime')?.value || '85'); // ms
+  const actualDist = parseFloat(document.getElementById('slActualDist')?.value || '350'); // mm
+
+  const isEn = currentLanguage === 'en';
+
+  const K = approachType === 'hand' ? 2000 : 1600; // mm/s
+  const T = (t1 + t2 + t3) / 1000; // s
+
+  let C = 0;
+  if (resolution <= 14) {
+    C = 0;
+  } else if (resolution <= 40) {
+    C = Math.max(0, 8 * (resolution - 14));
+  } else {
+    C = 850;
+  }
+
+  // S = K * T + C
+  const S = Math.round(K * T + C);
+  const margin = Math.round(actualDist - S);
+  const isSafe = margin >= 0;
+
+  const resMinDist = document.getElementById('resSlMinDistance');
+  const resFormula = document.getElementById('resSlFormulaText');
+  const resTotalT = document.getElementById('resSlTotalStopTime');
+  const resPenetration = document.getElementById('resSlPenetrationDist');
+  const resMargin = document.getElementById('resSlSafetyMargin');
+  const badge = document.getElementById('slVerdictBadge');
+
+  if (resMinDist) resMinDist.textContent = `${S} mm`;
+  if (resFormula) resFormula.textContent = `S = (${K} mm/s × ${T.toFixed(3)}s) + ${C}mm = ${S} mm`;
+  if (resTotalT) resTotalT.textContent = `${Math.round(T * 1000)} ms`;
+  if (resPenetration) resPenetration.textContent = `${C} mm`;
+  if (resMargin) {
+    resMargin.textContent = `${margin >= 0 ? '+' : ''}${margin} mm`;
+    resMargin.className = `summary-val font-mono ${isSafe ? 'text-safe' : 'text-warn'}`;
+  }
+  if (badge) {
+    badge.textContent = isSafe ? (isEn ? 'SAFE (Distance Compliant)' : 'SAFE (안전 마진 만족)') : (isEn ? 'HAZARD (Distance Insufficient)' : 'HAZARD (안전거리 부족)');
+    badge.className = `badge-pill ${isSafe ? 'badge-safe' : 'badge-warn'}`;
+  }
+}
+
+// ==========================================================================
+// TAB 23: TRANSFORMER CAPACITY & PROTECTION SIZING ENGINE
+// ==========================================================================
+
+function calculateTransformer() {
+  const phase = parseInt(document.getElementById('trPhaseType')?.value || '1', 10);
+  const v1 = parseFloat(document.getElementById('trPrimaryV')?.value || '380');
+  const v2 = parseFloat(document.getElementById('trSecondaryV')?.value || '220');
+  const steadyVA = parseFloat(document.getElementById('trSteadyVA')?.value || '850');
+  const inrushVA = parseFloat(document.getElementById('trInrushVA')?.value || '3200');
+  const marginPct = parseFloat(document.getElementById('trSafetyMargin')?.value || '25');
+
+  const isEn = currentLanguage === 'en';
+
+  // Design VA considering steady load + margin and inrush capability
+  const designSteadyVA = steadyVA * (1 + marginPct / 100);
+  const designInrushVA = inrushVA / 3.0; // TR can handle ~3x inrush for short bursts
+  const requiredVA = Math.max(designSteadyVA, designInrushVA);
+
+  // Standard Commercial TR Ratings (kVA): 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0
+  const stdKvaList = [0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0, 15.0];
+  const requiredKva = requiredVA / 1000;
+  let recKva = stdKvaList[stdKvaList.length - 1];
+  for (let i = 0; i < stdKvaList.length; i++) {
+    if (stdKvaList[i] >= requiredKva) {
+      recKva = stdKvaList[i];
+      break;
+    }
+  }
+
+  // Currents
+  let i1 = 0;
+  let i2 = 0;
+  if (phase === 3) {
+    i1 = (recKva * 1000) / (Math.sqrt(3) * v1);
+    i2 = (recKva * 1000) / (Math.sqrt(3) * v2);
+  } else {
+    i1 = (recKva * 1000) / v1;
+    i2 = (recKva * 1000) / v2;
+  }
+
+  // Recommended Breakers
+  const recBreaker1 = Math.ceil(i1 * 1.5);
+  const recBreaker2 = Math.ceil(i2 * 1.25);
+
+  const elCap = document.getElementById('resTrCapacity');
+  const elCapSub = document.getElementById('resTrCapFormula');
+  const elI1 = document.getElementById('resTrPrimaryCurrent');
+  const elI2 = document.getElementById('resTrSecondaryCurrent');
+  const elB1 = document.getElementById('resTrPrimaryBreaker');
+  const elB2 = document.getElementById('resTrSecondaryBreaker');
+
+  if (elCap) elCap.textContent = `${recKva} kVA`;
+  if (elCapSub) elCapSub.textContent = isEn ? `Steady load ${(designSteadyVA / 1000).toFixed(2)} kVA with inrush headroom satisfied` : `상시 ${(designSteadyVA / 1000).toFixed(2)} kVA + 순시 기동 부하율 안전 마진 만족`;
+  if (elI1) elI1.textContent = `${i1.toFixed(2)} A`;
+  if (elI2) elI2.textContent = `${i2.toFixed(2)} A`;
+  if (elB1) elB1.textContent = `${recBreaker1}A D-curve (MCB)`;
+  if (elB2) elB2.textContent = `${recBreaker2}A C-curve (MCB)`;
+}
+
+// ==========================================================================
+// TAB 24: TRANSFORMER %Z SHORT CIRCUIT CURRENT (Isc) ENGINE
+// ==========================================================================
+
+function calculateShortCircuit() {
+  const trKva = parseFloat(document.getElementById('scTrKva')?.value || '500');
+  const percentZ = parseFloat(document.getElementById('scPercentZ')?.value || '5.0');
+  const vLine = parseFloat(document.getElementById('scVoltage')?.value || '380');
+  const breakerIcu = parseFloat(document.getElementById('scBreakerIcu')?.value || '22');
+  const cableDist = parseFloat(document.getElementById('scCableDist')?.value || '30');
+  const cableSq = parseFloat(document.getElementById('scCableSq')?.value || '150');
+
+  const isEn = currentLanguage === 'en';
+
+  // Transformer Rated Current
+  const In = (trKva * 1000) / (Math.sqrt(3) * vLine);
+
+  // Transformer Base Short Circuit Current (kA)
+  const IscBase = (In / (percentZ / 100)) / 1000;
+
+  // Cable Impedance (Copper rho = 0.018 ohm.mm2/m)
+  const Rcable = (0.018 * cableDist) / cableSq;
+  const Xcable = 0.00008 * cableDist; // ~0.08 mOhm/m
+  const Zcable = Math.sqrt(Rcable * Rcable + Xcable * Xcable);
+
+  const Ztr = (vLine / (Math.sqrt(3) * (IscBase * 1000)));
+  const Ztotal = Ztr + Zcable;
+
+  const IscPanel = ((vLine / (Math.sqrt(3) * Ztotal)) / 1000);
+  const damping = IscBase - IscPanel;
+
+  const isPass = breakerIcu >= IscPanel;
+
+  const elSc = document.getElementById('resScCurrent');
+  const elSub = document.getElementById('resScSubText');
+  const elBase = document.getElementById('resScBaseTr');
+  const elDamp = document.getElementById('resScCableDamping');
+  const elRated = document.getElementById('resScRatedI');
+  const elRec = document.getElementById('resScRecBreaker');
+  const badge = document.getElementById('scVerdictBadge');
+
+  if (elSc) elSc.textContent = `${IscPanel.toFixed(1)} kA`;
+  if (elSub) elSub.textContent = isEn ? `Breaker Rating ${breakerIcu} kA vs Fault Current ${IscPanel.toFixed(1)} kA` : `차단기 차단용량 ${breakerIcu} kA 대비 고장 단락전류 ${IscPanel.toFixed(1)} kA`;
+  if (elBase) elBase.textContent = `${IscBase.toFixed(1)} kA`;
+  if (elDamp) elDamp.textContent = `-${damping.toFixed(1)} kA`;
+  if (elRated) elRated.textContent = `${In.toFixed(1)} A`;
+  if (elRec) elRec.textContent = `${Math.ceil(IscPanel * 1.25)} kA 이상`;
+
+  if (badge) {
+    badge.textContent = isPass ? (isEn ? 'PASS (Adequate kA Capacity)' : 'PASS (차단용량 충분)') : (isEn ? 'FAIL (Interrupting Capacity Insufficient)' : 'FAIL (차단용량 부족 - 교체 필요)');
+    badge.className = `badge-pill ${isPass ? 'badge-safe' : 'badge-fail'}`;
+  }
+}
+
+// ==========================================================================
+// TAB 25: MOTION MECHANISM INERTIA & MOTOR SIZING ENGINE
+// ==========================================================================
+
+function calculateMotionInertia() {
+  const mech = document.getElementById('miMechType')?.value || 'ballscrew';
+  const mass = parseFloat(document.getElementById('miTotalMass')?.value || '35'); // kg
+  const leadOrDia = parseFloat(document.getElementById('miLeadOrDia')?.value || '10'); // mm
+  const gearRatio = parseFloat(document.getElementById('miGearRatio')?.value || '1'); // 1/i
+  const motorJ = parseFloat(document.getElementById('miMotorJ')?.value || '1.35'); // x10^-4 kg.m2
+  const tAcc = parseFloat(document.getElementById('miAccelTime')?.value || '0.08'); // s
+  const maxRpm = parseFloat(document.getElementById('miMaxRpm')?.value || '3000'); // rpm
+
+  const isEn = currentLanguage === 'en';
+
+  let loadJ = 0;
+  let linearSpeed = 0; // mm/s
+
+  if (mech === 'ballscrew') {
+    // JL = M * (Lead / (2 * pi))^2 (kg.m2)
+    const leadM = leadOrDia / 1000;
+    loadJ = mass * Math.pow(leadM / (2 * Math.PI), 2);
+    linearSpeed = (maxRpm / 60) * leadOrDia;
+  } else if (mech === 'timingbelt') {
+    // JL = M * (D / 2)^2
+    const radiusM = (leadOrDia / 2) / 1000;
+    loadJ = mass * Math.pow(radiusM, 2);
+    linearSpeed = (maxRpm / 60) * (Math.PI * leadOrDia);
+  } else {
+    // Rotary disc: JL = (1/2) * M * R^2
+    const radiusM = (leadOrDia / 2) / 1000;
+    loadJ = 0.5 * mass * Math.pow(radiusM, 2);
+    linearSpeed = (maxRpm / 60) * (Math.PI * leadOrDia);
+  }
+
+  // Converted to motor shaft through gear ratio
+  const loadJMotorShaft = (loadJ / Math.pow(gearRatio, 2)) * 10000; // in 10^-4 kg.m2
+
+  const inertiaRatio = loadJMotorShaft / motorJ;
+
+  // Angular velocity omega (rad/s)
+  const omega = (2 * Math.PI * maxRpm) / 60;
+  const totalJ = (loadJMotorShaft + motorJ) * 1e-4; // kg.m2
+  const accelTorque = (totalJ * omega) / tAcc; // N.m
+
+  const elRatio = document.getElementById('resMiInertiaRatio');
+  const elSub = document.getElementById('resMiSubText');
+  const elLoadJ = document.getElementById('resMiLoadJ');
+  const elTa = document.getElementById('resMiAccelTorque');
+  const elSpeed = document.getElementById('resMiLinearSpeed');
+  const elRec = document.getElementById('resMiRecMotor');
+  const badge = document.getElementById('miVerdictBadge');
+
+  if (elRatio) elRatio.textContent = `${inertiaRatio.toFixed(2)} 배`;
+  if (elSub) elSub.textContent = isEn ? `Recommended Inertia Ratio (< 5x high speed, < 10x standard)` : `권장 관성비 (일반 5배 이하, 고빈도 3배 이하) 판정`;
+  if (elLoadJ) elLoadJ.textContent = `${loadJMotorShaft.toFixed(2)} ×10⁻⁴ kg·m²`;
+  if (elTa) elTa.textContent = `${accelTorque.toFixed(2)} N·m`;
+  if (elSpeed) elSpeed.textContent = `${Math.round(linearSpeed)} mm/s`;
+
+  if (elRec) {
+    if (accelTorque <= 1.27) elRec.textContent = '200W ~ 400W';
+    else if (accelTorque <= 2.39) elRec.textContent = '400W ~ 750W';
+    else if (accelTorque <= 4.77) elRec.textContent = '750W ~ 1.0kW';
+    else elRec.textContent = '1.5kW ~ 2.0kW+';
+  }
+
+  if (badge) {
+    if (inertiaRatio <= 5.0) {
+      badge.textContent = isEn ? 'OPTIMAL (Excellent Inertia)' : 'OPTIMAL (관성비 우수)';
+      badge.className = 'badge-pill badge-safe';
+    } else if (inertiaRatio <= 10.0) {
+      badge.textContent = isEn ? 'ACCEPTABLE (Tuning Required)' : 'ACCEPTABLE (게인 조정 필요)';
+      badge.className = 'badge-pill badge-warn';
+    } else {
+      badge.textContent = isEn ? 'OVERLOAD (Deceleration Risk)' : 'OVERLOAD (관성비 과대 - 감속기 권장)';
+      badge.className = 'badge-pill badge-fail';
+    }
+  }
+}
+
+// ==========================================================================
+// TAB 26: TEMPERATURE SENSOR CONVERSION & 3-WIRE COMPENSATION
+// ==========================================================================
+
+function calculateTempConversion() {
+  const sensor = document.getElementById('tcSensorType')?.value || 'pt100';
+  const temp = parseFloat(document.getElementById('tcInputTemp')?.value || '125.0');
+  const wireType = document.getElementById('tcWireType')?.value || '3w';
+  const cableLen = parseFloat(document.getElementById('tcCableLen')?.value || '25');
+  const wireSq = parseFloat(document.getElementById('tcCableGauge')?.value || '0.3');
+
+  const isEn = currentLanguage === 'en';
+
+  let convertedVal = '';
+  let leadR = ((0.018 * cableLen * 2) / wireSq); // 2-way cable loop resistance (ohm)
+  let deltaT = 0;
+
+  if (sensor === 'pt100' || sensor === 'pt1000') {
+    const R0 = sensor === 'pt100' ? 100.0 : 1000.0;
+    const A = 3.9083e-3;
+    const B = -5.775e-7;
+
+    // Resistance R(T) = R0 * (1 + A*T + B*T^2)
+    let Rt = 0;
+    if (temp >= 0) {
+      Rt = R0 * (1 + A * temp + B * Math.pow(temp, 2));
+    } else {
+      const C = -4.183e-12;
+      Rt = R0 * (1 + A * temp + B * Math.pow(temp, 2) + C * (temp - 100) * Math.pow(temp, 3));
+    }
+
+    convertedVal = `${Rt.toFixed(2)} Ω`;
+
+    // 2-Wire Lead error: deltaT = leadR / (R0 * 0.00385)
+    deltaT = leadR / (R0 * 0.00385);
+  } else if (sensor === 'tc_k') {
+    // Thermocouple K: ~41.27 uV/°C
+    const mv = (temp * 0.04127);
+    convertedVal = `${mv.toFixed(3)} mV`;
+    deltaT = 0; // TC uses cold junction compensation
+  } else if (sensor === 'tc_j') {
+    const mv = (temp * 0.051);
+    convertedVal = `${mv.toFixed(3)} mV`;
+    deltaT = 0;
+  } else {
+    const mv = (temp * 0.040);
+    convertedVal = `${mv.toFixed(3)} mV`;
+    deltaT = 0;
+  }
+
+  const elVal = document.getElementById('resTcConvertedVal');
+  const elFormula = document.getElementById('resTcFormulaText');
+  const elLeadR = document.getElementById('resTcLeadR');
+  const elError = document.getElementById('resTcErrorDelta');
+  const elComp = document.getElementById('resTcCompensatedTemp');
+
+  if (elVal) elVal.textContent = convertedVal;
+  if (elFormula) elFormula.textContent = isEn ? `IEC 60751 Conversion: T = ${temp}°C corresponds to ${convertedVal}` : `IEC 60751 규격 공식 연산: ${temp}°C 정밀 환산치 = ${convertedVal}`;
+  if (elLeadR) elLeadR.textContent = `${leadR.toFixed(2)} Ω`;
+
+  if (elError) {
+    if (wireType === '2w') {
+      elError.textContent = `+${deltaT.toFixed(2)} °C`;
+      elError.className = 'summary-val font-mono text-warn';
+    } else {
+      elError.textContent = '0.00 °C (보정됨)';
+      elError.className = 'summary-val font-mono text-safe';
+    }
+  }
+
+  if (elComp) {
+    if (wireType === '2w') {
+      elComp.textContent = `${(temp + deltaT).toFixed(2)} °C (오차 발생)`;
+      elComp.className = 'summary-val font-mono text-warn';
+    } else {
+      elComp.textContent = `${temp.toFixed(2)} °C (정밀 계측)`;
+      elComp.className = 'summary-val font-mono text-safe';
+    }
+  }
+}

@@ -252,6 +252,26 @@
             <i data-lucide="trending-down"></i>
             <span data-i18n="tab_inrush">돌입전류·트립</span>
           </button>
+          <button class="tab-btn" data-tab="tab-safetylight" role="tab">
+            <i data-lucide="shield-alert"></i>
+            <span>안전 라이트커튼</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-transformer" role="tab">
+            <i data-lucide="zap"></i>
+            <span>제어용 변압기</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-shortcircuit" role="tab">
+            <i data-lucide="flame"></i>
+            <span>단락전류(kA)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-motioninertia" role="tab">
+            <i data-lucide="cog"></i>
+            <span>기계부하 관성</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-tempconversion" role="tab">
+            <i data-lucide="thermometer"></i>
+            <span>PT100·열전대</span>
+          </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
             <span data-i18n="tab_notes">기술 노트</span>
@@ -3192,7 +3212,561 @@
     <!-- ========================================================================= -->
     <!-- TAB 8: 기술 자료 & 실무 가이드 -->
     <!-- ========================================================================= -->
-    <section id="tab-articles" class="tab-panel">
+    
+    <!-- ========================================================================= -->
+    <!-- TAB 22: ISO 13855 안전 라이트커튼 최소 이격거리 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-safetylight" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">ISO 13855 / EN ISO 13849-1 안전 라이트커튼 최소 안전거리(S) 계산기</h2>
+          <p class="main-desc">로봇 셀, 프레스 및 자동화 설비의 안전 라이트커튼 광축 분해능, 센서 응답시간, 기계 브레이크 정지시간에 따른 법적 최소 이격거리(S)를 판정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>안전 파라미터 및 응답 시간 설정</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="slApproachType">신체 접근 속도 기준 (Approach Speed K)</label>
+              <select id="slApproachType" class="select-precision font-mono">
+                <option value="hand" selected>손/팔 접근 (Hand/Arm K = 2,000 mm/s)</option>
+                <option value="body">전신/보행 접근 (Whole Body K = 1,600 mm/s)</option>
+              </select>
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="slResolution">라이트커튼 광축 빔 분해능 (Beam Resolution d)</label>
+              <select id="slResolution" class="select-precision font-mono">
+                <option value="14" selected>14mm (핑거 보호 Finger - C = 0mm)</option>
+                <option value="20">20mm (핸드 보호 Hand - C = 48mm)</option>
+                <option value="30">30mm (팔 보호 Arm - C = 128mm)</option>
+                <option value="40">40mm (신체 보호 Body - C = 850mm)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="slSensorTime">라이트커튼 응답 (t1)</label>
+                <div class="val-input-group">
+                  <input type="number" id="slSensorTime" value="20" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">ms</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="slPlcTime">Safety PLC/릴레이 (t2)</label>
+                <div class="val-input-group">
+                  <input type="number" id="slPlcTime" value="15" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">ms</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="slMachineStopTime">기계/서보 정지 시간 (t3)</label>
+                <div class="val-input-group">
+                  <input type="number" id="slMachineStopTime" value="85" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">ms</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="slActualDist">실제 설치 이격 거리</label>
+                <div class="val-input-group">
+                  <input type="number" id="slActualDist" value="350" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>ISO 13855 법적 최소 안전거리 판정</h3>
+            </div>
+            <span id="slVerdictBadge" class="badge-pill badge-safe">SAFE (안전 마진 만족)</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">REQUIRED MINIMUM SAFETY DISTANCE (S)</span>
+            <div class="terminal-voltage-big font-mono" id="resSlMinDistance">288 mm</div>
+            <div class="tv-sub" id="resSlFormulaText">S = (2000 mm/s × 0.120s) + 48mm = 288 mm</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">총 시스템 정지시간(T)</span>
+              <strong class="summary-val font-mono" id="resSlTotalStopTime">120 ms</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">추가 침투 거리(C)</span>
+              <strong class="summary-val font-mono" id="resSlPenetrationDist">48 mm</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">안전 이격 여유 마진</span>
+              <strong class="summary-val font-mono text-safe" id="resSlSafetyMargin">+62 mm</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">적용 안전 규격</span>
+              <strong class="summary-val font-mono">ISO 13855 PLe</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 23: 제어용 변압기(TR) 용량 & 1차/2차 보호 선정기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-transformer" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">제어용 변압기(TR) 용량(kVA) 및 1차/2차 차단기 선정기</h2>
+          <p class="main-desc">메인 동력 전원(380V/440V/480V)에서 제어 전원(220V/110V) 변환 시 상시 부하율과 솔레노이드/MC 돌입 피크를 고려한 변압기 용량 및 보호기를 자동 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>변압기 전압 사양 및 부하 입력</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="trPhaseType">상 구성 (Phase)</label>
+                <select id="trPhaseType" class="select-precision font-mono">
+                  <option value="1" selected>단상 (1-Phase 1P)</option>
+                  <option value="3">3상 (3-Phase 3P)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="trPrimaryV">1차측 전압 (Primary V1)</label>
+                <select id="trPrimaryV" class="select-precision font-mono">
+                  <option value="380" selected>380 V (한국/유럽)</option>
+                  <option value="440">440 V (선박/플랜트)</option>
+                  <option value="480">480 V (미국 NFPA 79)</option>
+                  <option value="220">220 V</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="trSecondaryV">2차측 전압 (Secondary V2)</label>
+                <select id="trSecondaryV" class="select-precision font-mono">
+                  <option value="220" selected>220 V</option>
+                  <option value="110">110 V (미국/일본)</option>
+                  <option value="24">24 V (초저압 AC)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="trSteadyVA">상시 연속 부하 (Steady VA)</label>
+                <div class="val-input-group">
+                  <input type="number" id="trSteadyVA" value="850" step="50" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">VA</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="trInrushVA">순시 최대 기동 돌입 부하</label>
+                <div class="val-input-group">
+                  <input type="number" id="trInrushVA" value="3200" step="100" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">VA</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="trSafetyMargin">안전 여유율 (Margin)</label>
+                <div class="val-input-group">
+                  <input type="number" id="trSafetyMargin" value="25" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>변압기 추천 용량 및 1차/2차 보호 정격</h3>
+            </div>
+            <span id="trStatusBadge" class="badge-pill badge-safe">OPTIMAL SIZING</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">RECOMMENDED TRANSFORMER CAPACITY</span>
+            <div class="terminal-voltage-big font-mono" id="resTrCapacity">1.5 kVA</div>
+            <div class="tv-sub" id="resTrCapFormula">상시 1.06 kVA + 순시 기동 부하율 85% 안전 마진 만족</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">1차측 정격 전류 (I1)</span>
+              <strong class="summary-val font-mono" id="resTrPrimaryCurrent">3.95 A</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">2차측 정격 전류 (I2)</span>
+              <strong class="summary-val font-mono" id="resTrSecondaryCurrent">6.82 A</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">1차측 추천 차단기</span>
+              <strong class="summary-val font-mono text-highlight" id="resTrPrimaryBreaker">10A D-curve</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">2차측 추천 차단기</span>
+              <strong class="summary-val font-mono text-highlight" id="resTrSecondaryBreaker">10A C-curve</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 24: 변압기 %Z 단락전류(kA) & 차단용량 판정기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-shortcircuit" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">IEC 60909 변압기 %Z 기반 최대 단락전류(Isc) &amp; 차단용량(kA) 판정기</h2>
+          <p class="main-desc">변압기 용량, 임피던스(%Z), 전선 길이에 따른 3상 대칭 단락전류를 산출하고 인입 차단기의 정격 차단용량(kA_IC / Icu) 적합성을 검증합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>수전 변압기 및 배선 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="scTrKva">변압기 용량 (Transformer kVA)</label>
+                <div class="val-input-group">
+                  <input type="number" id="scTrKva" value="500" step="50" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kVA</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="scPercentZ">변압기 임피던스 (%Z)</label>
+                <div class="val-input-group">
+                  <input type="number" id="scPercentZ" value="5.0" step="0.1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="scVoltage">수전 2차 전압 (V_line)</label>
+                <select id="scVoltage" class="select-precision font-mono">
+                  <option value="380" selected>380 V (3상)</option>
+                  <option value="440">440 V (3상)</option>
+                  <option value="480">480 V (3상)</option>
+                  <option value="220">220 V (3상/단상)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="scBreakerIcu">설치 차단기 차단용량 (Icu)</label>
+                <div class="val-input-group">
+                  <input type="number" id="scBreakerIcu" value="22" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kA</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="scCableDist">변압기~제어반 배선 거리</label>
+                <div class="val-input-group">
+                  <input type="number" id="scCableDist" value="30" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="scCableSq">인입 전선 규격 (mm²)</label>
+                <select id="scCableSq" class="select-precision font-mono">
+                  <option value="95">95 mm²</option>
+                  <option value="150" selected>150 mm²</option>
+                  <option value="240">240 mm²</option>
+                  <option value="300">300 mm²</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>단락전류 계산 및 차단기 차단용량 판정</h3>
+            </div>
+            <span id="scVerdictBadge" class="badge-pill badge-safe">PASS (차단용량 충분)</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">CALCULATED SHORT CIRCUIT CURRENT (Isc)</span>
+            <div class="terminal-voltage-big font-mono" id="resScCurrent">12.8 kA</div>
+            <div class="tv-sub" id="resScSubText">차단기 차단용량 22 kA 대비 58.2% (안전 마진 9.2 kA)</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">TR 2차측 직하 단락전류</span>
+              <strong class="summary-val font-mono" id="resScBaseTr">15.2 kA</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">선로 임피던스 감쇄</span>
+              <strong class="summary-val font-mono" id="resScCableDamping">-2.4 kA</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">변압기 정격전류 (In)</span>
+              <strong class="summary-val font-mono" id="resScRatedI">759.7 A</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">추천 최소 차단용량</span>
+              <strong class="summary-val font-mono text-highlight" id="resScRecBreaker">14 kA 이상</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 25: 기계 메커니즘 부하 관성 모멘트(JL) & 모터 사이징 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-motioninertia" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">기계 메커니즘 부하 관성 모멘트(JL) &amp; 서보모터 관성비 계산기</h2>
+          <p class="main-desc">볼스크류, 타이밍 벨트, 로터리 턴테이블 기구부의 관성 모멘트(JL)와 감속비에 따른 서보모터 관성비(JL/JM) 및 가속 토크를 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>기구 메커니즘 및 모터 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="miMechType">기구 메커니즘 종류 (Mechanism Type)</label>
+              <select id="miMechType" class="select-precision font-mono">
+                <option value="ballscrew" selected>볼스크류 수평 구동 (Ball Screw Horizontal)</option>
+                <option value="timingbelt">타이밍 벨트 구동 (Timing Belt Pulley)</option>
+                <option value="rotary">로터리 턴테이블 (Rotary Turntable Disc)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="miTotalMass">이동체 총 질량 (Table+Work M)</label>
+                <div class="val-input-group">
+                  <input type="number" id="miTotalMass" value="35" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kg</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="miLeadOrDia">스크류 리드 피치 / 풀리 직경</label>
+                <div class="val-input-group">
+                  <input type="number" id="miLeadOrDia" value="10" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="miGearRatio">감속기 감속비 (1 / i)</label>
+                <div class="val-input-group">
+                  <input type="number" id="miGearRatio" value="1" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">배</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="miMotorJ">모터 자체 관성 (JM ×10⁻⁴)</label>
+                <div class="val-input-group">
+                  <input type="number" id="miMotorJ" value="1.35" step="0.05" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kg·m²</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="miAccelTime">가속 시간 (t_acc)</label>
+                <div class="val-input-group">
+                  <input type="number" id="miAccelTime" value="0.08" step="0.01" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">s</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="miMaxRpm">최고 회전속도 (N_max)</label>
+                <div class="val-input-group">
+                  <input type="number" id="miMaxRpm" value="3000" step="100" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">RPM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>부하 관성비 및 가속 토크 판정</h3>
+            </div>
+            <span id="miVerdictBadge" class="badge-pill badge-safe">OPTIMAL (관성비 우수)</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">LOAD INERTIA RATIO (JL / JM)</span>
+            <div class="terminal-voltage-big font-mono" id="resMiInertiaRatio">2.17 배</div>
+            <div class="tv-sub" id="resMiSubText">권장 관성비 (일반 5배 이하, 고빈도 3배 이하) 완벽 만족</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">모터축 환산 부하 관성(JL)</span>
+              <strong class="summary-val font-mono" id="resMiLoadJ">2.93 ×10⁻⁴ kg·m²</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">가속 필요 토크 (Ta)</span>
+              <strong class="summary-val font-mono" id="resMiAccelTorque">1.68 N·m</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">이동체 최고 속도</span>
+              <strong class="summary-val font-mono" id="resMiLinearSpeed">500 mm/s</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">추천 서보모터 용량</span>
+              <strong class="summary-val font-mono text-highlight" id="resMiRecMotor">400W ~ 750W 급</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 26: IEC 60751 PT100 RTD & 열전대(TC) 온도 변환기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-tempconversion" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">IEC 60751 PT100 (RTD) &amp; 써모커플(TC K/J/T) 온도-저항/기전력 상호 변환기</h2>
+          <p class="main-desc">산업용 PT100 측온저항체(RTD) 및 K/J/T 열전대의 정밀 온도 변환과 장거리 2선식/3선식 배선 저항 오차 보정치를 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>온도 센서 종류 및 배선 환경</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="tcSensorType">온도 센서 유형 (Sensor Type)</label>
+              <select id="tcSensorType" class="select-precision font-mono">
+                <option value="pt100" selected>PT100 RTD (IEC 60751, R0 = 100 Ω)</option>
+                <option value="pt1000">PT1000 RTD (R0 = 1,000 Ω)</option>
+                <option value="tc_k">써모커플 K-Type (Chromel-Alumel, -200~1260°C)</option>
+                <option value="tc_j">써모커플 J-Type (Iron-Constantan, -40~750°C)</option>
+                <option value="tc_t">써모커플 T-Type (Copper-Constantan, -200~350°C)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="tcInputTemp">입력 측정 온도 (T)</label>
+                <div class="val-input-group">
+                  <input type="number" id="tcInputTemp" value="125.0" step="0.5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">°C</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="tcWireType">배선 연결 방식 (Lead Wire)</label>
+                <select id="tcWireType" class="select-precision font-mono">
+                  <option value="3w" selected>3선식 (3-Wire 자동 선로보상)</option>
+                  <option value="2w">2선식 (2-Wire 오차 발생)</option>
+                  <option value="4w">4선식 (4-Wire 완벽 무오차)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="tcCableLen">센서 케이블 배선 길이</label>
+                <div class="val-input-group">
+                  <input type="number" id="tcCableLen" value="25" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="tcCableGauge">센서 도선 굵기 (SQ)</label>
+                <select id="tcCableGauge" class="select-precision font-mono">
+                  <option value="0.2">0.2 mm² (AWG 24)</option>
+                  <option value="0.3" selected>0.3 mm² (AWG 22)</option>
+                  <option value="0.5">0.5 mm² (AWG 20)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>변환 저항/기전력 및 배선 오차 보정치</h3>
+            </div>
+            <span id="tcVerdictBadge" class="badge-pill badge-safe">IEC 60751 정합</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">CONVERTED RESISTANCE / THERMO-VOLTAGE</span>
+            <div class="terminal-voltage-big font-mono" id="resTcConvertedVal">148.07 Ω</div>
+            <div class="tv-sub" id="resTcFormulaText">Callendar-Van Dusen 식: R(125°C) = 100 × (1 + A·T + B·T²)</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">선로 왕복 저항 (R_lead)</span>
+              <strong class="summary-val font-mono" id="resTcLeadR">2.87 Ω</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">2선식 배선 시 온도 오차</span>
+              <strong class="summary-val font-mono text-warn" id="resTcErrorDelta">+7.46 °C</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">3/4선식 보정 후 온도</span>
+              <strong class="summary-val font-mono text-safe" id="resTcCompensatedTemp">125.00 °C</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">온도 계수 (α)</span>
+              <strong class="summary-val font-mono">0.003851 /°C</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
           <h2 class="main-title">FA 전장설계 기술 노트 & 현장 트러블슈팅</h2>
@@ -4540,6 +5114,26 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-inrushbreaker')">
           <div class="drawer-tool-icon"><i data-lucide="power"></i></div>
           <span class="drawer-tool-name" id="dtn20">돌입전류·트립</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-safetylight')">
+          <div class="drawer-tool-icon"><i data-lucide="shield-alert"></i></div>
+          <span class="drawer-tool-name" id="dtn22">안전 라이트커튼</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-transformer')">
+          <div class="drawer-tool-icon"><i data-lucide="zap"></i></div>
+          <span class="drawer-tool-name" id="dtn23">제어용 변압기</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-shortcircuit')">
+          <div class="drawer-tool-icon"><i data-lucide="flame"></i></div>
+          <span class="drawer-tool-name" id="dtn24">단락전류(kA)</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-motioninertia')">
+          <div class="drawer-tool-icon"><i data-lucide="cog"></i></div>
+          <span class="drawer-tool-name" id="dtn25">기계부하 관성</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-tempconversion')">
+          <div class="drawer-tool-icon"><i data-lucide="thermometer"></i></div>
+          <span class="drawer-tool-name" id="dtn26">PT100·열전대</span>
         </div>
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>
