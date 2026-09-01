@@ -4418,3 +4418,162 @@ body, h1, h2, h3, h4, h5, p, span, div, label, li {
   padding: 1px 4px;
   pointer-events: none;
 }
+
+
+/* ==========================================================================
+   CENTERED MASTER 3-COLUMN LAYOUT & ADSENSE SIDEBARS
+   ========================================================================== */
+
+.master-layout-grid {
+  display: grid;
+  grid-template-columns: 240px minmax(880px, 1180px) 260px;
+  justify-content: center;
+  gap: 1.25rem;
+  max-width: 1780px;
+  margin: 0 auto;
+  padding: 1rem 1rem 3.5rem 1rem;
+  width: 100%;
+}
+
+.page-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* Sticky Ad & Spec Sidebars */
+.ad-sidebar {
+  position: relative;
+  display: block;
+}
+
+.ad-sticky-box {
+  position: sticky;
+  top: 105px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.ad-box-label {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.adsense-slot-placeholder {
+  background: #ffffff;
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.ad-preview-banner {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-light);
+}
+
+.ad-chip {
+  background: var(--brand-orange-subtle);
+  color: var(--brand-orange);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 0.35rem;
+}
+
+.ad-preview-banner h6 {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.ad-preview-banner p {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+}
+
+.ad-btn-action {
+  display: block;
+  text-align: center;
+  background: var(--navy-dark);
+  color: #ffffff !important;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.4rem 0.6rem;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.ad-btn-action:hover {
+  background: var(--brand-orange);
+}
+
+/* Quick Standards Cheat Sheet Card */
+.quick-cheat-card {
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+}
+
+.quick-cheat-card h6 {
+  color: #38bdf8;
+  font-size: 0.8rem;
+  font-weight: 800;
+  margin-bottom: 0.45rem;
+}
+
+.cheat-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cheat-list li {
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 0.25rem;
+  color: #cbd5e1;
+}
+
+.cheat-list li strong {
+  color: #fb923c;
+}
+
+/* Responsive Grid Adaptation */
+@media (max-width: 1540px) {
+  .master-layout-grid {
+    grid-template-columns: minmax(780px, 1100px) 250px;
+  }
+  .ad-sidebar.left-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 1180px) {
+  .master-layout-grid {
+    display: block;
+    max-width: 100%;
+    padding: 0.75rem 0.75rem 3.5rem 0.75rem;
+  }
+  .ad-sidebar {
+    display: none;
+  }
+}

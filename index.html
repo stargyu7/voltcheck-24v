@@ -169,13 +169,13 @@
       </div>
     </div>
 
-    <!-- Row 2: Full-Width 11-Tool Segmented Menu -->
+    <!-- Row 2: Full-Width 32-Tool Segmented Menu & Centered Search Bar -->
     <div class="nav-menu-bar">
-      <!-- Quick Global Tool Search & Category Filter Pills -->
-      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; max-width:1520px; margin:0 auto; padding:0.25rem 0.75rem;">
-        <div class="quick-search-wrapper">
+      <!-- Centered Global Tool Search & Category Filter Ribbon -->
+      <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0.75rem; max-width:1600px; margin:0 auto; padding:0.25rem 0.75rem;">
+        <div class="quick-search-wrapper" style="max-width:440px;">
           <i data-lucide="search" class="quick-search-icon"></i>
-          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="32대 공학 도구 실시간 검색 (예: 24V, 밸브, SPD, 부스바, 모터, AGV...)" oninput="filterToolsSearch(this.value)">
+          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="32대 공학 도구 검색 (예: 24V, 밸브, SPD, 부스바, 모터, AGV...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
@@ -185,12 +185,6 @@
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·통신·계측</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 밸브·클린룸·규격</button>
         </div>
-      </div>
-        <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 26종 (All)</button>
-        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기 (Power &amp; TR)</button>
-        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·안전 (Motion &amp; Safety)</button>
-        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·통신 (Signals &amp; OT)</button>
-        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 제어반·규격 (Specs &amp; Tech)</button>
       </div>
 
       <!-- Segmented Track with Left/Right Scroll Arrows -->
@@ -346,8 +340,32 @@
     </div>
   </aside>
 
-  <!-- Main Container -->
-  <main class="page-container">
+  <!-- 3-Column Centered Master Layout Grid (AdSense Optimized) -->
+  <div class="master-layout-grid">
+    <!-- Left Sticky Skyscraper Ad Sidebar -->
+    <aside class="ad-sidebar left-sidebar" id="adLeftSidebar">
+      <div class="ad-sticky-box">
+        <div class="ad-box-label">SPONSORED AUTOMATION</div>
+        <div class="adsense-slot-placeholder">
+          <!-- Google AdSense Responsive Unit -->
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-7654949933724243"
+               data-ad-slot="7654949933"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <div class="ad-preview-banner">
+            <span class="ad-chip">추천 솔루션</span>
+            <h6>산업용 DIN레일 SMPS &amp; DC 전원 보호기</h6>
+            <p>Mean Well / Phoenix Contact 24V 고신뢰성 파워서플라이 특가</p>
+            <a href="javascript:void(0)" onclick="openDigitalModal()" class="ad-btn-action">실무 규격 패키지 &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Main Engineering Workbench -->
+    <main class="page-container" id="mainAppContent">
     <!-- ========================================================================= -->
     <!-- TAB 1: DC 24V 전압강하 & 센서 전원 마진 검증기 -->
     <!-- ========================================================================= -->
