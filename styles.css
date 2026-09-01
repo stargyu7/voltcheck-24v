@@ -4326,3 +4326,40 @@ body, h1, h2, h3, h4, h5, p, span, div, label, li {
   background: var(--brand-orange-subtle);
   color: var(--brand-orange);
 }
+
+
+/* Ctee Express Pay Button */
+.btn-ctee-pay {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+  transition: all 0.15s ease;
+  text-decoration: none;
+  width: 100%;
+}
+
+.btn-ctee-pay:hover {
+  background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.45);
+  transform: translateY(-1px);
+}
+
+.ctee-badges-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.4rem;
+}

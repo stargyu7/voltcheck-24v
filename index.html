@@ -4764,8 +4764,11 @@
               <li>✓ FA 전장설계 표준 규정 핸드북 80p PDF</li>
               <li>✓ 개인 PC / 모바일 평생 영구 소장</li>
             </ul>
-            <button type="button" class="btn-primary-action w-100 mt-2" id="tier1BuyBtn" onclick="selectTierAndBuy(9900, '엔지니어 실무 스타터 팩 (9,900원)')">
-              <i data-lucide="download"></i> <span>9,900원 즉시 소장하기</span>
+            <a href="https://ctee.kr/item/store/104555" target="_blank" rel="noopener noreferrer" class="btn-ctee-pay mt-2" id="tier1CteeBtn">
+              <i data-lucide="credit-card"></i> <span>카드·카카오페이 즉시 결제 (9,900원)</span>
+            </a>
+            <button type="button" class="btn-secondary-action w-100 mt-1" id="tier1BankBtn" onclick="selectTierAndBuy(9900, '엔지니어 실무 스타터 팩 (9,900원)')" style="font-size:0.78rem; padding:0.4rem;">
+              <i data-lucide="wallet"></i> <span>카카오뱅크 무통장 입금 안내</span>
             </button>
           </div>
 
@@ -4800,6 +4803,20 @@
             <div class="tier-price" style="margin:0;">
               <span class="t-num" id="checkoutPriceNum">9,900</span>
               <span class="t-unit">원 (VAT 포함)</span>
+            </div>
+          </div>
+
+          <!-- Ctee Express Direct Card & KakaoPay Checkout Box -->
+          <div style="background:#eff6ff; border:1.5px solid #93c5fd; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.6rem;">
+              <strong style="color:#1e40af; font-size:0.92rem;"><i data-lucide="zap"></i> 추천: 크티(Ctee) 안전결제 (신용카드 / 카카오페이 / 네이버페이)</strong>
+              <span class="badge-pill badge-safe">결제 즉시 자동 발급</span>
+            </div>
+            <a href="https://ctee.kr/item/store/104555" target="_blank" rel="noopener noreferrer" class="btn-ctee-pay">
+              <i data-lucide="external-link"></i> <span>크티(Ctee)에서 9,900원 안전결제 &amp; 즉시 다운로드 &rarr;</span>
+            </a>
+            <div class="ctee-badges-row">
+              <span>✓ 신용/체크카드</span> &bull; <span>✓ 카카오페이</span> &bull; <span>✓ 네이버페이</span> &bull; <span>✓ 실시간 계좌이체</span>
             </div>
           </div>
 

@@ -1,3 +1,4 @@
+const CTEE_PRODUCT_URL = 'https://ctee.kr/item/store/104555';
 /**
  * VOLTCHECK 24V (볼트체크) - Core Precision Engineering Engine
  * Full Suite: DC 24V Voltage Drop, 4-20mA Loop, SMPS Power Budget,
