@@ -6729,3 +6729,24 @@ function calculateSolarPV() {
     elBadge.className = isVoltSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
   }
 }
+
+
+// ==========================================================================
+// LOGO HOME NAVIGATION & VIEW RESET ENGINE
+// ==========================================================================
+
+function goHomeTab() {
+  const firstTabBtn = document.querySelector('.tab-btn[data-tab="tab-voltagedrop"]');
+  if (firstTabBtn) {
+    firstTabBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    firstTabBtn.click();
+  }
+  const searchInput = document.getElementById('globalToolSearch');
+  if (searchInput) {
+    searchInput.value = '';
+    filterToolsSearch('');
+  }
+  filterNavCategory('all');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+window.goHomeTab = goHomeTab;
