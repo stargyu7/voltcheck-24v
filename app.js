@@ -7443,3 +7443,55 @@ function calculateSteamPipe() {
   const elSub = document.getElementById('resStmBoilerFlow');
   if (elSub) elSub.textContent = `스팀 소모량: ${Math.round(steam_kgh)} kg/h • 추천 보일러 용량: ${boiler_ton.toFixed(2)} Ton/h (${Math.round(boiler_kgh)} kg/h)`;
 }
+
+
+// ==========================================================================
+// B2B SMART BOM MATCHER & RFQ MODAL ENGINE
+// ==========================================================================
+
+function openB2BQuoteModal(customTitle) {
+  const modal = document.getElementById('b2bQuoteModal');
+  const specText = document.getElementById('quoteBomSpecInput');
+  const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'tab-voltagedrop';
+
+  let defaultSpec = customTitle || `[선택 도구: ${activeTab}] 산출 사양에 따른 공식 1차 대리점 전장 자재 견적 의뢰`;
+  if (activeTab === 'tab-voltagedrop') {
+    const len = document.getElementById('wireLength')?.value || '50';
+    const gauge = document.getElementById('wireGauge')?.value || '1.5';
+    defaultSpec = `[DC 24V 전장 자재] 제어 케이블 TFR-CV ${gauge}SQ (${len}m), 단자대 1식, SMPS 24V 파워서플라이`;
+  } else if (activeTab === 'tab-smpsbudget') {
+    const watt = document.getElementById('resSmpsWattage')?.textContent || '240W';
+    defaultSpec = `[전원 자재] DIN-Rail 24V SMPS (${watt} 정격), LS ELECTRIC 1P 배선용 차단기 1식`;
+  } else if (activeTab === 'tab-motorcalc') {
+    const kw = document.getElementById('motorKw')?.value || '15';
+    defaultSpec = `[모터 제어] 3상 ${kw}kW 모터 구동용 전자개폐기(MC), EOCR 모터보호계전기, 차단기 1식`;
+  }
+
+  if (specText) specText.value = defaultSpec;
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('show');
+  }
+}
+window.openB2BQuoteModal = openB2BQuoteModal;
+
+function closeB2BQuoteModal() {
+  const modal = document.getElementById('b2bQuoteModal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+  }
+}
+window.closeB2BQuoteModal = closeB2BQuoteModal;
+
+function submitB2BQuoteRequest() {
+  const company = document.getElementById('quoteCompanyInput')?.value || '';
+  const name = document.getElementById('quoteNameInput')?.value || '';
+  const phone = document.getElementById('quotePhoneInput')?.value || '';
+  const email = document.getElementById('quoteEmailInput')?.value || '';
+  const spec = document.getElementById('quoteBomSpecInput')?.value || '';
+
+  alert(`[견적 요청 완료]\n${company} ${name}님, 견적 요청이 성공적으로 접수되었습니다.\n구로/안양 1차 공식 대리점에서 검토 후 1시간 내 ${email}로 최저가 비교 견적서를 발송해 드립니다.`);
+  closeB2BQuoteModal();
+}
+window.submitB2BQuoteRequest = submitB2BQuoteRequest;

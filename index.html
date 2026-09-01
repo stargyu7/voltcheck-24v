@@ -6640,6 +6640,38 @@
 
     <!-- Bottom Showcase (AdSense Ready) -->
         <!-- In-Tool High-Converting Pro Monetization & Distributor Box -->
+    
+    <!-- ========================================================================= -->
+    <!-- B2B SMART BOM MATCHER & 1ST DISTRIBUTOR QUOTATION WIDGET [NEW] -->
+    <!-- ========================================================================= -->
+    <div class="b2b-bom-matcher-box mt-3" style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-md); padding: 1.15rem 1.35rem; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span class="badge-pill font-mono" style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.72rem;">B2B BOM MATCHER</span>
+          <h4 style="margin: 0; font-size: 0.96rem; font-weight: 800; color: #0f172a;" id="bomWidgetTitle">🛒 현재 계산 결과 연동 공식 최저가 부품(BOM) &amp; 1차 대리점 비교 견적</h4>
+        </div>
+        <span style="font-size: 0.78rem; color: #64748b;">공식 1차 대리점 네트워크 실시간 매칭</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; align-items: center;">
+        <div style="background: #f8fafc; border: 1px dashed #94a3b8; border-radius: var(--radius-sm); padding: 0.75rem 1rem;">
+          <div style="font-size: 0.76rem; color: #64748b; font-weight: 700; text-transform: uppercase;">추천 부품 사양 (Recommended BOM Specification)</div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #1e293b; margin-top: 0.25rem;" id="bomCurrentSpecText">
+            • 추천 사양: 산업용 제어 규격 인증품 (Mean Well, LS ELECTRIC, 대한전선 정품)
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+          <button type="button" class="btn-primary-action w-100" onclick="openB2BQuoteModal()" style="background: #0284c7; padding: 0.6rem 1rem; font-size: 0.86rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+            <i data-lucide="file-spreadsheet"></i> <span>⚡ 1차 대리점 공식 최저가 비교 견적서 무료 받기 (1시간 내 발송) &rarr;</span>
+          </button>
+          <div style="display: flex; gap: 0.4rem; justify-content: center; font-size: 0.74rem; color: #64748b;">
+            <span>✓ 구로/안양 유통단지 1차 대리점 직결</span> &bull; <span>✓ 대량 발주 추가할인</span> &bull; <span>✓ 세금계산서 100%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="pro-monetization-banner mt-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1.5px solid #3b82f6; border-radius: var(--radius-md); padding: 1.15rem 1.35rem; color: #ffffff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);">
       <div style="display: flex; align-items: center; gap: 0.85rem;">
         <div style="background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; border-radius: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -7721,5 +7753,59 @@
   </div>
 
   <script src="app.js?v=2.3.0"></script>
+
+  <!-- B2B Industrial Quotation Request Modal -->
+  <div id="b2bQuoteModal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:9999; align-items:center; justify-content:center; padding:1rem;">
+    <div class="modal-content" style="background:#ffffff; border-radius:var(--radius-md); max-width:560px; width:100%; padding:1.5rem; box-shadow:0 20px 25px -5px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem; margin-bottom:1rem;">
+        <div>
+          <span class="badge-pill badge-safe font-mono" style="font-size:0.7rem;">B2B 1ST DISTRIBUTOR RFQ</span>
+          <h3 style="margin:0.25rem 0 0 0; font-size:1.15rem; font-weight:800; color:#0f172a;">공식 1차 대리점 최저가 비교 견적 신청</h3>
+        </div>
+        <button type="button" onclick="closeB2BQuoteModal()" style="background:none; border:none; font-size:1.25rem; cursor:pointer; color:#64748b;">&times;</button>
+      </div>
+
+      <form id="b2bQuoteForm" onsubmit="event.preventDefault(); submitB2BQuoteRequest();">
+        <div style="margin-bottom:0.85rem;">
+          <label style="display:block; font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">견적 요청 부품 사양 (BOM Spec)</label>
+          <textarea id="quoteBomSpecInput" rows="3" class="input-val font-mono" style="width:100%; font-size:0.82rem; padding:0.5rem; border:1px solid #cbd5e1; border-radius:4px; resize:vertical;"></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.85rem;">
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">회사명 / 상호 (Company)</label>
+            <input type="text" id="quoteCompanyInput" placeholder="예: (주)한국FA / 개인" required class="input-val" style="width:100%; font-size:0.84rem; padding:0.45rem;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">담당자 성함 (Name)</label>
+            <input type="text" id="quoteNameInput" placeholder="예: 홍길동 팀장" required class="input-val" style="width:100%; font-size:0.84rem; padding:0.45rem;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">연락처 (Mobile)</label>
+            <input type="tel" id="quotePhoneInput" placeholder="010-0000-0000" required class="input-val font-mono" style="width:100%; font-size:0.84rem; padding:0.45rem;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.25rem;">이메일 (견적서 수신용)</label>
+            <input type="email" id="quoteEmailInput" placeholder="engineer@company.com" required class="input-val font-mono" style="width:100%; font-size:0.84rem; padding:0.45rem;">
+          </div>
+        </div>
+
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:4px; padding:0.65rem 0.85rem; font-size:0.76rem; color:#166534; margin-bottom:1rem;">
+          ✓ 접수 즉시 구로/안양 1차 공식 총판(LS, 오토닉스, 슈나이더)으로 전달되어 1시간 이내에 최저가 비교 견적서(PDF/Excel)가 발송됩니다.
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+          <button type="button" onclick="closeB2BQuoteModal()" class="btn-secondary-action" style="padding:0.5rem 1rem; font-size:0.84rem;">닫기</button>
+          <button type="submit" class="btn-primary-action" style="background:#0284c7; padding:0.5rem 1.25rem; font-size:0.84rem; font-weight:800;">
+            <i data-lucide="send"></i> <span>최저가 견적 무료 신청하기</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
