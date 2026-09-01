@@ -4,6 +4,13 @@ Allow: /
 Disallow: /scratch/
 Disallow: /.git/
 
+# Google AdSense & Ads.txt Crawlers
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: Google-adstxt
+Allow: /
+
 # Search Engine Specific Optimization
 User-agent: Googlebot
 Allow: /
