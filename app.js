@@ -472,6 +472,9 @@ function applyPreset(presetKey) {
 // ==========================================================================
 
 const GLOBAL_EN_REPLACEMENTS = [
+  [/공정거래위원회 지침 및 FTC 가이드라인 준수: 본 추천 부품 링크\(Digi-Key, Mouser\)를 통한 구매 시 볼트체크는 파트너사로부터 소정의 수수료를 지급받을 수 있으며, 구매자 부담 가격에는 일체 영향이 없습니다\./g, "FTC Compliance Disclosure: VoltCheck may earn an affiliate commission from authorized distributors (Digi-Key, Mouser) at no additional cost to you when purchasing through these verified links."],
+  [/추천 규격 실제 구매 부품 \(BOM Part Matching\)/g, "Recommended Manufacturer BOM Parts (Live Catalog)"],
+  [/계산된 전선 규격 및 SMPS 용량에 일치하는 국내외 공인 제조사 공식 카탈로그 품번입니다\./g, "Official manufacturer part numbers matching calculated wire gauge and SMPS power ratings."],
   // Site Environment & DMM
   [/반도체 Fab 클린룸 \(Cleanroom 22°C\)/g, "Semiconductor Fab Cleanroom (22°C)"],
   [/2차전지 배터리 조립라인 \(Dryroom 25°C\)/g, "Secondary Battery Assembly (Dryroom 25°C)"],
@@ -2744,6 +2747,16 @@ function applyLanguage(lang) {
   if (flTerms) flTerms.textContent = isEn ? 'Terms & Disclaimers' : '이용약관 & 규격 면책 (Terms)';
   const flRef = document.getElementById('fLinkRefund');
   if (flRef) flRef.textContent = isEn ? 'Digital Delivery & Refund Policy' : '디지털 배송/환불 규정 (Refund)';
+
+  // Legal & Affiliate Disclosures
+  const bTitle = document.getElementById('bomSectionTitle');
+  if (bTitle) bTitle.textContent = isEn ? 'Recommended Manufacturer BOM Parts (Live Catalog)' : '추천 규격 실제 구매 부품 (BOM Part Matching)';
+  const bSub = document.getElementById('bomSectionSub');
+  if (bSub) bSub.textContent = isEn ? 'Official manufacturer part numbers matching calculated wire gauge and SMPS power ratings.' : '계산된 전선 규격 및 SMPS 용량에 일치하는 국내외 공인 제조사 공식 카탈로그 품번입니다.';
+  const bAff = document.getElementById('bomAffiliateText');
+  if (bAff) bAff.textContent = isEn ? 'FTC Compliance Disclosure: VoltCheck may earn an affiliate commission from authorized distributors (Digi-Key, Mouser) at no additional cost to you when purchasing through these verified links.' : '공정거래위원회 지침 및 FTC 가이드라인 준수: 본 추천 부품 링크(Digi-Key, Mouser)를 통한 구매 시 볼트체크는 파트너사로부터 소정의 수수료를 지급받을 수 있으며, 구매자 부담 가격에는 일체 영향이 없습니다.';
+  const sBox = document.getElementById('statutoryNoticeBox');
+  if (sBox) sBox.innerHTML = isEn ? '<strong>[Statutory Digital Content Disclosure]</strong><br>This product is an instantly delivered digital asset. In accordance with digital content consumer regulations, returns are limited once file delivery begins. (Lifetime free calculation revisions supported.)' : '<strong>[전자상거래법 제17조 제2항에 따른 법정 고지]</strong><br>본 상품은 결제/입금 확인 즉시 영구 다운로드 링크 및 파일이 제공되는 디지털 콘텐츠로서, 다운로드 개시 후에는 전자상거래 등에서의 소비자보호에 관한 법률에 따라 단순 변심에 의한 청약철회가 제한될 수 있습니다. (설계 수식 오류 시 평생 무상 개정판 지원)';
 
   // 5. Tab 9: PLC Scaling Specific Labels
   const plcLabels = {
@@ -5100,7 +5113,7 @@ function closeLegalModal() {
 }
 
 function switchLegalTab(tab) {
-  const tabs = ['terms', 'privacy', 'refund'];
+  const tabs = ['terms', 'privacy', 'refund', 'affiliate'];
   tabs.forEach(t => {
     const btn = document.getElementById('ltBtn' + t.charAt(0).toUpperCase() + t.slice(1));
     const pane = document.getElementById('pane' + t.charAt(0).toUpperCase() + t.slice(1));

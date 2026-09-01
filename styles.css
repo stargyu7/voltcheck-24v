@@ -3392,3 +3392,36 @@ body:not(.theme-dark) .interactive-canvas {
     margin-bottom: 1rem;
   }
 }
+
+
+/* Legal & Affiliate Transparency Disclosure */
+.affiliate-disclosure-banner {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #f59e0b;
+  border-radius: var(--radius-xs);
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  line-height: 1.45;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.affiliate-disclosure-banner i {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.checkout-statutory-notice {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-xs);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.75rem;
+  color: #475569;
+  line-height: 1.45;
+  margin-top: 0.75rem;
+}
