@@ -173,17 +173,17 @@
     <div class="nav-menu-bar">
       <!-- Centered Global Tool Search & Category Filter Ribbon -->
       <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0.75rem; max-width:1600px; margin:0 auto; padding:0.25rem 0.75rem;">
-        <div class="quick-search-wrapper" style="max-width:460px;">
+        <div class="quick-search-wrapper" style="max-width:480px;">
           <i data-lucide="search" class="quick-search-icon"></i>
-          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="38대 공학 도구 검색 (예: 24V, 롤투롤, VFD서지, 방폭, 트레이, 조도, 태양광...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
+          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="42대 종합 공학 도구 검색 (예: 24V, 펌프양정, 볼트토크, 열교환기, 빔처짐...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 38종 (All)</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 42종 (All)</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기·SPD·PV</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·롤투롤·VFD</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·통신·방폭(Ex)</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 트레이·조도·클린룸</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·볼트·빔처짐</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·방폭·열교환기</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 펌프양정·트레이·조도</button>
         </div>
       </div>
 
@@ -340,6 +340,22 @@
           <button class="tab-btn" data-tab="tab-solarpv" data-category="power" role="tab">
             <i data-lucide="zap"></i>
             <span>태양광·ESS DC1500V</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-pumphead" data-category="specs" role="tab">
+            <i data-lucide="droplet"></i>
+            <span>펌프양정·배관손실</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-bolttorque" data-category="motion" role="tab">
+            <i data-lucide="nut"></i>
+            <span>볼트체결·조임토크</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-heatexchanger" data-category="signal" role="tab">
+            <i data-lucide="thermometer-snowflake"></i>
+            <span>열교환기·LMTD</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-beamdeflection" data-category="motion" role="tab">
+            <i data-lucide="box"></i>
+            <span>보처짐·구조모멘트</span>
           </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -5089,6 +5105,385 @@
       </div>
     </section>
 
+
+    <!-- ========================================================================= -->
+    <!-- TAB 39: 펌프 전양정(Total Head) & Darcy-Weisbach 배관 손실 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-pumphead" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">유체역학 펌프 전양정(Total Dynamic Head) &amp; Darcy-Weisbach 배관 마찰손실 수두 계산기</h2>
+          <p class="main-desc">배관 직경, 유량(LPM/m³/h), 배관 길이 및 밸브 부속류에 따른 관마찰 압력 손실(bar)과 펌프 필요 수동력(kW/HP)을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>유체 유량 및 배관 규격 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="phFlowRate">설계 유량 (Flow Rate Q)</label>
+                <div class="val-input-group">
+                  <input type="number" id="phFlowRate" value="150" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">L/min</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="phPipeDiameter">배관 내경 (Pipe ID D)</label>
+                <select id="phPipeDiameter" class="select-precision font-mono">
+                  <option value="25">25A (1인치 / ID 27.6mm)</option>
+                  <option value="40" selected>40A (1.5인치 / ID 41.6mm)</option>
+                  <option value="50">50A (2인치 / ID 52.9mm)</option>
+                  <option value="80">80A (3인치 / ID 80.7mm)</option>
+                  <option value="100">100A (4인치 / ID 105.3mm)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="phStaticHead">실양정 고저차 (Static Head H)</label>
+                <div class="val-input-group">
+                  <input type="number" id="phStaticHead" value="15" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="phPipeLength">총 배관 직관 길이 (Pipe L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="phPipeLength" value="50" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>펌프 전양정 &amp; 소요 펌프 모터 마력(HP)</h3>
+            </div>
+            <span id="phVerdictBadge" class="badge-pill badge-safe">HYDRAULIC SIZING OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">TOTAL DYNAMIC HEAD (H_total)</span>
+            <div class="terminal-voltage-big font-mono" id="resPhTotalHead">17.8 m</div>
+            <div class="tv-sub" id="resPhMotorPower">추천 펌프 모터: 0.75 kW (1.0 HP) • 배관 유속: 1.84 m/s (적정)</div>
+          </div>
+
+          <!-- Dynamic Visual Gauge -->
+          <div class="visual-gauge-container">
+            <div class="visual-gauge-header">
+              <span>배관 내 권장 유속 게이지</span>
+              <strong class="font-mono text-safe" id="gaugePhText">1.84 m/s (1.0~2.5m/s 적정)</strong>
+            </div>
+            <div class="visual-gauge-track">
+              <div class="gauge-zone zone-safe" style="width:65%;"></div>
+              <div class="gauge-zone zone-warn" style="width:20%;"></div>
+              <div class="gauge-zone zone-danger" style="width:15%;"></div>
+              <div class="visual-gauge-marker" id="gaugePhMarker" style="left:52.5%;"></div>
+            </div>
+            <div class="visual-gauge-legend">
+              <span>0 m/s</span>
+              <span>2.5 m/s (권장 상한)</span>
+              <span>3.5 m/s (침식/소음 위험)</span>
+            </div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="droplet"></i>
+            <div>
+              <strong>배관 설계 수칙:</strong> 펌프 흡입 배관 유속은 1.0~1.5 m/s, 토출 배관 유속은 1.5~2.5 m/s 이내로 유지해야 캐비테이션(공동현상)과 워터해머를 방지합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-pumphead')">
+              <i data-lucide="copy"></i> <span>펌프 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 40: VDI 2230 / ISO 898-1 볼트 체결 토크 & 축력 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-bolttorque" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">VDI 2230 / ISO 898-1 기계요소 볼트 체결 토크(N·m) &amp; 목표 축력(Preload) 계산기</h2>
+          <p class="main-desc">볼트 호칭 직경(M3~M36), 강도 등급(8.8, 10.9, 12.9) 및 나사산 마찰 상태에 따른 규정 체결 조임토크와 볼트 인장 축력을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>볼트 호칭 직경 및 강도 등급</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="btBoltSize">볼트 호칭 직경 (Metric Size)</label>
+                <select id="btBoltSize" class="select-precision font-mono">
+                  <option value="4">M4 (피치 0.7mm)</option>
+                  <option value="6">M6 (피치 1.0mm)</option>
+                  <option value="8">M8 (피치 1.25mm)</option>
+                  <option value="10">M10 (피치 1.5mm)</option>
+                  <option value="12" selected>M12 (피치 1.75mm / 표준)</option>
+                  <option value="16">M16 (피치 2.0mm)</option>
+                  <option value="20">M20 (피치 2.5mm)</option>
+                  <option value="24">M24 (피치 3.0mm)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="btBoltGrade">볼트 강도 등급 (ISO 898-1)</label>
+                <select id="btBoltGrade" class="select-precision font-mono">
+                  <option value="8.8" selected>8.8 등급 (항복강도 640 MPa / 표준)</option>
+                  <option value="10.9">10.9 등급 (항복강도 900 MPa / 고장력)</option>
+                  <option value="12.9">12.9 등급 (항복강도 1080 MPa / 초고장력)</option>
+                  <option value="4.8">4.8 등급 (일반 연강용)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="btFrictionCoeff">나사산 마찰 상태 (Friction µ)</label>
+                <select id="btFrictionCoeff" class="select-precision font-mono">
+                  <option value="0.14" selected>표준 무급유 (µ = 0.14 / 일반 조립)</option>
+                  <option value="0.10">오일/그리스 윤활 (µ = 0.10)</option>
+                  <option value="0.18">아연 도금/건조 상태 (µ = 0.18)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="btYieldSafetyPct">항복강도 체결 목표치 (Yield %)</label>
+                <div class="val-input-group">
+                  <input type="number" id="btYieldSafetyPct" value="90" step="5" min="50" max="95" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>규정 조임 토크 &amp; 목표 체결 축력</h3>
+            </div>
+            <span id="btVerdictBadge" class="badge-pill badge-safe">VDI 2230 COMPLIANT</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">RECOMMENDED TIGHTENING TORQUE (N·m)</span>
+            <div class="terminal-voltage-big font-mono" id="resBtTorqueNm">84.5 N·m</div>
+            <div class="tv-sub" id="resBtPreloadForce">목표 인장 축력(Preload): 48.6 kN (항복응력 90% 안전 한계)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="nut"></i>
+            <div>
+              <strong>기계요소 체결 팁:</strong> 볼트 체결 토크의 약 90%는 나사산과 헤드 밑면의 마찰을 이겨내는 데 소모되며, 단 10%만이 실제 볼트 축력(체결력)으로 전환됩니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-bolttorque')">
+              <i data-lucide="copy"></i> <span>볼트 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 41: 열교환기 LMTD 대수평균온도차 & 전열면적 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-heatexchanger" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">열역학 열교환기 LMTD 대수평균온도차 &amp; 소요 전열면적(Area m²) 계산기</h2>
+          <p class="main-desc">고온/저온 유체의 입출구 온도와 총괄 열전달계수(U-value)에 따른 대수평균온도차(LMTD) 및 필요 열교환기 전열면적을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>열용량 및 고온/저온 유체 온도</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="hxHeatDuty">교환 열용량 (Heat Duty Q)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hxHeatDuty" value="50" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kW</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="hxOverallU">총괄 열전달계수 (U-value)</label>
+                <div class="val-input-group">
+                  <input type="number" id="hxOverallU" value="1500" step="100" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">W/m²·K</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="hxHotInTemp">고온 유체 입구/출구 온도</label>
+                <div style="display:flex; gap:0.4rem;">
+                  <input type="number" id="hxHotInTemp" value="80" step="1" inputmode="decimal" class="input-val font-mono" placeholder="입구°C">
+                  <input type="number" id="hxHotOutTemp" value="50" step="1" inputmode="decimal" class="input-val font-mono" placeholder="출구°C">
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="hxColdInTemp">저온 유체 입구/출구 온도</label>
+                <div style="display:flex; gap:0.4rem;">
+                  <input type="number" id="hxColdInTemp" value="20" step="1" inputmode="decimal" class="input-val font-mono" placeholder="입구°C">
+                  <input type="number" id="hxColdOutTemp" value="40" step="1" inputmode="decimal" class="input-val font-mono" placeholder="출구°C">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>LMTD 대수평균온도차 &amp; 소요 전열면적</h3>
+            </div>
+            <span id="hxVerdictBadge" class="badge-pill badge-safe">THERMAL SIZING OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">REQUIRED HEAT TRANSFER AREA (A)</span>
+            <div class="terminal-voltage-big font-mono" id="resHxAreaM2">1.02 m²</div>
+            <div class="tv-sub" id="resHxLmtdText">대수평균온도차 (LMTD): 34.8 °C (대향류 기준 안정적 전열)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="thermometer-snowflake"></i>
+            <div>
+              <strong>열교환기 설계 수칙:</strong> 대향류(Counter Flow)는 평행류(Parallel Flow)보다 LMTD가 크므로 동일한 열교환량에서 필요한 전열면적(비용)을 20~30% 절감할 수 있습니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-heatexchanger')">
+              <i data-lucide="copy"></i> <span>열교환기 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 42: 구조역학 보(Beam) 굽힘모멘트 & 처짐량 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-beamdeflection" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">구조역학 보(Beam) 최대 굽힘모멘트(N·m) &amp; 정밀 처짐량(Deflection ≤ L/500) 계산기</h2>
+          <p class="main-desc">설비 프레임 및 빔 구조물의 지지 스팬, 집중 하중(kgf) 및 단면 2차 모멘트(I)에 따른 최대 처짐량과 구조 건전성을 해석합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>보 스팬 및 하중 조건</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="bmBeamSpan">보 지지 스팬 (Beam Span L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="bmBeamSpan" value="2.0" step="0.2" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="bmPointLoad">중앙 집중 하중 (Load P)</label>
+                <div class="val-input-group">
+                  <input type="number" id="bmPointLoad" value="500" step="50" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">kgf</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="bmSectionType">보 단면 규격 (Section Type)</label>
+                <select id="bmSectionType" class="select-precision font-mono">
+                  <option value="profile80">알루미늄 프로파일 80x80 (I = 140 cm⁴)</option>
+                  <option value="hbeam100" selected>H-Beam 100x100 (I = 378 cm⁴ / 철골)</option>
+                  <option value="pipeSquare75">각형 강관 75x75x3.2t (I = 72 cm⁴)</option>
+                  <option value="hbeam150">H-Beam 150x150 (I = 1610 cm⁴)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="bmSupportType">지지 방식 (Support Boundary)</label>
+                <select id="bmSupportType" class="select-precision font-mono">
+                  <option value="simple" selected>단순 지지보 (Simply Supported)</option>
+                  <option value="fixed">양단 고정보 (Both Ends Fixed)</option>
+                  <option value="cantilever">외팔보 (Cantilever)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>최대 처짐량 &amp; 구조 건전성 판정</h3>
+            </div>
+            <span id="bmVerdictBadge" class="badge-pill badge-safe">DEFLECTION OK (&le; L/500)</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">MAXIMUM BEAM DEFLECTION (&delta;_max)</span>
+            <div class="terminal-voltage-big font-mono" id="resBmDeflection">1.03 mm</div>
+            <div class="tv-sub" id="resBmDeflectionSub">허용 한계치: 4.00 mm (L/500 정밀기준 만족) • 최대 모멘트: 2,452 N·m</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="box"></i>
+            <div>
+              <strong>기계 프레임 설계 기준:</strong> 산업용 로봇이나 정밀 가공 설비의 베이스 프레임은 처짐량이 L/500(스팬의 0.2%) 이내여야 위치 결정 정밀도를 유지합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-beamdeflection')">
+              <i data-lucide="copy"></i> <span>보 처짐 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -5694,7 +6089,7 @@
         <div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="badge-pill font-mono" style="background: #f59e0b; color: #000; font-weight: 800; font-size: 0.68rem;">OFFLINE MASTER BUNDLE</span>
-            <h5 style="margin: 0; font-size: 0.98rem; font-weight: 800; color: #f8fafc;">38대 전 도구 오프라인 자동연산 엑셀(XLSX) &amp; 전기 CAD 심볼 200종</h5>
+            <h5 style="margin: 0; font-size: 0.98rem; font-weight: 800; color: #f8fafc;">42대 전 도구 오프라인 자동연산 엑셀(XLSX) &amp; 전기 CAD 심볼 200종</h5>
           </div>
           <p style="margin: 0.25rem 0 0 0; font-size: 0.77rem; color: #94a3b8;">사내 보안 폐쇄망(인터넷 불가 연구소/공장)에서 평생 영구 소장하여 즉시 활용하는 실무 엔지니어 필수 번들</p>
         </div>
@@ -6740,6 +7135,22 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-solarpv')">
           <div class="drawer-tool-icon"><i data-lucide="zap"></i></div>
           <span class="drawer-tool-name" id="dtn38">태양광/ESS DC1500V</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-pumphead')">
+          <div class="drawer-tool-icon"><i data-lucide="droplet"></i></div>
+          <span class="drawer-tool-name" id="dtn39">펌프 전양정 배관손실</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-bolttorque')">
+          <div class="drawer-tool-icon"><i data-lucide="nut"></i></div>
+          <span class="drawer-tool-name" id="dtn40">볼트 체결 조임토크</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-heatexchanger')">
+          <div class="drawer-tool-icon"><i data-lucide="thermometer-snowflake"></i></div>
+          <span class="drawer-tool-name" id="dtn41">열교환기 LMTD 면적</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-beamdeflection')">
+          <div class="drawer-tool-icon"><i data-lucide="box"></i></div>
+          <span class="drawer-tool-name" id="dtn42">구조보 굽힘 처짐량</span>
         </div>
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>

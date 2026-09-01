@@ -2432,7 +2432,31 @@ const TAB_I18N_DATA = {
       c1: '설치 위치 및 계통 전압/접지 방식',
       c2: '추천 SPD 사양 및 전압보호레벨(Up)'
     },
-        'tab-rolltension': {
+            'tab-pumphead': {
+      title: '유체역학 펌프 전양정(Total Dynamic Head) & Darcy-Weisbach 배관 마찰손실 수두 계산기',
+      desc: '배관 직경, 유량(LPM/m³/h), 배관 길이 및 밸브 부속류에 따른 관마찰 압력 손실(bar)과 펌프 필요 수동력(kW/HP)을 산출합니다.',
+      c1: '유체 유량 및 배관 규격 파라미터',
+      c2: '펌프 전양정 & 소요 펌프 모터 마력(HP)'
+    },
+    'tab-bolttorque': {
+      title: 'VDI 2230 / ISO 898-1 기계요소 볼트 체결 토크(N·m) & 목표 축력(Preload) 계산기',
+      desc: '볼트 호칭 직경(M3~M36), 강도 등급(8.8, 10.9, 12.9) 및 나사산 마찰 상태에 따른 규정 체결 조임토크와 볼트 인장 축력을 산출합니다.',
+      c1: '볼트 호칭 직경 및 강도 등급',
+      c2: '규정 조임 토크 & 목표 체결 축력'
+    },
+    'tab-heatexchanger': {
+      title: '열역학 열교환기 LMTD 대수평균온도차 & 소요 전열면적(Area m²) 계산기',
+      desc: '고온/저온 유체의 입출구 온도와 총괄 열전달계수(U-value)에 따른 대수평균온도차(LMTD) 및 필요 열교환기 전열면적을 산출합니다.',
+      c1: '열용량 및 고온/저온 유체 온도',
+      c2: 'LMTD 대수평균온도차 & 소요 전열면적'
+    },
+    'tab-beamdeflection': {
+      title: '구조역학 보(Beam) 최대 굽힘모멘트(N·m) & 정밀 처짐량(Deflection ≤ L/500) 계산기',
+      desc: '설비 프레임 및 빔 구조물의 지지 스팬, 집중 하중(kgf) 및 단면 2차 모멘트(I)에 따른 최대 처짐량과 구조 건전성을 해석합니다.',
+      c1: '보 스팬 및 하중 조건',
+      c2: '최대 처짐량 & 구조 건전성 판정'
+    },
+    'tab-rolltension': {
       title: '2차전지 / 필름 롤투롤(Roll-to-Roll) 권취 장력(Tension) & 서보모터 토크(N·m) 계산기',
       desc: '배터리 전극 및 필름 권취 시 권경(지관→완제품) 변화에 따른 테이퍼 장력(Tension Taper)과 서보모터 필요 토크 및 회전수(RPM)를 산출합니다.',
       c1: '롤 규격 및 라인 속도 파라미터',
@@ -2480,7 +2504,31 @@ const TAB_I18N_DATA = {
       c1: 'Installation Point & Grid Specs',
       c2: 'Recommended SPD Ratings & Up Level'
     },
-        'tab-rolltension': {
+            'tab-pumphead': {
+      title: 'Pump Total Dynamic Head (TDH) & Darcy-Weisbach Pipe Friction Loss Sizer',
+      desc: 'Calculate pipe velocity, friction head loss, total dynamic head, and required pump motor power (kW/HP) based on flow rate and pipe diameter.',
+      c1: 'Flow Rate & Pipe Specifications',
+      c2: 'Total Head & Required Pump Power'
+    },
+    'tab-bolttorque': {
+      title: 'VDI 2230 / ISO 898-1 Fastener Bolt Tightening Torque & Preload Sizer',
+      desc: 'Calculate recommended bolt tightening torque (N·m) and tensile preload force (kN) based on metric bolt size, grade (8.8/10.9/12.9), and friction.',
+      c1: 'Bolt Size & Strength Grade',
+      c2: 'Recommended Torque & Preload'
+    },
+    'tab-heatexchanger': {
+      title: 'Thermodynamics Heat Exchanger LMTD & Heat Transfer Area (m²) Sizer',
+      desc: 'Calculate Log Mean Temperature Difference (LMTD) and required heat exchange surface area (m²) for counter-flow heat exchangers.',
+      c1: 'Heat Duty & Fluid Temperatures',
+      c2: 'LMTD & Transfer Area Verdict'
+    },
+    'tab-beamdeflection': {
+      title: 'Structural Beam Maximum Bending Moment & Deflection (<= L/500) Sizer',
+      desc: 'Calculate maximum bending moment (N·m), beam deflection (mm), and structural integrity under point or uniform loads.',
+      c1: 'Beam Span & Loading Conditions',
+      c2: 'Max Deflection & Structural Verdict'
+    },
+    'tab-rolltension': {
       title: 'Roll-to-Roll Winder Tension & Servo Motor Torque (N·m) Sizer',
       desc: 'Calculate linear taper tension profile, required servo motor torque, and winder RPM as roll diameter increases from core to full package.',
       c1: 'Roll Dimensions & Line Speed',
@@ -5352,6 +5400,10 @@ document.addEventListener('DOMContentLoaded', () => {
   calculateCableTray();
   calculateLuxLighting();
   calculateSolarPV();
+  calculatePumpHead();
+  calculateBoltTorque();
+  calculateHeatExchanger();
+  calculateBeamDeflection();
 
 });
 
@@ -5635,7 +5687,19 @@ function selectDrawerTool(tabId) {
 
   // Update mobile bottom nav highlights
   document.querySelectorAll('.mb-nav-item').forEach(el => el.classList.remove('active'));
-  if (tabId === 'tab-rolltension') {
+  if (tabId === 'tab-pumphead') {
+    const h = document.getElementById('resPhTotalHead')?.textContent || '0 m';
+    text = `[VoltCheck 펌프 전양정 및 배관 마찰손실 검토 결과]\n- 펌프 전양정: ${h}\n- 적용 표준: Darcy-Weisbach / Hydraulic Institute\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-bolttorque') {
+    const t = document.getElementById('resBtTorqueNm')?.textContent || '0 N·m';
+    text = `[VoltCheck 볼트 체결 조임토크 및 축력 검토 결과]\n- 규정 조임 토크: ${t}\n- 적용 표준: VDI 2230 / ISO 898-1\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-heatexchanger') {
+    const a = document.getElementById('resHxAreaM2')?.textContent || '0 m²';
+    text = `[VoltCheck 열교환기 LMTD 및 전열면적 검토 결과]\n- 소요 전열면적: ${a}\n- 적용 표준: LMTD Method / TEMA\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-beamdeflection') {
+    const d = document.getElementById('resBmDeflection')?.textContent || '0 mm';
+    text = `[VoltCheck 구조보 굽힘모멘트 및 처짐량 검토 결과]\n- 최대 처짐량: ${d}\n- 적용 표준: Structural Mechanics / L/500\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-rolltension') {
     const t = document.getElementById('resRtMotorTorque')?.textContent || '0 N·m';
     text = `[VoltCheck 롤투롤 와인더 장력 및 서보 토크 검토 결과]\n- 서보 필요 토크: ${t}\n- 적용 표준: KS B 6700\nhttps://voltcheck24.com/`;
   } else if (tabId === 'tab-vfdsurge') {
@@ -6919,3 +6983,161 @@ function translateEntireDOM(lang) {
 }
 window.translateEntireDOM = translateEntireDOM;
 
+
+
+// ==========================================================================
+// TAB 39: PUMP TOTAL DYNAMIC HEAD & DARCY-WEISBACH PIPE SIZER
+// ==========================================================================
+
+function calculatePumpHead() {
+  const q_lpm = parseFloat(document.getElementById('phFlowRate')?.value) || 150;
+  const d_mm = parseFloat(document.getElementById('phPipeDiameter')?.value) || 40;
+  const h_static = parseFloat(document.getElementById('phStaticHead')?.value) || 15;
+  const l_m = parseFloat(document.getElementById('phPipeLength')?.value) || 50;
+
+  // Velocity v = Q / A (Q in m3/s, A in m2)
+  const q_m3s = q_lpm / 60000.0;
+  const d_m = (d_mm === 25 ? 27.6 : (d_mm === 40 ? 41.6 : (d_mm === 50 ? 52.9 : (d_mm === 80 ? 80.7 : 105.3)))) / 1000.0;
+  const area_m2 = Math.PI * Math.pow(d_m / 2.0, 2);
+  const vel = q_m3s / area_m2;
+
+  // Darcy friction loss hf = f * (L/D) * (v^2 / 2g), f ~= 0.025
+  const f_coeff = 0.025;
+  const g = 9.81;
+  const hf = f_coeff * ((l_m * 1.3) / d_m) * (Math.pow(vel, 2) / (2.0 * g));
+  const hTotal = h_static + hf;
+
+  // Pump hydraulic power P = (rho * g * Q * H) / (1000 * eta), eta = 0.65
+  const powerKw = (1000.0 * g * q_m3s * hTotal) / (1000.0 * 0.65);
+  const powerHp = powerKw * 1.341;
+
+  const elHead = document.getElementById('resPhTotalHead');
+  if (elHead) elHead.textContent = `${hTotal.toFixed(1)} m`;
+  const elPower = document.getElementById('resPhMotorPower');
+  if (elPower) elPower.textContent = `추천 펌프 모터: ${powerKw.toFixed(2)} kW (${powerHp.toFixed(1)} HP) • 배관 유속: ${vel.toFixed(2)} m/s (적정)`;
+
+  const isVelSafe = vel <= 2.5;
+  const elBadge = document.getElementById('phVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isVelSafe ? 'HYDRAULIC SIZING OK' : 'VELOCITY HAZARD';
+    elBadge.className = isVelSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+
+  const elGaugeText = document.getElementById('gaugePhText');
+  if (elGaugeText) elGaugeText.textContent = `${vel.toFixed(2)} m/s (${isVelSafe ? '적정' : '과대/소음위험'})`;
+  const elMarker = document.getElementById('gaugePhMarker');
+  if (elMarker) {
+    const pct = Math.min(100, Math.max(0, (vel / 3.5) * 100));
+    elMarker.style.left = `${pct}%`;
+  }
+}
+
+// ==========================================================================
+// TAB 40: VDI 2230 BOLT TIGHTENING TORQUE & PRELOAD ENGINE
+// ==========================================================================
+
+function calculateBoltTorque() {
+  const mSize = parseInt(document.getElementById('btBoltSize')?.value) || 12;
+  const grade = parseFloat(document.getElementById('btBoltGrade')?.value) || 8.8;
+  const mu = parseFloat(document.getElementById('btFrictionCoeff')?.value) || 0.14;
+  const yieldPct = (parseFloat(document.getElementById('btYieldSafetyPct')?.value) || 90) / 100.0;
+
+  // Stress areas As (mm2) for Metric bolts
+  const asMap = { 4: 8.78, 6: 20.1, 8: 36.6, 10: 58.0, 12: 84.3, 16: 157.0, 20: 245.0, 24: 353.0 };
+  const pitchMap = { 4: 0.7, 6: 1.0, 8: 1.25, 10: 1.5, 12: 1.75, 16: 2.0, 20: 2.5, 24: 3.0 };
+
+  const As = asMap[mSize] || 84.3;
+  const P = pitchMap[mSize] || 1.75;
+  const yieldMpa = grade === 8.8 ? 640 : (grade === 10.9 ? 900 : (grade === 12.9 ? 1080 : 320));
+
+  // Preload force F_preload (N) = 0.9 * Rp0.2 * As
+  const fPreload_N = yieldPct * yieldMpa * As;
+  const fPreload_kN = fPreload_N / 1000.0;
+
+  // Torque T (N*m) = F_preload * (0.16 * P + 0.58 * d2 * mu + d_bearing/2 * mu) / 1000
+  const d2 = mSize - (0.6495 * P);
+  const dBearing = mSize * 1.3;
+  const torque_Nm = (fPreload_N * (0.16 * P + 0.58 * d2 * mu + (dBearing / 2.0) * mu)) / 1000.0;
+
+  const elTorque = document.getElementById('resBtTorqueNm');
+  if (elTorque) elTorque.textContent = `${torque_Nm.toFixed(1)} N·m`;
+  const elForce = document.getElementById('resBtPreloadForce');
+  if (elForce) elForce.textContent = `목표 인장 축력(Preload): ${fPreload_kN.toFixed(1)} kN (항복응력 ${Math.round(yieldPct*100)}% 안전 한계)`;
+}
+
+// ==========================================================================
+// TAB 41: HEAT EXCHANGER LMTD & TRANSFER AREA ENGINE
+// ==========================================================================
+
+function calculateHeatExchanger() {
+  const q_kw = parseFloat(document.getElementById('hxHeatDuty')?.value) || 50;
+  const u_val = parseFloat(document.getElementById('hxOverallU')?.value) || 1500;
+  const th_in = parseFloat(document.getElementById('hxHotInTemp')?.value) || 80;
+  const th_out = parseFloat(document.getElementById('hxHotOutTemp')?.value) || 50;
+  const tc_in = parseFloat(document.getElementById('hxColdInTemp')?.value) || 20;
+  const tc_out = parseFloat(document.getElementById('hxColdOutTemp')?.value) || 40;
+
+  // Counter flow deltaT1 = Th_in - Tc_out, deltaT2 = Th_out - Tc_in
+  const dt1 = Math.max(0.1, th_in - tc_out);
+  const dt2 = Math.max(0.1, th_out - tc_in);
+
+  let lmtd = (dt1 + dt2) / 2.0;
+  if (Math.abs(dt1 - dt2) > 0.01) {
+    lmtd = (dt1 - dt2) / Math.log(dt1 / dt2);
+  }
+
+  // Area A (m2) = Q (Watts) / (U * LMTD)
+  const q_w = q_kw * 1000.0;
+  const area_m2 = q_w / (u_val * lmtd);
+
+  const elArea = document.getElementById('resHxAreaM2');
+  if (elArea) elArea.textContent = `${area_m2.toFixed(2)} m²`;
+  const elLmtd = document.getElementById('resHxLmtdText');
+  if (elLmtd) elLmtd.textContent = `대수평균온도차 (LMTD): ${lmtd.toFixed(1)} °C (대향류 기준 안정적 전열)`;
+}
+
+// ==========================================================================
+// TAB 42: STRUCTURAL BEAM BENDING MOMENT & DEFLECTION ENGINE
+// ==========================================================================
+
+function calculateBeamDeflection() {
+  const span_m = parseFloat(document.getElementById('bmBeamSpan')?.value) || 2.0;
+  const load_kgf = parseFloat(document.getElementById('bmPointLoad')?.value) || 500;
+  const secType = document.getElementById('bmSectionType')?.value || 'hbeam100';
+  const supType = document.getElementById('bmSupportType')?.value || 'simple';
+
+  // Moment of Inertia I (cm4 -> m4)
+  const i_cm4 = secType === 'hbeam100' ? 378 : (secType === 'profile80' ? 140 : (secType === 'hbeam150' ? 1610 : 72));
+  const i_m4 = i_cm4 * 1e-8;
+  const e_pa = (secType === 'profile80') ? 70e9 : 205e9; // Young's modulus (Steel 205 GPa, Al 70 GPa)
+
+  const p_n = load_kgf * 9.80665;
+  const l_m = span_m;
+
+  // Max Moment (N*m) and Deflection (m)
+  let maxM_nm = (p_n * l_m) / 4.0;
+  let def_m = (p_n * Math.pow(l_m, 3)) / (48.0 * e_pa * i_m4);
+
+  if (supType === 'fixed') {
+    maxM_nm = (p_n * l_m) / 8.0;
+    def_m = (p_n * Math.pow(l_m, 3)) / (192.0 * e_pa * i_m4);
+  } else if (supType === 'cantilever') {
+    maxM_nm = p_n * l_m;
+    def_m = (p_n * Math.pow(l_m, 3)) / (3.0 * e_pa * i_m4);
+  }
+
+  const def_mm = def_m * 1000.0;
+  const allowDef_mm = (l_m * 1000.0) / 500.0;
+  const isSafe = def_mm <= allowDef_mm;
+
+  const elDef = document.getElementById('resBmDeflection');
+  if (elDef) elDef.textContent = `${def_mm.toFixed(2)} mm`;
+  const elSub = document.getElementById('resBmDeflectionSub');
+  if (elSub) elSub.textContent = `허용 한계치: ${allowDef_mm.toFixed(2)} mm (L/500 기준 ${isSafe ? '만족' : '초과위험'}) • 최대 모멘트: ${Math.round(maxM_nm).toLocaleString('ko-KR')} N·m`;
+
+  const elBadge = document.getElementById('bmVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isSafe ? 'DEFLECTION OK (≤ L/500)' : 'EXCESSIVE DEFLECTION';
+    elBadge.className = isSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+}
