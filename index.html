@@ -219,6 +219,14 @@
             <i data-lucide="drafting-compass"></i>
             <span data-i18n="tab_sld">단선결선도 CAD</span>
           </button>
+          <button class="tab-btn" data-tab="tab-iolinksafety" role="tab">
+            <i data-lucide="shield-alert"></i>
+            <span data-i18n="tab_iolink">IO-Link·안전회로</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-grounding" role="tab">
+            <i data-lucide="shield"></i>
+            <span data-i18n="tab_ground">접지(PE)·EMC실드</span>
+          </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
             <span data-i18n="tab_notes">기술 노트</span>
@@ -2461,6 +2469,314 @@
       </div>
     </section>
     <!-- ========================================================================= -->
+    <!-- TAB 17: IO-Link 마스터 파워 버짓 & ISO 13849-1 안전회로 검증기 [NEW KILLER TOOL] -->
+    <!-- ========================================================================= -->
+    <section id="tab-iolinksafety" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">IO-Link 마스터 파워 버짓 &amp; PLe/SIL3 안전회로 루프 검증기</h2>
+          <p class="main-desc">스마트 팩토리 IO-Link 필드 허브 포트별 전력 버짓, M12 Class A/B 전압강하 및 ISO 13849-1 E-Stop 안전회로 OSSD 배선 한계를 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>IO-Link 필드 마스터 &amp; 포트 부하 구성</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="iolinkMasterType">IO-Link 마스터 포트 타입 (Port Class)</label>
+              <select id="iolinkMasterType" class="select-precision font-mono">
+                <option value="classA" selected>Class A (M12 4-Pin / 센서 전원 Pin 1/3 max 200mA)</option>
+                <option value="classB">Class B (M12 5-Pin / 액추에이터 전용 24V Pin 2/5 max 2.0A)</option>
+                <option value="hybrid">Class A + Class B 혼합 8포트 필드버스 허브</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-field">
+                <label for="iolinkPortCount">연결 포트 수 (Active Ports)</label>
+                <select id="iolinkPortCount" class="select-precision font-mono">
+                  <option value="2">2 Ports (소형 모듈)</option>
+                  <option value="4">4 Ports</option>
+                  <option value="8" selected>8 Ports (표준 마스터 블록)</option>
+                </select>
+              </div>
+              <div class="adv-field">
+                <label for="iolinkDevicePreset">포트당 대표 디바이스 부하</label>
+                <select id="iolinkDevicePreset" class="select-precision font-mono">
+                  <option value="sensor">광전/근접 센서 (포트당 45mA)</option>
+                  <option value="laser" selected>정밀 레이저 변위 센서 (포트당 120mA)</option>
+                  <option value="rfid">RFID 리더기 / 바코드 스캐너 (포트당 350mA)</option>
+                  <option value="valve">솔레노이드 밸브 매니폴드 (포트당 1.2A - Class B)</option>
+                  <option value="hub">8채널 디지털 I/O 확장 허브 (포트당 500mA)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-field">
+                <label for="iolinkTrunkLen">제어반 간 트렁크 케이블 길이 (L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="iolinkTrunkLen" value="25" min="1" max="100" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="adv-field">
+                <label for="iolinkTrunkGauge">트렁크 전원선 굵기</label>
+                <select id="iolinkTrunkGauge" class="select-precision font-mono">
+                  <option value="0.34">AWG 22 (0.34 SQ - 신호용)</option>
+                  <option value="0.75" selected>AWG 18 (0.75 SQ - 표준)</option>
+                  <option value="1.5">AWG 16 (1.5 SQ - 고용량)</option>
+                  <option value="2.5">AWG 14 (2.5 SQ - 중부하)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="divider-line my-3"></div>
+
+            <div class="field-box">
+              <label for="safetyRelayModel">ISO 13849-1 안전 릴레이 / OSSD 모듈</label>
+              <select id="safetyRelayModel" class="select-precision font-mono">
+                <option value="omron_g9se" selected>OMRON G9SE (비상정지/도어 PLe Cat.4 / 루프 저항 50Ω 한계)</option>
+                <option value="pilz_pnoz">Pilz PNOZ s4 (안전 라이트커튼 OSSD / 30m 한계)</option>
+                <option value="banner_sc10">Banner SC10 (하이브리드 세이프티 컨트롤러)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-field">
+                <label for="safetyLoopLen">안전 스위치 선로 편도 길이</label>
+                <div class="val-input-group">
+                  <input type="number" id="safetyLoopLen" value="30" min="1" max="200" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+              <div class="adv-field">
+                <label for="safetyContactType">접점 방식</label>
+                <select id="safetyContactType" class="select-precision font-mono">
+                  <option value="dry_contact" selected>이중 무전압 접점 (2x NC Contact)</option>
+                  <option value="ossd_pnp">OSSD 반도체 펄스 출력 (PNP)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>파워 버짓 &amp; 세이프티 진단 결과</h3>
+            </div>
+            <div class="caption-right font-mono">
+              <span id="iolinkHealthBadge" class="badge-pill badge-safe">IO-LINK: SAFE</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">TOTAL IO-LINK 24V CURRENT (마스터 총 소모전류)</span>
+                <span class="gauge-target" id="iolinkDropBadge">트렁크 전압강하: -0.58V</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resIolinkTotalCurrent" class="digit-value">1.16</span>
+                <span class="digit-unit">A</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>마스터 수전 전압:</span>
+                  <strong id="resIolinkTerminalV" class="text-safe">23.42 V</strong>
+                </div>
+                <div class="g-stat">
+                  <span>C/Q 통신 선로 정전용량:</span>
+                  <strong id="resIolinkCapacitance" class="text-highlight">2,500 pF (적합)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label">안전 루프 저항 (R_loop)</span>
+              <strong class="s-val font-mono" id="resSafetyLoopR">3.3 Ω</strong>
+              <span class="s-sub" id="resSafetyLoopLimit">허용 50.0Ω 이내</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">OSSD 펄스 지연 시간</span>
+              <strong class="s-val font-mono text-safe" id="resSafetyPulseDelay">&lt; 15 &mu;s (안전)</strong>
+              <span class="s-sub">불요 트립 위험 없음</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">도달 안전 등급</span>
+              <strong class="s-val font-mono text-highlight" id="resSafetyPlRating">PLe / Cat. 4</strong>
+              <span class="s-sub">ISO 13849-1 준수</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-3" id="iolinkSafetyNote">
+            <i data-lucide="shield-check" class="note-icon"></i>
+            <div class="note-content">
+              <strong>엔지니어링 소견:</strong> 8포트 레이저 센서 구동 시 총 부하전류 1.16A로 0.75SQ 배선에서 전압강하 0.58V(2.4%)가 발생하며, C/Q 통신 케이블 정전용량(2,500pF)이 IEC 61131-9 규정 한계(4,000pF)를 만족하여 최대 230.4kbps(COM3) 고속 통신이 보장됩니다.
+            </div>
+          </div>
+
+          <div class="circuit-actions-bar mt-3">
+            <button type="button" id="addIolinkToProjectBtn" class="btn-add-to-project">
+              <i data-lucide="plus-circle"></i>
+              <span>IO-Link/안전회로 프로젝트에 담기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 18: 제어반 보호접지(PE) 단면적 & 고주파 EMC 실드 계산기 [KEC / IEC 60364-5-54] -->
+    <!-- ========================================================================= -->
+    <section id="tab-grounding" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">제어반 보호접지선(PE) 최소 규격 &amp; 고주파 EMC 노이즈 실드 계산기</h2>
+          <p class="main-desc">KEC 제140조 및 IEC 60364-5-54 단열온도 상승식(Adiabatic Equation)을 기반으로 고장 단락전류 차단 시 보호도체(PE) 최소 단면적과 인버터 실드 접지를 검증합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>단락 고장 조건 &amp; 도체 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-field">
+                <label for="peFaultCurrent">상정 단락 고장전류 (I_k)</label>
+                <div class="val-input-group">
+                  <input type="number" id="peFaultCurrent" value="5.0" step="0.5" min="0.5" max="50" class="input-val font-mono">
+                  <span class="val-unit">kA</span>
+                </div>
+              </div>
+              <div class="adv-field">
+                <label for="peTripTime">차단기 트립 동작시간 (t)</label>
+                <div class="val-input-group">
+                  <input type="number" id="peTripTime" value="0.10" step="0.01" min="0.01" max="5.0" class="input-val font-mono">
+                  <span class="val-unit">초 (sec)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-field">
+                <label for="peConductorMat">도체 재질 및 절연체 (k 계수)</label>
+                <select id="peConductorMat" class="select-precision font-mono">
+                  <option value="143" selected>구리 도체 + PVC 절연 (k = 143)</option>
+                  <option value="176">구리 도체 + XLPE/고무 절연 (k = 176)</option>
+                  <option value="95">알루미늄 도체 + PVC 절연 (k = 95)</option>
+                </select>
+              </div>
+              <div class="adv-field">
+                <label for="pePhaseWireSq">주 전원 도체 단면적 (S_phase)</label>
+                <select id="pePhaseWireSq" class="select-precision font-mono">
+                  <option value="2.5">2.5 SQ (상용 동력선)</option>
+                  <option value="4.0">4.0 SQ</option>
+                  <option value="6.0" selected>6.0 SQ (표준 분기선)</option>
+                  <option value="10.0">10.0 SQ</option>
+                  <option value="16.0">16.0 SQ</option>
+                  <option value="25.0">25.0 SQ</option>
+                  <option value="35.0">35.0 SQ</option>
+                  <option value="50.0">50.0 SQ</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="emcShieldType">인버터/서보 케이블 실드 접지 방식</label>
+              <select id="emcShieldType" class="select-precision font-mono">
+                <option value="emc_clamp" selected>360° 원주형 EMC 접지 클램프 (권장 표준)</option>
+                <option value="pigtail">돼지꼬리(Pigtail) 전선 납땜 접지 (주의: 노이즈 취약)</option>
+                <option value="double_shield">이중 실드 (내부 일단 접지 + 외부 360° 양단 접지)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>보호접지(PE) 선정 &amp; EMC 소견</h3>
+            </div>
+            <div class="caption-right font-mono">
+              <span class="badge-pill badge-safe">KEC 140조 적합</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">RECOMMENDED PE CONDUCTOR (추천 상용 접지선 규격)</span>
+                <span class="gauge-target" id="peCalcMinBadge">이론 최소: 11.05 mm²</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resPeStandardSq" class="digit-value">16.0</span>
+                <span class="digit-unit">SQ (mm²)</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>단열온도식 계산 단면적:</span>
+                  <strong id="resPeCalcExact">11.05 mm²</strong>
+                </div>
+                <div class="g-stat">
+                  <span>상도체 간이 대조 규격:</span>
+                  <strong id="resPeSimpleRule">6.0 SQ (1:1 매칭)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label">단열 계산식 공식</span>
+              <strong class="s-val font-mono" style="font-size:0.85rem;">S = &radic;(I&sup2;t) / k</strong>
+              <span class="s-sub">IEC 60364-5-54</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">10MHz 고주파 실드 임피던스</span>
+              <strong class="s-val font-mono text-safe" id="resEmcImpedance">&lt; 0.5 &Omega; (우수)</strong>
+              <span class="s-sub">360° 클램프 접지</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">접지 저항 목표치</span>
+              <strong class="s-val font-mono text-highlight">&le; 10.0 &Omega;</strong>
+              <span class="s-sub">공통접지 기준 충족</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-3" id="peGroundingNote">
+            <i data-lucide="check-circle" class="note-icon"></i>
+            <div class="note-content">
+              <strong>KEC 실무 소견:</strong> 5.0kA 단락전류를 0.1초 내에 차단할 때 구리(k=143) 기준 열용량을 견디기 위해 최소 11.05 mm²의 접지선이 필요하므로 상용 표준 규격인 <strong>16.0 SQ 녹/황 전선</strong>을 선정해야 합니다. 서보 모터 모터선 실드는 돼지꼬리 결선 시 10MHz에서 60Ω 이상의 인덕턴스가 발생하여 통신 노이즈를 유발하므로 반드시 360° EMC 클램프로 금속 플레이트에 직결하십시오.
+            </div>
+          </div>
+
+          <div class="circuit-actions-bar mt-3">
+            <button type="button" id="addPeToProjectBtn" class="btn-add-to-project">
+              <i data-lucide="plus-circle"></i>
+              <span>접지 설계 프로젝트에 담기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ========================================================================= -->
     <!-- TAB 8: 기술 자료 & 실무 가이드 -->
     <!-- ========================================================================= -->
     <section id="tab-articles" class="tab-panel">
@@ -2480,6 +2796,32 @@
             ΔV = I × R_loop = I × [2 × ρ_20 × (L / A) × (1 + α(T - 20))]
           </div>
         </article>
+
+        <!-- Interactive Daily Troubleshooting Diagnostic Flowchart Engine [KILLER FEATURE] -->
+        <div class="troubleshooting-tree-card my-3" style="grid-column: 1 / -1; background: var(--bg-surface); border: 2px solid var(--brand-orange); border-radius: var(--radius-md); padding: 1.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <span class="tech-badge" style="background: var(--brand-orange); color: #ffffff; font-weight: 800;">DIAGNOSTIC ENGINE</span>
+              <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--navy-dark); margin: 0;">⚡ 현장 고장 원인 즉시 분석 인터랙티브 진단 트리</h3>
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono);">15년차 FA 제어반 기술위원회 감수</span>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label style="font-size: 0.9rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 0.5rem; display: block;">현재 발생 중인 현장 고장 증상을 선택하세요:</label>
+            <div class="trouble-symptom-btns" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="btn-util trouble-btn active" data-symptom="sensor_reset">⚡ 센서 간헐적 오동작/리셋</button>
+              <button type="button" class="btn-util trouble-btn" data-symptom="rs485_drop">📡 RS-485 통신 두절/CRC 에러</button>
+              <button type="button" class="btn-util trouble-btn" data-symptom="smps_hiccup">🔄 SMPS 딸꾹질(Hiccup) 점멸</button>
+              <button type="button" class="btn-util trouble-btn" data-symptom="analog_noise">📈 4-20mA 신호 헌팅/노이즈</button>
+              <button type="button" class="btn-util trouble-btn" data-symptom="valve_delay">🔥 솔레노이드 복귀 지연/과열</button>
+            </div>
+          </div>
+
+          <div id="troubleDiagnosticResult" class="trouble-diag-box" style="background: var(--bg-main); border: 1px solid var(--border-main); border-radius: var(--radius-sm); padding: 1.25rem;">
+            <!-- Dynamically rendered step-by-step troubleshooting checklist -->
+          </div>
+        </div>
 
         <article class="tech-article-item">
           <div class="tech-badge">현장 트러블슈팅</div>

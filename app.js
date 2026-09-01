@@ -3574,3 +3574,313 @@ function submitDigitalOrder() {
 document.addEventListener('DOMContentLoaded', () => {
   initMonetizationModals();
 });
+
+// ==========================================================================
+// TAB 17: IO-LINK POWER BUDGET & ISO 13849-1 SAFETY LOOP ENGINE
+// ==========================================================================
+
+function initIolinkSafetyCalculator() {
+  const masterSelect = document.getElementById('iolinkMasterType');
+  const portSelect = document.getElementById('iolinkPortCount');
+  const deviceSelect = document.getElementById('iolinkDevicePreset');
+  const trunkLenInput = document.getElementById('iolinkTrunkLen');
+  const trunkGaugeSelect = document.getElementById('iolinkTrunkGauge');
+  const safetyRelaySelect = document.getElementById('safetyRelayModel');
+  const safetyLenInput = document.getElementById('safetyLoopLen');
+  const safetyTypeSelect = document.getElementById('safetyContactType');
+
+  function calculateIolinkSafety() {
+    if (!masterSelect || !portSelect) return;
+
+    const ports = parseInt(portSelect.value, 10) || 8;
+    const devType = deviceSelect ? deviceSelect.value : 'laser';
+    const trunkL = parseFloat(trunkLenInput ? trunkLenInput.value : 25) || 25;
+    const trunkSq = parseFloat(trunkGaugeSelect ? trunkGaugeSelect.value : 0.75) || 0.75;
+
+    // Device current in Amperes per port
+    let curPerPort = 0.12; // Laser default
+    if (devType === 'sensor') curPerPort = 0.045;
+    else if (devType === 'rfid') curPerPort = 0.350;
+    else if (devType === 'valve') curPerPort = 1.200;
+    else if (devType === 'hub') curPerPort = 0.500;
+
+    // Master internal base electronics power (200mA)
+    const masterBaseA = 0.20;
+    const totalCurrentA = masterBaseA + (curPerPort * ports);
+
+    // Trunk line resistance R = 2 * (rho_20 * L / A) -> copper rho=0.0175
+    const rLoop = 2.0 * (0.0175 * trunkL / trunkSq) * 1.15; // 15% temp buffer
+    const vDrop = totalCurrentA * rLoop;
+    const vTerminal = Math.max(0, 24.0 - vDrop);
+
+    // C/Q Line capacitance: typical 100 pF/m
+    const cqCapacitancePf = trunkL * 100;
+
+    // Safety Loop calculations (ISO 13849-1)
+    const sLen = parseFloat(safetyLenInput ? safetyLenInput.value : 30) || 30;
+    const sWireSq = 0.34; // AWG22
+    const sLoopR = 2.0 * (0.0175 * sLen / sWireSq);
+    const sDelayUs = (sLen * 0.45).toFixed(1);
+
+    // Update UI Readouts
+    const totCurrentEl = document.getElementById('resIolinkTotalCurrent');
+    const termVEl = document.getElementById('resIolinkTerminalV');
+    const capEl = document.getElementById('resIolinkCapacitance');
+    const dropBadgeEl = document.getElementById('iolinkDropBadge');
+    const healthBadgeEl = document.getElementById('iolinkHealthBadge');
+    const safetyREl = document.getElementById('resSafetyLoopR');
+    const safetyDelayEl = document.getElementById('resSafetyPulseDelay');
+    const safetyPlEl = document.getElementById('resSafetyPlRating');
+
+    if (totCurrentEl) totCurrentEl.textContent = totalCurrentA.toFixed(2);
+    if (termVEl) {
+      termVEl.textContent = `${vTerminal.toFixed(2)} V`;
+      termVEl.className = vTerminal >= 21.6 ? 'text-safe' : 'text-warn';
+    }
+    if (capEl) {
+      capEl.textContent = `${Math.round(cqCapacitancePf).toLocaleString()} pF (한계: 4,000pF)`;
+      capEl.className = cqCapacitancePf <= 4000 ? 'text-safe' : 'text-warn';
+    }
+    if (dropBadgeEl) dropBadgeEl.textContent = `트렁크 전압강하: -${vDrop.toFixed(2)}V (${((vDrop/24)*100).toFixed(1)}%)`;
+
+    if (healthBadgeEl) {
+      if (vTerminal >= 21.6 && cqCapacitancePf <= 4000) {
+        healthBadgeEl.className = 'badge-pill badge-safe';
+        healthBadgeEl.textContent = 'IO-LINK: PASS (정상)';
+      } else {
+        healthBadgeEl.className = 'badge-pill badge-warn';
+        healthBadgeEl.textContent = 'IO-LINK: WARN (용량 부족)';
+      }
+    }
+
+    if (safetyREl) safetyREl.textContent = `${sLoopR.toFixed(1)} Ω`;
+    if (safetyDelayEl) safetyDelayEl.textContent = `< ${sDelayUs} μs (안전)`;
+    if (safetyPlEl) {
+      safetyPlEl.textContent = sLoopR <= 50 ? 'PLe / Cat. 4' : 'PLd / Cat. 3 (마진 협소)';
+      safetyPlEl.className = sLoopR <= 50 ? 's-val font-mono text-safe' : 's-val font-mono text-warn';
+    }
+  }
+
+  [masterSelect, portSelect, deviceSelect, trunkLenInput, trunkGaugeSelect, safetyRelaySelect, safetyLenInput, safetyTypeSelect].forEach(elem => {
+    if (elem) elem.addEventListener('input', calculateIolinkSafety);
+  });
+
+  const addIolinkBtn = document.getElementById('addIolinkToProjectBtn');
+  if (addIolinkBtn) {
+    addIolinkBtn.addEventListener('click', () => {
+      const cur = document.getElementById('resIolinkTotalCurrent')?.textContent || '1.16';
+      const termV = document.getElementById('resIolinkTerminalV')?.textContent || '23.42V';
+      const pl = document.getElementById('resSafetyPlRating')?.textContent || 'PLe / Cat. 4';
+
+      if (typeof addProjectItem === 'function') {
+        addProjectItem({
+          calcType: 'IO-Link·안전회로',
+          label: `IO-Link 8포트 마스터 & ${pl} 안전루프`,
+          params: `총 부하전류 ${cur}A, 수전단 ${termV}`,
+          result: `ISO 13849-1 ${pl} 만족`
+        });
+      }
+    });
+  }
+
+  calculateIolinkSafety();
+}
+
+// ==========================================================================
+// TAB 18: 제어반 보호접지(PE) 단면적 & EMC 실드 계산기 [KEC 140조]
+// ==========================================================================
+
+function initGroundingCalculator() {
+  const faultInput = document.getElementById('peFaultCurrent');
+  const tripTimeInput = document.getElementById('peTripTime');
+  const matSelect = document.getElementById('peConductorMat');
+  const phaseSqSelect = document.getElementById('pePhaseWireSq');
+  const emcSelect = document.getElementById('emcShieldType');
+
+  function calculateGrounding() {
+    if (!faultInput || !tripTimeInput) return;
+
+    const Ik_kA = parseFloat(faultInput.value) || 5.0;
+    const Ik_A = Ik_kA * 1000.0;
+    const t = parseFloat(tripTimeInput.value) || 0.10;
+    const k = parseFloat(matSelect ? matSelect.value : 143) || 143;
+    const sPhase = parseFloat(phaseSqSelect ? phaseSqSelect.value : 6.0) || 6.0;
+
+    // Adiabatic equation: S = sqrt(I^2 * t) / k
+    const sCalc = (Math.sqrt(Math.pow(Ik_A, 2) * t)) / k;
+
+    // Standard commercial wire sizes: [1.5, 2.5, 4.0, 6.0, 10.0, 16.0, 25.0, 35.0, 50.0, 70.0, 95.0]
+    const standardSizes = [1.5, 2.5, 4.0, 6.0, 10.0, 16.0, 25.0, 35.0, 50.0, 70.0, 95.0];
+    let recSize = standardSizes[standardSizes.length - 1];
+    for (let i = 0; i < standardSizes.length; i++) {
+      if (standardSizes[i] >= sCalc) {
+        recSize = standardSizes[i];
+        break;
+      }
+    }
+
+    // KEC / IEC 60364-5-54 Table 54.2 Simple Rule
+    let simpleRuleSq = sPhase;
+    if (sPhase > 16.0 && sPhase <= 35.0) simpleRuleSq = 16.0;
+    else if (sPhase > 35.0) simpleRuleSq = sPhase / 2.0;
+
+    // EMC Shield impedance estimation at 10MHz
+    const emcType = emcSelect ? emcSelect.value : 'emc_clamp';
+    let emcImpedance = '< 0.5 Ω (우수 - 노이즈 99.8% 차폐)';
+    let emcColor = 'text-safe';
+    if (emcType === 'pigtail') {
+      emcImpedance = '> 62.8 Ω (위험 - 고주파 노이즈 유입)';
+      emcColor = 'text-warn';
+    } else if (emcType === 'double_shield') {
+      emcImpedance = '< 0.1 Ω (최상급 - 초정밀 아날로그)';
+    }
+
+    // Update UI Readouts
+    const stdSqEl = document.getElementById('resPeStandardSq');
+    const calcExactEl = document.getElementById('resPeCalcExact');
+    const simpleRuleEl = document.getElementById('resPeSimpleRule');
+    const minBadgeEl = document.getElementById('peCalcMinBadge');
+    const emcEl = document.getElementById('resEmcImpedance');
+
+    if (stdSqEl) stdSqEl.textContent = recSize.toFixed(1);
+    if (calcExactEl) calcExactEl.textContent = `${sCalc.toFixed(2)} mm²`;
+    if (simpleRuleEl) simpleRuleEl.textContent = `${simpleRuleSq.toFixed(1)} SQ (상도체 ${sPhase}SQ 기준)`;
+    if (minBadgeEl) minBadgeEl.textContent = `이론 최소 단면적: ${sCalc.toFixed(2)} mm²`;
+    if (emcEl) {
+      emcEl.textContent = emcImpedance;
+      emcEl.className = `s-val font-mono ${emcColor}`;
+    }
+  }
+
+  [faultInput, tripTimeInput, matSelect, phaseSqSelect, emcSelect].forEach(elem => {
+    if (elem) elem.addEventListener('input', calculateGrounding);
+  });
+
+  const addPeBtn = document.getElementById('addPeToProjectBtn');
+  if (addPeBtn) {
+    addPeBtn.addEventListener('click', () => {
+      const sq = document.getElementById('resPeStandardSq')?.textContent || '16.0';
+      const fault = document.getElementById('peFaultCurrent')?.value || '5.0';
+      const t = document.getElementById('peTripTime')?.value || '0.1';
+
+      if (typeof addProjectItem === 'function') {
+        addProjectItem({
+          calcType: '접지(PE)·EMC',
+          label: `제어반 보호접지선 (${sq} SQ)`,
+          params: `고장전류 ${fault}kA, 트립 ${t}s`,
+          result: `KEC 140조 규격 만족 (추천: ${sq} SQ)`
+        });
+      }
+    });
+  }
+
+  calculateGrounding();
+}
+
+// ==========================================================================
+// TAB 14: INTERACTIVE DAILY TROUBLESHOOTING DIAGNOSTIC TREE ENGINE
+// ==========================================================================
+
+const TROUBLESHOOTING_DATA = {
+  sensor_reset: {
+    title: '⚡ DC 24V 광전/근접 센서 간헐적 오동작 & 브라운아웃(Brownout)',
+    cause: '솔레노이드 밸브/릴레이 구동 시 발생하는 순간 돌입 전류(Inrush) 및 긴 배선(>30m)에 따른 순간 전압 강하 (V < 18V)',
+    steps: [
+      { step: '1단계: SMPS 분리 배선', desc: 'PLC/센서용 제어 전원(SMPS #1)과 솔레노이드/모터 브레이크 구동 전원(SMPS #2)을 물리적으로 분리하십시오.' },
+      { step: '2단계: 역기전력 흡수 다이오드 확인', desc: 'DC 릴레이 및 솔레노이드 코일 양단에 1N4007 플라이백 다이오드 또는 바리스터 서지 킬러가 장착되었는지 점검하십시오.' },
+      { step: '3단계: 도선 굵기 상향 (AWG 24 -> AWG 20)', desc: '20m 초과 원거리 센서 라인의 배선을 0.5SQ 이상으로 교체하여 선로 루프 저항(R_loop)을 5Ω 이하로 억제하십시오.' }
+    ]
+  },
+  rs485_drop: {
+    title: '📡 RS-485 / Modbus-RTU 통신 두절, 타임아웃 & 패킷 CRC 에러',
+    cause: '120Ω 종단저항 미체결에 의한 신호 반사파(Reflection) 또는 인버터/서보 노이즈에 의한 공통모드 전압 초과 (-7V ~ +12V)',
+    steps: [
+      { step: '1단계: 물리적 양 끝단 120Ω 종단저항 점검', desc: '데이지체인 선로의 맨 처음 마스터와 맨 마지막 슬레이브 단자대에만 120Ω 1/4W 금속피막 저항을 체결하십시오. (중간 디바이스 체결 금지)' },
+      { step: '2단계: 실드선 접지 1점 접지(Single-point)', desc: 'RS-485 케이블 실드(Shield)는 마스터 제어반 PE 접지 단자에만 1점 접지하고 슬레이브 측은 절연 테이핑하여 접지 루프 전류를 방지하십시오.' },
+      { step: '3단계: 통신선-동력선 이격 배선', desc: '380V/220V 모터 동력 배선과 최소 20cm 이상 이격하거나 금속 차폐 격벽이 있는 닥트에 분리 포설하십시오.' }
+    ]
+  },
+  smps_hiccup: {
+    title: '🔄 SMPS 파워서플라이 딸꾹질(Hiccup) 점멸 & 출력 전압 불안정',
+    cause: '부하 용량 초과(Overload), 출력단 24V 단락(Short), 또는 대용량 콘덴서 부하 기동 시 돌입 전류 한계 초과',
+    steps: [
+      { step: '1단계: 분기 차단기(CP) 순차 분리', desc: '모든 부하 차단기를 내린 후 SMPS를 단독 기동하여 정상 24.0V가 출력되는지 확인하십시오. (정상이면 특정 분기 선로 단락)' },
+      { step: '2단계: 서킷 프로텍터(CP) C-curve 정격 점검', desc: '돌입 전류가 큰 DC 모터/솔레노이드 부하는 정격 전류의 2~3배 용량의 C-curve 차단기로 변경하십시오.' },
+      { step: '3단계: SMPS 부하율 70% 마진 설계', desc: '연속 부하 전류의 1.3배 이상 정격(예: 부하 7A 시 10A/240W 파워)으로 SMPS 용량을 증설하십시오.' }
+    ]
+  },
+  analog_noise: {
+    title: '📈 PLC 4-20mA 아날로그 입력값 헌팅(Hunting) & 계측 오차',
+    cause: '비차폐 선로 포설, Shunt 저항 정밀도 불량(1% 초과), 또는 트랜스미터와 PLC 접지 간 전위차에 의한 접지 루프',
+    steps: [
+      { step: '1단계: 0.1% 급 정밀 금속박 250Ω Shunt 저항 적용', desc: '일반 저항 대신 온도계수 25ppm 이하의 고정밀 250.0Ω 계측용 Shunt를 사용하십시오.' },
+      { step: '2단계: 아날로그 신호 아이솔레이터(절연기) 삽입', desc: '현장 센서와 제어반 PLC 입력단 사이에 4-20mA 절연 변환기(Galvanic Isolator)를 추가하여 접지 루프를 차단하십시오.' },
+      { step: '3단계: 트위스트 페어 실드선(CVV-S) 적용', desc: '신호선(+)과 복귀선(-)을 반드시 꼬임선(Twisted Pair)으로 사용하고 실드를 편조 접지하십시오.' }
+    ]
+  },
+  valve_delay: {
+    title: '🔥 DC 24V 솔레노이드 밸브 복귀 지연 & 코일 이상 발열',
+    cause: '역기전력 다이오드 전류 순환으로 인한 자속 소멸 지연 또는 전압강하로 인한 코일 불완전 흡착',
+    steps: [
+      { step: '1단계: 고속 응답용 Zener-Diode 조합 서지킬러 채택', desc: '순수 다이오드 대신 36V 제너 다이오드 + 일반 다이오드 직렬 조합을 사용하여 코일 역기전력 방전 속도를 3배 빠르게 하십시오.' },
+      { step: '2단계: 밸브 단자 전압 실측', desc: '솔레노이드 흡착 순간 전압이 21.6V(정격의 90%) 이상 유지되는지 Fluke 87V Min/Max 모드로 측정하십시오.' }
+    ]
+  }
+};
+
+function initTroubleshootingDecisionTree() {
+  const container = document.getElementById('troubleDiagnosticResult');
+  const buttons = document.querySelectorAll('.trouble-btn');
+  if (!container || buttons.length === 0) return;
+
+  function renderSymptom(key) {
+    const data = TROUBLESHOOTING_DATA[key] || TROUBLESHOOTING_DATA.sensor_reset;
+    let html = `
+      <div style="margin-bottom: 0.85rem;">
+        <h4 style="color:var(--brand-orange); font-size:1.05rem; font-weight:800; margin:0 0 0.35rem 0;">${data.title}</h4>
+        <p style="color:var(--text-secondary); font-size:0.88rem; line-height:1.5; margin:0;"><strong>근본 원인:</strong> ${data.cause}</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.65rem;">
+    `;
+
+    data.steps.forEach(s => {
+      html += `
+        <div style="background:var(--bg-surface); border:1px solid var(--border-main); border-radius:var(--radius-sm); padding:0.85rem 1rem;">
+          <div style="font-weight:700; color:var(--navy-dark); font-size:0.9rem; margin-bottom:0.25rem;">${s.step}</div>
+          <div style="color:var(--text-secondary); font-size:0.85rem; line-height:1.45;">${s.desc}</div>
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+      <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <span style="font-size:0.78rem; color:var(--text-muted);">관련 규격: IEC 60204-1 §9.2 / NFPA 79 Chapter 9</span>
+        <button type="button" class="btn-util" onclick="window.print()" style="font-size:0.78rem;">
+          <i data-lucide="printer"></i> 트러블슈팅 매뉴얼 인쇄
+        </button>
+      </div>
+    `;
+
+    container.innerHTML = html;
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const symptom = btn.getAttribute('data-symptom');
+      renderSymptom(symptom);
+    });
+  });
+
+  renderSymptom('sensor_reset');
+}
+
+// Hook into DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  initIolinkSafetyCalculator();
+  initGroundingCalculator();
+  initTroubleshootingDecisionTree();
+});
