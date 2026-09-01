@@ -104,6 +104,9 @@ function bindEvents() {
         tabPanels[i].classList.toggle('active', tabPanels[i].id === tabId);
       }
 
+      // Smoothly auto-scroll active button to center so it is NEVER clipped
+      btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
       updateUrlHash();
 
       // Quick selective draw only for the tab opened
@@ -2838,6 +2841,18 @@ function applyLanguage(lang) {
   if (mdT) mdT.textContent = isEn ? '21 Engineering Tool Suite' : '21대 전장설계 공학 도구';
   const mdS = document.getElementById('mdSub');
   if (mdS) mdS.textContent = isEn ? 'One-Tap Instant Sizing Suite' : '원터치 계산기 즉시 전환';
+
+  // Category Filter Chips
+  const cfA = document.getElementById('cfAll');
+  if (cfA) cfA.textContent = isEn ? '⭐ All 26 Tools' : '⭐ 전체 26종 (All)';
+  const cfP = document.getElementById('cfPower');
+  if (cfP) cfP.textContent = isEn ? '⚡ Power & TR' : '⚡ 전원·변압기 (Power & TR)';
+  const cfM = document.getElementById('cfMotion');
+  if (cfM) cfM.textContent = isEn ? '🛡️ Motion & Safety' : '🛡️ 모터·안전 (Motion & Safety)';
+  const cfS = document.getElementById('cfSignal');
+  if (cfS) cfS.textContent = isEn ? '🌡️ Signals & OT' : '🌡️ 신호·통신 (Signals & OT)';
+  const cfSp = document.getElementById('cfSpecs');
+  if (cfSp) cfSp.textContent = isEn ? '📁 Specs & Tech' : '📁 제어반·규격 (Specs & Tech)';
 
   // 5. Tab 9: PLC Scaling Specific Labels
   const plcLabels = {
@@ -5674,5 +5689,43 @@ function calculateTempConversion() {
       elComp.textContent = `${temp.toFixed(2)} °C (정밀 계측)`;
       elComp.className = 'summary-val font-mono text-safe';
     }
+  }
+}
+
+
+// ==========================================================================
+// HORIZONTAL NAVIGATION SCROLL & CATEGORY FILTER ENGINE
+// ==========================================================================
+
+function scrollTabMenu(offset) {
+  const container = document.getElementById('navTabsContainer');
+  if (container) {
+    container.scrollBy({ left: offset, behavior: 'smooth' });
+  }
+}
+
+function filterNavCategory(cat) {
+  document.querySelectorAll('.cat-filter-chip').forEach(el => el.classList.remove('active'));
+  if (cat === 'all') document.getElementById('cfAll')?.classList.add('active');
+  else if (cat === 'power') document.getElementById('cfPower')?.classList.add('active');
+  else if (cat === 'motion') document.getElementById('cfMotion')?.classList.add('active');
+  else if (cat === 'signal') document.getElementById('cfSignal')?.classList.add('active');
+  else if (cat === 'specs') document.getElementById('cfSpecs')?.classList.add('active');
+
+  const tabBtns = document.querySelectorAll('.tab-btn[data-tab]');
+  let firstVisible = null;
+
+  tabBtns.forEach(btn => {
+    const btnCat = btn.getAttribute('data-category');
+    if (cat === 'all' || btnCat === cat) {
+      btn.style.display = 'inline-flex';
+      if (!firstVisible) firstVisible = btn;
+    } else {
+      btn.style.display = 'none';
+    }
+  });
+
+  if (firstVisible && cat !== 'all') {
+    firstVisible.click();
   }
 }

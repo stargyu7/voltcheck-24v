@@ -170,13 +170,26 @@
 
     <!-- Row 2: Full-Width 11-Tool Segmented Menu -->
     <div class="nav-menu-bar">
-      <div class="nav-container nav-container-menu">
-        <nav class="nav-tabs-segmented" role="tablist">
-          <button class="tab-btn active" data-tab="tab-voltagedrop" role="tab">
+      <!-- Quick Category Filter Pills -->
+      <div class="category-filter-strip" id="categoryFilterStrip">
+        <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 26종 (All)</button>
+        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기 (Power &amp; TR)</button>
+        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·안전 (Motion &amp; Safety)</button>
+        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·통신 (Signals &amp; OT)</button>
+        <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 제어반·규격 (Specs &amp; Tech)</button>
+      </div>
+
+      <!-- Segmented Track with Left/Right Scroll Arrows -->
+      <div class="nav-segmented-track">
+        <button type="button" class="nav-scroll-btn left" id="navScrollLeftBtn" onclick="scrollTabMenu(-260)" aria-label="Scroll left">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <nav class="nav-tabs-segmented" id="navTabsContainer" role="tablist">
+          <button class="tab-btn active" data-tab="tab-voltagedrop" data-category="power" role="tab">
             <i data-lucide="activity"></i>
             <span>24V 전압강하</span>
           </button>
-          <button class="tab-btn" data-tab="tab-analogloop" role="tab">
+          <button class="tab-btn" data-tab="tab-analogloop" data-category="signal" role="tab">
             <i data-lucide="gauge"></i>
             <span>4-20mA 루프</span>
           </button>
@@ -184,7 +197,7 @@
             <i data-lucide="cpu"></i>
             <span>SMPS·CP 용량</span>
           </button>
-          <button class="tab-btn" data-tab="tab-cabinetcooling" role="tab">
+          <button class="tab-btn" data-tab="tab-cabinetcooling" data-category="specs" role="tab">
             <i data-lucide="thermometer-snowflake"></i>
             <span>제어반 쿨링</span>
           </button>
@@ -208,7 +221,7 @@
             <i data-lucide="binary"></i>
             <span>PLC 스케일링</span>
           </button>
-          <button class="tab-btn" data-tab="tab-motorcalc" role="tab">
+          <button class="tab-btn" data-tab="tab-motorcalc" data-category="motion" role="tab">
             <i data-lucide="zap"></i>
             <span>3상 모터·MC</span>
           </button>
@@ -277,6 +290,9 @@
             <span data-i18n="tab_notes">기술 노트</span>
           </button>
         </nav>
+        <button type="button" class="nav-scroll-btn right" id="navScrollRightBtn" onclick="scrollTabMenu(260)" aria-label="Scroll right">
+          <i data-lucide="chevron-right"></i>
+        </button>
       </div>
     </div>
   </header>
