@@ -476,7 +476,8 @@ function applyPreset(presetKey) {
 // ==========================================================================
 
 const GLOBAL_EN_REPLACEMENTS = [
-  [/공정거래위원회 지침 및 FTC 가이드라인 준수: 본 추천 부품 링크\(Digi-Key, Mouser\)를 통한 구매 시 볼트체크는 파트너사로부터 소정의 수수료를 지급받을 수 있으며, 구매자 부담 가격에는 일체 영향이 없습니다\./g, "FTC Compliance Disclosure: VoltCheck may earn an affiliate commission from authorized distributors (Digi-Key, Mouser) at no additional cost to you when purchasing through these verified links."],
+  [/공정거래위원회 지침 및 FTC 가이드라인 준수: 본 추천 부품 링크\(Digi-Key, Mouser\)를 통한 구매 시 Total Engineering은 파트너사로부터 소정의 수수료를 지급받을 수 있으며, 구매자 부담 가격에는 일체 영향이 없습니다\./g, "FTC Compliance Disclosure: Total Engineering may earn an affiliate commission from authorized distributors (Digi-Key, Mouser) at no additional cost to you when purchasing through these verified links."],
+  [/공정거래위원회 지침 및 FTC 가이드라인 준수: 본 추천 부품 링크\(Digi-Key, Mouser\)를 통한 구매 시 볼트체크는 파트너사로부터 소정의 수수료를 지급받을 수 있으며, 구매자 부담 가격에는 일체 영향이 없습니다\./g, "FTC Compliance Disclosure: Total Engineering may earn an affiliate commission from authorized distributors (Digi-Key, Mouser) at no additional cost to you when purchasing through these verified links."],
   [/추천 규격 실제 구매 부품 \(BOM Part Matching\)/g, "Recommended Manufacturer BOM Parts (Live Catalog)"],
   [/계산된 전선 규격 및 SMPS 용량에 일치하는 국내외 공인 제조사 공식 카탈로그 품번입니다\./g, "Official manufacturer part numbers matching calculated wire gauge and SMPS power ratings."],
   // Site Environment & DMM
@@ -490,8 +491,11 @@ const GLOBAL_EN_REPLACEMENTS = [
   [/사용 계측기 \(DMM \/ Scope\)/g, "Measurement Tool (DMM / Scope)"],
 
   // Top Nav & Header
-  [/볼트체크 24V/g, "VoltCheck 24V"],
-  [/산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷/g, "Industrial Cable Voltage Drop & Control Panel Engineering Suite"],
+  [/토털 엔지니어링/g, "Total Engineering"],
+  [/볼트체크 24V/g, "Total Engineering"],
+  [/VoltCheck 24V/g, "Total Engineering"],
+  [/산업용 제어선로 전압강하 & 전장설계 토털 엔지니어링 툴킷/g, "Industrial Automation & Electrical Total Engineering Suite"],
+  [/산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷/g, "Industrial Automation & Electrical Total Engineering Suite"],
   [/실무 엑셀·CAD 팩/g, "Pro Excel·CAD Pack"],
   [/단위 환산/g, "Unit Converter"],
   [/내 보관함/g, "Saved Calcs"],
@@ -1914,7 +1918,7 @@ function copySummaryToClipboard() {
   const margin = document.getElementById('resMarginV').textContent;
   const status = document.getElementById('verdictBadgeText').textContent;
 
-  const text = `[볼트체크 24V - 선로 전압강하 검토 결과]\n` +
+  const text = `[Total Engineering - 선로 전압강하 검토 결과]\n` +
     `- 공급 전원: DC ${vSource}V\n` +
     `- 배선 거리: ${l}m (${gauge})\n` +
     `- 소비 전류: ${i}A\n` +
@@ -1922,7 +1926,7 @@ function copySummaryToClipboard() {
     `- 말단 수전 전압: ${vTerm}V\n` +
     `- 전원 안전 마진: ${margin}\n` +
     `- 판정 결과: ${status}\n` +
-    `- 출처: 볼트체크 24V (VoltCheck)`;
+    `- 출처: Total Engineering (토털 엔지니어링)`;
 
   navigator.clipboard.writeText(text).then(() => {
     alert('계산 결과 요약이 클립보드에 복사되었습니다.');
@@ -1952,21 +1956,21 @@ const POLICIES = {
     title_en: 'Privacy Policy',
     content_ko: `
       <h4>1. 개인정보 수집 및 처리 목적</h4>
-      <p>볼트체크 24V(이하 "서비스")는 별도의 회원가입 없이 익명으로 모든 공학 계산 도구를 무료 제공합니다. 사용자가 입력하는 설계 파라미터(전압, 전류, 거리 등)는 브라우저 로컬 저장소(LocalStorage) 및 URL 해시에만 임시 보관되며 당사 서버로 일체 전송되거나 수집되지 않습니다.</p>
+      <p>Total Engineering(이하 "서비스")은 별도의 회원가입 없이 익명으로 모든 공학 계산 도구를 무료 제공합니다. 사용자가 입력하는 설계 파라미터(전압, 전류, 거리 등)는 브라우저 로컬 저장소(LocalStorage) 및 URL 해시에만 임시 보관되며 당사 서버로 일체 전송되거나 수집되지 않습니다.</p>
       <h4>2. 제3자 쿠키 및 Google AdSense 광고 게재 안내</h4>
       <p>본 서비스는 사이트 운영을 위해 Google AdSense 등 제3자 광고 서비스를 이용하고 있습니다. Google을 포함한 타사 공급업체는 쿠키를 사용하여 사용자의 이전 방문 기록을 바탕으로 맞춤형 광고를 게재합니다.</p>
       <p>사용자는 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google 광고 설정</a>에서 맞춤형 광고를 비활성화하거나, 웹 브라우저 쿠키 차단 기능을 통해 쿠키 저장을 거부할 수 있습니다.</p>
       <h4>3. 데이터 보호 책임자 및 연락처</h4>
-      <p>이메일: contact@voltcheck24v.engineering | 관리: 볼트체크 엔지니어링 랩</p>
+      <p>이메일: contact@voltcheck24.com | 관리: Total Engineering Lab</p>
     `,
     content_en: `
       <h4>1. Data Collection & Purpose</h4>
-      <p>VoltCheck 24V provides all engineering tools completely free without registration. Design parameters (voltage, distance, wire gauge, etc.) are processed locally in your browser (LocalStorage / URL Hash) and are never transmitted to or stored on our servers.</p>
+      <p>Total Engineering provides all engineering tools completely free without registration. Design parameters (voltage, distance, wire gauge, etc.) are processed locally in your browser (LocalStorage / URL Hash) and are never transmitted to or stored on our servers.</p>
       <h4>2. Third-Party Cookies & Google AdSense Compliance</h4>
       <p>This website utilizes third-party advertising vendors including Google AdSense. Google uses cookies (such as the DoubleClick cookie) to serve relevant ads based on prior visits to this or other websites.</p>
       <p>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ad Settings</a> or by configuring browser cookie permissions.</p>
       <h4>3. Data Protection Officer & Inquiries</h4>
-      <p>Email: contact@voltcheck24v.engineering | Operator: VoltCheck Engineering Labs</p>
+      <p>Email: contact@voltcheck24.com | Operator: Total Engineering Labs</p>
     `
   },
   terms: {
@@ -1980,7 +1984,7 @@ const POLICIES = {
     `,
     content_en: `
       <h4>1. Engineering Disclaimer</h4>
-      <p>All calculations on VoltCheck 24V are developed in accordance with international electrical standards (IEC 60204-1, NFPA 79, UL 508A, KEC).</p>
+      <p>All calculations on Total Engineering are developed in accordance with international electrical standards (IEC 60204-1, NFPA 79, UL 508A, KEC).</p>
       <p>However, actual field performance may vary depending on ambient thermal peaks, electromagnetic interference (EMI), terminal contact resistance, and manufacturer wire tolerances.</p>
       <p><strong>Results are provided for design review and preliminary verification purposes. Engineers must verify critical safety parameters against official component datasheets prior to commissioning.</strong></p>
     `
@@ -1989,8 +1993,8 @@ const POLICIES = {
     title_ko: '엔지니어링 기술 기준 및 개발진 소개 (About Us)',
     title_en: 'About Us & Engineering Editorial Standards',
     content_ko: `
-      <h4>볼트체크 24V (VoltCheck Pro) 미션</h4>
-      <p>반도체, 2차전지, 자동차 조립, 스마트팩토리 공장자동화 현장의 전기/전장 및 OT 개발 엔지니어가 번거로운 수작업 계산 없이 1초 만에 최적의 케이블 규격, SMPS 용량, 통신 신뢰성을 검증할 수 있도록 돕는 개방형 엔지니어링 스위트입니다.</p>
+      <h4>Total Engineering (토털 엔지니어링) 미션</h4>
+      <p>반도체, 2차전지, 자동차 조립, 스마트팩토리 공장자동화 현장의 전기/전장 및 OT 개발 엔지니어가 번거로운 수작업 계산 없이 1초 만에 최적의 케이블 규격, SMPS 용량, 통신 신뢰성을 검증할 수 있도록 돕는 개방형 토털 엔지니어링 스위트입니다.</p>
       <h4>준용 엔지니어링 표준</h4>
       <p>• IEC 60204-1 (Safety of machinery - Electrical equipment of machines)<br>
       • NFPA 79 (Electrical Standard for Industrial Machinery 2024)<br>
@@ -1999,7 +2003,7 @@ const POLICIES = {
       • NAMUR NE 43 (Standardization of signal level for failure information)</p>
     `,
     content_en: `
-      <h4>VoltCheck 24V Mission</h4>
+      <h4>Total Engineering Mission</h4>
       <p>Our mission is to empower industrial automation, semiconductor, EV battery, and robotics control engineers worldwide with instant, accurate electrical and OT sizing tools.</p>
       <h4>Referenced International Engineering Standards</h4>
       <p>• IEC 60204-1 (Safety of machinery - Electrical equipment of machines)<br>
@@ -2015,12 +2019,12 @@ const POLICIES = {
     content_ko: `
       <h4>피드백 및 기술 제휴</h4>
       <p>새로운 계산 모듈 건의, 현장 특수 조건 반영, 기업 전장 표준 연동 문의는 아래로 연락 주시기 바랍니다.</p>
-      <p>• 이메일: contact@voltcheck24v.engineering<br>• 운영: 볼트체크 엔지니어링 랩</p>
+      <p>• 이메일: contact@voltcheck24.com<br>• 운영: Total Engineering Lab</p>
     `,
     content_en: `
       <h4>Engineering Inquiries & Feedback</h4>
       <p>For technical feedback, algorithm enhancement requests, or enterprise partnerships, please contact:</p>
-      <p>• Email: contact@voltcheck24.com<br>• Team: VoltCheck Engineering Labs</p>
+      <p>• Email: contact@voltcheck24.com<br>• Team: Total Engineering Labs</p>
     `
   }
 };
@@ -2647,10 +2651,10 @@ function applyLanguage(lang) {
 
   // 1. Top Nav Buttons & Brand
   const brandName = document.querySelector('.brand-name');
-  if (brandName) brandName.textContent = isEn ? 'VoltCheck 24V' : '볼트체크 24V';
+  if (brandName) brandName.textContent = 'Total Engineering';
 
   const brandTag = document.querySelector('.brand-tagline');
-  if (brandTag) brandTag.textContent = isEn ? 'Industrial Cable Voltage Drop & Control Panel Engineering Suite' : '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷';
+  if (brandTag) brandTag.textContent = isEn ? 'Industrial Automation & Electrical Total Engineering Suite' : '산업용 제어선로 전압강하 & 전장설계 토털 엔지니어링 툴킷';
 
   const digitalBtn = document.querySelector('#openDigitalProductBtn span:first-of-type');
   if (digitalBtn) digitalBtn.textContent = isEn ? 'Pro Excel·CAD Pack' : '실무 엑셀·CAD 팩';
@@ -2890,7 +2894,7 @@ function applyLanguage(lang) {
   const bSub = document.getElementById('bomSectionSub');
   if (bSub) bSub.textContent = isEn ? 'Official manufacturer part numbers matching calculated wire gauge and SMPS power ratings.' : '계산된 전선 규격 및 SMPS 용량에 일치하는 국내외 공인 제조사 공식 카탈로그 품번입니다.';
   const bAff = document.getElementById('bomAffiliateText');
-  if (bAff) bAff.textContent = isEn ? 'FTC Compliance Disclosure: VoltCheck may earn an affiliate commission from authorized distributors (Digi-Key, Mouser) at no additional cost to you when purchasing through these verified links.' : '공정거래위원회 지침 및 FTC 가이드라인 준수: 본 추천 부품 링크(Digi-Key, Mouser)를 통한 구매 시 볼트체크는 파트너사로부터 소정의 수수료를 지급받을 수 있으며, 구매자 부담 가격에는 일체 영향이 없습니다.';
+  if (bAff) bAff.textContent = isEn ? 'FTC Compliance Disclosure: Total Engineering may earn an affiliate commission from authorized distributors (Digi-Key, Mouser) at no additional cost to you when purchasing through these verified links.' : '공정거래위원회 지침 및 FTC 가이드라인 준수: 본 추천 부품 링크(Digi-Key, Mouser)를 통한 구매 시 Total Engineering은 파트너사로부터 소정의 수수료를 지급받을 수 있으며, 구매자 부담 가격에는 일체 영향이 없습니다.';
   const sBox = document.getElementById('statutoryNoticeBox');
   if (sBox) sBox.innerHTML = isEn ? '<strong>[Statutory Digital Content Disclosure]</strong><br>This product is an instantly delivered digital asset. In accordance with digital content consumer regulations, returns are limited once file delivery begins. (Lifetime free calculation revisions supported.)' : '<strong>[전자상거래법 제17조 제2항에 따른 법정 고지]</strong><br>본 상품은 결제/입금 확인 즉시 영구 다운로드 링크 및 파일이 제공되는 디지털 콘텐츠로서, 다운로드 개시 후에는 전자상거래 등에서의 소비자보호에 관한 법률에 따라 단순 변심에 의한 청약철회가 제한될 수 있습니다. (설계 수식 오류 시 평생 무상 개정판 지원)';
 
@@ -5388,11 +5392,11 @@ copySummaryToClipboard = function() {
   const vDrop = document.getElementById('resDropV')?.textContent || '-0.67V';
   const status = document.getElementById('verdictBadgeText')?.textContent || 'PASS';
 
-  const shareText = `[볼트체크 24V 전압강하 검토 결과]\n- 공급: DC ${vSource}V / 부하: ${i}A\n- 선로: ${l}m (${gauge})\n- 전압강하: ${vDrop}\n- 말단전압: ${vTerm}V (${status})\nhttps://voltcheck24.com/`;
+  const shareText = `[Total Engineering 전압강하 검토 결과]\n- 공급: DC ${vSource}V / 부하: ${i}A\n- 선로: ${l}m (${gauge})\n- 전압강하: ${vDrop}\n- 말단전압: ${vTerm}V (${status})\nhttps://voltcheck24.com/`;
 
   if (navigator.share && /Mobi|Android|iPhone/i.test(navigator.userAgent)) {
     navigator.share({
-      title: 'VoltCheck 24V 계산서',
+      title: 'Total Engineering 계산서',
       text: shareText,
       url: 'https://voltcheck24.com/'
     }).catch(() => {
