@@ -472,6 +472,16 @@ function applyPreset(presetKey) {
 // ==========================================================================
 
 const GLOBAL_EN_REPLACEMENTS = [
+  // Site Environment & DMM
+  [/반도체 Fab 클린룸 \(Cleanroom 22°C\)/g, "Semiconductor Fab Cleanroom (22°C)"],
+  [/2차전지 배터리 조립라인 \(Dryroom 25°C\)/g, "Secondary Battery Assembly (Dryroom 25°C)"],
+  [/자동차 차체 용접\/가공 라인 \(40°C\)/g, "Automotive Body Welding/Machining (40°C)"],
+  [/일반 공작기계\/절삭유 환경 \(35°C\)/g, "General Machine Tool/Coolant Env (35°C)"],
+  [/옥외 수처리\/플랜트 배선 \(50°C\)/g, "Outdoor Water Treatment/Plant (50°C)"],
+  [/Fluke 87V \(정밀급\)/g, "Fluke 87V (Industrial DMM)"],
+  [/측정 환경 \/ 설비 라인/g, "Site Environment / Line"],
+  [/사용 계측기 \(DMM \/ Scope\)/g, "Measurement Tool (DMM / Scope)"],
+
   // Top Nav & Header
   [/볼트체크 24V/g, "VoltCheck 24V"],
   [/산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷/g, "Industrial Cable Voltage Drop & Control Panel Engineering Suite"],
@@ -614,12 +624,15 @@ const GLOBAL_EN_REPLACEMENTS = [
   [/([\d.]+)V \(최저\)/g, "$1V (Min)"],
   [/단면적 ([\d.]+) mm² • 저항 ([\d.]+) Ω\/km @(\d+)°C • 허용전류 ([\d.]+)A/g, "Area $1 mm² • R $2 Ω/km @$3°C • Ampacity $4A"]
   // Tab 9: PLC Scaling Specific
-  [/지멘스 \(Siemens S7-1200\/1500\)/g, "Siemens S7-1200/1500"],
-  [/미쓰비시 \(Mitsubishi Q\/iQ-R 12-bit\)/g, "Mitsubishi Q/iQ-R 12-bit"],
-  [/미쓰비시 \(Mitsubishi Q\/iQ-R 16-bit\)/g, "Mitsubishi Q/iQ-R 16-bit"],
-  [/LS ELECTRIC \(XGB\/XGK\)/g, "LS ELECTRIC (XGB/XGK)"],
-  [/LS ELECTRIC \(XGK\/XGI 고분해능\)/g, "LS ELECTRIC (XGK/XGI High-Res)"],
-  [/오므론 \(Omron CJ\/NJ\)/g, "Omron CJ/NJ"],
+  [/지멘스 \(Siemens S7-1200\/1500\) • 0 ~ 27,648/g, "Siemens (S7-1200/1500) • 0 ~ 27,648"],
+  [/미쓰비시 \(Mitsubishi Q\/iQ-R 12-bit\) • 0 ~ 4,000/g, "Mitsubishi (Q/iQ-R 12-bit) • 0 ~ 4,000"],
+  [/미쓰비시 \(Mitsubishi Q\/iQ-R 16-bit\) • 0 ~ 12,000/g, "Mitsubishi (Q/iQ-R 16-bit) • 0 ~ 12,000"],
+  [/LS ELECTRIC \(XGB\/XGK\) • 0 ~ 16,000/g, "LS ELECTRIC (XGB/XGK) • 0 ~ 16,000"],
+  [/LS ELECTRIC \(XGK\/XGI 고분해능\) • 0 ~ 32,000/g, "LS ELECTRIC (XGK/XGI High-Res) • 0 ~ 32,000"],
+  [/오므론 \(Omron CJ\/NJ\) • 0 ~ 4,000 \/ 8,000/g, "Omron (CJ/NJ) • 0 ~ 4,000 / 8,000"],
+  [/지멘스/g, "Siemens"],
+  [/미쓰비시/g, "Mitsubishi"],
+  [/오므론/g, "Omron"],
   [/사용자 정의 \(Custom Digital Range\)/g, "Custom Digital Range"],
   [/DC 4 ~ 20 mA \(전류 루프\)/g, "DC 4 ~ 20 mA (Current Loop)"],
   [/DC 0 ~ 10 V \(전압\)/g, "DC 0 ~ 10 V (Voltage)"],
