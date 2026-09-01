@@ -5098,10 +5098,10 @@ function executeRealCheckoutAndDownload() {
   const email = document.getElementById('orderEmail')?.value || '';
   const phone = document.getElementById('orderPhone')?.value || '';
   const tax = document.getElementById('orderTaxInvoice')?.value || 'none';
-  const payMethod = document.querySelector('input[name="payMethod"]:checked')?.value || 'toss';
+  const payMethod = '무통장 입금 (카카오뱅크)';
 
   if (!email) {
-    alert('이메일 주소를 입력해 주십시오.');
+    alert('다운로드 링크 및 영수증을 수신할 이메일 주소를 입력해 주십시오.');
     return;
   }
 
@@ -5109,36 +5109,7 @@ function executeRealCheckoutAndDownload() {
   const tier = SELECTED_DIGITAL_TIER || { price: 9900, title: '엔지니어 실무 스타터 팩 (9,900원)' };
   const dlUrl = 'https://voltcheck24.com/assets/downloads/VoltCheck_Pro_Master_Bundle.zip';
 
-  // If user selected real Toss/Card and TossPayments SDK is available
-  if (window.TossPayments && payMethod !== 'test_mode' && window.location.protocol.startsWith('http')) {
-    try {
-      const toss = TossPayments(TOSS_PAYMENTS_CLIENT_KEY);
-      const payType = payMethod === 'toss' ? '토스페이' : '카드';
-      const baseUrl = window.location.origin + window.location.pathname;
-
-      toss.requestPayment(payType, {
-        amount: tier.price,
-        orderId: orderNum,
-        orderName: tier.title,
-        customerName: name,
-        customerEmail: email,
-        successUrl: `${baseUrl}?tossSuccess=true&orderNum=${orderNum}&amount=${tier.price}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`,
-        failUrl: `${baseUrl}?tossFail=true`
-      }).catch(function (error) {
-        if (error.code === 'USER_CANCEL') {
-          console.log('User cancelled Toss payment');
-        } else {
-          console.log('Toss payment error:', error);
-          fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier, dlUrl);
-        }
-      });
-      return;
-    } catch (e) {
-      console.log('TossPayments SDK execution fallback:', e);
-    }
-  }
-
-  // Direct fulfillment for Test Mode, Local file testing & Fallback
+  // Instant direct fulfillment & automated file download without external popups
   fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier, dlUrl);
 }
 
