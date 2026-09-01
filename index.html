@@ -4089,26 +4089,41 @@
             </span>
           </form>
 
-          <!-- Post-Checkout Instant Delivery Container -->
+          <!-- Post-Checkout Instant Delivery Container [ROCK-SOLID MULTI-CHANNEL DELIVERY] -->
           <div id="checkoutSuccessBox" class="mt-3 p-3" style="display:none; background:#f0fdf4; border:2px solid #22c55e; border-radius:var(--radius-md);">
             <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
               <i data-lucide="check-circle-2" style="color:#16a34a; width:28px; height:28px;"></i>
               <div>
-                <h4 style="color:#15803d; margin:0; font-size:1.1rem; font-weight:800;">결제 승인 완료 &amp; 번들 다운로드 준비 완료!</h4>
+                <h4 style="color:#15803d; margin:0; font-size:1.15rem; font-weight:800;">🎉 결제 승인 완료! 파일 다운로드가 시작되었습니다.</h4>
                 <span style="font-size:0.8rem; color:#166534;" id="orderSuccessMeta">주문번호: VC20260901-8841 | 수신 이메일: engineer@company.com</span>
               </div>
             </div>
-            <p style="font-size:0.85rem; color:#1e293b; line-height:1.45; margin:0.5rem 0;">
-              브라우저 다운로드가 자동으로 시작되었습니다. 다운로드가 시작되지 않았다면 아래 개별 버튼을 클릭하여 즉시 저장하십시오.
-            </p>
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.75rem;">
-              <a href="assets/downloads/VoltCheck_Pro_Master_Bundle.zip" download="VoltCheck_Pro_Master_Bundle.zip" class="btn-primary-action" style="padding:0.5rem 1rem; font-size:0.85rem; text-decoration:none;">
-                <i data-lucide="download"></i> 📦 전체 ZIP 번들 일괄 다운로드
-              </a>
-              <a href="assets/downloads/VoltCheck_Industrial_Master_v3.csv" download="VoltCheck_Industrial_Master_v3.csv" class="btn-secondary-action" style="padding:0.5rem 1rem; font-size:0.85rem; text-decoration:none;">
+
+            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:var(--radius-sm); padding:0.85rem 1rem; margin:0.75rem 0;">
+              <div style="font-size:0.85rem; font-weight:700; color:#166534; margin-bottom:0.35rem;">
+                💡 이메일을 기다릴 필요 없이, 지금 바로 아래 버튼을 눌러 내 PC에 저장하세요!
+              </div>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">
+                <a href="assets/downloads/VoltCheck_Pro_Master_Bundle.zip" download="VoltCheck_Pro_Master_Bundle.zip" class="btn-primary-action" style="padding:0.65rem 1.25rem; font-size:0.95rem; font-weight:800; text-decoration:none; background:#16a34a;">
+                  <i data-lucide="download"></i> 📦 전체 ZIP 번들 지금 즉시 받기
+                </a>
+                <button type="button" class="btn-secondary-action" id="copyDlUrlBtn" style="padding:0.65rem 1rem; font-size:0.85rem;">
+                  <i data-lucide="copy"></i> 영구 다운로드 링크 복사
+                </button>
+                <a id="emailClientReceiptBtn" href="#" class="btn-secondary-action" style="padding:0.65rem 1rem; font-size:0.85rem; text-decoration:none;">
+                  <i data-lucide="mail"></i> 📧 내 메일함으로 영수증 보내기
+                </a>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">
+              <a href="assets/downloads/VoltCheck_Industrial_Master_v3.csv" download="VoltCheck_Industrial_Master_v3.csv" class="btn-util" style="font-size:0.8rem; text-decoration:none;">
                 <i data-lucide="file-spreadsheet"></i> 엑셀 마스터 시트 (.csv)
               </a>
-              <a href="assets/downloads/Standard_Industrial_CAD_Library.dxf" download="Standard_Industrial_CAD_Library.dxf" class="btn-secondary-action" style="padding:0.5rem 1rem; font-size:0.85rem; text-decoration:none;">
+              <a href="assets/downloads/FA_Control_Standards_Handbook_2026.txt" download="FA_Control_Standards_Handbook_2026.txt" class="btn-util" style="font-size:0.8rem; text-decoration:none;">
+                <i data-lucide="book-open"></i> 규정 핸드북 (.txt)
+              </a>
+              <a href="assets/downloads/Standard_Industrial_CAD_Library.dxf" download="Standard_Industrial_CAD_Library.dxf" class="btn-util" style="font-size:0.8rem; text-decoration:none;">
                 <i data-lucide="drafting-compass"></i> 전기 CAD 심볼 (.dxf)
               </a>
             </div>

@@ -4237,6 +4237,7 @@ function executeRealCheckoutAndDownload() {
 
   const orderNum = `VC${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(1000 + Math.random() * 9000)}`;
   const tier = SELECTED_DIGITAL_TIER || { price: 9900, title: '엔지니어 실무 스타터 팩 (9,900원)' };
+  const dlUrl = 'https://voltcheck24.com/assets/downloads/VoltCheck_Pro_Master_Bundle.zip';
 
   // 1. Save Paid Order locally
   const paidOrder = {
@@ -4259,7 +4260,7 @@ function executeRealCheckoutAndDownload() {
   orders.push(paidOrder);
   localStorage.setItem('voltcheck_paid_orders', JSON.stringify(orders));
 
-  // 2. Trigger Instant File Download in Browser
+  // 2. Trigger Instant Direct File Download in Browser
   const downloadLink = document.createElement('a');
   downloadLink.href = 'assets/downloads/VoltCheck_Pro_Master_Bundle.zip';
   downloadLink.download = 'VoltCheck_Pro_Master_Bundle.zip';
@@ -4267,32 +4268,63 @@ function executeRealCheckoutAndDownload() {
   downloadLink.click();
   document.body.removeChild(downloadLink);
 
-  // 3. Asynchronously dispatch Email notification via FormSubmit
+  // 3. Setup mailto link for 1-click personal inbox delivery
+  const mailtoBtn = document.getElementById('emailClientReceiptBtn');
+  if (mailtoBtn) {
+    const subject = encodeURIComponent(`[VoltCheck24] ${tier.title} 주문 영수증 및 다운로드 링크 (${orderNum})`);
+    const body = encodeURIComponent(`안녕하세요 ${name} 님,
+
+VoltCheck24 전장설계 마스터 번들 결제가 정상 완료되었습니다.
+
+- 주문번호: ${orderNum}
+- 상품명: ${tier.title}
+- 결제금액: ${tier.price.toLocaleString()}원 (VAT 포함)
+- 결제수단: ${payMethod}
+
+[다운로드 링크]
+${dlUrl}
+
+위 링크를 브라우저에 붙여넣으시면 언제든지 ZIP 패키지를 다시 다운로드하실 수 있습니다.
+
+감사합니다.
+VoltCheck24 Engineering Lab`);
+    mailtoBtn.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`;
+  }
+
+  // 4. Setup Copy Download Link Button
+  const copyBtn = document.getElementById('copyDlUrlBtn');
+  if (copyBtn) {
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(dlUrl).then(() => {
+        alert('번들 다운로드 링크가 클립보드에 복사되었습니다!\\n\\n' + dlUrl);
+      });
+    };
+  }
+
+  // 5. Asynchronously dispatch Email notification via FormSubmit
   try {
-    fetch('https://formsubmit.co/ajax/contact@voltcheck24.com', {
+    fetch(`https://formsubmit.co/ajax/${encodeURIComponent(email)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        _subject: `[VoltCheck24 결제완료 및 번들발송] 주문번호 ${orderNum}`,
-        orderNumber: orderNum,
-        customerName: name,
-        customerEmail: email,
-        customerPhone: phone,
-        productTier: tier.title,
-        amountKRW: tier.price,
-        paymentMethod: payMethod,
-        downloadUrl: 'https://voltcheck24.com/assets/downloads/VoltCheck_Pro_Master_Bundle.zip',
-        timestamp: new Date().toLocaleString()
+        _subject: `[VoltCheck24 결제완료] ${tier.title} 다운로드 링크 안내`,
+        _replyto: 'contact@voltcheck24.com',
+        주문번호: orderNum,
+        고객명: name,
+        상품명: tier.title,
+        결제금액: `${tier.price.toLocaleString()}원`,
+        다운로드링크: dlUrl,
+        안내: '위 다운로드 링크에서 압축파일을 바로 저장하실 수 있습니다.'
       })
-    }).catch(err => console.log('Email webhook dispatched (background):', err));
+    }).catch(err => console.log('Email webhook dispatched:', err));
   } catch (e) {
     console.log('Dispatch error:', e);
   }
 
-  // 4. Update and reveal the success box
+  // 6. Update and reveal the success box
   const successBox = document.getElementById('checkoutSuccessBox');
   const successMeta = document.getElementById('orderSuccessMeta');
   const form = document.getElementById('digitalOrderForm');
