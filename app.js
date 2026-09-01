@@ -7495,3 +7495,28 @@ function submitB2BQuoteRequest() {
   closeB2BQuoteModal();
 }
 window.submitB2BQuoteRequest = submitB2BQuoteRequest;
+
+
+// ==========================================================================
+// VIRAL KAKAOTALK & SOCIAL SHARING ENGINE
+// ==========================================================================
+
+function shareCurrentTool(platform) {
+  const activeBtn = document.querySelector('.tab-btn.active');
+  const activeTabId = activeBtn?.getAttribute('data-tab') || 'tab-voltagedrop';
+  const toolName = activeBtn?.querySelector('span')?.textContent || '공학 계산기';
+  const currentUrl = window.location.origin + window.location.pathname;
+
+  const shareText = `[VoltCheck 24V - 48대 전 산업 토털 엔지니어링 계산기]\n실무에서 방금 '${toolName}' 결과를 산출했습니다.\n지금 무료로 설계 검증해보세요!\n${currentUrl}`;
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert(`[계산 결과 링크 복사 완료]\n'${toolName}' 검토 내용과 사이트 주소가 클립보드에 복사되었습니다.\n카카오톡 단체방이나 사내 메신저(슬랙/잔디)에 바로 붙여넣기(Ctrl+V)하세요!`);
+    }).catch(() => {
+      prompt('아래 공유 링크를 복사하세요:', shareText);
+    });
+  } else {
+    prompt('아래 공유 링크를 복사하세요:', shareText);
+  }
+}
+window.shareCurrentTool = shareCurrentTool;
