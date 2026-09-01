@@ -122,6 +122,11 @@
 
         <!-- Right Utility Actions -->
         <div class="nav-utils">
+          <button type="button" id="openDigitalProductBtn" class="btn-util btn-digital-pack" title="실무 엑셀 &amp; CAD 템플릿 패키지">
+            <i data-lucide="package"></i>
+            <span>실무 엑셀·CAD 팩</span>
+            <span class="badge-new-glow">PRO</span>
+          </button>
           <button id="openUnitConverterBtn" class="btn-util" title="산업용 단위 환산기">
             <i data-lucide="scale"></i>
             <span>단위 환산</span>
@@ -659,6 +664,21 @@
                   <span>익명 실측 데이터 제출 &amp; 벤치마크 저장</span>
                 </button>
               </div>
+
+              <!-- Curation: Recommended Measurement Equipment -->
+              <div class="recommended-gear-strip mt-3">
+                <span class="gear-label"><i data-lucide="sparkles"></i> 현장 공인 추천 정밀 계측 장비:</span>
+                <div class="gear-chips">
+                  <a href="https://www.fluke.com/ko-kr/product/electrical-testing/digital-multimeters/fluke-87v" target="_blank" rel="noopener sponsored" class="gear-chip">
+                    <i data-lucide="external-link"></i>
+                    <strong>Fluke 87V</strong> (정밀 산업용 DMM / True-RMS)
+                  </a>
+                  <a href="https://www.hioki.com/kr-ko/products/multimeters/digital/id_5813" target="_blank" rel="noopener sponsored" class="gear-chip">
+                    <i data-lucide="external-link"></i>
+                    <strong>Hioki DT4256</strong> (현장 계측 표준 DMM)
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1131,6 +1151,32 @@
           <div class="d-pill"><span>21심 이상</span><strong>45% (0.45)</strong></div>
         </div>
         <p class="guide-note">* 제어반 내 배선 닥트에 다수의 전원선이 함께 묶여 포설될 경우 위 감소 계수를 곱하여 실제 허용전류를 산정하십시오.</p>
+      </div>
+
+      <!-- Curation: Professional Control Tools -->
+      <div class="recommended-gear-card mt-3">
+        <div class="rg-header">
+          <i data-lucide="wrench" class="text-highlight"></i>
+          <strong>공인 전장 엔지니어 표준 압착기 &amp; 스트리퍼 (Recommended Tools)</strong>
+        </div>
+        <div class="gear-grid mt-2">
+          <div class="gear-card-item">
+            <div class="g-maker">KNIPEX (독일 정밀공구)</div>
+            <div class="g-title">Knipex 97 53 04 사각 자동 페룰 압착기</div>
+            <p class="g-desc">0.08~16.0 mm² 페룰 단자 완벽 사각 압착. IEC 60204-1 단자 체결 규격 만족.</p>
+            <a href="https://search.shopping.naver.com/search/all?query=Knipex+97+53+04" target="_blank" rel="noopener sponsored" class="btn-util mt-1" style="font-size:0.75rem; text-decoration:none;">
+              <i data-lucide="shopping-cart"></i> 공식 판매처 최저가 확인
+            </a>
+          </div>
+          <div class="gear-card-item">
+            <div class="g-maker">Weidmüller (바이드뮬러)</div>
+            <div class="g-title">Stripax 0.08~10.0 mm² 자동 전선 탈피기</div>
+            <p class="g-desc">도체 심선 손상 제로(Zero-damage) 정밀 탈피. 제어반 배선 작업 속도 3배 향상.</p>
+            <a href="https://search.shopping.naver.com/search/all?query=Weidmuller+Stripax" target="_blank" rel="noopener sponsored" class="btn-util mt-1" style="font-size:0.75rem; text-decoration:none;">
+              <i data-lucide="shopping-cart"></i> 공식 판매처 최저가 확인
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -3079,34 +3125,139 @@
     </div>
   </div>
 
-  <!-- Quote Modal -->
+  <!-- Enhanced B2B BOM Quotation Lead Modal [PHASE 2 CASH COW] -->
   <div id="quoteModal" class="modal-backdrop hidden">
-    <div class="modal-card">
+    <div class="modal-card modal-lg">
       <div class="modal-header">
-        <h4>FA 전장 부품 및 케이블 견적 문의</h4>
+        <div class="modal-title-group">
+          <i data-lucide="file-spreadsheet" class="text-highlight"></i>
+          <div>
+            <h4 id="quoteModalTitle">공식 대리점 B2B 부품 비교 견적 요청 (BOM)</h4>
+            <span class="modal-subtitle font-mono">Official Industrial Distributor Direct Quotation</span>
+          </div>
+        </div>
         <button type="button" id="closeQuoteModalBtn" class="btn-close">&times;</button>
       </div>
       <div class="modal-body">
-        <p class="modal-desc">계산된 사양에 부합하는 산업용 케이블 및 파워서플라이 제조사 공식 대리점 통합 견적서를 발송해 드립니다.</p>
-        <form id="quoteForm" onsubmit="return false;">
-          <div class="form-field">
-            <label for="quoteCompany">회사명 / 설비 프로젝트명 *</label>
-            <input type="text" id="quoteCompany" placeholder="예: (주)한국FA / 2차전지 조립라인" required class="input-precision">
+        <div class="quote-summary-box mb-3">
+          <div class="qs-title"><i data-lucide="check-circle-2" class="text-safe"></i> 현재 계산된 추천 BOM 사양 자동 집계:</div>
+          <ul id="quoteActivePartsList" class="qs-list mt-1 font-mono">
+            <li>• 케이블: 대한전선 / LAPP 4심 0.3SQ 제어케이블 (편도 40m 기준)</li>
+            <li>• 회로보호기: LS ELECTRIC BKN-32C 4A 1P C-curve</li>
+            <li>• 전원공급기: MEAN WELL NDR-240-24 (24V 10A DIN)</li>
+          </ul>
+          <span class="qs-note">※ 수도권(구로/안양/시흥) 및 영남권 공식 1차 대리점에서 1시간 이내 최저가 비교 견적서를 발송합니다.</span>
+        </div>
+
+        <form id="quoteForm" onsubmit="event.preventDefault(); submitB2BQuoteLead();">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label for="quoteCompany">회사명 / 사업자명 *</label>
+              <input type="text" id="quoteCompany" placeholder="예: (주)에이원오토메이션" required class="input-precision font-mono">
+            </div>
+            <div class="form-field">
+              <label for="quoteRegion">납품 희망 지역 / 공장 위치 *</label>
+              <select id="quoteRegion" class="select-precision font-mono">
+                <option value="화성/평택" selected>경기 남부 (화성/평택/안성 반도체·배터리 팹)</option>
+                <option value="구로/인천/시흥">수도권 (구로유통상가/인천/시흥공단)</option>
+                <option value="천안/아산/청주">충청권 (천안/아산/청주 오창산단)</option>
+                <option value="울산/창원/부산">영남권 (울산 현대/창원 기계공단/부산)</option>
+                <option value="구미/대구/광주">기타 산단 (구미/대구/광주 빛그린산단)</option>
+              </select>
+            </div>
           </div>
+
           <div class="form-row-2 mt-2">
             <div class="form-field">
-              <label for="quoteName">담당자 성함/직함 *</label>
-              <input type="text" id="quoteName" placeholder="홍길동 수석" required class="input-precision">
+              <label for="quoteName">담당자 성함 / 부서 / 직함 *</label>
+              <input type="text" id="quoteName" placeholder="김철수 책임 / 전장설계팀" required class="input-precision font-mono">
             </div>
             <div class="form-field">
-              <label for="quoteEmail">업무용 이메일 *</label>
-              <input type="email" id="quoteEmail" placeholder="engineer@company.com" required class="input-precision">
+              <label for="quotePhone">연락처 (휴대전화/직통번호) *</label>
+              <input type="tel" id="quotePhone" placeholder="010-1234-5678" required class="input-precision font-mono">
             </div>
           </div>
-          <button type="button" id="submitQuoteBtn" class="btn-primary-action w-100 mt-3">
-            견적 요청서 발송 (무료)
+
+          <div class="form-row-2 mt-2">
+            <div class="form-field">
+              <label for="quoteEmail">견적 수신용 업무용 이메일 *</label>
+              <input type="email" id="quoteEmail" placeholder="engineer@company.com" required class="input-precision font-mono">
+            </div>
+            <div class="form-field">
+              <label for="quoteTimeline">발주 예정 시기</label>
+              <select id="quoteTimeline" class="select-precision font-mono">
+                <option value="urgent">1주일 이내 긴급 발주 (재고 즉시 출하 필요)</option>
+                <option value="normal" selected>1개월 이내 프로젝트 발주</option>
+                <option value="compare">설계 단계 단순 예산 단가 비교</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field mt-2">
+            <label for="quoteMemo">추가 요청 사항 (필요 수량, 드럼 단위, 릴 길이 등)</label>
+            <textarea id="quoteMemo" rows="2" placeholder="예: 케이블 100m 3롤, SMPS 2대 견적 요청합니다. 성적서/CAD 도면 요청 포함." class="input-precision font-mono"></textarea>
+          </div>
+
+          <button type="submit" id="submitQuoteBtn" class="btn-primary-action w-100 mt-3" style="padding: 0.85rem; font-size: 1rem;">
+            <i data-lucide="send"></i>
+            <span>공식 대리점 최저가 비교 견적서 신청 (무료)</span>
           </button>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Digital Product Asset Bundle Modal [PHASE 1 DIGITAL REVENUE] -->
+  <div id="digitalProductModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i data-lucide="package-check" class="text-highlight"></i>
+          <div>
+            <h4>전장설계 실무 엑셀(XLSX) 마스터 템플릿 &amp; CAD 핸드북 패키지</h4>
+            <span class="modal-subtitle font-mono">VoltCheck Professional Offline Engineering Master Bundle</span>
+          </div>
+        </div>
+        <button type="button" id="closeDigitalModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="digital-bundle-grid">
+          <div class="bundle-item-card">
+            <div class="b-badge">XLSX 템플릿</div>
+            <h5>VoltCheck_Master_V2.xlsx</h5>
+            <p>보안 사내 폐쇄망 및 오프라인 환경용 24V 전압강하, SMPS 부하율, 제어반 쿨링 자동 연산 엑셀 마스터 시트.</p>
+          </div>
+          <div class="bundle-item-card">
+            <div class="b-badge">PDF 핸드북</div>
+            <h5>FA 전장설계 표준 규정 실무 가이드 (50p)</h5>
+            <p>2026 KEC, NFPA 79, UL 508A 제어반 점검 체크리스트, 허용전류 감쇄표 및 현장 트러블슈팅 바이블.</p>
+          </div>
+          <div class="bundle-item-card">
+            <div class="b-badge">DWG / DXF</div>
+            <h5>전기 CAD 표준 회로 심볼 라이브러리</h5>
+            <p>AutoCAD / EPLAN 호환 SMPS, 회로보호기(CP), 릴레이, 밸브, 단자대 블록 심볼 150종 수록.</p>
+          </div>
+        </div>
+
+        <div class="pricing-cta-card mt-3">
+          <div class="pricing-left">
+            <span class="price-orig">정가 59,000원</span>
+            <div class="price-main">
+              <span class="price-num">29,000</span>
+              <span class="price-unit">원 (VAT 포함)</span>
+            </div>
+            <span class="price-sub">※ 법인카드 결제 및 세금계산서/지출증빙 영수증 즉시 발행</span>
+          </div>
+          <div class="pricing-right">
+            <form id="digitalOrderForm" onsubmit="event.preventDefault(); submitDigitalOrder();">
+              <input type="email" id="orderEmail" required placeholder="수신용 이메일 주소 (name@company.com)" class="input-precision font-mono mb-2">
+              <button type="submit" class="btn-primary-action w-100" style="padding: 0.75rem 1.25rem;">
+                <i data-lucide="download-cloud"></i>
+                <span>29,000원 즉시 다운로드 신청</span>
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>

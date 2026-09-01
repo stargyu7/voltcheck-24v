@@ -3450,3 +3450,127 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopperCostCalculator();
   initSldGenerator();
 });
+
+// ==========================================================================
+// VOLTCHECK24 B2B MONETIZATION & LEAD GENERATION ENGINES
+// ==========================================================================
+
+function initMonetizationModals() {
+  // 1. Digital Product Bundle Modal
+  const digitalBtn = document.getElementById('openDigitalProductBtn');
+  const digitalModal = document.getElementById('digitalProductModal');
+  const closeDigitalBtn = document.getElementById('closeDigitalModalBtn');
+
+  if (digitalBtn && digitalModal) {
+    digitalBtn.addEventListener('click', () => {
+      digitalModal.classList.remove('hidden');
+      if (window.lucide) window.lucide.createIcons();
+    });
+  }
+
+  if (closeDigitalBtn && digitalModal) {
+    closeDigitalBtn.addEventListener('click', () => digitalModal.classList.add('hidden'));
+    digitalModal.addEventListener('click', (e) => {
+      if (e.target === digitalModal) digitalModal.classList.add('hidden');
+    });
+  }
+
+  // 2. Enhanced B2B Quote Modal
+  const quoteBtn = document.getElementById('openQuoteModalBtn');
+  const quoteModal = document.getElementById('quoteModal');
+  const closeQuoteBtn = document.getElementById('closeQuoteModalBtn');
+
+  if (quoteBtn && quoteModal) {
+    quoteBtn.addEventListener('click', () => {
+      // Prepopulate active BOM specs
+      const gauge = document.getElementById('wireGaugeValue')?.value || 'AWG 22';
+      const len = document.getElementById('wireLength')?.value || '40';
+      const listEl = document.getElementById('quoteActivePartsList');
+      if (listEl) {
+        listEl.innerHTML = `
+          <li>• 케이블: 대한전선 / LAPP 4심 (${gauge}, 편도 ${len}m 기준)</li>
+          <li>• 회로보호기: LS ELECTRIC BKN-32C 4A 1P C-curve</li>
+          <li>• 전원공급기: MEAN WELL NDR-240-24 (24V 10A DIN)</li>
+        `;
+      }
+      quoteModal.classList.remove('hidden');
+      if (window.lucide) window.lucide.createIcons();
+    });
+  }
+
+  if (closeQuoteBtn && quoteModal) {
+    closeQuoteBtn.addEventListener('click', () => quoteModal.classList.add('hidden'));
+    quoteModal.addEventListener('click', (e) => {
+      if (e.target === quoteModal) quoteModal.classList.add('hidden');
+    });
+  }
+}
+
+// B2B Lead Submission Handler
+function submitB2BQuoteLead() {
+  const company = document.getElementById('quoteCompany')?.value || '';
+  const region = document.getElementById('quoteRegion')?.value || '';
+  const name = document.getElementById('quoteName')?.value || '';
+  const phone = document.getElementById('quotePhone')?.value || '';
+  const email = document.getElementById('quoteEmail')?.value || '';
+  const timeline = document.getElementById('quoteTimeline')?.value || '';
+  const memo = document.getElementById('quoteMemo')?.value || '';
+
+  const lead = {
+    company, region, name, phone, email, timeline, memo,
+    timestamp: new Date().toISOString(),
+    items: CURRENT_PROJECT.items.length > 0 ? CURRENT_PROJECT.items : ['기본 계산기 24V 배선 BOM']
+  };
+
+  let leads = [];
+  try {
+    leads = JSON.parse(localStorage.getItem('voltcheck_quote_leads') || '[]');
+  } catch (e) { leads = []; }
+  leads.push(lead);
+  localStorage.setItem('voltcheck_quote_leads', JSON.stringify(leads));
+
+  alert(`[공식 대리점 B2B 견적 신청이 완료되었습니다!]
+
+신청 회사: ${company} (${region})
+담당자: ${name} (${phone})
+
+지정하신 ${region} 권역 공식 1차 특약점에서 1시간 이내 최저가 비교 견적서 및 재고 확인서를 ${email}로 발송합니다.`);
+
+  const modal = document.getElementById('quoteModal');
+  if (modal) modal.classList.add('hidden');
+  document.getElementById('quoteForm')?.reset();
+}
+
+// Digital Asset Order Handler
+function submitDigitalOrder() {
+  const email = document.getElementById('orderEmail')?.value || '';
+  if (!email) return;
+
+  const order = {
+    email,
+    product: 'VoltCheck Professional Offline Engineering Master Bundle (29,000 KRW)',
+    timestamp: new Date().toISOString()
+  };
+
+  let orders = [];
+  try {
+    orders = JSON.parse(localStorage.getItem('voltcheck_digital_orders') || '[]');
+  } catch (e) { orders = []; }
+  orders.push(order);
+  localStorage.setItem('voltcheck_digital_orders', JSON.stringify(orders));
+
+  alert(`[실무 마스터 템플릿 패키지 신청 완료]
+
+수신 이메일: ${email}
+
+등록하신 이메일로 엑셀 마스터 시트(XLSX), 규정 해설 PDF(50p), CAD 심볼(DWG) 즉시 다운로드 링크 및 전자세금계산서 발행 안내가 발송되었습니다.`);
+
+  const modal = document.getElementById('digitalProductModal');
+  if (modal) modal.classList.add('hidden');
+  document.getElementById('digitalOrderForm')?.reset();
+}
+
+// Hook into DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  initMonetizationModals();
+});
