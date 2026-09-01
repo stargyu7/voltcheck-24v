@@ -2432,6 +2432,42 @@ const TAB_I18N_DATA = {
       c1: '설치 위치 및 계통 전압/접지 방식',
       c2: '추천 SPD 사양 및 전압보호레벨(Up)'
     },
+        'tab-rolltension': {
+      title: '2차전지 / 필름 롤투롤(Roll-to-Roll) 권취 장력(Tension) & 서보모터 토크(N·m) 계산기',
+      desc: '배터리 전극 및 필름 권취 시 권경(지관→완제품) 변화에 따른 테이퍼 장력(Tension Taper)과 서보모터 필요 토크 및 회전수(RPM)를 산출합니다.',
+      c1: '롤 규격 및 라인 속도 파라미터',
+      c2: '필요 서보 모터 토크 & 테이퍼 장력 판정'
+    },
+    'tab-vfdsurge': {
+      title: 'NEMA MG 1 Part 31 인버터(VFD) 케이블 dV/dt 반사파 서지 전압 & 리액터/필터 선정기',
+      desc: '인버터와 모터 간 장거리 케이블 포설 시 발생하는 반사파 서지 피크 전압(V_peak)과 모터 권선 절연 파괴 방지용 AC 리액터 및 dV/dt 필터를 판정합니다.',
+      c1: '인버터 전압 및 모터 케이블 조건',
+      c2: '모터 단자 피크 서지 전압 & 권장 필터'
+    },
+    'tab-explosionproof': {
+      title: 'IEC 60079 / KOSHA 방폭(Ex) 위험 구역 기기 등급 & 본질안전(IS) 배리어 정합성 검증기',
+      desc: '화학 플랜트 및 배터리 전해액 룸의 방폭 구역(Zone 0/1/2)과 가스 그룹(IIC/IIB/IIA), 온도 등급(T1~T6) 및 제너 배리어(Zener Barrier) Entity 파라미터를 검증합니다.',
+      c1: '방폭 구역 분류 및 배리어 사양',
+      c2: '본질안전(IS) 적합성 & 케이블 한계치 판정'
+    },
+    'tab-cabletray': {
+      title: 'NEMA VE-2 / IEC 61537 케이블 트레이 적재 중량(kg/m) & 지지대 스팬(Span) 처짐량 계산기',
+      desc: '포설할 다중 케이블의 총 중량(kg/m)과 트레이 규격에 따른 지지대 브라켓 간격(Span) 및 구조 처짐량(Deflection ≤ L/200)을 산출합니다.',
+      c1: '트레이 규격 및 케이블 적재 수량',
+      c2: '총 적재 하중 & 구조 처짐량 판정'
+    },
+    'tab-luxlighting': {
+      title: 'KS A 3011 / ISO 8995 제어반 내부 & 클린룸 LED 요구 조도(Lux) 및 등기구 수량(N) 계산기',
+      desc: '제어반 및 클린룸 작업 공간의 면적(m²), 작업 표준 조도(Lux), 등기구 광속(lm) 및 조명률에 따른 최적의 LED 조명 등기구 개수와 소비전력을 산출합니다.',
+      c1: '공간 규격 및 요구 조도 표준',
+      c2: '필요 LED 조명 수량 & 총 소비전력'
+    },
+    'tab-solarpv': {
+      title: 'IEC 62548 태양광(PV) / 산업용 ESS DC 1500V 스트링 전압강하 & gPV 직류 퓨즈 선정기',
+      desc: '공장 지붕 태양광 및 ESS 배터리 컨테이너의 최저 외기온도(-20°C) 시 최대 개방전압(Voc_max ≤ 1500V)과 직류 gPV 퓨즈 정격을 산출합니다.',
+      c1: '태양광 모듈 스트링 및 케이블 파라미터',
+      c2: '최대 DC 전압 & 추천 gPV 퓨즈 정격'
+    },
     'tab-hoistcrane': {
       title: '갠트리/크레인 호이스트 권상 모터 출력(kW) & 와이어로프 안전율 계산기',
       desc: '정격 인양 하중(Ton), 권상 속도(m/min), 기계 효율에 따른 모터 필요 출력(kW)과 와이어로프 안전율을 산출합니다.',
@@ -2443,6 +2479,42 @@ const TAB_I18N_DATA = {
       desc: 'Calculate maximum continuous operating voltage (Uc), discharge rating (In/Iimp), and Up levels based on earthing systems (TN/TT/IT).',
       c1: 'Installation Point & Grid Specs',
       c2: 'Recommended SPD Ratings & Up Level'
+    },
+        'tab-rolltension': {
+      title: 'Roll-to-Roll Winder Tension & Servo Motor Torque (N·m) Sizer',
+      desc: 'Calculate linear taper tension profile, required servo motor torque, and winder RPM as roll diameter increases from core to full package.',
+      c1: 'Roll Dimensions & Line Speed',
+      c2: 'Required Servo Torque & Taper Verdict'
+    },
+    'tab-vfdsurge': {
+      title: 'NEMA MG 1 Part 31 VFD Reflected Wave Peak Surge & AC Reactor Sizer',
+      desc: 'Calculate motor terminal peak reflected surge voltage (V_peak) over long cable distances and size AC load reactors or dV/dt filters.',
+      c1: 'VFD Inverter & Cable Specs',
+      c2: 'Peak Surge Voltage & Filter Verdict'
+    },
+    'tab-explosionproof': {
+      title: 'IEC 60079 Explosion Proof (Ex) Zone & Intrinsic Safety (IS) Barrier Sizer',
+      desc: 'Verify hazardous area classifications (Zone 0/1/2), gas groups (IIC/IIB/IIA), temperature codes (T1-T6), and Zener barrier entity parameters.',
+      c1: 'Hazardous Area & Barrier Inputs',
+      c2: 'Intrinsic Safety & Cable Limits'
+    },
+    'tab-cabletray': {
+      title: 'NEMA VE-2 / IEC 61537 Cable Tray Loading & Support Span Deflection Sizer',
+      desc: 'Calculate multi-cable bundle load weight (kg/m), recommended hanger support spans, and structural deflection compliance (<= L/200).',
+      c1: 'Tray Dimensions & Cable Quantities',
+      c2: 'Total Tray Load & Deflection Verdict'
+    },
+    'tab-luxlighting': {
+      title: 'KS A 3011 / ISO 8995 Enclosure & Cleanroom LED Illumination (Lux) Sizer',
+      desc: 'Determine required LED lighting fixture count (N) and electrical wattage based on room area (m2), target lux, and fixture lumens.',
+      c1: 'Space Dimensions & Target Lux',
+      c2: 'Required Fixture Count & Power'
+    },
+    'tab-solarpv': {
+      title: 'IEC 62548 Solar PV / ESS DC 1500V String & gPV Fuse Sizer',
+      desc: 'Calculate maximum open-circuit voltage at sub-zero cold conditions (Voc_max <= 1500V) and size DC gPV string fuses and disconnects.',
+      c1: 'Solar String & Cable Parameters',
+      c2: 'Max DC Voltage & gPV Fuse Rating'
     },
     'tab-hoistcrane': {
       title: 'Gantry / Crane Hoist Motor Power (kW) & Wire Rope Safety Factor Sizer',
@@ -5273,6 +5345,12 @@ document.addEventListener('DOMContentLoaded', () => {
   calculateCleanESD();
   calculateSPD();
   calculateCraneHoist();
+  calculateRollTension();
+  calculateVfdSurge();
+  calculateExplosionProof();
+  calculateCableTray();
+  calculateLuxLighting();
+  calculateSolarPV();
 
 });
 
@@ -5556,7 +5634,25 @@ function selectDrawerTool(tabId) {
 
   // Update mobile bottom nav highlights
   document.querySelectorAll('.mb-nav-item').forEach(el => el.classList.remove('active'));
-  if (tabId === 'tab-voltagedrop') {
+  if (tabId === 'tab-rolltension') {
+    const t = document.getElementById('resRtMotorTorque')?.textContent || '0 N·m';
+    text = `[VoltCheck 롤투롤 와인더 장력 및 서보 토크 검토 결과]\n- 서보 필요 토크: ${t}\n- 적용 표준: KS B 6700\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-vfdsurge') {
+    const vp = document.getElementById('resVfdPeakVolt')?.textContent || '0 V';
+    text = `[VoltCheck VFD 반사파 서지 및 리액터 검토 결과]\n- 모터 단자 피크 전압: ${vp}\n- 적용 표준: NEMA MG 1 Part 31\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-explosionproof') {
+    const ex = document.getElementById('resExProtection')?.textContent || 'Ex d';
+    text = `[VoltCheck IEC 60079 방폭 적합성 검토 결과]\n- 방폭 구조 등급: ${ex}\n- 적용 표준: IEC 60079 / KOSHA\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-cabletray') {
+    const w = document.getElementById('resCtTotalWeight')?.textContent || '0 kg/m';
+    text = `[VoltCheck 케이블 트레이 적재 하중 검토 결과]\n- 총 적재 중량: ${w}\n- 적용 표준: NEMA VE-2 / IEC 61537\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-luxlighting') {
+    const n = document.getElementById('resLuxFixtureCount')?.textContent || '0 등';
+    text = `[VoltCheck 조도(Lux) 및 LED 조명 수량 검토 결과]\n- 필요 등기구 수량: ${n}\n- 적용 표준: KS A 3011 / ISO 8995\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-solarpv') {
+    const voc = document.getElementById('resPvVocMax')?.textContent || '0 V';
+    text = `[VoltCheck 태양광/ESS DC 1500V 스트링 검토 결과]\n- 최대 개방 전압: ${voc}\n- 적용 표준: IEC 62548\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-voltagedrop') {
     document.getElementById('mbNavVolt')?.classList.add('active');
   } else if (tabId === 'tab-smpsbudget') {
     document.getElementById('mbNavSmps')?.classList.add('active');
@@ -6434,3 +6530,202 @@ function selectTierAndBuy(price, tierName) {
   }
 }
 window.selectTierAndBuy = selectTierAndBuy;
+
+
+// ==========================================================================
+// TAB 33: ROLL-TO-ROLL WINDER TENSION & SERVO TORQUE ENGINE
+// ==========================================================================
+
+function calculateRollTension() {
+  const dCore = parseFloat(document.getElementById('rtCoreDia')?.value) || 100;
+  const dMax = parseFloat(document.getElementById('rtMaxDia')?.value) || 600;
+  const tBase = parseFloat(document.getElementById('rtBaseTension')?.value) || 120;
+  const taperPct = parseFloat(document.getElementById('rtTaperPct')?.value) || 35;
+  const lineSpeed = parseFloat(document.getElementById('rtLineSpeed')?.value) || 80;
+  const gearRatio = parseFloat(document.getElementById('rtGearRatio')?.value) || 5;
+
+  // Final tension at D_max T_end = T_base * [1 - (taper/100)*(1 - dCore/dMax)]
+  const tEnd = tBase * (1.0 - (taperPct / 100.0) * (1.0 - (dCore / dMax)));
+
+  // Max torque at D_max M = (T_end * (D_max/2000)) / (gearRatio * 0.95)
+  const rMax_m = (dMax / 2.0) / 1000.0;
+  const torque_nm = (tEnd * rMax_m) / (gearRatio * 0.95);
+
+  // Max RPM at core diameter N = (V / (pi * dCore)) * gearRatio
+  const rpmCore = (lineSpeed / (Math.PI * (dCore / 1000.0))) * gearRatio;
+
+  // Update UI
+  const elTorque = document.getElementById('resRtMotorTorque');
+  if (elTorque) elTorque.textContent = `${torque_nm.toFixed(2)} N·m`;
+  const elSub = document.getElementById('resRtTaperEndText');
+  if (elSub) elSub.textContent = `최대 권경 장력: ${tEnd.toFixed(1)} N (${taperPct}% 감쇠) • 최대 회전수: ${Math.round(rpmCore)} RPM`;
+  const elGaugeText = document.getElementById('gaugeRtText');
+  if (elGaugeText) elGaugeText.textContent = `${tEnd.toFixed(1)} N (주름 방지 최적)`;
+}
+
+// ==========================================================================
+// TAB 34: VFD REFLECTED WAVE PEAK SURGE & REACTOR SIZER ENGINE
+// ==========================================================================
+
+function calculateVfdSurge() {
+  const vin = parseFloat(document.getElementById('vfdGridVolt')?.value) || 380;
+  const len = parseFloat(document.getElementById('vfdCableLen')?.value) || 120;
+  const mType = document.getElementById('vfdMotorType')?.value || 'inverter_duty';
+  const carrier = parseFloat(document.getElementById('vfdCarrierFreq')?.value) || 4;
+
+  const vdc = vin * Math.sqrt(2);
+  let vpeak = vdc * 1.9; // Reflected wave spike
+  if (len < 30) vpeak = vdc * 1.3;
+  else if (len < 70) vpeak = vdc * 1.6;
+
+  const maxAllowed = mType === 'inverter_duty' ? 1600 : 1000;
+  const isSafe = vpeak <= maxAllowed;
+
+  let recText = '케이블 길이 30m 이내로 리액터 없이 직결 안전';
+  if (len >= 300) recText = '추천 대책: 사인파 필터 (Sine Wave Filter) 필수 설치';
+  else if (len >= 100) recText = '추천 대책: dV/dt 필터 장착 (전압 상승률 ≤ 500V/µs 억제)';
+  else if (len >= 30) recText = '추천 대책: 3% ~ 5% 부하 AC 리액터 (Load Reactor) 설치';
+
+  const elPeak = document.getElementById('resVfdPeakVolt');
+  if (elPeak) elPeak.textContent = `${Math.round(vpeak).toLocaleString('ko-KR')} V`;
+  const elRec = document.getElementById('resVfdFilterRec');
+  if (elRec) elRec.textContent = recText;
+
+  const elBadge = document.getElementById('vfdVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isSafe ? (len < 30 ? 'SURGE SAFE' : 'FILTER RECOMMENDED') : 'INSULATION HAZARD';
+    elBadge.className = isSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+
+  const elGaugeText = document.getElementById('gaugeVfdText');
+  if (elGaugeText) elGaugeText.textContent = `${Math.round(vpeak)}V / ${maxAllowed}V 한계 (${isSafe ? '안전' : '절연파괴 위험'})`;
+  const elMarker = document.getElementById('gaugeVfdMarker');
+  if (elMarker) {
+    const pct = Math.min(100, Math.max(0, (vpeak / 1800) * 100));
+    elMarker.style.left = `${pct}%`;
+  }
+}
+
+// ==========================================================================
+// TAB 35: IEC 60079 EXPLOSION PROOF & INTRINSIC SAFETY SIZER
+// ==========================================================================
+
+function calculateExplosionProof() {
+  const zone = document.getElementById('exZoneType')?.value || 'zone1';
+  const gas = document.getElementById('exGasGroup')?.value || 'iic';
+  const tClass = document.getElementById('exTempClass')?.value || 't4';
+  const len = parseFloat(document.getElementById('exCableLength')?.value) || 80;
+
+  // Max cable capacitance standard 1nF/m
+  const cCable_nF = len * 0.12; // 120 pF/m
+  const maxCo_nF = gas === 'iic' ? 83 : 650; // IIC limit
+  const isCapSafe = cCable_nF < maxCo_nF;
+
+  const code = `Ex ${zone === 'zone0' ? 'ia' : (zone === 'zone1' ? 'd / ia' : 'ec')} ${gas.toUpperCase()} ${tClass.toUpperCase()}`;
+
+  const elProt = document.getElementById('resExProtection');
+  if (elProt) elProt.textContent = code;
+  const elCap = document.getElementById('resExCableCap');
+  if (elCap) elCap.textContent = `케이블 정전용량 Ccable = ${cCable_nF.toFixed(1)} nF (배리어 허용한계 ${maxCo_nF} nF 대비 마진 여유)`;
+
+  const elBadge = document.getElementById('exVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isCapSafe ? 'IEC 60079 COMPLIANT' : 'CAPACITANCE HAZARD';
+    elBadge.className = isCapSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+}
+
+// ==========================================================================
+// TAB 36: CABLE TRAY LOADING & SPAN DEFLECTION SIZER
+// ==========================================================================
+
+function calculateCableTray() {
+  const width = parseFloat(document.getElementById('ctTrayWidth')?.value) || 450;
+  const span = parseFloat(document.getElementById('ctSupportSpan')?.value) || 2.0;
+  const nPower = parseInt(document.getElementById('ctPowerCablesCount')?.value) || 12;
+  const nControl = parseInt(document.getElementById('ctControlCablesCount')?.value) || 30;
+
+  // Power cable avg 1.4 kg/m, Control cable avg 0.25 kg/m, Tray self weight 6 kg/m
+  const wTotal = (nPower * 1.4) + (nControl * 0.25) + 6.0;
+
+  // Deflection delta = (5 * w * L^4) / (384 * E * I) ~= approx 0.2 mm / (kg/m) at 2m
+  const deflection_mm = (wTotal * Math.pow(span, 4) * 0.007);
+  const maxDeflection_mm = (span * 1000.0) / 200.0;
+  const isSafe = deflection_mm <= maxDeflection_mm;
+
+  const elWeight = document.getElementById('resCtTotalWeight');
+  if (elWeight) elWeight.textContent = `${wTotal.toFixed(1)} kg/m`;
+  const elDef = document.getElementById('resCtDeflectionText');
+  if (elDef) elDef.textContent = `예상 처짐량: ${deflection_mm.toFixed(1)} mm (NEMA 허용한도 ${maxDeflection_mm.toFixed(1)} mm 이내 ${isSafe ? '안정' : '초과위험'})`;
+
+  const elBadge = document.getElementById('ctVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isSafe ? 'NEMA DEFLECTION OK' : 'SPAN OVERLOAD';
+    elBadge.className = isSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+}
+
+// ==========================================================================
+// TAB 37: LUX LIGHTING & FIXTURE COUNT ENGINE
+// ==========================================================================
+
+function calculateLuxLighting() {
+  const targetLux = parseFloat(document.getElementById('luxTargetType')?.value) || 500;
+  const area = parseFloat(document.getElementById('luxRoomArea')?.value) || 12.0;
+  const fixtureLm = parseFloat(document.getElementById('luxFixtureLumens')?.value) || 2200;
+  const fixtureW = parseFloat(document.getElementById('luxFixtureWatts')?.value) || 20;
+
+  // N = (E * A) / (F * U * M), U = 0.55, M = 0.75
+  const u = 0.55;
+  const m = 0.75;
+  const reqN = (targetLux * area) / (fixtureLm * u * m);
+  const finalN = Math.max(1, Math.ceil(reqN));
+  const totalW = finalN * fixtureW;
+  const actualLux = (finalN * fixtureLm * u * m) / area;
+
+  const elCount = document.getElementById('resLuxFixtureCount');
+  if (elCount) elCount.textContent = `${finalN} 등`;
+  const elPower = document.getElementById('resLuxPowerText');
+  if (elPower) elPower.textContent = `총 조명 소비전력: ${totalW} W • 평균 설계 조도: ${Math.round(actualLux)} Lux 만족`;
+}
+
+// ==========================================================================
+// TAB 38: SOLAR PV / ESS DC 1500V STRINGS & FUSE SIZER
+// ==========================================================================
+
+function calculateSolarPV() {
+  const nMod = parseInt(document.getElementById('pvSeriesCount')?.value) || 28;
+  const voc = parseFloat(document.getElementById('pvVocStc')?.value) || 45.5;
+  const isc = parseFloat(document.getElementById('pvIscStc')?.value) || 13.8;
+  const len = parseFloat(document.getElementById('pvCableLength')?.value) || 60;
+
+  // Voc max at -20°C beta = -0.28%/°C
+  const deltaT = 25 - (-20); // 45°C drop
+  const vocMax = nMod * voc * (1.0 + (0.0028 * deltaT));
+  const isVoltSafe = vocMax <= 1500;
+
+  // DC Fuse = 1.56 * Isc
+  const minFuseA = isc * 1.56;
+  let recFuseA = 25;
+  if (minFuseA <= 15) recFuseA = 15;
+  else if (minFuseA <= 20) recFuseA = 20;
+  else if (minFuseA <= 25) recFuseA = 25;
+  else if (minFuseA <= 32) recFuseA = 32;
+  else recFuseA = 40;
+
+  // Cable drop ratio deltaV = (2 * L * I * 0.01786 / 4.0) / (nMod * 38)
+  const dropV = (2.0 * len * isc * 0.01786) / 4.0;
+  const vmpTotal = nMod * (voc * 0.82);
+  const dropRatio = (dropV / vmpTotal) * 100.0;
+
+  const elVoc = document.getElementById('resPvVocMax');
+  if (elVoc) elVoc.textContent = `${Math.round(vocMax).toLocaleString('ko-KR')} V`;
+  const elFuse = document.getElementById('resPvFuseText');
+  if (elFuse) elFuse.textContent = `추천 직류 퓨즈: ${recFuseA}A gPV (1500V DC 정격) • 전압강하율 ${dropRatio.toFixed(2)}% 안전`;
+
+  const elBadge = document.getElementById('pvVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isVoltSafe ? 'DC 1500V SAFE' : 'OVERVOLTAGE HAZARD';
+    elBadge.className = isVoltSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+}

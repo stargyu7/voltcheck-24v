@@ -1,7 +1,7 @@
 {
-  "name": "볼트체크 24V (VoltCheck Pro) - 토털 엔지니어링",
+  "name": "볼트체크 24V (VoltCheck Pro) - 38대 토털 엔지니어링",
   "short_name": "VoltCheck",
-  "description": "공장 자동화 및 전장설계 30대 공학 계산 도구 및 표준 가이드",
+  "description": "공장 자동화, 2차전지/반도체 팹, 신재생 및 전장설계 38대 공학 계산 도구 및 표준 가이드",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f172a",

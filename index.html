@@ -173,17 +173,17 @@
     <div class="nav-menu-bar">
       <!-- Centered Global Tool Search & Category Filter Ribbon -->
       <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0.75rem; max-width:1600px; margin:0 auto; padding:0.25rem 0.75rem;">
-        <div class="quick-search-wrapper" style="max-width:440px;">
+        <div class="quick-search-wrapper" style="max-width:460px;">
           <i data-lucide="search" class="quick-search-icon"></i>
-          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="32대 공학 도구 검색 (예: 24V, 밸브, SPD, 부스바, 모터, AGV...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
+          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="38대 공학 도구 검색 (예: 24V, 롤투롤, VFD서지, 방폭, 트레이, 조도, 태양광...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 32종 (All)</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기·SPD</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·로봇·호이스트</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·통신·계측</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 밸브·클린룸·규격</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 38종 (All)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·변압기·SPD·PV</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·롤투롤·VFD</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 신호·통신·방폭(Ex)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 트레이·조도·클린룸</button>
         </div>
       </div>
 
@@ -316,6 +316,30 @@
           <button class="tab-btn" data-tab="tab-hoistcrane" data-category="motion" role="tab">
             <i data-lucide="anchor"></i>
             <span>크레인·호이스트</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-rolltension" data-category="motion" role="tab">
+            <i data-lucide="disc"></i>
+            <span>롤투롤·장력제어</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-vfdsurge" data-category="motion" role="tab">
+            <i data-lucide="activity"></i>
+            <span>VFD 반사파·리액터</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-explosionproof" data-category="signal" role="tab">
+            <i data-lucide="flame"></i>
+            <span>방폭(Ex)·본질안전</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-cabletray" data-category="specs" role="tab">
+            <i data-lucide="grid"></i>
+            <span>트레이 하중·스팬</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-luxlighting" data-category="specs" role="tab">
+            <i data-lucide="sun"></i>
+            <span>조도(Lux)·LED수량</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-solarpv" data-category="power" role="tab">
+            <i data-lucide="zap"></i>
+            <span>태양광·ESS DC1500V</span>
           </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -4483,6 +4507,588 @@
       </div>
     </section>
 
+
+    <!-- ========================================================================= -->
+    <!-- TAB 33: 롤투롤(Roll-to-Roll) 와인더 장력(Tension) & 서보 토크 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-rolltension" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">2차전지 / 필름 롤투롤(Roll-to-Roll) 권취 장력(Tension) &amp; 서보모터 토크(N·m) 계산기</h2>
+          <p class="main-desc">배터리 전극 및 필름 권취 시 권경(지관→완제품) 변화에 따른 테이퍼 장력(Tension Taper)과 서보모터 필요 토크 및 회전수(RPM)를 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>롤 규격 및 라인 속도 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="rtCoreDia">초기 지관 외경 (D_core)</label>
+                <div class="val-input-group">
+                  <input type="number" id="rtCoreDia" value="100" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="rtMaxDia">최대 권취 외경 (D_max)</label>
+                <div class="val-input-group">
+                  <input type="number" id="rtMaxDia" value="600" step="50" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="rtBaseTension">초기 권취 장력 (T_base)</label>
+                <div class="val-input-group">
+                  <input type="number" id="rtBaseTension" value="120" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">N</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="rtTaperPct">테이퍼 감쇠율 (Taper Ratio)</label>
+                <div class="val-input-group">
+                  <input type="number" id="rtTaperPct" value="35" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="rtLineSpeed">생산 라인 속도 (Line Speed)</label>
+                <div class="val-input-group">
+                  <input type="number" id="rtLineSpeed" value="80" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m/min</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="rtGearRatio">감속기 감속비 (Gear Ratio i)</label>
+                <div class="val-input-group">
+                  <input type="number" id="rtGearRatio" value="5" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">: 1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>필요 서보 모터 토크 &amp; 테이퍼 장력 판정</h3>
+            </div>
+            <span id="rtVerdictBadge" class="badge-pill badge-safe">TAPER PROFILE OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">REQUIRED SERVO CONTINUOUS TORQUE (N·m)</span>
+            <div class="terminal-voltage-big font-mono" id="resRtMotorTorque">4.68 N·m</div>
+            <div class="tv-sub" id="resRtTaperEndText">최대 권경 장력: 78.0 N (35% 감쇠) • 최대 회전수: 1,273 RPM</div>
+          </div>
+
+          <!-- Dynamic Visual Gauge -->
+          <div class="visual-gauge-container">
+            <div class="visual-gauge-header">
+              <span>장력 테이퍼 곡선 안정도</span>
+              <strong class="font-mono text-safe" id="gaugeRtText">78.0 N (주름 방지)</strong>
+            </div>
+            <div class="visual-gauge-track">
+              <div class="gauge-zone zone-safe" style="width:70%;"></div>
+              <div class="gauge-zone zone-warn" style="width:30%;"></div>
+              <div class="visual-gauge-marker" id="gaugeRtMarker" style="left:65%;"></div>
+            </div>
+            <div class="visual-gauge-legend">
+              <span>120 N (코어 지관)</span>
+              <span>78 N (외경 600mm)</span>
+            </div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="disc"></i>
+            <div>
+              <strong>배터리 전극 권취 팁:</strong> 권취 직경이 커질 때 테이퍼(30~50%)를 주지 않으면 권취 내부 압력 과다로 지관 변형 및 주름이 발생합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-rolltension')">
+              <i data-lucide="copy"></i> <span>롤투롤 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 34: 인버터(VFD) dV/dt 반사파 서지 & AC 리액터 선정기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-vfdsurge" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">NEMA MG 1 Part 31 인버터(VFD) 케이블 dV/dt 반사파 서지 전압 &amp; 리액터/필터 선정기</h2>
+          <p class="main-desc">인버터와 모터 간 장거리 케이블 포설 시 발생하는 반사파 서지 피크 전압(V_peak)과 모터 권선 절연 파괴 방지용 AC 리액터 및 dV/dt 필터를 판정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>인버터 전압 및 모터 케이블 조건</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="vfdGridVolt">인버터 입력 선간 전압 (Vin)</label>
+                <select id="vfdGridVolt" class="select-precision font-mono">
+                  <option value="380" selected>380 V (3상 한국/유럽)</option>
+                  <option value="440">440 V (3상 플랜트)</option>
+                  <option value="480">480 V (3상 미국 NFPA)</option>
+                  <option value="220">220 V (3상 저압)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="vfdCableLen">모터 케이블 포설 거리 (L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="vfdCableLen" value="120" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="vfdMotorType">모터 절연 등급 (Motor Class)</label>
+                <select id="vfdMotorType" class="select-precision font-mono">
+                  <option value="inverter_duty" selected>Inverter Duty (NEMA Part 31 / 1600V 내압)</option>
+                  <option value="general_purpose">일반 범용 모터 (General / 1000V 내압)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="vfdCarrierFreq">인버터 캐리어 주파수</label>
+                <select id="vfdCarrierFreq" class="select-precision font-mono">
+                  <option value="4" selected>4 kHz (표준 권장)</option>
+                  <option value="8">8 kHz (저소음)</option>
+                  <option value="16">16 kHz (초저소음 / 서지 위험↑)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>모터 단자 피크 서지 전압 &amp; 권장 필터</h3>
+            </div>
+            <span id="vfdVerdictBadge" class="badge-pill badge-warn">FILTER REQUIRED</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">MOTOR TERMINAL PEAK VOLTAGE (V_peak)</span>
+            <div class="terminal-voltage-big font-mono" id="resVfdPeakVolt">1,020 V</div>
+            <div class="tv-sub" id="resVfdFilterRec">추천 대책: 3% ~ 5% 부하 AC 리액터 (Load Reactor) 또는 dV/dt 필터 설치</div>
+          </div>
+
+          <!-- Dynamic Visual Gauge -->
+          <div class="visual-gauge-container">
+            <div class="visual-gauge-header">
+              <span>권선 절연 내압 위험도 게이지</span>
+              <strong class="font-mono text-safe" id="gaugeVfdText">1,020V / 1,600V 한계</strong>
+            </div>
+            <div class="visual-gauge-track">
+              <div class="gauge-zone zone-safe" style="width:50%;"></div>
+              <div class="gauge-zone zone-warn" style="width:30%;"></div>
+              <div class="gauge-zone zone-danger" style="width:20%;"></div>
+              <div class="visual-gauge-marker" id="gaugeVfdMarker" style="left:63.7%;"></div>
+            </div>
+            <div class="visual-gauge-legend">
+              <span>537V (DC Bus)</span>
+              <span>1,000V (일반모터 한계)</span>
+              <span>1,600V (Part 31 한계)</span>
+            </div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="activity"></i>
+            <div>
+              <strong>모터 절연 보호 수칙:</strong> 케이블이 50m를 초과하면 dV/dt 필터나 3% AC 리액터를 인버터 출력단에 장착해야 모터 권선 소손을 영구 차단합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-vfdsurge')">
+              <i data-lucide="copy"></i> <span>VFD 서지 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 35: IEC 60079 방폭(Ex) 위험 구역 & 본질안전(IS) 배리어 검증기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-explosionproof" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">IEC 60079 / KOSHA 방폭(Ex) 위험 구역 기기 등급 &amp; 본질안전(IS) 배리어 정합성 검증기</h2>
+          <p class="main-desc">화학 플랜트 및 배터리 전해액 룸의 방폭 구역(Zone 0/1/2)과 가스 그룹(IIC/IIB/IIA), 온도 등급(T1~T6) 및 제너 배리어(Zener Barrier) Entity 파라미터를 검증합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>방폭 구역 분류 및 배리어 사양</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="exZoneType">방폭 위험 장소 (Zone)</label>
+                <select id="exZoneType" class="select-precision font-mono">
+                  <option value="zone1" selected>Zone 1 (가스 상용 위험 장소 / Ex d, Ex ia, Ex ib)</option>
+                  <option value="zone0">Zone 0 (가스 연속 폭발 위험 / Ex ia 전용)</option>
+                  <option value="zone2">Zone 2 (가스 비정상 상태 위험 / Ex n, Ex ec)</option>
+                  <option value="zone21">Zone 21 (가연성 분진 위험 장소)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="exGasGroup">폭발 가스 그룹 (Gas Group)</label>
+                <select id="exGasGroup" class="select-precision font-mono">
+                  <option value="iic" selected>IIC (수소, 아세틸렌 - 최고 위험 등급)</option>
+                  <option value="iib">IIB (에틸렌, 도시가스)</option>
+                  <option value="iia">IIA (프로판, 메탄, 휘발유)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="exTempClass">최고 표면 온도 등급 (T Class)</label>
+                <select id="exTempClass" class="select-precision font-mono">
+                  <option value="t4" selected>T4 (최고 표면온도 &le; 135°C / 실무 최다)</option>
+                  <option value="t6">T6 (최고 표면온도 &le; 85°C / 초정밀 안전)</option>
+                  <option value="t3">T3 (최고 표면온도 &le; 200°C)</option>
+                  <option value="t1">T1 (최고 표면온도 &le; 450°C)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="exCableLength">방폭 구역 케이블 길이 (L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="exCableLength" value="80" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>본질안전(IS) 적합성 &amp; 케이블 한계치 판정</h3>
+            </div>
+            <span id="exVerdictBadge" class="badge-pill badge-safe">IEC 60079 COMPLIANT</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">RECOMMENDED EX PROTECTION TYPE</span>
+            <div class="terminal-voltage-big font-mono" id="resExProtection">Ex ia IIC T4 Ga/Gb</div>
+            <div class="tv-sub" id="resExCableCap">최대 허용 케이블 정전용량 Ccable &le; 83 nF (80m 마진 91.7% 안전)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="flame"></i>
+            <div>
+              <strong>KOSHA 방폭 인증 팁:</strong> 본질안전 방폭 계통은 배리어의 허용 정전용량(Co)과 인덕턴스(Lo)가 현장 센서(Ci, Li) 및 선로 케이블 합산치보다 반드시 커야 합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-explosionproof')">
+              <i data-lucide="copy"></i> <span>방폭 검증 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 36: NEMA VE-2 케이블 트레이 적재 중량 & 스팬 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-cabletray" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">NEMA VE-2 / IEC 61537 케이블 트레이 적재 중량(kg/m) &amp; 지지대 스팬(Span) 처짐량 계산기</h2>
+          <p class="main-desc">포설할 다중 케이블의 총 중량(kg/m)과 트레이 규격에 따른 지지대 브라켓 간격(Span) 및 구조 처짐량(Deflection ≤ L/200)을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>트레이 규격 및 케이블 적재 수량</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="ctTrayWidth">트레이 폭 (Tray Width W)</label>
+                <select id="ctTrayWidth" class="select-precision font-mono">
+                  <option value="300">300 mm (사다리형/바닥밀폐형)</option>
+                  <option value="450" selected>450 mm (표준 플랜트형)</option>
+                  <option value="600">600 mm (대형 간선형)</option>
+                  <option value="900">900 mm (초대형 집합형)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="ctSupportSpan">지지대 설치 간격 (Support Span L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="ctSupportSpan" value="2.0" step="0.5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="ctPowerCablesCount">동력 케이블 (굵은선) 가닥수</label>
+                <div class="val-input-group">
+                  <input type="number" id="ctPowerCablesCount" value="12" step="2" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">가닥</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="ctControlCablesCount">제어 케이블 (가는선) 가닥수</label>
+                <div class="val-input-group">
+                  <input type="number" id="ctControlCablesCount" value="30" step="5" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">가닥</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>총 적재 하중 &amp; 구조 처짐량 판정</h3>
+            </div>
+            <span id="ctVerdictBadge" class="badge-pill badge-safe">NEMA DEFLECTION OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">TOTAL CABLE TRAY LOAD WEIGHT (kg/m)</span>
+            <div class="terminal-voltage-big font-mono" id="resCtTotalWeight">28.5 kg/m</div>
+            <div class="tv-sub" id="resCtDeflectionText">예상 처짐량: 3.2 mm (허용 기준 10.0 mm 이내 안정)</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="grid"></i>
+            <div>
+              <strong>NEMA VE-2 시공 수칙:</strong> 케이블 트레이 처짐량은 지지대 스팬의 1/200 이하여야 하며, 접속부(Splice Plate)는 지지대 바로 위가 아닌 1/4 지점에 배치해야 굽힘 모멘트가 최소화됩니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-cabletray')">
+              <i data-lucide="copy"></i> <span>트레이 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 37: 제어반·클린룸 LED 조도(Lux) & 조명 수량 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-luxlighting" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">KS A 3011 / ISO 8995 제어반 내부 &amp; 클린룸 LED 요구 조도(Lux) 및 등기구 수량(N) 계산기</h2>
+          <p class="main-desc">제어반 및 클린룸 작업 공간의 면적(m²), 작업 표준 조도(Lux), 등기구 광속(lm) 및 조명률에 따른 최적의 LED 조명 등기구 개수와 소비전력을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>공간 규격 및 요구 조도 표준</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="luxTargetType">용도별 표준 조도 (Target Lux)</label>
+                <select id="luxTargetType" class="select-precision font-mono">
+                  <option value="500" selected>제어반 내부 점검 / 배전반실 (500 Lux - KS A 3011)</option>
+                  <option value="1000">반도체/클린룸 정밀 조립대 (1,000 Lux)</option>
+                  <option value="300">일반 공장 바닥 / 통로 (300 Lux)</option>
+                  <option value="1500">초정밀 검사 / 비전 라인 (1,500 Lux)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="luxRoomArea">바닥/작업면 면적 (Area A)</label>
+                <div class="val-input-group">
+                  <input type="number" id="luxRoomArea" value="12.0" step="1.0" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m²</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="luxFixtureLumens">LED 1등당 정격 광속 (Lumen F)</label>
+                <div class="val-input-group">
+                  <input type="number" id="luxFixtureLumens" value="2200" step="100" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">lm</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="luxFixtureWatts">LED 1등당 소비전력 (Power W)</label>
+                <div class="val-input-group">
+                  <input type="number" id="luxFixtureWatts" value="20" step="5" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">W</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>필요 LED 조명 수량 &amp; 총 소비전력</h3>
+            </div>
+            <span id="luxVerdictBadge" class="badge-pill badge-safe">ILLUMINATION COMPLIANT</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">REQUIRED LED FIXTURE COUNT (N)</span>
+            <div class="terminal-voltage-big font-mono" id="resLuxFixtureCount">6 등</div>
+            <div class="tv-sub" id="resLuxPowerText">총 조명 소비전력: 120 W • 평균 설계 조도: 513 Lux 만족</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="sun"></i>
+            <div>
+              <strong>KS A 3011 조도 기준:</strong> 제어반 내부 단자대 점검 시 그림자 사각지대를 없애기 위해 도어 상단 및 좌우 측면에 광확산형 LED 바를 분산 배치하십시오.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-luxlighting')">
+              <i data-lucide="copy"></i> <span>조도 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 38: 태양광/ESS DC 1500V 스트링 & DC 퓨즈 선정기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-solarpv" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">IEC 62548 태양광(PV) / 산업용 ESS DC 1500V 스트링 전압강하 &amp; gPV 직류 퓨즈 선정기</h2>
+          <p class="main-desc">공장 지붕 태양광 및 ESS 배터리 컨테이너의 최저 외기온도(-20°C) 시 최대 개방전압(Voc_max ≤ 1500V)과 직류 gPV 퓨즈 정격을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>태양광 모듈 스트링 및 케이블 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="pvSeriesCount">직렬 모듈 수량 (N_series)</label>
+                <div class="val-input-group">
+                  <input type="number" id="pvSeriesCount" value="28" step="1" inputmode="numeric" class="input-val font-mono">
+                  <span class="val-unit">장</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="pvVocStc">모듈 개방전압 Voc (STC 기준)</label>
+                <div class="val-input-group">
+                  <input type="number" id="pvVocStc" value="45.5" step="0.5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">V</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="pvIscStc">모듈 단락전류 Isc (STC 기준)</label>
+                <div class="val-input-group">
+                  <input type="number" id="pvIscStc" value="13.8" step="0.2" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">A</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="pvCableLength">접속반까지 DC 배선 거리 (L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="pvCableLength" value="60" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>최대 DC 전압 &amp; 추천 gPV 퓨즈 정격</h3>
+            </div>
+            <span id="pvVerdictBadge" class="badge-pill badge-safe">DC 1500V SAFE</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">MAXIMUM STRING OPEN VOLTAGE (Voc_max)</span>
+            <div class="terminal-voltage-big font-mono" id="resPvVocMax">1,446 V</div>
+            <div class="tv-sub" id="resPvFuseText">추천 직류 퓨즈: 25A gPV (1500V DC 정격) • 전압강하율 0.82% 안전</div>
+          </div>
+
+          <div class="engineering-rule-box">
+            <i data-lucide="zap"></i>
+            <div>
+              <strong>IEC 62548 안전 수칙:</strong> 겨울철 극저온(-20°C) 시 개방전압 상승으로 1,500V를 초과하면 인버터 MPPT 파손이 일어나므로 모듈 직렬 수를 엄격히 제한하십시오.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-solarpv')">
+              <i data-lucide="copy"></i> <span>태양광 결과 복사</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -6086,6 +6692,30 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-hoistcrane')">
           <div class="drawer-tool-icon"><i data-lucide="anchor"></i></div>
           <span class="drawer-tool-name" id="dtn32">크레인·호이스트</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-rolltension')">
+          <div class="drawer-tool-icon"><i data-lucide="disc"></i></div>
+          <span class="drawer-tool-name" id="dtn33">롤투롤 와인더 장력</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-vfdsurge')">
+          <div class="drawer-tool-icon"><i data-lucide="activity"></i></div>
+          <span class="drawer-tool-name" id="dtn34">VFD 반사파 리액터</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-explosionproof')">
+          <div class="drawer-tool-icon"><i data-lucide="flame"></i></div>
+          <span class="drawer-tool-name" id="dtn35">방폭(Ex) 본질안전</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cabletray')">
+          <div class="drawer-tool-icon"><i data-lucide="grid"></i></div>
+          <span class="drawer-tool-name" id="dtn36">케이블 트레이 하중</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-luxlighting')">
+          <div class="drawer-tool-icon"><i data-lucide="sun"></i></div>
+          <span class="drawer-tool-name" id="dtn37">제어반 조도(Lux)</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-solarpv')">
+          <div class="drawer-tool-icon"><i data-lucide="zap"></i></div>
+          <span class="drawer-tool-name" id="dtn38">태양광/ESS DC1500V</span>
         </div>
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>
