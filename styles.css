@@ -3298,3 +3298,97 @@ body:not(.theme-dark) .interactive-canvas {
 .legal-content-pane h5:first-child {
   margin-top: 0;
 }
+
+
+/* ==========================================================================
+   BOM AFFILIATE & SUBMITTAL-GRADE A4 CUSTOMIZER STYLES
+   ========================================================================== */
+
+.bom-part-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-bom-buy {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.28rem 0.55rem;
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.15s ease;
+}
+
+.btn-bom-buy:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+.report-customizer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.approval-stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1.5px solid #0f172a;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.approval-stamp-cell {
+  border-right: 1px solid #0f172a;
+}
+.approval-stamp-cell:last-child {
+  border-right: none;
+}
+
+.approval-stamp-header {
+  background: #f1f5f9;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem;
+  border-bottom: 1px solid #0f172a;
+}
+
+.approval-stamp-body {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .top-nav, .sub-header-bar, .bottom-showcase-bar, .app-footer, .meter-actions, .field-measurement-card, .bom-parts-card, .floating-project-basket, .cookie-consent-banner, .modal-backdrop {
+    display: none !important;
+  }
+  .print-only-report {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .report-header {
+    border-bottom: 2px solid #000000;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}

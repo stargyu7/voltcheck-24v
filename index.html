@@ -3625,8 +3625,10 @@
         <span class="report-subtitle">ENGINEERING VOLTAGE DROP & POWER MARGIN CALCULATION SHEET</span>
       </div>
       <div class="report-meta">
+        <div><strong>프로젝트:</strong> <span id="rptProjectDisplay">2026 현대차 배터리 라인 #1</span></div>
+        <div><strong>발주처/고객:</strong> <span id="rptClientDisplay">삼성전자 평택 캠퍼스 P4 FAB</span></div>
         <div><strong>검토일자:</strong> <span id="rptDate">2026-08-31</span></div>
-        <div><strong>작성:</strong> <span>FA 전장설계팀</span></div>
+        <div><strong>설계자:</strong> <span id="rptAuthorDisplay">이규정 수석 엔지니어 (PE)</span></div>
         <div><strong>판정:</strong> <span id="rptFinalStatus" class="font-bold">PASS</span></div>
       </div>
     </div>
@@ -4265,6 +4267,79 @@
   </div>
 
   <!-- Global Legal & Compliance Modal (Terms of Service, GDPR Privacy Policy, Digital Refund) -->
+    <!-- Submittal-Grade A4 Report Customizer Modal [MICRO-SAAS / ENTERPRISE SUBMISSION] -->
+  <div id="printCustomizerModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i data-lucide="file-check-2" class="text-highlight"></i>
+          <div>
+            <h4 id="pcmTitle">A4 기술 검토서 &amp; 발주처 감리 제출 설정</h4>
+            <span class="modal-subtitle font-mono">IEC 60204-1 / NFPA 79 Formal Engineering Submittal</span>
+          </div>
+        </div>
+        <button type="button" id="closePrintCustomizerBtn" class="btn-close" onclick="closePrintCustomizer()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="report-customizer-grid">
+          <div class="field-box">
+            <label for="pcmProjectName">프로젝트명 / 설비 호기 *</label>
+            <input type="text" id="pcmProjectName" value="2026 현대차 배터리 라인 #1 DC 24V 간선 검토" class="input-precision font-mono">
+          </div>
+          <div class="field-box">
+            <label for="pcmClientName">발주처 / 고객사 (Submittal Target) *</label>
+            <input type="text" id="pcmClientName" value="삼성전자 평택 캠퍼스 P4 FAB" class="input-precision font-mono">
+          </div>
+        </div>
+
+        <div class="report-customizer-grid mt-2">
+          <div class="field-box">
+            <label for="pcmAuthorName">설계 책임 기술자 (Lead Engineer) *</label>
+            <input type="text" id="pcmAuthorName" value="이규정 수석 엔지니어 (PE)" class="input-precision font-mono">
+          </div>
+          <div class="field-box">
+            <label for="pcmReportType">검토 기준 규격</label>
+            <select id="pcmReportType" class="select-precision font-mono">
+              <option value="iec" selected>IEC 60204-1 (유럽/글로벌 기계류 전기안전)</option>
+              <option value="nfpa">NFPA 79 (북미 산업용 기계 표준)</option>
+              <option value="kec">KEC 한국전기설비규정 (KEC 제140조)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 3-Tier Official Approval Stamp Box Preview -->
+        <div class="mt-3">
+          <span style="font-size:0.82rem; font-weight:700; color:var(--navy-dark);"><i data-lucide="stamp"></i> 공인 3단 결재 승인란 (출력물 상단 자동 배치)</span>
+          <div class="approval-stamp-grid mt-1">
+            <div class="approval-stamp-cell">
+              <div class="approval-stamp-header">작 성 (Drafted)</div>
+              <div class="approval-stamp-body" id="stampDrafted">이규정 (인)</div>
+            </div>
+            <div class="approval-stamp-cell">
+              <div class="approval-stamp-header">검 토 (Checked)</div>
+              <div class="approval-stamp-body" id="stampChecked">전장설계팀 (인)</div>
+            </div>
+            <div class="approval-stamp-cell">
+              <div class="approval-stamp-header">승 인 (Approved)</div>
+              <div class="approval-stamp-body" id="stampApproved">책임감리원 (인)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-actions mt-3" style="border-top:1px solid var(--border-light); padding-top:1rem;">
+          <button type="button" class="btn-primary-action" onclick="executeFinalSubmittalPrint()" style="padding:0.75rem 1.5rem; font-size:0.95rem;">
+            <i data-lucide="printer"></i>
+            <span id="pcmPrintBtnText">🖨️ A4 공식 기술 검토서 즉시 인쇄 / PDF 저장</span>
+          </button>
+          <button type="button" class="btn-secondary-action" onclick="copySummaryToClipboard()">
+            <i data-lucide="copy"></i>
+            <span>결과 텍스트 복사</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="legalModal" class="modal-backdrop hidden">
     <div class="modal-card modal-lg">
       <div class="modal-header">

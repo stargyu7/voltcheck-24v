@@ -348,7 +348,7 @@ function bindEvents() {
   document.getElementById('exportTableCsvBtn')?.addEventListener('click', exportTableAsCsv);
 
   // Print Report
-  document.getElementById('printReportBtn')?.addEventListener('click', generateAndPrintReport);
+  document.getElementById('printReportBtn')?.addEventListener('click', () => openPrintCustomizer());
 
   // Glossary Live Search Filter
   document.getElementById('glossarySearchInput')?.addEventListener('input', (e) => {
@@ -3283,6 +3283,7 @@ function renderBomParts(gaugeKey = 'AWG 22') {
     const maker = isEn ? (item.makerEn || item.maker) : item.maker;
     const desc = isEn ? (item.descEn || item.desc) : item.desc;
     const price = isEn ? (item.priceEn || item.priceRange) : item.priceRange;
+    const buyUrl = item.buyUrl || 'https://www.digikey.com/?utm_source=voltcheck';
 
     html += `
       <div class="bom-part-card">
@@ -3296,9 +3297,14 @@ function renderBomParts(gaugeKey = 'AWG 22') {
         </div>
         <div class="bom-part-bottom">
           <span style="font-size:0.75rem; color:var(--text-muted);">${isEn ? 'Spec:' : '규격:'} ${gaugeKey}</span>
-          <button type="button" class="btn-util btn-add-bom-item" data-part="${item.partNo}" style="font-size:0.75rem; padding:0.25rem 0.6rem;">
-            ${isEn ? '+ Add' : '+ 견적함'}
-          </button>
+          <div class="bom-part-actions">
+            <a href="${buyUrl}" target="_blank" rel="noopener sponsored" class="btn-bom-buy" title="공식 유통점 실시간 재고 & 견적 조회">
+              <i data-lucide="shopping-cart" style="width:12px;height:12px;"></i> ${isEn ? 'Buy on DigiKey' : '공식 유통점 구매'}
+            </a>
+            <button type="button" class="btn-util btn-add-bom-item" data-part="${item.partNo}" style="font-size:0.75rem; padding:0.25rem 0.6rem;">
+              ${isEn ? '+ Add' : '+ 견적함'}
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -3310,6 +3316,7 @@ function renderBomParts(gaugeKey = 'AWG 22') {
     const cpMaker = isEn ? (cp.makerEn || cp.maker) : cp.maker;
     const cpDesc = isEn ? (cp.descEn || cp.desc) : cp.desc;
     const cpPrice = isEn ? (cp.priceEn || cp.priceRange) : cp.priceRange;
+    const cpBuyUrl = cp.buyUrl || 'https://www.mouser.com/?utm_source=voltcheck';
 
     html += `
       <div class="bom-part-card" style="border-left: 3px solid #3b82f6;">
@@ -3322,10 +3329,15 @@ function renderBomParts(gaugeKey = 'AWG 22') {
           <p class="bom-part-desc mt-1">${cpDesc}</p>
         </div>
         <div class="bom-part-bottom">
-          <span style="font-size:0.75rem; color:var(--text-muted);">${isEn ? 'Recommended Circuit Protector (CP)' : '추천 회로보호기 (CP)'}</span>
-          <button type="button" class="btn-util btn-add-bom-item" data-part="${cp.partNo}" style="font-size:0.75rem; padding:0.25rem 0.6rem;">
-            ${isEn ? '+ Add' : '+ 견적함'}
-          </button>
+          <span style="font-size:0.75rem; color:var(--text-muted);">${isEn ? 'Recommended CP' : '추천 회로보호기 (CP)'}</span>
+          <div class="bom-part-actions">
+            <a href="${cpBuyUrl}" target="_blank" rel="noopener sponsored" class="btn-bom-buy">
+              <i data-lucide="shopping-cart" style="width:12px;height:12px;"></i> ${isEn ? 'Buy on Mouser' : '공식 유통점 구매'}
+            </a>
+            <button type="button" class="btn-util btn-add-bom-item" data-part="${cp.partNo}" style="font-size:0.75rem; padding:0.25rem 0.6rem;">
+              ${isEn ? '+ Add' : '+ 견적함'}
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -3340,6 +3352,8 @@ function renderBomParts(gaugeKey = 'AWG 22') {
       alert(isEn ? `[Added to BOM Quote]\nPart No: ${part}\n\nItem registered to BOM form.` : `[BOM 견적함 추가]\n품번: ${part}\n\n'부품 견적 요청(BOM)' 양식에 해당 부품이 등록되었습니다.`);
     });
   });
+
+  if (window.lucide) window.lucide.createIcons();
 }
 
 // --------------------------------------------------------------------------
@@ -5086,4 +5100,44 @@ function switchLegalTab(tab) {
       else pane.classList.remove('active');
     }
   });
+}
+
+// ==========================================================================
+// SUBMITTAL-GRADE A4 PDF REPORT CUSTOMIZER LOGIC
+// ==========================================================================
+
+function openPrintCustomizer() {
+  const modal = document.getElementById('printCustomizerModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
+}
+
+function closePrintCustomizer() {
+  const modal = document.getElementById('printCustomizerModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+}
+
+function executeFinalSubmittalPrint() {
+  const proj = document.getElementById('pcmProjectName')?.value || '2026 현대차 배터리 라인 #1';
+  const client = document.getElementById('pcmClientName')?.value || '삼성전자 평택 캠퍼스 P4 FAB';
+  const author = document.getElementById('pcmAuthorName')?.value || '이규정 수석 엔지니어 (PE)';
+
+  const dispProj = document.getElementById('rptProjectDisplay');
+  const dispClient = document.getElementById('rptClientDisplay');
+  const dispAuthor = document.getElementById('rptAuthorDisplay');
+
+  if (dispProj) dispProj.textContent = proj;
+  if (dispClient) dispClient.textContent = client;
+  if (dispAuthor) dispAuthor.textContent = author;
+
+  const stampDraft = document.getElementById('stampDrafted');
+  if (stampDraft) stampDraft.textContent = `${author} (인)`;
+
+  closePrintCustomizer();
+  generateAndPrintReport();
 }
