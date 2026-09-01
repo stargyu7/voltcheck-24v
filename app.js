@@ -5420,7 +5420,7 @@ function executeRealCheckoutAndDownload() {
   const email = document.getElementById('orderEmail')?.value || '';
   const phone = document.getElementById('orderPhone')?.value || '';
   const tax = document.getElementById('orderTaxInvoice')?.value || 'none';
-  const payMethod = '무통장 입금 (카카오뱅크)';
+  const payMethod = '크티(Ctee) 공식 안전결제';
 
   if (!email) {
     alert('다운로드 링크 및 영수증을 수신할 이메일 주소를 입력해 주십시오.');
