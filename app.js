@@ -2411,6 +2411,73 @@ const TAB_I18N_DATA = {
     }
   },
   en: {
+
+  ja: {
+    'tab-voltagedrop': {
+      title: 'DC 24V ケーブル電圧降下＆センサ電源マージン計算機',
+      desc: '配線長、線径（AWG/SQ）、負荷電流に応じたループ抵抗と電圧降下をリアルタイム算出し、センサのリセット事故を未然に防止します。',
+      c1: '設計パラメータ入力',
+      c2: '判定結果＆計測データ'
+    },
+    'tab-analogloop': {
+      title: '4-20mA アナログ電流ループ電圧マージン検証機',
+      desc: '伝送器電源（24V）、受信側250Ωシャント抵抗、線路抵抗に応じた計測マジンを判定します。',
+      c1: 'ループ電源＆伝送器仕様',
+      c2: '電圧マージン判定結果'
+    },
+    'tab-smpsbudget': {
+      title: 'DC 24V SMPS 電源容量＆サーキットプロテクタ選定',
+      desc: '定常負荷、安全率30％、突入電流を考慮した最適なSMPS容量とCP定格を自動選定します。',
+      c1: '負荷プロファイル設定',
+      c2: '推奨SMPS容量＆CP仕様'
+    },
+    'tab-safetylight': {
+      title: 'ISO 13855 セーフティライトカーテン最小安全距離(S)計算機',
+      desc: '光軸分解能、センサ応答時間、機械ブレーキ停止時間に基づく法定最小安全距離(S)を算出します。',
+      c1: '安全パラメータ設定',
+      c2: 'ISO 13855 安全距離判定'
+    },
+    'tab-transformer': {
+      title: '制御用変圧器(TR)容量(kVA)＆1次/2次遮断器選定機',
+      desc: '動力電源から制御電源への降圧時、定常負荷と突入ピークを考慮した変圧器容量と保護機器を算出します。',
+      c1: '変圧器仕様入力',
+      c2: '推奨容量＆遮断器定格'
+    }
+  },
+  zh: {
+    'tab-voltagedrop': {
+      title: 'DC 24V 电缆电压降与传感器裕度校验器',
+      desc: '根据电缆长度、线径规格（AWG/SQ）及负载电流，实时计算回路电阻与电压降，杜绝工业现场欠压停机。',
+      c1: '设计参数输入',
+      c2: '校验结果与读数'
+    },
+    'tab-analogloop': {
+      title: '4-20mA 模拟量电流回路受电裕度验证器',
+      desc: '根据变送器电源（24V）、接收端250欧姆分流电阻及线路阻抗，判定模拟量采集裕度。',
+      c1: '回路电源与变送器规格',
+      c2: '电压裕度判定结果'
+    },
+    'tab-smpsbudget': {
+      title: 'DC 24V 开关电源(SMPS)容量与断路器选型',
+      desc: '结合稳态负载、30%安全裕度及冲击电流，智能计算推荐的开关电源功率及支路保护规格。',
+      c1: '负载配置与同时系数',
+      c2: '推荐电源容量与断路器'
+    },
+    'tab-safetylight': {
+      title: 'ISO 13855 安全光幕最小安全防护距离(S)计算器',
+      desc: '根据光轴分辨率、传感器响应时间及机械制动停止时间，计算合规的最小安装安全距离。',
+      c1: '安全参数与响应时间',
+      c2: 'ISO 13855 距离判定'
+    },
+    'tab-transformer': {
+      title: '控制变压器(TR)容量(kVA)与一/二次侧保护选型',
+      desc: '在主电源转换为控制电源时，综合稳态负载与接触器合闸冲击，自动计算变压器容量。',
+      c1: '变压器电压与负载输入',
+      c2: '推荐容量与保护规格'
+    }
+  }
+,
+
     'tab-voltagedrop': {
       title: 'DC 24V Cable Voltage Drop & Sensor Power Margin',
       desc: 'Calculate cable loop resistance, voltage drop, and sensor brownout margin in real-time according to distance, wire gauge, and load current.',
@@ -5729,3 +5796,26 @@ function filterNavCategory(cat) {
     firstVisible.click();
   }
 }
+
+
+// ==========================================================================
+// 4-LANGUAGE GLOBAL TRANSLATION & DROPDOWN ENGINE
+// ==========================================================================
+
+function toggleLangDropdown(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById('langMenuDropdown');
+  if (menu) menu.classList.toggle('show');
+}
+
+function selectLanguage(lang) {
+  const menu = document.getElementById('langMenuDropdown');
+  if (menu) menu.classList.remove('show');
+  applyLanguage(lang);
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', () => {
+  const menu = document.getElementById('langMenuDropdown');
+  if (menu) menu.classList.remove('show');
+});

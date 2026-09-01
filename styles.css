@@ -4147,3 +4147,182 @@ body, h1, h2, h3, h4, h5, p, span, div, label, li {
   color: var(--text-secondary);
   flex: 1 1 320px;
 }
+
+
+/* ==========================================================================
+   TOTAL ENGINEERING SUITE: CAD SYMBOLS, GLOBAL GRID & TROUBLESHOOTING
+   ========================================================================== */
+
+.cad-symbols-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.cad-symbol-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.cad-symbol-card:hover {
+  border-color: var(--brand-orange);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.cad-sym-preview {
+  height: 64px;
+  background: #0f172a;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+}
+
+.cad-sym-preview svg {
+  max-height: 100%;
+  max-width: 100%;
+  stroke: #38bdf8;
+  fill: none;
+  stroke-width: 2;
+}
+
+.cad-sym-info h5 {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin-bottom: 0.2rem;
+}
+
+.cad-sym-tag {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--brand-orange);
+  font-weight: 700;
+}
+
+.cad-sym-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.global-grid-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1rem;
+}
+
+.global-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.global-grid-table th {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font-weight: 700;
+  border: 1px solid #334155;
+  white-space: nowrap;
+}
+
+.global-grid-table td {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  background: #ffffff;
+}
+
+.global-grid-table tr:nth-child(even) td {
+  background: var(--bg-surface-subtle);
+}
+
+.color-swatch-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+.color-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* 4-Language Selector */
+.lang-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.lang-select-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-main);
+  color: var(--navy-dark);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.lang-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  min-width: 140px;
+}
+
+.lang-menu-dropdown.show {
+  display: flex;
+}
+
+.lang-option-item {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--navy-dark);
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.lang-option-item:hover {
+  background: var(--brand-orange-subtle);
+  color: var(--brand-orange);
+}
