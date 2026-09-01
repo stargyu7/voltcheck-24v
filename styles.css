@@ -3642,3 +3642,358 @@ body:not(.theme-dark) .interactive-canvas {
   color: var(--navy-dark);
   line-height: 1.25;
 }
+
+
+/* ==========================================================================
+   COMPREHENSIVE MOBILE UX & TYPOGRAPHY VISIBILITY OVERHAUL (320px ~ 768px)
+   ========================================================================== */
+
+/* 1. Global Text Break & Polish */
+body, h1, h2, h3, h4, h5, p, span, div, label, li {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 2. Responsive Headings & Descriptions */
+.main-title {
+  font-size: clamp(1.1rem, 4.5vw, 1.45rem) !important;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.main-desc {
+  font-size: clamp(0.78rem, 3.2vw, 0.88rem) !important;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* 3. Mobile Viewport Rules (<= 768px) */
+@media (max-width: 768px) {
+  /* Layout Padding */
+  .app-main {
+    padding: 0.75rem 0.6rem !important;
+  }
+
+  .nav-container {
+    padding: 0 0.65rem !important;
+    gap: 0.4rem !important;
+  }
+
+  .brand-tagline {
+    display: none !important;
+  }
+
+  .brand-name {
+    font-size: 1.05rem !important;
+  }
+
+  .brand-en {
+    font-size: 0.68rem !important;
+  }
+
+  .brand-symbol {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .symbol-v {
+    font-size: 1rem !important;
+  }
+
+  /* Hide overflowing desktop utility buttons on mobile (accessible via bottom nav) */
+  .nav-top-bar #openQuoteModalBtn,
+  .nav-top-bar #openCatalogModalBtn,
+  .nav-top-bar #openHistoryModalBtn,
+  .nav-top-bar #shareUrlBtn,
+  .nav-top-bar #printReportBtn,
+  .nav-top-bar #complianceNoticeBtn {
+    display: none !important;
+  }
+
+  .nav-actions {
+    gap: 0.35rem !important;
+  }
+
+  .btn-nav-action {
+    font-size: 0.75rem !important;
+    padding: 0.35rem 0.55rem !important;
+  }
+
+  .btn-nav-primary {
+    font-size: 0.75rem !important;
+    padding: 0.38rem 0.65rem !important;
+  }
+
+  /* Segmented 21-Tab Scroll Bar */
+  .nav-menu-bar {
+    padding: 0.25rem 0 !important;
+  }
+
+  .tab-btn {
+    font-size: 0.72rem !important;
+    padding: 0.32rem 0.5rem !important;
+    gap: 0.2rem !important;
+  }
+
+  /* Sub Header Standards Bar */
+  .sub-header-bar {
+    padding: 0.4rem 0.65rem !important;
+    font-size: 0.72rem !important;
+  }
+  .sub-header-bar .sh-title {
+    display: none !important;
+  }
+  .sub-header-bar .standards-badges span {
+    font-size: 0.68rem !important;
+    padding: 0.1rem 0.35rem !important;
+  }
+
+  /* Form & Workbench Grids */
+  .meter-workbench-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .workbench-card, .meter-readout-panel {
+    border-radius: var(--radius-md) !important;
+  }
+
+  .card-caption {
+    padding: 0.6rem 0.75rem !important;
+  }
+
+  .card-caption h3 {
+    font-size: 0.88rem !important;
+  }
+
+  .workbench-body {
+    padding: 0.85rem 0.75rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .adv-inputs-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+  }
+
+  .params-2col-grid, .calc-matrix-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+  }
+
+  /* Form Controls & Inputs (16px to prevent iOS Safari auto-zoom) */
+  .input-val, .input-precision {
+    font-size: 16px !important;
+    height: 42px !important;
+    padding: 0.45rem 0.65rem !important;
+  }
+
+  .select-precision {
+    font-size: 15px !important;
+    height: 42px !important;
+    padding: 0.45rem 0.65rem !important;
+    width: 100% !important;
+  }
+
+  .val-input-group {
+    width: 100% !important;
+  }
+  .val-unit {
+    padding: 0 0.6rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* Quick Preset Pills */
+  .preset-pill-group {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.35rem !important;
+  }
+  .preset-pill-items {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.35rem !important;
+    width: 100% !important;
+  }
+  .pill-btn {
+    font-size: 0.75rem !important;
+    padding: 0.35rem 0.55rem !important;
+    flex: 1 1 calc(50% - 0.35rem) !important;
+    text-align: center !important;
+    justify-content: center !important;
+    min-height: 38px !important;
+  }
+
+  /* Hero Meter Readout Panel */
+  .terminal-voltage-hero {
+    padding: 0.85rem 0.75rem !important;
+  }
+
+  .terminal-voltage-big {
+    font-size: clamp(2rem, 7.5vw, 2.5rem) !important;
+  }
+
+  .res-num-hero {
+    font-size: clamp(1.75rem, 6.5vw, 2.2rem) !important;
+  }
+
+  .summary-grid-hero {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.4rem !important;
+  }
+
+  .summary-item-hero {
+    padding: 0.5rem 0.4rem !important;
+  }
+  .summary-label {
+    font-size: 0.7rem !important;
+  }
+  .summary-val {
+    font-size: 0.88rem !important;
+  }
+
+  /* AI 6-Point Safety Audit Card */
+  .audit-card-body {
+    padding: 0.75rem !important;
+  }
+  .audit-score-hero {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.4rem !important;
+  }
+  .audit-checklist-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.35rem !important;
+  }
+  .audit-check-item {
+    padding: 0.45rem 0.6rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  /* Field Measurement & BOM Cards */
+  .fm-inputs-grid, .fm-result-banner {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+
+  .bom-parts-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+  }
+  .bom-part-card {
+    padding: 0.75rem !important;
+  }
+  .bom-part-bottom {
+    flex-wrap: wrap !important;
+    gap: 0.4rem !important;
+  }
+
+  .gear-chips {
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+  }
+  .gear-chip {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.45rem !important;
+  }
+
+  /* Canvas & SVG Viewports */
+  .sld-canvas-viewport {
+    padding: 0.5rem !important;
+  }
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Tables Mobile Responsiveness */
+  .table-scroll-wrapper, .cable-table-wrap, .data-table-container {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  table.data-table {
+    min-width: 540px !important;
+    font-size: 0.78rem !important;
+  }
+  table.data-table th, table.data-table td {
+    padding: 0.4rem 0.5rem !important;
+  }
+
+  /* Modals Mobile Sizing */
+  .modal-backdrop {
+    padding: 0.5rem !important;
+    align-items: flex-end !important;
+  }
+  .modal-card, .modal-card.modal-lg {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 88vh !important;
+    padding: 1.15rem 0.85rem !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+  .modal-header {
+    padding-bottom: 0.65rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .modal-header h4 {
+    font-size: 1rem !important;
+  }
+
+  .pricing-tiers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+  .pricing-tier-card {
+    padding: 1.15rem 0.85rem !important;
+  }
+
+  .global-pay-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.35rem !important;
+  }
+
+  .report-customizer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+
+  .legal-tab-nav {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    padding-bottom: 0.35rem !important;
+  }
+  .legal-tab-btn {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.65rem !important;
+  }
+
+  .legal-content-pane {
+    max-height: 52vh !important;
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Showcase Bar at Bottom */
+  .showcase-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+  }
+
+  /* Footer */
+  .footer-container {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    text-align: center !important;
+  }
+  .footer-standards {
+    justify-content: center !important;
+  }
+  .f-nav-links {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+}
