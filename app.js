@@ -3884,3 +3884,337 @@ document.addEventListener('DOMContentLoaded', () => {
   initGroundingCalculator();
   initTroubleshootingDecisionTree();
 });
+
+// ==========================================================================
+// TAB 19: PLC I/O NPN(SINK) VS PNP(SOURCE) INTERFACE ENGINE
+// ==========================================================================
+
+function initNpnPnpCalculator() {
+  const plcSelect = document.getElementById('npnPlcType');
+  const sensorSelect = document.getElementById('npnSensorType');
+  const curInput = document.getElementById('npnSensorCurrent');
+  const lenInput = document.getElementById('npnWireLength');
+
+  function calculateNpnPnp() {
+    if (!plcSelect || !sensorSelect) return;
+
+    const plcType = plcSelect.value;
+    const sensorType = sensorSelect.value;
+
+    let isMatch = false;
+    let statusText = '결선 불일치 (동작 불가)';
+    let statusColor = '#ef4444';
+    let comVolt = '+24V DC';
+    let signalFlow = '신호 인식 불가';
+    let burnRisk = '위험 없음 (단순 미동작)';
+    let noteText = '';
+
+    if (plcType === 'sink_npn') {
+      comVolt = '+24V DC';
+      if (sensorType === 'npn_no') {
+        isMatch = true;
+        statusText = 'SINK ⟷ NPN 정상 호환';
+        statusColor = '#4ade80';
+        signalFlow = 'ON 시 0V 싱크 (Low Active)';
+        burnRisk = '위험 없음 (Zero Risk)';
+        noteText = '<strong>정상 결선:</strong> 미쓰비시/LS 산전 표준 결선입니다. PLC COM 단자에 +24V를 공급하고 NPN 센서 흑색선(OUT)이 0V로 전류를 Sink하여 내부 포토커플러가 정상 ON됩니다.';
+      } else if (sensorType === 'pnp_no') {
+        isMatch = false;
+        statusText = '결선 불일치 (PNP ⟷ SINK)';
+        statusColor = '#ef4444';
+        signalFlow = 'PLC 입력 전압차 0V (미인식)';
+        burnRisk = '소손 위험은 없으나 입력 LED 미점등';
+        noteText = '<strong>⚠️ 결선 에러:</strong> SINK(+24V COM) 입력 카드에 PNP(+24V 출력) 센서를 직접 연결하면 전위차가 발생하지 않아 동작하지 않습니다. <strong>NPN 센서로 교체</strong>하거나 <strong>중간에 NPN 변환 릴레이/보드</strong>를 삽입해야 합니다.';
+      } else if (sensorType === 'dry_contact') {
+        isMatch = true;
+        statusText = 'SINK ⟷ 무전압 스위치 정상';
+        statusColor = '#4ade80';
+        signalFlow = '접점 폐로 시 0V 도통';
+        noteText = '스위치 한쪽을 PLC 입력 X단자에, 반대쪽을 0V(GND)에 연결하면 정상 인식됩니다.';
+      } else if (sensorType === 'two_wire_dc') {
+        isMatch = true;
+        statusText = '2선식 센서 (누설전류 주의)';
+        statusColor = '#f59e0b';
+        signalFlow = 'OFF 시 누설전류 < 1.0mA 확인 필요';
+        noteText = '2선식 DC 센서는 OFF 시에도 구동용 누설전류(0.8~1.5mA)가 흘러 PLC 입력이 OFF되지 않고 상시 ON될 수 있습니다. 필요 시 블리더 저항(Bleeder Resistor 3.3kΩ)을 병렬 연결하십시오.';
+      }
+    } else if (plcType === 'source_pnp') {
+      comVolt = '0V (GND)';
+      if (sensorType === 'pnp_no') {
+        isMatch = true;
+        statusText = 'SOURCE ⟷ PNP 정상 호환';
+        statusColor = '#4ade80';
+        signalFlow = 'ON 시 +24V 공급 (High Active)';
+        burnRisk = '위험 없음 (Zero Risk)';
+        noteText = '<strong>정상 결선:</strong> 지멘스/유럽 IEC 표준 결선입니다. PLC COM 단자에 0V GND를 연결하고 PNP 센서가 +24V를 공급(Source)하여 포토커플러를 정상 점등시킵니다.';
+      } else if (sensorType === 'npn_no') {
+        isMatch = false;
+        statusText = '결선 불일치 (NPN ⟷ SOURCE)';
+        statusColor = '#ef4444';
+        signalFlow = '전위차 0V (미인식)';
+        noteText = '<strong>⚠️ 결선 에러:</strong> SOURCE(0V COM) 입력 카드에 NPN(0V Sink) 센서를 연결하면 동작하지 않습니다. <strong>PNP 센서</strong>를 사용하십시오.';
+      } else if (sensorType === 'dry_contact') {
+        isMatch = true;
+        statusText = 'SOURCE ⟷ 무전압 스위치 정상';
+        statusColor = '#4ade80';
+        signalFlow = '접점 폐로 시 +24V 도통';
+        noteText = '스위치 한쪽을 PLC X단자에, 반대쪽을 +24V에 연결하십시오.';
+      }
+    } else {
+      // Bidirectional
+      isMatch = true;
+      statusText = '양방향 절연 입력 (호환 가능)';
+      statusColor = '#38bdf8';
+      comVolt = sensorType === 'npn_no' ? '+24V 연결 권장' : '0V 연결 권장';
+      signalFlow = 'COM 단자 결선에 따라 NPN/PNP 모두 수용';
+      noteText = '양방향 입력 카드는 COM 단자를 +24V에 물리면 NPN용으로, 0V에 물리면 PNP용으로 동작합니다.';
+    }
+
+    const badgeEl = document.getElementById('npnMatchBadge');
+    const comTargetEl = document.getElementById('npnComTarget');
+    const statusEl = document.getElementById('resNpnStatus');
+    const signalFlowEl = document.getElementById('resNpnSignalFlow');
+    const burnRiskEl = document.getElementById('resNpnBurnRisk');
+    const noteTextEl = document.getElementById('npnDiagNoteText');
+
+    if (badgeEl) {
+      badgeEl.className = isMatch ? 'badge-pill badge-safe' : 'badge-pill badge-warn';
+      badgeEl.textContent = isMatch ? '결선 호환: MATCH (정상)' : '결선 불일치: MISMATCH (경고)';
+    }
+    if (comTargetEl) comTargetEl.textContent = `PLC COM 단자 연결: ${comVolt}`;
+    if (statusEl) {
+      statusEl.textContent = statusText;
+      statusEl.style.color = statusColor;
+    }
+    if (signalFlowEl) signalFlowEl.textContent = signalFlow;
+    if (burnRiskEl) burnRiskEl.textContent = burnRisk;
+    if (noteTextEl) noteTextEl.innerHTML = noteText;
+  }
+
+  [plcSelect, sensorSelect, curInput, lenInput].forEach(elem => {
+    if (elem) elem.addEventListener('input', calculateNpnPnp);
+  });
+
+  const addNpnBtn = document.getElementById('addNpnToProjectBtn');
+  if (addNpnBtn) {
+    addNpnBtn.addEventListener('click', () => {
+      const status = document.getElementById('resNpnStatus')?.textContent || 'NPN/PNP 결선';
+      const plc = plcSelect ? plcSelect.options[plcSelect.selectedIndex].text : 'SINK';
+      const sensor = sensorSelect ? sensorSelect.options[sensorSelect.selectedIndex].text : 'NPN';
+
+      if (typeof addProjectItem === 'function') {
+        addProjectItem({
+          calcType: 'NPN·PNP 결선',
+          label: `PLC 입력 [${plc.split(' ')[0]}] ⟷ 센서 [${sensor.split(' ')[0]}]`,
+          params: `PLC: ${plc}, 센서: ${sensor}`,
+          result: status
+        });
+      }
+    });
+  }
+
+  calculateNpnPnp();
+}
+
+// ==========================================================================
+// TAB 20: 유도성 부하(솔레노이드/릴레이) 역기전력 서지 보호 계산기
+// ==========================================================================
+
+function initFlybackSurgeCalculator() {
+  const presetSelect = document.getElementById('coilLoadPreset');
+  const curInput = document.getElementById('coilCurrentA');
+  const indInput = document.getElementById('coilInductanceMh');
+  const suppressorSelect = document.getElementById('surgeSuppressorType');
+
+  if (presetSelect && curInput && indInput) {
+    presetSelect.addEventListener('change', () => {
+      const p = presetSelect.value;
+      if (p === 'solenoid_valve') { curInput.value = '0.45'; indInput.value = '150'; }
+      else if (p === 'relay_my4') { curInput.value = '0.037'; indInput.value = '50'; }
+      else if (p === 'servo_brake') { curInput.value = '1.50'; indInput.value = '800'; }
+      calculateSurge();
+    });
+  }
+
+  function calculateSurge() {
+    if (!curInput || !indInput) return;
+
+    const I = parseFloat(curInput.value) || 0.45;
+    const L_mH = parseFloat(indInput.value) || 150;
+    const L_H = L_mH / 1000.0;
+
+    // Stored magnetic energy: E = 0.5 * L * I^2 (Joules)
+    const energyJ = 0.5 * L_H * Math.pow(I, 2);
+    const energyMilliJ = energyJ * 1000.0;
+
+    // Unprotected voltage spike peak: V_peak ~ L * (di/dt) -> typical di/dt is ~ 2000 A/s on mechanical contact break
+    const unprotSpikeV = Math.min(1200, Math.round(L_H * 2500 + 24));
+
+    const sType = suppressorSelect ? suppressorSelect.value : 'flyback_diode';
+    let clampedV = '-0.7 V (다이오드 순방향 전압)';
+    let partNo = '1N4007 (1000V 1A)';
+    let dischargeMs = (L_mH / (24 / I) * 3).toFixed(1);
+
+    if (sType === 'zener_combo') {
+      clampedV = '-36.7 V (제너 36V + 다이오드 0.7V)';
+      partNo = '1N4007 + 1N5365B (36V 5W Zener)';
+      dischargeMs = (dischargeMs / 3.5).toFixed(1);
+    } else if (sType === 'varistor_mov') {
+      clampedV = '-39.0 V (MOV 클램프)';
+      partNo = 'ERZ-V10D390 (39V 10mm 바리스터)';
+      dischargeMs = (dischargeMs / 2.5).toFixed(1);
+    }
+
+    const energyEl = document.getElementById('resStoredEnergyMilliJoule');
+    const clampedVEl = document.getElementById('resClampedV');
+    const partEl = document.getElementById('resSurgePart');
+    const spikeBadgeEl = document.getElementById('surgePeakV');
+    const dischargeTimeEl = document.getElementById('resDischargeTime');
+
+    if (energyEl) energyEl.textContent = energyMilliJ.toFixed(2);
+    if (clampedVEl) clampedVEl.textContent = clampedV;
+    if (partEl) partEl.textContent = partNo;
+    if (spikeBadgeEl) spikeBadgeEl.textContent = `무보호 시 역기전력: 약 -${unprotSpikeV}V 피크`;
+    if (dischargeTimeEl) dischargeTimeEl.textContent = `약 ${dischargeMs} ms (소호 방전)`;
+  }
+
+  [curInput, indInput, suppressorSelect].forEach(elem => {
+    if (elem) elem.addEventListener('input', calculateSurge);
+  });
+
+  const addSurgeBtn = document.getElementById('addSurgeToProjectBtn');
+  if (addSurgeBtn) {
+    addSurgeBtn.addEventListener('click', () => {
+      const e = document.getElementById('resStoredEnergyMilliJoule')?.textContent || '15.2';
+      const part = document.getElementById('resSurgePart')?.textContent || '1N4007';
+
+      if (typeof addProjectItem === 'function') {
+        addProjectItem({
+          calcType: '역기전력 서지',
+          label: `코일 서지 보호 [${part}]`,
+          params: `축적에너지 ${e}mJ`,
+          result: `보호소자: ${part} 선정`
+        });
+      }
+    });
+  }
+
+  calculateSurge();
+}
+
+// ==========================================================================
+// TAB 21: SMPS 투입 돌입전류(INRUSH) & 차단기 트립 곡선 판정 엔진
+// ==========================================================================
+
+function initInrushBreakerCalculator() {
+  const countInput = document.getElementById('inrushSmpsCount');
+  const modelSelect = document.getElementById('inrushSmpsModel');
+  const curveSelect = document.getElementById('inrushBreakerType');
+  const ampSelect = document.getElementById('inrushBreakerAmp');
+
+  function calculateInrush() {
+    if (!countInput || !modelSelect) return;
+
+    const count = parseInt(countInput.value, 10) || 2;
+    const peakPerUnit = parseFloat(modelSelect.value) || 35.0;
+    const curve = curveSelect ? curveSelect.value : 'c_curve';
+    const In = parseFloat(ampSelect ? ampSelect.value : 10) || 10;
+
+    // Total inrush peak current (A)
+    const totalPeakA = count * peakPerUnit;
+
+    // Instantaneous magnetic trip threshold for breaker:
+    // B-curve: 3~5x In (min 30A for 10A)
+    // C-curve: 5~10x In (min 50A, instantaneous trip at 100A)
+    // D-curve: 10~20x In (min 100A, trip at 200A)
+    let tripThresholdA = In * 10; // C-curve default upper bound
+    let curveName = '10A C-Curve';
+
+    if (curve === 'b_curve') {
+      tripThresholdA = In * 5;
+      curveName = `${In}A B-Curve (위험)`;
+    } else if (curve === 'c_curve') {
+      tripThresholdA = In * 10;
+      curveName = `${In}A C-Curve (표준)`;
+    } else if (curve === 'd_curve') {
+      tripThresholdA = In * 20;
+      curveName = `${In}A D-Curve (고돌입용)`;
+    }
+
+    const marginPct = ((tripThresholdA - totalPeakA) / tripThresholdA) * 100;
+    const isSafe = totalPeakA < tripThresholdA;
+
+    // Normal steady-state primary current (AC 220V approx)
+    const normalPrimaryA = (count * 240 / 220 / 0.88).toFixed(1);
+
+    const peakEl = document.getElementById('resInrushTotalPeak');
+    const limitEl = document.getElementById('resBreakerInstantLimit');
+    const marginEl = document.getElementById('resInrushMarginPct');
+    const badgeEl = document.getElementById('inrushTripBadge');
+    const primaryAEl = document.getElementById('resNormalPrimaryA');
+    const verdictEl = document.getElementById('resInrushVerdict');
+
+    if (peakEl) peakEl.textContent = totalPeakA.toFixed(1);
+    if (limitEl) limitEl.textContent = `${tripThresholdA.toFixed(1)} A (${curveName})`;
+    if (marginEl) {
+      marginEl.textContent = `${marginPct >= 0 ? '+' : ''}${marginPct.toFixed(1)}% ${isSafe ? '여유 (안전)' : '초과 (트립 위험)'}`;
+      marginEl.className = isSafe ? 'text-highlight' : 'text-warn';
+    }
+    if (badgeEl) {
+      badgeEl.className = isSafe ? 'badge-pill badge-safe' : 'badge-pill badge-warn';
+      badgeEl.textContent = isSafe ? 'TRIP SAFE (오트립 없음)' : 'TRIP RISK (차단기 트립 위험)';
+    }
+    if (primaryAEl) primaryAEl.textContent = `약 ${normalPrimaryA} A`;
+    if (verdictEl) {
+      verdictEl.textContent = isSafe ? `${In}A ${curve.toUpperCase()} 적합` : `${In}A D-Curve 또는 시차투입 권장`;
+      verdictEl.className = isSafe ? 's-val font-mono text-safe' : 's-val font-mono text-warn';
+    }
+  }
+
+  [countInput, modelSelect, curveSelect, ampSelect].forEach(elem => {
+    if (elem) elem.addEventListener('input', calculateInrush);
+  });
+
+  const addInrushBtn = document.getElementById('addInrushToProjectBtn');
+  if (addInrushBtn) {
+    addInrushBtn.addEventListener('click', () => {
+      const peak = document.getElementById('resInrushTotalPeak')?.textContent || '70.0';
+      const verdict = document.getElementById('resInrushVerdict')?.textContent || '10A C-Curve 적합';
+
+      if (typeof addProjectItem === 'function') {
+        addProjectItem({
+          calcType: '돌입전류·트립',
+          label: `SMPS 돌입전류 (${peak}A Peak)`,
+          params: `피크 ${peak}A`,
+          result: verdict
+        });
+      }
+    });
+  }
+
+  calculateInrush();
+}
+
+// Digital Bundle Tier Selection Helper
+let SELECTED_DIGITAL_TIER = {
+  price: 9900,
+  title: '엔지니어 실무 스타터 팩 (9,900원)'
+};
+
+function selectTierAndBuy(price, title) {
+  SELECTED_DIGITAL_TIER = { price, title };
+  const box = document.getElementById('digitalOrderBox');
+  const titleEl = document.getElementById('selectedTierTitle');
+  if (titleEl) titleEl.textContent = `선택된 상품: ${title}`;
+  if (box) {
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// Hook all onto DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  initNpnPnpCalculator();
+  initFlybackSurgeCalculator();
+  initInrushBreakerCalculator();
+});

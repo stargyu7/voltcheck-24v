@@ -227,6 +227,18 @@
             <i data-lucide="shield"></i>
             <span data-i18n="tab_ground">접지(PE)·EMC실드</span>
           </button>
+          <button class="tab-btn" data-tab="tab-npnpnp" role="tab">
+            <i data-lucide="split"></i>
+            <span data-i18n="tab_npnpnp">NPN·PNP 결선</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-flybacksurge" role="tab">
+            <i data-lucide="zap-off"></i>
+            <span data-i18n="tab_flyback">역기전력 서지</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-inrushbreaker" role="tab">
+            <i data-lucide="trending-down"></i>
+            <span data-i18n="tab_inrush">돌입전류·트립</span>
+          </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
             <span data-i18n="tab_notes">기술 노트</span>
@@ -2777,6 +2789,390 @@
       </div>
     </section>
     <!-- ========================================================================= -->
+    <!-- TAB 19: PLC I/O NPN(Sink) vs PNP(Source) 인터페이스 & 센서 결선 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-npnpnp" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">PLC I/O 싱크(NPN) vs 소스(PNP) 배선 인터페이스 &amp; 센서 결선 검증기</h2>
+          <p class="main-desc">국내/일본(NPN Sink) 및 유럽/글로벌(PNP Source) PLC 입력 모듈과 3선식/2선식 센서의 공통(Common) 결선 오배선 및 출력단 소손을 방지합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>PLC I/O 및 센서 타입 설정</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="npnPlcType">PLC 입력 카드 규격 (PLC Input Type)</label>
+              <select id="npnPlcType" class="select-precision font-mono">
+                <option value="sink_npn" selected>싱크 입력 (Sink / NPN Type - COM 단자에 +24V 인가, 미쓰비시/LS 표준)</option>
+                <option value="source_pnp">소스 입력 (Source / PNP Type - COM 단자에 0V GND 인가, 지멘스/유럽 표준)</option>
+                <option value="bidirectional">양방향 절연 입력 (Bidirectional / COM 전위 자유 선택)</option>
+              </select>
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="npnSensorType">연결 센서 출력 방식 (Sensor Output)</label>
+              <select id="npnSensorType" class="select-precision font-mono">
+                <option value="npn_no" selected>NPN 오픈컬렉터 (3-Wire DC, N.O. 접점 / 부하를 0V로 흡수)</option>
+                <option value="pnp_no">PNP 오픈컬렉터 (3-Wire DC, N.O. 접점 / 부하로 +24V 공급)</option>
+                <option value="dry_contact">무전압 접점 (2-Wire 스위치 / 릴레이 a접점)</option>
+                <option value="two_wire_dc">2선식 DC 근접센서 (누설전류 주의형)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-field">
+                <label for="npnSensorCurrent">센서 부하 전류 (I_load)</label>
+                <div class="val-input-group">
+                  <input type="number" id="npnSensorCurrent" value="35" min="5" max="200" class="input-val font-mono">
+                  <span class="val-unit">mA</span>
+                </div>
+              </div>
+              <div class="adv-field">
+                <label for="npnWireLength">배선 거리 (m)</label>
+                <div class="val-input-group">
+                  <input type="number" id="npnWireLength" value="25" min="1" max="100" class="input-val font-mono">
+                  <span class="val-unit">m</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>결선 정합성 판정 &amp; 배선 가이드</h3>
+            </div>
+            <div class="caption-right font-mono">
+              <span id="npnMatchBadge" class="badge-pill badge-safe">결선 호환: MATCH (정상 동작)</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">WIRING TOPOLOGY &amp; COMMON VOLTAGE</span>
+                <span class="gauge-target" id="npnComTarget">PLC COM 전위: +24V DC</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resNpnStatus" class="digit-value" style="font-size:1.8rem; color:#4ade80;">SINK &harr; NPN 정상</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>신호선(OUT) 전위 변화:</span>
+                  <strong id="resNpnSignalFlow">ON 시 0V (Low Active)</strong>
+                </div>
+                <div class="g-stat">
+                  <span>트랜지스터 파손 위험:</span>
+                  <strong id="resNpnBurnRisk" class="text-safe">위험 없음 (Zero Risk)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label">갈색선 (Brown / Pin 1)</span>
+              <strong class="s-val font-mono text-highlight">+24V DC</strong>
+              <span class="s-sub">전원 양극</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">청색선 (Blue / Pin 3)</span>
+              <strong class="s-val font-mono text-highlight">0V (GND)</strong>
+              <span class="s-sub">전원 음극</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">흑색선 (Black / Pin 4)</span>
+              <strong class="s-val font-mono" id="resNpnBlackPin">PLC X 입력단자</strong>
+              <span class="s-sub">제어 출력 신호선</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-3" id="npnDiagNote">
+            <i data-lucide="check-circle" class="note-icon"></i>
+            <div class="note-content" id="npnDiagNoteText">
+              <strong>결선 가이드:</strong> 싱크(NPN) 입력 카드는 내부 포토커플러 애노드가 COM 단자에 연결되어 있으므로, COM 단자에 +24V를 공급하고 센서 흑색선(OUT)이 ON 시 0V로 전류를 Sink하여 정상 인식합니다.
+            </div>
+          </div>
+
+          <div class="circuit-actions-bar mt-3">
+            <button type="button" id="addNpnToProjectBtn" class="btn-add-to-project">
+              <i data-lucide="plus-circle"></i>
+              <span>NPN/PNP 결선 프로젝트에 담기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 20: 유도성 부하(솔레노이드/릴레이) 역기전력 서지 보호 & 플라이백 다이오드 계산기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-flybacksurge" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">DC 24V 유도성 코일 역기전력(Flyback) 서지 보호 &amp; 다이오드·바리스터 계산기</h2>
+          <p class="main-desc">솔레노이드 밸브, 릴레이 코일, 모터 브레이크 OFF 시 발생하는 -300V~-1000V 역기전력 스파이크 에너지를 흡수하여 PLC 출력단 파손 및 CPU 리셋을 방지합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>유도성 코일 부하 파라미터</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="coilLoadPreset">부하 종류 및 코일 규격 프리셋</label>
+              <select id="coilLoadPreset" class="select-precision font-mono">
+                <option value="solenoid_valve" selected>공압 솔레노이드 밸브 (24V 0.45A / L = 150 mH)</option>
+                <option value="relay_my4">소형 릴레이 코일 MY4N (24V 37mA / L = 50 mH)</option>
+                <option value="servo_brake">서보 모터 전자 브레이크 (24V 1.5A / L = 800 mH)</option>
+                <option value="custom">직접 수치 입력 (Custom Inductance)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-field">
+                <label for="coilCurrentA">코일 정상 전류 (I_coil)</label>
+                <div class="val-input-group">
+                  <input type="number" id="coilCurrentA" value="0.45" step="0.05" min="0.01" max="10.0" class="input-val font-mono">
+                  <span class="val-unit">A</span>
+                </div>
+              </div>
+              <div class="adv-field">
+                <label for="coilInductanceMh">코일 인덕턴스 (L)</label>
+                <div class="val-input-group">
+                  <input type="number" id="coilInductanceMh" value="150" min="1" max="5000" class="input-val font-mono">
+                  <span class="val-unit">mH</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-box mt-2">
+              <label for="surgeSuppressorType">서지 억제 보호 소자 방식</label>
+              <select id="surgeSuppressorType" class="select-precision font-mono">
+                <option value="flyback_diode" selected>플라이백 다이오드 (1N4007 - 가장 강력한 전압 클램프, 복귀시간 다소 지연)</option>
+                <option value="zener_combo">제너 다이오드 + 일반 다이오드 직렬 (고속 복귀형, 36V 제너 클램프)</option>
+                <option value="varistor_mov">바리스터 (MOV 39V / 양방향 서지 흡수)</option>
+                <option value="rc_snubber">RC 스너버 (교류/직류 겸용)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>역기전력 에너지 &amp; 소자 선정 결과</h3>
+            </div>
+            <div class="caption-right font-mono">
+              <span class="badge-pill badge-safe">PLC 출력단 100% 보호</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">STORED MAGNETIC ENERGY (코일 축적 전자기 에너지)</span>
+                <span class="gauge-target" id="surgePeakV">무보호 시 역기전력: ~ -650V</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resStoredEnergyMilliJoule" class="digit-value">15.2</span>
+                <span class="digit-unit">mJ (밀리줄)</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>다이오드 클램프 전압:</span>
+                  <strong id="resClampedV" class="text-safe">-0.7 V (안전)</strong>
+                </div>
+                <div class="g-stat">
+                  <span>추천 보호 소자 품번:</span>
+                  <strong id="resSurgePart" class="text-highlight">1N4007 (1000V 1A)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label">최대 역내전압(PIV) 요구치</span>
+              <strong class="s-val font-mono" id="resMinPivV">&ge; 200 V</strong>
+              <span class="s-sub">안전율 4배 적용</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">코일 소호 방전 시간 (&tau;)</span>
+              <strong class="s-val font-mono" id="resDischargeTime">약 18.5 ms</strong>
+              <span class="s-sub">밸브 복귀 지연치</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">PLC 트랜지스터 안전도</span>
+              <strong class="s-val font-mono text-safe">GRADE A (완벽 차단)</strong>
+              <span class="s-sub">Vce 항복 전압 한계 이내</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-3">
+            <i data-lucide="shield-check" class="note-icon"></i>
+            <div class="note-content">
+              <strong>서지 설계 지침:</strong> 솔레노이드 코일 통전 해제 시 $E = rac{1}{2}LI^2 = 15.2	ext{mJ}$의 에너지가 발생합니다. 코일 양단에 <strong>1N4007 다이오드</strong>를 역방향 병렬 연결하면 역기전력이 0.7V 이내로 안전하게 소호되어 PLC Y 출력 카드 파손을 원천 차단합니다.
+            </div>
+          </div>
+
+          <div class="circuit-actions-bar mt-3">
+            <button type="button" id="addSurgeToProjectBtn" class="btn-add-to-project">
+              <i data-lucide="plus-circle"></i>
+              <span>서지 보호 설계 프로젝트에 담기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 21: SMPS 전원 투입 돌입전류(Inrush) & 차단기 트립 곡선 판정기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-inrushbreaker" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">SMPS 전원 투입 돌입전류(Inrush) &amp; 차단기 C/D 커브 오동작 판정기</h2>
+          <p class="main-desc">제어반 메인 전원 투입 시 다수의 SMPS 입력단 평활 커패시터 충전으로 발생하는 20~40배 돌입전류와 배선차단기(MCCB/CP) 순시 트립 오동작을 검증합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>전원부 구성 &amp; 차단기 정격</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-field">
+                <label for="inrushSmpsCount">동시 투입 SMPS 대수</label>
+                <div class="val-input-group">
+                  <input type="number" id="inrushSmpsCount" value="2" min="1" max="10" class="input-val font-mono">
+                  <span class="val-unit">대</span>
+                </div>
+              </div>
+              <div class="adv-field">
+                <label for="inrushSmpsModel">SMPS 기종 (단대당 돌입전류)</label>
+                <select id="inrushSmpsModel" class="select-precision font-mono">
+                  <option value="35" selected>MEAN WELL NDR-240-24 (대당 피크 35A / 230VAC)</option>
+                  <option value="20">MEAN WELL NDR-120-24 (대당 피크 20A / 230VAC)</option>
+                  <option value="60">MEAN WELL NDR-480-24 (대당 피크 60A / 230VAC)</option>
+                  <option value="45">LS ELECTRIC LDU-240 (대당 피크 45A)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-field">
+                <label for="inrushBreakerType">상위 차단기 트립 커브 (Trip Curve)</label>
+                <select id="inrushBreakerType" class="select-precision font-mono">
+                  <option value="b_curve">B-Curve (정격의 3~5배 / 저항성 전등용, 트립 취약)</option>
+                  <option value="c_curve" selected>C-Curve (정격의 5~10배 / 산업용 표준 CP)</option>
+                  <option value="d_curve">D-Curve (정격의 10~20배 / 고돌입 모터·트랜스용)</option>
+                </select>
+              </div>
+              <div class="adv-field">
+                <label for="inrushBreakerAmp">차단기 정격 전류 (In)</label>
+                <select id="inrushBreakerAmp" class="select-precision font-mono">
+                  <option value="6">6A (소형 분기)</option>
+                  <option value="10" selected>10A (표준 SMPS 1차측)</option>
+                  <option value="16">16A (중형 제어반)</option>
+                  <option value="20">20A</option>
+                  <option value="30">30A (메인 MCCB)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>돌입전류 피크 &amp; 트립 안전율</h3>
+            </div>
+            <div class="caption-right font-mono">
+              <span id="inrushTripBadge" class="badge-pill badge-safe">TRIP SAFE (안전)</span>
+            </div>
+          </div>
+
+          <div class="digital-gauge-card">
+            <div class="gauge-screen">
+              <div class="gauge-top-meta">
+                <span class="gauge-label">TOTAL INRUSH PEAK CURRENT (합산 돌입전류 피크)</span>
+                <span class="gauge-target" id="inrushDurationBadge">지속시간: 약 3.5 ms</span>
+              </div>
+              <div class="gauge-main-digits font-mono">
+                <span id="resInrushTotalPeak" class="digit-value">70.0</span>
+                <span class="digit-unit">A (Peak)</span>
+              </div>
+              <div class="gauge-bottom-meta font-mono">
+                <div class="g-stat">
+                  <span>차단기 순시 트립 임계치:</span>
+                  <strong id="resBreakerInstantLimit" class="text-safe">100.0 A (10A C-Curve)</strong>
+                </div>
+                <div class="g-stat">
+                  <span>돌입 마진율:</span>
+                  <strong id="resInrushMarginPct" class="text-highlight">+30.0% 여유 (안전)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="specs-mini-grid mt-2">
+            <div class="spec-cell">
+              <span class="s-label">정상 운전 시 1차측 정격전류</span>
+              <strong class="s-val font-mono" id="resNormalPrimaryA">약 2.4 A</strong>
+              <span class="s-sub">AC 220V 기준</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">NTC 서미스터 소프트 스타트</span>
+              <strong class="s-val font-mono text-safe">내장됨 (Active)</strong>
+              <span class="s-sub">내부 서미스터 억제</span>
+            </div>
+            <div class="spec-cell">
+              <span class="s-label">차단기 선정 판정</span>
+              <strong class="s-val font-mono text-safe" id="resInrushVerdict">10A C-Curve 적합</strong>
+              <span class="s-sub">오트립 위험 없음</span>
+            </div>
+          </div>
+
+          <div class="engineer-note-box mt-3">
+            <i data-lucide="check-circle" class="note-icon"></i>
+            <div class="note-content" id="inrushNoteText">
+              <strong>돌입전류 판정 소견:</strong> SMPS 2대 동시 투입 시 총 70.0A(피크 3.5ms)의 돌입전류가 발생하지만, 10A C-Curve 차단기의 순시 트립 하한치(100A)보다 30% 낮아 전원 투입 시 불요 차단(Nuisance Trip)이 발생하지 않습니다.
+            </div>
+          </div>
+
+          <div class="circuit-actions-bar mt-3">
+            <button type="button" id="addInrushToProjectBtn" class="btn-add-to-project">
+              <i data-lucide="plus-circle"></i>
+              <span>돌입전류 검토 프로젝트에 담기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ========================================================================= -->
     <!-- TAB 8: 기술 자료 & 실무 가이드 -->
     <!-- ========================================================================= -->
     <section id="tab-articles" class="tab-panel">
@@ -3549,14 +3945,14 @@
     </div>
   </div>
 
-  <!-- Digital Product Asset Bundle Modal [PHASE 1 DIGITAL REVENUE] -->
+  <!-- Digital Product Asset Bundle Modal [DUAL-TIER ACCESSIBLE PRICING] -->
   <div id="digitalProductModal" class="modal-backdrop hidden">
     <div class="modal-card modal-lg">
       <div class="modal-header">
         <div class="modal-title-group">
           <i data-lucide="package-check" class="text-highlight"></i>
           <div>
-            <h4>전장설계 실무 엑셀(XLSX) 마스터 템플릿 &amp; CAD 핸드북 패키지</h4>
+            <h4>전장설계 실무 엑셀(XLSX) 마스터 템플릿 &amp; 기술 핸드북 패키지</h4>
             <span class="modal-subtitle font-mono">VoltCheck Professional Offline Engineering Master Bundle</span>
           </div>
         </div>
@@ -3566,39 +3962,74 @@
         <div class="digital-bundle-grid">
           <div class="bundle-item-card">
             <div class="b-badge">XLSX 템플릿</div>
-            <h5>VoltCheck_Master_V2.xlsx</h5>
-            <p>보안 사내 폐쇄망 및 오프라인 환경용 24V 전압강하, SMPS 부하율, 제어반 쿨링 자동 연산 엑셀 마스터 시트.</p>
+            <h5>VoltCheck_Master_V3.xlsx (자동연산)</h5>
+            <p>사내 보안 폐쇄망용 24V 전압강하, SMPS 부하율, 제어반 발열 쿨링, 닥트 40% 점유율, 케이블 BOM 원가 자동 산출 엑셀 마스터 시트.</p>
           </div>
           <div class="bundle-item-card">
             <div class="b-badge">PDF 핸드북</div>
-            <h5>FA 전장설계 표준 규정 실무 가이드 (50p)</h5>
-            <p>2026 KEC, NFPA 79, UL 508A 제어반 점검 체크리스트, 허용전류 감쇄표 및 현장 트러블슈팅 바이블.</p>
+            <h5>FA 전장설계 표준 규정 실무 바이블 (80p)</h5>
+            <p>2026 KEC, NFPA 79, UL 508A 제어반 점검 체크리스트, 허용전류 감쇄표 및 오실로스코프 파형 트러블슈팅 20선 수록.</p>
           </div>
           <div class="bundle-item-card">
             <div class="b-badge">DWG / DXF</div>
-            <h5>전기 CAD 표준 회로 심볼 라이브러리</h5>
-            <p>AutoCAD / EPLAN 호환 SMPS, 회로보호기(CP), 릴레이, 밸브, 단자대 블록 심볼 150종 수록.</p>
+            <h5>전기 CAD 표준 회로 심볼 200종 (PRO 전용)</h5>
+            <p>AutoCAD / EPLAN 호환 SMPS, 회로보호기(CP), 릴레이, 밸브, 단자대, 비상정지 PLe 안전회로 블록 심볼 모음.</p>
           </div>
         </div>
 
-        <div class="pricing-cta-card mt-3">
-          <div class="pricing-left">
-            <span class="price-orig">정가 59,000원</span>
-            <div class="price-main">
-              <span class="price-num">29,000</span>
-              <span class="price-unit">원 (VAT 포함)</span>
+        <!-- Dual Tier Pricing Option Cards -->
+        <div class="pricing-tiers-grid mt-3">
+          <!-- Tier 1: 9,900 KRW Individual Starter -->
+          <div class="pricing-tier-card tier-popular">
+            <div class="tier-badge">🔥 실무자 최다 선택 (커피 2잔 가격)</div>
+            <div class="tier-header">
+              <h4>엔지니어 실무 스타터 팩</h4>
+              <div class="tier-price">
+                <span class="t-num">9,900</span>
+                <span class="t-unit">원 (VAT 포함)</span>
+              </div>
             </div>
-            <span class="price-sub">※ 법인카드 결제 및 세금계산서/지출증빙 영수증 즉시 발행</span>
+            <ul class="tier-features font-mono">
+              <li>✓ VoltCheck_Master_V3.xlsx 자동연산 엑셀</li>
+              <li>✓ FA 전장설계 표준 규정 핸드북 80p PDF</li>
+              <li>✓ 개인 PC / 모바일 평생 영구 소장</li>
+            </ul>
+            <button type="button" class="btn-primary-action w-100 mt-2" onclick="selectTierAndBuy(9900, '엔지니어 실무 스타터 팩 (9,900원)')">
+              <i data-lucide="download"></i> 9,900원 즉시 소장하기
+            </button>
           </div>
-          <div class="pricing-right">
-            <form id="digitalOrderForm" onsubmit="event.preventDefault(); submitDigitalOrder();">
-              <input type="email" id="orderEmail" required placeholder="수신용 이메일 주소 (name@company.com)" class="input-precision font-mono mb-2">
-              <button type="submit" class="btn-primary-action w-100" style="padding: 0.75rem 1.25rem;">
-                <i data-lucide="download-cloud"></i>
-                <span>29,000원 즉시 다운로드 신청</span>
+
+          <!-- Tier 2: 29,000 KRW Team / Pro Package -->
+          <div class="pricing-tier-card">
+            <div class="tier-badge" style="background:#3b82f6;">🏢 팀 / 기업용 라이선스</div>
+            <div class="tier-header">
+              <h4>PRO 기업용 마스터 번들</h4>
+              <div class="tier-price">
+                <span class="t-num">29,000</span>
+                <span class="t-unit">원 (VAT 포함)</span>
+              </div>
+            </div>
+            <ul class="tier-features font-mono">
+              <li>✓ 스타터 팩의 모든 구성품 포함</li>
+              <li>✓ <strong>AutoCAD/EPLAN 전기 CAD 심볼 200종 (DWG/DXF)</strong></li>
+              <li>✓ 사내 폐쇄망 무제한 복제 및 세금계산서/지출증빙 발행</li>
+            </ul>
+            <button type="button" class="btn-secondary-action w-100 mt-2" onclick="selectTierAndBuy(29000, 'PRO 기업용 마스터 번들 (29,000원)')">
+              <i data-lucide="building"></i> 29,000원 법인/팀 구매
+            </button>
+          </div>
+        </div>
+
+        <div id="digitalOrderBox" class="mt-3 p-3" style="background:var(--bg-main); border:1px solid var(--border-main); border-radius:var(--radius-sm); display:none;">
+          <form id="digitalOrderForm" onsubmit="event.preventDefault(); submitDigitalOrder();">
+            <div style="font-weight:700; color:var(--navy-dark); font-size:0.95rem; margin-bottom:0.5rem;" id="selectedTierTitle">선택된 상품: 엔지니어 실무 스타터 팩 (9,900원)</div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <input type="email" id="orderEmail" required placeholder="수신용 이메일 주소 (name@company.com)" style="flex:1; min-width:260px;" class="input-precision font-mono">
+              <button type="submit" class="btn-primary-action" style="padding:0.6rem 1.25rem;">
+                <i data-lucide="send"></i> 다운로드 링크 수신
               </button>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
