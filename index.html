@@ -286,6 +286,22 @@
             <i data-lucide="thermometer"></i>
             <span>PT100·열전대</span>
           </button>
+          <button class="tab-btn" data-tab="tab-valvecv" role="tab">
+            <i data-lucide="gauge"></i>
+            <span>밸브 유량계수(Cv)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-agvbattery" role="tab">
+            <i data-lucide="truck"></i>
+            <span>AGV 배터리·충전</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-busbar" role="tab">
+            <i data-lucide="layers"></i>
+            <span>부스바 허용전류</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-cleanesd" role="tab">
+            <i data-lucide="sparkles"></i>
+            <span>클린룸 정전기(ESD)</span>
+          </button>
           <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
             <span data-i18n="tab_notes">기술 노트</span>
@@ -3783,6 +3799,426 @@
       </div>
     </section>
 
+
+    <!-- ========================================================================= -->
+    <!-- TAB 27: 밸브 유량계수(Cv/Kv) & 배관 차압 계산기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-valvecv" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">ISA-75.01 / IEC 60534 제어 밸브 유량계수(Cv / Kv) &amp; 배관 유량 사이징 계산기</h2>
+          <p class="main-desc">유체(물, 오일, 공압, 증기)의 유량과 전후 차압(&Delta;P)에 따른 제어 밸브 유량계수(Cv, Kv)와 배관 유속 및 최소 밸브 구경(DN)을 판정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>유체 물성 및 유량/압력 조건</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="vcFluidType">유체 종류 (Fluid Type)</label>
+              <select id="vcFluidType" class="select-precision font-mono">
+                <option value="water" selected>물 (Water - 비중 G=1.0)</option>
+                <option value="oil">산업용 작동유 (Hydraulic Oil - G=0.88)</option>
+                <option value="air">압축공기 (Compressed Air)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="vcFlowRate">설계 요구 유량 (Flow Q)</label>
+                <div class="val-input-group">
+                  <input type="number" id="vcFlowRate" value="120" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">L/min</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="vcDeltaP">밸브 전후 차압 (&Delta;P)</label>
+                <div class="val-input-group">
+                  <input type="number" id="vcDeltaP" value="1.5" step="0.1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">bar</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="vcPipeDiameter">배관 내경 (Pipe ID)</label>
+                <div class="val-input-group">
+                  <input type="number" id="vcPipeDiameter" value="32" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="vcSafetyMargin">용량 안전 마진</label>
+                <div class="val-input-group">
+                  <input type="number" id="vcSafetyMargin" value="25" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>필요 밸브 유량계수(Cv) 및 유속 판정</h3>
+            </div>
+            <span id="vcVerdictBadge" class="badge-pill badge-safe">OPTIMAL FLOW</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">REQUIRED VALVE FLOW COEFFICIENT (Cv)</span>
+            <div class="terminal-voltage-big font-mono" id="resVcCv">6.38 Cv</div>
+            <div class="tv-sub" id="resVcKvSubText">미터계 유량계수 Kv = 5.52 m³/h (개도율 65% 설계 기준)</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">배관 내 유속 (Velocity)</span>
+              <strong class="summary-val font-mono" id="resVcVelocity">2.49 m/s</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">유속 적합성 평가</span>
+              <strong class="summary-val font-mono text-safe" id="resVcVelStatus">적정 (권장 1~3 m/s)</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">추천 밸브 구경 (DN)</span>
+              <strong class="summary-val font-mono text-highlight" id="resVcRecPort">DN25 ~ DN32 (1")</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">캐비테이션 위험도</span>
+              <strong class="summary-val font-mono text-safe" id="resVcCavitation">안전 (저위험)</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 28: 스마트 물류 AGV / AMR 배터리 런타임 & 충전 사이저 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-agvbattery" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">스마트 물류 AGV / AMR 자율주행로봇 배터리 런타임 &amp; 급속 충전 사이징</h2>
+          <p class="main-desc">AGV/AMR 무인이송로봇의 주행 모터, 리프팅 기구, 라이다 센서 소비전력과 방전심도(DoD 80%)에 따른 실가동 시간과 급속 충전 시간을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>배터리 팩 및 로봇 소비전력 프로파일</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="agvBatteryV">배터리 공칭 전압 (V)</label>
+                <select id="agvBatteryV" class="select-precision font-mono">
+                  <option value="24">24 V DC (소형 AMR)</option>
+                  <option value="48" selected>48 V DC (표준 AGV)</option>
+                  <option value="384">384 V DC (중량물 OHT)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="agvBatteryAh">배터리 팩 용량 (Ah)</label>
+                <div class="val-input-group">
+                  <input type="number" id="agvBatteryAh" value="60" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">Ah</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="agvDrivePower">주행 평균 전력 (W)</label>
+                <div class="val-input-group">
+                  <input type="number" id="agvDrivePower" value="450" step="50" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">W</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="agvPayloadDuty">리프트/센서 전력 (W)</label>
+                <div class="val-input-group">
+                  <input type="number" id="agvPayloadPower" value="120" step="20" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">W</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="agvChargerA">충전기 공급 전류 (A)</label>
+                <div class="val-input-group">
+                  <input type="number" id="agvChargerA" value="30" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">A</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="agvDod">방전 심도 (DoD %)</label>
+                <div class="val-input-group">
+                  <input type="number" id="agvDod" value="80" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>연속 가동 시간 및 충전 소요 시간</h3>
+            </div>
+            <span id="agvStatusBadge" class="badge-pill badge-safe">LONG RUNTIME</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">CONTINUOUS OPERATING RUNTIME</span>
+            <div class="terminal-voltage-big font-mono" id="resAgvRuntime">4.04 시간 (4시간 2분)</div>
+            <div class="tv-sub" id="resAgvEnergy">총 유효 에너지 2.30 kWh (소비전력 570W 기준)</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">급속 충전 시간 (0&rarr;80%)</span>
+              <strong class="summary-val font-mono text-highlight" id="resAgvChargeTime">1.60 시간 (96분)</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">충전율 (C-rate)</span>
+              <strong class="summary-val font-mono" id="resAgvCrate">0.50 C</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">평균 방전 전류</span>
+              <strong class="summary-val font-mono" id="resAgvDischargeA">11.88 A</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">추천 충전 방식</span>
+              <strong class="summary-val font-mono">무선 유도 / 접촉식 충전</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 29: 구리/알루미늄 부스바(Busbar) 허용전류 & 단락 기계력 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-busbar" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">DIN 43671 / IEC 60865 구리 부스바(Busbar) 허용전류 &amp; 단락 전자력 계산기</h2>
+          <p class="main-desc">배전반 및 분전함 모선 부스바(Busbar) 규격(두께&times;폭)에 따른 연속 허용전류와 3상 단락 시 발생하는 상간 전자 기계력(N/m) 및 지지애자 간격을 산출합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>부스바 도체 규격 및 단락 조건</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="adv-inputs-grid">
+              <div class="adv-col">
+                <label for="bbMaterial">도체 재질 (Material)</label>
+                <select id="bbMaterial" class="select-precision font-mono">
+                  <option value="cu" selected>전기동 (Cu E-Cu, 도전율 98%)</option>
+                  <option value="al">알루미늄 (Al E-Al, 도전율 61%)</option>
+                </select>
+              </div>
+              <div class="adv-col">
+                <label for="bbBarsCount">상당 도체 매수 (Parallel Bars)</label>
+                <select id="bbBarsCount" class="select-precision font-mono">
+                  <option value="1" selected>1 매 (Single Bar)</option>
+                  <option value="2">2 매 (Double Bar)</option>
+                  <option value="3">3 매 (Triple Bar)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="bbWidth">부스바 폭 (Width W)</label>
+                <div class="val-input-group">
+                  <input type="number" id="bbWidth" value="50" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="bbThickness">부스바 두께 (Thickness T)</label>
+                <div class="val-input-group">
+                  <input type="number" id="bbThickness" value="5" step="1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="bbShortIsc">단락전류 피크 (Ip kA)</label>
+                <div class="val-input-group">
+                  <input type="number" id="bbShortIsc" value="35" step="5" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">kA</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="bbPhaseDist">상간 중심 거리 (Distance a)</label>
+                <div class="val-input-group">
+                  <input type="number" id="bbPhaseDist" value="120" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">mm</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>연속 허용전류 및 단락 전자력 판정</h3>
+            </div>
+            <span id="bbVerdictBadge" class="badge-pill badge-safe">AMPACITY OK</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">CONTINUOUS RATED AMPACITY (DIN 43671)</span>
+            <div class="terminal-voltage-big font-mono" id="resBbAmpacity">630 A</div>
+            <div class="tv-sub" id="resBbSectionArea">단면적 250 mm² (온도상승 35K, 주위온도 35°C 기준)</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">단락 전자력 (Force F)</span>
+              <strong class="summary-val font-mono text-warn" id="resBbElectroForce">2,042 N/m</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">최대 지지애자 간격</span>
+              <strong class="summary-val font-mono text-highlight" id="resBbSupportSpacing">450 mm 이하</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">부스바 단위 중량</span>
+              <strong class="summary-val font-mono" id="resBbWeight">2.23 kg/m</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">적용 설계 규격</span>
+              <strong class="summary-val font-mono">DIN 43671 / IEC 60865</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 30: 반도체/클린룸 ESD 정전기 감쇠 & 표면저항 판정기 [NEW] -->
+    <!-- ========================================================================= -->
+    <section id="tab-cleanesd" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h2 class="main-title">ANSI/ESD S20.20 &amp; IEC 61340 반도체/클린룸 정전기 감쇠 &amp; 표면저항 판정기</h2>
+          <p class="main-desc">반도체/2차전지 클린룸 EPA 제전 매트, 바닥재, 이오나이저의 정전기 감쇠 시간(1000V&rarr;100V &le; 2.0s) 및 표면 저항 적합성을 판정합니다.</p>
+        </div>
+      </div>
+
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">01</span>
+              <h3>정전기 측정 전압 및 표면 저항값</h3>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="field-box">
+              <label for="esdTargetItem">관리 제전 품목 (ESD Protected Item)</label>
+              <select id="esdTargetItem" class="select-precision font-mono">
+                <option value="mat" selected>제전 작업대 매트 (Worksurface Mat)</option>
+                <option value="floor">제전 바닥재 / 에폭시 (ESD Flooring)</option>
+                <option value="ionizer">이오나이저 송풍기 (Ionizer Blower)</option>
+                <option value="wrist">제전 손목띠 (Wrist Strap)</option>
+              </select>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="esdInitVolt">초기 정전 전압 (V1)</label>
+                <div class="val-input-group">
+                  <input type="number" id="esdInitVolt" value="1000" step="50" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">V</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="esdFinalVolt">감쇠 후 전압 (V2)</label>
+                <div class="val-input-group">
+                  <input type="number" id="esdFinalVolt" value="100" step="10" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">V</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="adv-inputs-grid mt-2">
+              <div class="adv-col">
+                <label for="esdDecayTime">측정 감쇠 시간 (t_decay)</label>
+                <div class="val-input-group">
+                  <input type="number" id="esdDecayTime" value="0.8" step="0.1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">s</span>
+                </div>
+              </div>
+              <div class="adv-col">
+                <label for="esdSurfaceR">측정 표면 저항 (Rs &times; 10^)</label>
+                <div class="val-input-group">
+                  <input type="number" id="esdSurfaceR" value="7.2" step="0.1" inputmode="decimal" class="input-val font-mono">
+                  <span class="val-unit">log &Omega;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left">
+              <span class="card-num">02</span>
+              <h3>ANSI/ESD S20.20 규격 적합성 판정</h3>
+            </div>
+            <span id="esdVerdictBadge" class="badge-pill badge-safe">EPA PASS (정전기 안전)</span>
+          </div>
+          <div class="terminal-voltage-hero">
+            <span class="tv-label font-mono">ESD PROTECTION COMPLIANCE VERDICT</span>
+            <div class="terminal-voltage-big font-mono" id="resEsdVerdict">PASS (적합)</div>
+            <div class="tv-sub" id="resEsdSubText">감쇠시간 0.8s (기준 2.0s 이하 만족) / 표면저항 10^7.2 &Omega; (정전분산 영역)</div>
+          </div>
+          <div class="summary-grid-hero">
+            <div class="summary-item-hero">
+              <span class="summary-label">재질 전기적 특성 분류</span>
+              <strong class="summary-val font-mono text-safe" id="resEsdMaterialClass">정전기 분산성 (Dissipative)</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">정전기 감쇠율 (Rate)</span>
+              <strong class="summary-val font-mono" id="resEsdDecayRate">1,125 V/s</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">클린룸 허용 규격</span>
+              <strong class="summary-val font-mono">10⁶ ~ 10⁹ &Omega;</strong>
+            </div>
+            <div class="summary-item-hero">
+              <span class="summary-label">적용 국제 표준</span>
+              <strong class="summary-val font-mono">ANSI/ESD S20.20</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -5231,7 +5667,7 @@
       <div class="drawer-handle-bar"></div>
       <div class="drawer-header">
         <div class="drawer-title-group">
-          <h4 id="mdTitle">21대 전장설계 공학 도구</h4>
+          <h4 id="mdTitle">30대 전장설계 공학 도구</h4>
           <span id="mdSub">원터치 계산기 즉시 전환</span>
         </div>
         <button type="button" class="btn-close" onclick="closeMobileToolsDrawer()">&times;</button>
@@ -5337,6 +5773,22 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-tempconversion')">
           <div class="drawer-tool-icon"><i data-lucide="thermometer"></i></div>
           <span class="drawer-tool-name" id="dtn26">PT100·열전대</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-valvecv')">
+          <div class="drawer-tool-icon"><i data-lucide="gauge"></i></div>
+          <span class="drawer-tool-name" id="dtn27">밸브 유량계수(Cv)</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-agvbattery')">
+          <div class="drawer-tool-icon"><i data-lucide="truck"></i></div>
+          <span class="drawer-tool-name" id="dtn28">AGV 배터리 런타임</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-busbar')">
+          <div class="drawer-tool-icon"><i data-lucide="layers"></i></div>
+          <span class="drawer-tool-name" id="dtn29">부스바 허용전류</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cleanesd')">
+          <div class="drawer-tool-icon"><i data-lucide="sparkles"></i></div>
+          <span class="drawer-tool-name" id="dtn30">클린룸 정전기(ESD)</span>
         </div>
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>

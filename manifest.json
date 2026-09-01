@@ -1,11 +1,11 @@
 {
-  "name": "Total Engineering (토털 엔지니어링)",
-  "short_name": "TotalEng",
-  "description": "공장 자동화 및 전장설계 26대 공학 계산 도구 및 표준 가이드",
+  "name": "볼트체크 24V (VoltCheck Pro) - 토털 엔지니어링",
+  "short_name": "VoltCheck",
+  "description": "공장 자동화 및 전장설계 30대 공학 계산 도구 및 표준 가이드",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#f97316",
+  "theme_color": "#0f172a",
   "orientation": "portrait-primary",
   "icons": [
     {

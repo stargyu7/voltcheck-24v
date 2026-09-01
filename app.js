@@ -2259,124 +2259,124 @@ function calculateServoRegen() {
 const TAB_I18N_DATA = {
   ko: {
     'tab-voltagedrop': {
-      title: 'DC 24V 선로 전압강하 및 말단 전원 마진 검토',
-      desc: '배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.',
+      title: 'DC 24V 케이블 전압강하 & 센서 전원 마진 검증기',
+      desc: '공장 자동화(FA) 현장의 제어선로 배선 거리, 전선 굵기(AWG/SQ), 부하 전류에 따른 루프 저항과 전압강하를 실시간 연산하여 센서 리셋 오동작을 사전 차단합니다.',
       c1: '설계 파라미터 입력',
-      c2: '검증 판정 및 계측치'
+      c2: '검증 판정 결과 및 계측 데이터'
     },
     'tab-analogloop': {
-      title: '4-20mA 아날로그 전류 루프 수신기 마진 검토',
-      desc: '2선식/4선식 트랜스미터의 전원 전압, 선로 저항, 수신기 Shunt 저항에 따른 루프 전압 마진을 계산합니다.',
-      c1: '루프 전원 및 트랜스미터 사양',
-      c2: '루프 전압 마진 & 수신 전압 검증'
+      title: '4-20mA 아날로그 전송기 수전 마진 검증기',
+      desc: '2선식/4선식 4-20mA 전류 루프에서 전송기 최소 동작전압, 250Ω 션트 저항, 배선 저항에 따른 루프 전압 마진을 검증합니다.',
+      c1: '루프 전원 및 전송기 사양',
+      c2: '루프 전압 마진 판정'
     },
     'tab-smpsbudget': {
-      title: 'DC 24V SMPS 전원 용량 및 서킷 프로텍터(CP) 선정',
-      desc: '부하 총 전류와 안전 여유율(30%), 돌입 전류를 고려하여 최적의 SMPS 용량 및 분기 CP 정격을 산정합니다.',
-      c1: '부하 목록 및 동시 사용률 설정',
-      c2: 'SMPS 추천 용량 & 차단기 사양'
+      title: 'DC 24V SMPS 용량 & 회로보호기(CP) 자동 선정기',
+      desc: '상시 부하율, 30% 안전 마진, 돌입전류 배수를 종합 분석하여 최적의 SMPS 용량과 분기 회로보호기 정격을 자동 산출합니다.',
+      c1: '부하 프로파일 설정',
+      c2: '추천 SMPS 용량 및 CP 사양'
     },
     'tab-cabinetcooling': {
-      title: '제어반 밀폐형 에어컨 & 열교환기 쿨링 용량 계산',
-      desc: '제어반 외형 치수, 내부 발열량, 최고 주위 온도(Ta)를 기반으로 필요 냉각 용량(W, kcal/h)을 산출합니다.',
-      c1: '제어반 외형 및 열원 조건',
-      c2: '필요 쿨링 용량 & 선정 가이드'
+      title: '제어반 발열량 & 판넬 에어컨 용량 선정기',
+      desc: '제어반 크기, 내부 발열 부품(SMPS, 인버터, PLC) 손실 및 주위 온도(Ta)에 따른 필요 쿨링 용량(W, kcal/h)을 산출합니다.',
+      c1: '제어반 규격 및 발열원 입력',
+      c2: '필요 냉각 용량 및 팬/에어컨 선정'
     },
     'tab-cabletable': {
-      title: '산업용 케이블 규격별 허용전류 & 도체저항 조견표',
-      desc: 'AWG 및 Metric(SQ) 도선의 단면적, 상온 도체 저항, 공기 중/닥트 내 포설 시 허용전류를 비교 검토합니다.',
-      c1: '케이블 도선 규격 필터링',
-      c2: '도선 상세 물리 사양'
+      title: '산업용 케이블 규격별 허용전류 & 도체 저항 조견표',
+      desc: 'AWG 및 Metric(SQ) 전선의 공칭 단면적, 20°C 도체 저항, 개방 배선 및 전선관/덕트 포설 시 허용전류(Ampacity)를 비교합니다.',
+      c1: '도체 규격 필터링',
+      c2: '도체 물리 사양 상세표'
     },
     'tab-rs485': {
-      title: 'RS-485 / Modbus 통신선로 & 120Ω 종단저항 검토',
-      desc: '통신 보레이트(Baud Rate)와 배선 길이에 따른 최대 허용 거리, 종단저항 체결 여부, T자 분기(Stub) 한계를 계산합니다.',
-      c1: '통신 선로 사양',
-      c2: '통신 신호 무결성 검증'
+      title: 'RS-485 / Modbus 통신선로 & 120Ω 종단저항 분석기',
+      desc: '통신 보레이트, 케이블 길이, 분기(Stub) 길이에 따른 신호 감쇄 및 120Ω 종단저항 설치 필요성을 판정합니다.',
+      c1: '통신 버스 파라미터',
+      c2: '통신 품질 및 종단저항 판정'
     },
     'tab-pneumatics': {
-      title: '공압 실린더 공기 소모량 & 컴프레셔 마력(HP) 산출',
-      desc: '실린더 튜브 내경, 스트로크, 작동 횟수를 기준으로 분당 공기 소모량(Nℓ/min)과 필요 컴프레셔 용량을 산정합니다.',
+      title: '공압 실린더 공기 소모량 & 콤프레샤(HP) 선정기',
+      desc: '실린더 튜브 내경, 스트로크, 분당 작동 횟수에 따른 분당 공기 소모량(Nℓ/min)과 필요 콤프레샤 마력(HP)을 산출합니다.',
       c1: '공압 액추에이터 사양',
-      c2: '필요 유량 & 컴프레셔 추천'
+      c2: '필요 에어 유량 및 콤프레샤 추천'
     },
     'tab-ductutility': {
-      title: '제어반 배선 닥트(Duct) 점유율 40% 한계 계산기',
-      desc: 'NFPA 79 및 KEC 규정에 따른 배선 닥트 규격별 최대 수용 전선 가닥수와 40% 권장 점유율 여부를 검증합니다.',
-      c1: '닥트 규격 및 케이블 구성',
-      c2: '닥트 단면 점유율 판정'
+      title: '배선 덕트(Duct) 점유율 40% 한계 검증기',
+      desc: 'KEC 및 NFPA 79 규정(최대 점유율 40% 이하)에 따른 덕트 내 전선 수용 적합성을 계산합니다.',
+      c1: '덕트 규격 및 케이블 구성',
+      c2: '덕트 점유율 판정 및 여유 공간'
     },
     'tab-plcscaling': {
-      title: 'PLC 아날로그 12-bit / 16-bit ADC 스케일링 계산기',
-      desc: '지멘스, 미쓰비시, LS산전, 오므론 PLC의 아날로그 신호(4-20mA, 0-10V)와 물리량(°C, MPa, RPM) 간 선형 변환 수식 및 디지털 Raw Count를 즉시 산출합니다.',
-      c1: 'PLC 메이커 및 센서 물리량 범위 설정',
-      c2: '스케일링 연산 및 PLC 코드 결과'
+      title: 'PLC 아날로그 12-bit / 16-bit ADC 스케일링 코드 생성기',
+      desc: '4-20mA 신호를 디지털 값(0~4000, 0~16000, 0~27648, 0~32767)으로 변환하는 수식 및 PLC 래더/ST 코드를 자동 생성합니다.',
+      c1: 'ADC 분해능 및 엔지니어링 단위',
+      c2: '변환 수식 및 PLC 표준 코드'
     },
     'tab-motorcalc': {
-      title: '3상 유도전동기(380V/220V) 정격전류 & 마그네트(MC) 선정',
-      desc: '모터 정격 출력(kW/HP)과 전압에 따른 정격 전류, 차단기(MCCB), 전자개폐기(MC), 열동형 과부하계전기(EOCR)를 산출합니다.',
-      c1: '모터 사양 및 운전 조건',
-      c2: '추천 전장 제어기기 사양'
+      title: '3상 모터(380V/220V) 정격전류 & 마그네트(MC) 선정기',
+      desc: '모터 정격 출력(kW/HP), 효율, 역률에 따른 정격전류(FLA)와 기동전류, 마그네트(MC), EOCR 보호 범위를 산출합니다.',
+      c1: '모터 명판 사양 입력',
+      c2: '전류 계산 및 개폐기/보호기 정격'
     },
     'tab-bendingradius': {
-      title: '케이블 베어(Cable Carrier) 최소 곡률반경 & 체결 계산기',
-      desc: '가동형 로봇 케이블의 외경(OD)과 이동 스트로크에 따른 케이블 베어 최소 곡률 반경(R) 및 필요 체인 링크 수를 계산합니다.',
-      c1: '케이블 사양 및 주행 조건',
-      c2: '케이블 베어 사양 및 링크 수'
+      title: '케이블 베어(Cable Carrier) 최소 곡률반경 & 체인 선정기',
+      desc: '가동형 케이블 외경, 굽힘 반경 배수(R), 이동 스트로크에 따른 최적 곡률반경과 케이블베어 여유 공간을 계산합니다.',
+      c1: '가동 케이블 사양 및 행정 조건',
+      c2: '권장 곡률반경(R) 및 베어 규격'
     },
     'tab-otethernet': {
       title: '산업용 OT 이더넷 대역폭 & IP 서브넷 마스크 계산기',
-      desc: 'EtherNet/IP, PROFINET, Modbus-TCP 패킷 주기(RPI)에 따른 네트워크 대역폭 점유율과 서브넷 IP 범위를 산출합니다.',
-      c1: '산업용 네트워크 구성',
-      c2: '대역폭 점유율 & IP 서브넷'
+      desc: 'PROFINET, EtherNet/IP, Modbus-TCP 패킷 주기 및 IP 대역 서브넷 마스크, 브로드캐스트 주소를 자동 산출합니다.',
+      c1: '네트워크 트래픽 및 IP 구성',
+      c2: '대역폭 사용률 및 서브넷 할당표'
     },
     'tab-servoregen': {
-      title: '서보 모터 감속 회생 에너지 & 외장 회생저항 계산기',
-      desc: '부하 관성 모멘트(J), 최고 회전수(RPM), 감속 시간에 따른 회생 제동 전력(W)과 필요 외장 저항 규격을 산출합니다.',
-      c1: '서보 부하 및 감속 운전 패턴',
-      c2: '회생 제동 에너지 & 저항 선정'
+      title: '서보모터 회생제동 에너지 & 외장 저항기 용량 계산기',
+      desc: '서보모터 감속 시 기계 부하 관성에서 발생하는 회생 에너지를 계산하여 드라이브 내장 콘덴서 흡수 여부 및 외장 회생저항기(W/Ω)를 산출합니다.',
+      c1: '부하 관성 및 감속 조건',
+      c2: '회생 에너지 및 외장 저항기 사양'
     },
     'tab-coppercost': {
-      title: '구리 시세(LME) 연동 케이블 실시간 원가 & 중량 계산기',
-      desc: '런던금속거래소(LME) 국제 구리 시세를 반영하여 전선 규격(SQ) 및 길이에 따른 순수 구리 원자재비와 케이블 원가를 산출합니다.',
-      c1: '케이블 사양 및 시세 조건',
-      c2: '구리 원자재비 & 중량 산출'
+      title: '국제 구리시세(LME) 연동 케이블 실시간 원가 & 중량 산출기',
+      desc: '국제 전기동(LME Copper) 시세와 환율, 케이블 도체 단면적/길이에 따른 순수 구리 원가 및 중량을 실시간 산출합니다.',
+      c1: '케이블 사양 및 LME 시세',
+      c2: '구리 중량 및 원가 분석'
     },
     'tab-sldgenerator': {
       title: '단선결선도(SLD) CAD 자동 생성기 (AutoCAD / EPLAN 호환)',
-      desc: '24V 전원단, 차단기, 케이블 선로, 단자대 및 말단 부하 기기를 포함하는 표준 단선도를 실시간 생성하고 CAD(DXF) 도면으로 내보냅니다.',
-      c1: '단선결선 회로 파라미터',
-      c2: 'SLD 단선도 실시간 프리뷰'
+      desc: '차단기, 변압기, SMPS, 분기 회로의 단선도를 브라우저에서 실시간 작도하고 DXF 파일로 즉시 다운로드합니다.',
+      c1: '단선도 계통 파라미터',
+      c2: '실시간 단선도 미리보기 & CAD 출력'
     },
     'tab-iolinksafety': {
-      title: 'IO-Link 마스터 파워 버짓 & PLe/SIL3 안전회로 루프 검증기',
-      desc: '스마트 팩토리 IO-Link 필드 허브 포트별 전력 버짓, M12 Class A/B 전압강하 및 ISO 13849-1 E-Stop 안전회로 OSSD 배선 한계를 산출합니다.',
-      c1: 'IO-Link 마스터 & 안전 루프 사양',
-      c2: '전력 버짓 & 안전 루프 적합 판정'
+      title: 'IO-Link 마스터 포트 전원 & PLe/SIL3 안전회로 검증기',
+      desc: 'IO-Link 클래스 A/B 포트 전원 버짓과 OSSD 안전 광전센서/비상정지 루프의 전압강하를 검증합니다.',
+      c1: 'IO-Link 및 안전회로 구성',
+      c2: '포트 전원 마진 및 안전 판정'
     },
     'tab-grounding': {
-      title: '제어반 보호접지선(PE) 최소 규격 & 고주파 EMC 노이즈 실드 계산기',
-      desc: 'KEC 제140조 및 IEC 60364-5-54 단열온도 상승식(Adiabatic Equation)을 기반으로 고장 단락전류 차단 시 보호도체(PE) 최소 단면적과 인버터 실드 접지를 검증합니다.',
-      c1: '단락 고장 전류 및 접지 조건',
-      c2: '보호접지(PE) 최소 단면적 검증'
+      title: '보호접지(PE) 최소 규격 & 노이즈 EMC 실드 임피던스 계산기',
+      desc: 'KEC 및 IEC 60204-1 기준 상도체 굵기에 따른 보호도체(PE) 최소 단면적과 고조파 노이즈 차폐용 접지 브레이드 임피던스를 산출합니다.',
+      c1: '도체 단면적 및 접지선 파라미터',
+      c2: '보호도체(PE) 규격 및 EMC 임피던스'
     },
     'tab-npnpnp': {
-      title: 'PLC I/O 싱크(NPN) vs 소스(PNP) 배선 인터페이스 & 센서 결선 검증기',
-      desc: '국내/일본(NPN Sink) 및 유럽/글로벌(PNP Source) PLC 입력 모듈과 3선식/2선식 센서의 공통(Common) 결선 오배선 및 출력단 소손을 방지합니다.',
-      c1: 'PLC 모듈 및 센서 인터페이스 사양',
-      c2: 'I/O 공통 전위 및 결선 다이어그램'
+      title: 'PLC I/O 싱크(NPN) vs 소스(PNP) 결선 인터페이스 & 변환 계산기',
+      desc: '아시아(NPN) 및 유럽/미국(PNP) 센서 결선 방식과 풀업/풀다운 저항, NPN-PNP 상호 변환 회로를 검증합니다.',
+      c1: '센서 및 PLC 모듈 사양',
+      c2: '결선 회로 판정 및 변환 가이드'
     },
     'tab-flybacksurge': {
-      title: 'DC 24V 유도성 코일 역기전력(Flyback) 서지 보호 & 다이오드·바리스터 계산기',
-      desc: '솔레노이드 밸브, 릴레이 코일, 모터 브레이크 OFF 시 발생하는 -300V~-1000V 역기전력 스파이크 에너지를 흡수하여 PLC 출력단 파손 및 CPU 리셋을 방지합니다.',
-      c1: '유도성 부하(코일) 전기적 특성',
-      c2: '역기전력 스파이크 및 억제 소자 선정'
+      title: 'DC 24V 역기전력(Flyback) 서지 보호 & 다이오드/TVS 선정기',
+      desc: '솔레노이드 밸브, 릴레이 코일 OFF 시 발생하는 역기전력 피크 전압과 환류 다이오드(Flyback Diode) 및 TVS 다이오드 사양을 산출합니다.',
+      c1: '코일 인덕턴스 및 정격전류',
+      c2: '역기전력 피크 및 보호 소자 사양'
     },
     'tab-inrushbreaker': {
-      title: 'SMPS 전원 투입 돌입전류(Inrush) & 차단기 C/D 커브 오동작 판정기',
-      desc: '제어반 메인 전원 투입 시 다수의 SMPS 입력단 평활 커패시터 충전으로 발생하는 20~40배 돌입전류와 배선차단기(MCCB/CP) 순시 트립 오동작을 검증합니다.',
-      c1: 'SMPS 구성 및 메인 전원 사양',
-      c2: '돌입전류 피크 & 차단기 트립 마진'
+      title: 'SMPS 기동 돌입전류(Inrush) & 차단기 C/D 커브 트립 검증기',
+      desc: 'SMPS 다중 기동 시 발생하는 대전류 돌입 피크(Inrush Current)와 배선용 차단기(MCB) B/C/D 트립 커브 오동작 여부를 사전 검증합니다.',
+      c1: 'SMPS 대수 및 돌입 파라미터',
+      c2: '트립 마진 및 차단기 커브 판정'
     },
     'tab-safetylight': {
       title: 'ISO 13855 / EN ISO 13849-1 안전 라이트커튼 최소 안전거리(S) 계산기',
@@ -2386,7 +2386,7 @@ const TAB_I18N_DATA = {
     },
     'tab-transformer': {
       title: '제어용 변압기(TR) 용량(kVA) 및 1차/2차 차단기 선정기',
-      desc: '메인 동력 전원(380V/440V/480V)에서 제어 전원(220V/110V) 변환 시 상시 부하율과 솔레노이드/MC 돌입 피크를 고려한 변압기 용량 및 보호기를 자동 산출합니다.',
+      desc: '메인 동력 전원에서 제어 전원 변환 시 상시 부하율과 솔레노이드/MC 돌입 피크를 고려한 변압기 용량 및 보호기를 자동 산출합니다.',
       c1: '변압기 전압 사양 및 부하 입력',
       c2: '변압기 추천 용량 및 1차/2차 보호 정격'
     },
@@ -2408,6 +2408,30 @@ const TAB_I18N_DATA = {
       c1: '온도 센서 종류 및 배선 환경',
       c2: '변환 저항/기전력 및 배선 오차 보정치'
     },
+    'tab-valvecv': {
+      title: 'ISA-75.01 / IEC 60534 제어 밸브 유량계수(Cv / Kv) & 배관 유량 사이징 계산기',
+      desc: '유체(물, 오일, 공압, 증기)의 유량과 전후 차압(ΔP)에 따른 제어 밸브 유량계수(Cv, Kv)와 배관 유속 및 최소 밸브 구경(DN)을 판정합니다.',
+      c1: '유체 물성 및 유량/압력 조건',
+      c2: '필요 밸브 유량계수(Cv) 및 유속 판정'
+    },
+    'tab-agvbattery': {
+      title: '스마트 물류 AGV / AMR 자율주행로봇 배터리 런타임 & 급속 충전 사이징',
+      desc: 'AGV/AMR 무인이송로봇의 주행 모터, 리프팅 기구, 라이다 센서 소비전력과 방전심도(DoD 80%)에 따른 실가동 시간과 급속 충전 시간을 산출합니다.',
+      c1: '배터리 팩 및 로봇 소비전력 프로파일',
+      c2: '연속 가동 시간 및 충전 소요 시간'
+    },
+    'tab-busbar': {
+      title: 'DIN 43671 / IEC 60865 구리 부스바(Busbar) 허용전류 & 단락 전자력 계산기',
+      desc: '배전반 및 분전함 모선 부스바(Busbar) 규격(두께×폭)에 따른 연속 허용전류와 3상 단락 시 발생하는 상간 전자 기계력(N/m) 및 지지애자 간격을 산출합니다.',
+      c1: '부스바 도체 규격 및 단락 조건',
+      c2: '연속 허용전류 및 단락 전자력 판정'
+    },
+    'tab-cleanesd': {
+      title: 'ANSI/ESD S20.20 & IEC 61340 반도체/클린룸 정전기 감쇠 & 표면저항 판정기',
+      desc: '반도체/2차전지 클린룸 EPA 제전 매트, 바닥재, 이오나이저의 정전기 감쇠 시간(1000V→100V ≤ 2.0s) 및 표면 저항 적합성을 판정합니다.',
+      c1: '정전기 측정 전압 및 표면 저항값',
+      c2: 'ANSI/ESD S20.20 규격 적합성 판정'
+    },
     'tab-articles': {
       title: '전장설계 기술 자료 & 실무 가이드',
       desc: 'KEC, IEC 60204-1, NFPA 79 규정 및 노이즈 방지 실무 가이드라인을 제공합니다.',
@@ -2416,7 +2440,187 @@ const TAB_I18N_DATA = {
     }
   },
   en: {
-
+    'tab-voltagedrop': {
+      title: 'DC 24V Cable Voltage Drop & Sensor Power Margin',
+      desc: 'Calculate cable loop resistance, voltage drop, and sensor brownout margin in real-time according to distance, wire gauge, and load current.',
+      c1: 'Design Parameters Input',
+      c2: 'Verification Verdict & Readouts'
+    },
+    'tab-analogloop': {
+      title: '4-20mA Analog Current Loop Margin Verification',
+      desc: 'Calculate loop operating margins based on transmitter supply voltage, cable loop resistance, and PLC receiver shunt resistance.',
+      c1: 'Loop Power & Transmitter Specs',
+      c2: 'Loop Voltage Margin & Readouts'
+    },
+    'tab-smpsbudget': {
+      title: 'DC 24V SMPS Power Supply & Circuit Protector Sizing',
+      desc: 'Sizing SMPS wattage and branch circuit protector ratings considering total steady-state load, 30% safety margin, and inrush currents.',
+      c1: 'Load Profile & Coincidence Factor',
+      c2: 'Recommended SMPS Capacity & CP Specs'
+    },
+    'tab-cabinetcooling': {
+      title: 'Control Panel Enclosure Air Conditioner & Cooling Sizing',
+      desc: 'Calculate required cooling capacity (W, kcal/h) according to panel dimensions, internal heat generation, and ambient temperature (Ta).',
+      c1: 'Enclosure Dimensions & Thermal Load',
+      c2: 'Required Cooling Capacity & Sizing Guide'
+    },
+    'tab-cabletable': {
+      title: 'Industrial Cable Ampacity & Conductor Resistance Table',
+      desc: 'Compare cross-sectional area, DC resistance at 20°C, and ampacity in open air vs enclosed raceways for AWG and Metric SQ wires.',
+      c1: 'Conductor Size Filter',
+      c2: 'Detailed Physical Specifications'
+    },
+    'tab-rs485': {
+      title: 'RS-485 / Modbus Bus Line & 120Ω Termination Analysis',
+      desc: 'Calculate maximum allowable distance, 120Ω termination requirements, and stub branch limits based on baud rate and cable length.',
+      c1: 'Bus Line Specifications',
+      c2: 'Signal Integrity Verification'
+    },
+    'tab-pneumatics': {
+      title: 'Pneumatic Cylinder Air Consumption & Compressor HP Sizing',
+      desc: 'Calculate air consumption per minute (Nℓ/min) and required compressor HP based on cylinder bore, stroke, and cycle frequency.',
+      c1: 'Pneumatic Actuator Specs',
+      c2: 'Required Flow & Compressor Sizing'
+    },
+    'tab-ductutility': {
+      title: 'Control Raceway Duct Fill Ratio 40% Limit Checker',
+      desc: 'Calculate raceway fill compliance and free thermal clearance according to KEC and NFPA 79 standards (maximum 40% fill limit).',
+      c1: 'Raceway Dimensions & Cables',
+      c2: 'Duct Fill Compliance & Free Area'
+    },
+    'tab-plcscaling': {
+      title: 'PLC Analog 12-bit / 16-bit ADC Scaling Code Generator',
+      desc: 'Convert 4-20mA analog inputs into raw counts and auto-generate industrial PLC Ladder and Structured Text scaling blocks.',
+      c1: 'ADC Resolution & Engineering Range',
+      c2: 'Conversion Formula & PLC Source Code'
+    },
+    'tab-motorcalc': {
+      title: '3-Phase Motor FLA & Magnetic Contactor (MC) Sizing',
+      desc: 'Calculate 3-phase motor full-load ampacity (FLA), locked-rotor current, and recommended magnetic contactor / EOCR overload ratings.',
+      c1: 'Motor Nameplate Specifications',
+      c2: 'Motor FLA & Starter Ratings'
+    },
+    'tab-bendingradius': {
+      title: 'Cable Carrier Minimum Bending Radius & Chain Sizing',
+      desc: 'Calculate minimum dynamic bending radius (R) and drag chain cavity clearance for flexible robotic cables according to outer diameter.',
+      c1: 'Cable Specifications & Travel Stroke',
+      c2: 'Recommended Radius (R) & Chain Sizing'
+    },
+    'tab-otethernet': {
+      title: 'Industrial OT Ethernet Bandwidth & Subnet Sizer',
+      desc: 'Calculate industrial protocol packet bandwidth (PROFINET, EtherNet/IP) and IP network subnet masks with broadcast addresses.',
+      c1: 'Traffic Parameters & IP Network',
+      c2: 'Bandwidth Utilization & Subnet Table'
+    },
+    'tab-servoregen': {
+      title: 'Servo Motor Regenerative Energy & Braking Resistor Sizer',
+      desc: 'Calculate kinetic deceleration energy, drive capacitor absorption margin, and external dynamic braking resistor wattage and ohms.',
+      c1: 'Mechanism Load Inertia & Deceleration',
+      c2: 'Regen Energy & External Resistor Specs'
+    },
+    'tab-coppercost': {
+      title: 'LME Copper Spot Price Real-Time Cable Weight & Cost Sizer',
+      desc: 'Calculate conductor pure copper weight (kg/km) and raw material costs in real-time synced with London Metal Exchange (LME) copper prices.',
+      c1: 'Conductor Specifications & LME Price',
+      c2: 'Copper Weight & Cost Analysis'
+    },
+    'tab-sldgenerator': {
+      title: 'Single Line Diagram (SLD) CAD Generator (AutoCAD / EPLAN)',
+      desc: 'Interactive browser-based single-line schematic CAD drawing generator with instant DXF vector export for industrial control panels.',
+      c1: 'Single Line System Parameters',
+      c2: 'Live SLD Schematic Preview & CAD Export'
+    },
+    'tab-iolinksafety': {
+      title: 'IO-Link Master Port Power Budget & PLe/SIL3 Safety Loop',
+      desc: 'Verify IO-Link Class A/B master port supply capacity and OSSD safety light curtain / emergency stop loop voltage drop margins.',
+      c1: 'IO-Link Devices & Safety Configuration',
+      c2: 'Port Power Margin & Safety Loop Verdict'
+    },
+    'tab-grounding': {
+      title: 'Protective Earth (PE) Sizing & EMC Shield Impedance Sizer',
+      desc: 'Determine minimum protective conductor (PE) size and high-frequency EMC grounding braid impedance according to IEC 60204-1 and KEC.',
+      c1: 'Phase Conductor & Grounding Specs',
+      c2: 'Protective Conductor & EMC Impedance'
+    },
+    'tab-npnpnp': {
+      title: 'PLC I/O Sink (NPN) vs Source (PNP) Wiring Interface',
+      desc: 'Interactive 3-wire sensor polarity interface with pull-up/pull-down resistor calculations and NPN-to-PNP conversion circuits.',
+      c1: 'Sensor Type & PLC Input Module Specs',
+      c2: 'Wiring Interface Verdict & Conversion'
+    },
+    'tab-flybacksurge': {
+      title: 'DC 24V Solenoid Flyback Surge Suppression & Diode Sizer',
+      desc: 'Calculate inductive turn-off transient peak voltage and size Flyback freewheeling diodes and TVS suppressor clamps.',
+      c1: 'Coil Inductance & Holding Current',
+      c2: 'Flyback Peak & Diode Specifications'
+    },
+    'tab-inrushbreaker': {
+      title: 'SMPS Startup Inrush Current & Breaker C/D Curve Sizer',
+      desc: 'Calculate capacitive startup inrush peak current and verify Miniature Circuit Breaker (MCB) Type C/D trip curves against nuisance tripping.',
+      c1: 'Power Supply Array & Inrush Specs',
+      c2: 'Trip Margin & Breaker Curve Verdict'
+    },
+    'tab-safetylight': {
+      title: 'ISO 13855 / EN ISO 13849-1 Safety Light Curtain Minimum Distance (S)',
+      desc: 'Calculate legally required minimum safety distance (S) based on beam resolution, sensor response, and machine stopping time.',
+      c1: 'Safety Parameters & Response Times',
+      c2: 'ISO 13855 Minimum Distance Verdict'
+    },
+    'tab-transformer': {
+      title: 'Control Power Transformer (TR) Capacity (kVA) & Protection Sizer',
+      desc: 'Size control power transformers and primary/secondary circuit breakers considering steady-state VA, solenoid inrush, and safety margins.',
+      c1: 'Transformer Specs & Load Profile',
+      c2: 'Recommended kVA & Breaker Ratings'
+    },
+    'tab-shortcircuit': {
+      title: 'IEC 60909 Transformer %Z Symmetrical Short-Circuit Current (Isc)',
+      desc: 'Calculate maximum 3-phase symmetrical short-circuit current (Isc) based on transformer %Z and upstream cable impedance damping.',
+      c1: 'Transformer & Upstream Cable Inputs',
+      c2: 'Calculated Isc & Interrupting Capacity'
+    },
+    'tab-motioninertia': {
+      title: 'Mechanism Load Inertia (JL) & Servo Motor Inertia Ratio Sizer',
+      desc: 'Calculate load inertia (JL) for ball screws, timing belts, and rotary tables, evaluating servo motor inertia ratios (JL/JM) and accel torque.',
+      c1: 'Mechanism Specs & Motor Parameters',
+      c2: 'Load Inertia Ratio & Torque Verdict'
+    },
+    'tab-tempconversion': {
+      title: 'IEC 60751 PT100 (RTD) & Thermocouple (TC K/J/T) Temp-to-Resistance/mV Converter',
+      desc: 'Precise temperature-to-resistance/mV conversion and 2-wire/3-wire lead wire resistance error compensation.',
+      c1: 'Sensor Type & Wiring Configuration',
+      c2: 'Converted Value & Lead Wire Offset'
+    },
+    'tab-valvecv': {
+      title: 'ISA-75.01 / IEC 60534 Control Valve Flow Coefficient (Cv / Kv) & Pipe Sizer',
+      desc: 'Calculate required valve flow coefficient (Cv, Kv), fluid velocity (m/s), and port size (DN) based on flow rate and differential pressure (ΔP).',
+      c1: 'Fluid Properties & Flow Conditions',
+      c2: 'Required Valve Cv & Flow Verdict'
+    },
+    'tab-agvbattery': {
+      title: 'Smart Logistics AGV / AMR Robot Battery Runtime & Fast Charger Sizer',
+      desc: 'Calculate real-world operating runtime (hours), battery DoD (80%), power profile, and rapid charging duration for autonomous mobile robots.',
+      c1: 'Battery Pack & Robot Load Profile',
+      c2: 'Continuous Runtime & Fast Charge Duration'
+    },
+    'tab-busbar': {
+      title: 'DIN 43671 / IEC 60865 Copper Busbar Ampacity & Short-Circuit Force Sizer',
+      desc: 'Calculate continuous rated current ampacity (A) and peak electromechanical short-circuit force (N/m) between switchgear busbar phases.',
+      c1: 'Busbar Conductor & Short-Circuit Specs',
+      c2: 'Continuous Ampacity & Short-Circuit Force'
+    },
+    'tab-cleanesd': {
+      title: 'ANSI/ESD S20.20 & IEC 61340 Cleanroom Static Decay & Surface Resistivity Checker',
+      desc: 'Verify EPA ESD static decay time (1,000V to 100V <= 2.0s) and surface resistance (10^6 to 10^9 ohms) for semiconductor and battery fabs.',
+      c1: 'Static Voltage & Surface Resistance Inputs',
+      c2: 'ANSI/ESD S20.20 Compliance Verdict'
+    },
+    'tab-articles': {
+      title: 'Engineering Technical Library & Field Reference',
+      desc: 'IEC 60204-1, NFPA 79, and KEC industrial electrical design rules, grounding practices, and noise suppression guidelines.',
+      c1: 'Technical Topics Index',
+      c2: 'Complete Reference Guide'
+    }
+  },
   ja: {
     'tab-voltagedrop': {
       title: 'DC 24V ケーブル電圧降下＆センサ電源マージン計算機',
@@ -2481,166 +2685,8 @@ const TAB_I18N_DATA = {
       c2: '推荐容量与保护规格'
     }
   }
-,
-
-    'tab-voltagedrop': {
-      title: 'DC 24V Cable Voltage Drop & Sensor Power Margin',
-      desc: 'Calculate cable loop resistance, voltage drop, and sensor brownout margin in real-time according to distance, wire gauge, and load current.',
-      c1: 'Design Parameters Input',
-      c2: 'Verification Verdict & Readouts'
-    },
-    'tab-analogloop': {
-      title: '4-20mA Analog Current Loop Margin Verification',
-      desc: 'Calculate loop operating margins based on transmitter supply voltage, cable loop resistance, and PLC receiver shunt resistance.',
-      c1: 'Loop Power & Transmitter Specs',
-      c2: 'Loop Voltage Margin & Readouts'
-    },
-    'tab-smpsbudget': {
-      title: 'DC 24V SMPS Power Supply & Circuit Protector Sizing',
-      desc: 'Sizing SMPS wattage and branch circuit protector ratings considering total steady-state load, 30% safety margin, and inrush currents.',
-      c1: 'Load Profile & Coincidence Factor',
-      c2: 'Recommended SMPS Capacity & CP Specs'
-    },
-    'tab-cabinetcooling': {
-      title: 'Control Panel Enclosure Air Conditioner & Cooling Sizing',
-      desc: 'Calculate required cooling capacity (W, kcal/h) according to panel dimensions, internal heat generation, and ambient temperature (Ta).',
-      c1: 'Enclosure Dimensions & Thermal Load',
-      c2: 'Required Cooling Capacity & Sizing Guide'
-    },
-    'tab-cabletable': {
-      title: 'Industrial Cable Ampacity & Conductor Resistance Table',
-      desc: 'Compare cross-sectional area, DC resistance at 20°C, and ampacity in open air vs enclosed raceways for AWG and Metric SQ wires.',
-      c1: 'Conductor Size Filter',
-      c2: 'Detailed Physical Specifications'
-    },
-    'tab-rs485': {
-      title: 'RS-485 / Modbus Bus Line & 120Ω Termination Analysis',
-      desc: 'Calculate maximum allowable distance, 120Ω termination requirements, and stub branch limits based on baud rate and cable length.',
-      c1: 'Bus Line Specifications',
-      c2: 'Signal Integrity Verification'
-    },
-    'tab-pneumatics': {
-      title: 'Pneumatic Cylinder Air Consumption & Compressor HP Sizing',
-      desc: 'Calculate air consumption per minute (Nℓ/min) and required compressor HP based on cylinder bore, stroke, and cycle frequency.',
-      c1: 'Pneumatic Actuator Specs',
-      c2: 'Required Flow & Compressor Sizing'
-    },
-    'tab-ductutility': {
-      title: 'Control Panel Wiring Duct 40% Fill Ratio Calculator',
-      desc: 'Verify maximum allowable cable counts and 40% raceway fill limit according to NFPA 79 and KEC regulations.',
-      c1: 'Duct Dimensions & Cable Schedule',
-      c2: 'Cross-Sectional Fill Verdict'
-    },
-    'tab-plcscaling': {
-      title: 'PLC Analog 12-bit / 16-bit ADC Scaling Calculator',
-      desc: 'Calculates linear scaling formulas, PLC ladder/ST logic, and digital raw counts between analog signals (4-20mA, 0-10V) and engineering units (°C, MPa, RPM) for Siemens, Mitsubishi, LS, and Omron PLCs.',
-      c1: 'PLC Maker & Engineering Unit Range',
-      c2: 'Scaling Calculation & PLC Code Output'
-    },
-    'tab-motorcalc': {
-      title: '3-Phase Induction Motor Rated Current & Contactor (MC) Sizing',
-      desc: 'Calculate full-load current, circuit breaker (MCCB), magnetic contactor (MC), and overload relay (EOCR) according to motor power (kW/HP) and voltage.',
-      c1: 'Motor Specs & Operating Conditions',
-      c2: 'Recommended Control Gear Specs'
-    },
-    'tab-bendingradius': {
-      title: 'Cable Carrier Minimum Bending Radius & Chain Sizing',
-      desc: 'Calculate minimum bending radius (R) and required chain link count based on flexible cable outer diameter (OD) and travel stroke.',
-      c1: 'Cable Specs & Travel Stroke',
-      c2: 'Carrier Specs & Link Count'
-    },
-    'tab-otethernet': {
-      title: 'Industrial OT Ethernet Bandwidth & IP Subnet Calculator',
-      desc: 'Calculate bandwidth utilization and subnet IP ranges based on cyclic packet rates (RPI) for EtherNet/IP, PROFINET, and Modbus-TCP.',
-      c1: 'Industrial Network Configuration',
-      c2: 'Bandwidth Utilization & IP Subnet'
-    },
-    'tab-servoregen': {
-      title: 'Servo Motor Deceleration Regenerative Energy & Braking Resistor Sizing',
-      desc: 'Calculate regenerative braking energy and external resistor wattage based on load inertia (J), peak RPM, and deceleration time.',
-      c1: 'Servo Load & Deceleration Profile',
-      c2: 'Regenerative Braking & Resistor Sizing'
-    },
-    'tab-coppercost': {
-      title: 'LME Copper Spot Price & Cable Raw Material Cost Estimator',
-      desc: 'Calculate pure copper raw material cost and cable manufacturing price based on London Metal Exchange (LME) spot rates and wire cross-section.',
-      c1: 'Cable Specs & Market Pricing',
-      c2: 'Raw Copper Cost & Weight'
-    },
-    'tab-sldgenerator': {
-      title: 'Single-Line Diagram (SLD) CAD Auto-Generator',
-      desc: 'Generates parametric single-line diagrams for 24V power circuits, breakers, cable runs, terminal blocks, and load devices, and exports standard AutoCAD/EPLAN DXF files.',
-      c1: 'Single-Line Circuit Parameters',
-      c2: 'Real-Time SLD Diagram Preview'
-    },
-    'tab-iolinksafety': {
-      title: 'IO-Link Master Power Budget & ISO 13849-1 Safety Loop Verifier',
-      desc: 'Calculate fieldbus port power budgets, M12 Class A/B voltage drop, and ISO 13849-1 E-Stop OSSD safety wiring limits.',
-      c1: 'IO-Link Master & Safety Loop Specs',
-      c2: 'Power Budget & Safety Compliance'
-    },
-    'tab-grounding': {
-      title: 'Control Panel Protective Earth (PE) & High-Frequency EMC Shield Calculator',
-      desc: 'Verify minimum protective earth (PE) cross-section and inverter shield bonding based on KEC Art. 140 and IEC 60364-5-54 adiabatic equations.',
-      c1: 'Short-Circuit Fault & Grounding Specs',
-      c2: 'Minimum PE Conductor Sizing'
-    },
-    'tab-npnpnp': {
-      title: 'PLC I/O Sink (NPN) vs Source (PNP) Wiring & Sensor Interface Verifier',
-      desc: 'Prevent wiring errors and transistor burnout between Japanese/Korean (NPN Sink) and European/Global (PNP Source) PLC modules and 3-wire DC sensors.',
-      c1: 'PLC Module & Sensor Specifications',
-      c2: 'I/O Common Voltage & Wiring Diagram'
-    },
-    'tab-flybacksurge': {
-      title: 'DC 24V Inductive Coil Flyback Surge & Diode/Varistor Calculator',
-      desc: 'Absorb -300V~-1000V inductive flyback voltage spikes when turning off solenoid valves, relays, and motor brakes to protect PLC transistor outputs.',
-      c1: 'Inductive Load (Coil) Parameters',
-      c2: 'Flyback Voltage Spike & Snubber Sizing'
-    },
-    'tab-inrushbreaker': {
-      title: 'SMPS Power-On Inrush Peak & Breaker Trip Curve Calculator',
-      desc: 'Verify 20x~40x inrush peak currents from charging SMPS filter capacitors at startup and prevent nuisance tripping on B/C/D curve circuit breakers.',
-      c1: 'SMPS Configuration & AC Input Specs',
-      c2: 'Inrush Peak & Breaker Trip Margin'
-    },
-    'tab-safetylight': {
-      title: 'ISO 13855 Safety Light Curtain Minimum Distance Calculator',
-      desc: 'Calculate mandatory minimum safety distance (S) according to optical beam resolution, sensor response, and machine brake stopping time.',
-      c1: 'Safety Parameters & Response Times',
-      c2: 'ISO 13855 Minimum Distance Verdict'
-    },
-    'tab-transformer': {
-      title: 'Control Power Transformer (kVA) & Protection Sizing',
-      desc: 'Sizing transformer kVA ratings and primary/secondary circuit breakers considering steady load and solenoid/MC inrush peaks.',
-      c1: 'Voltage Specs & Load Profile',
-      c2: 'Recommended Capacity & Protection Specs'
-    },
-    'tab-shortcircuit': {
-      title: 'IEC 60909 Symmetrical Short Circuit Current (kA) Verifier',
-      desc: 'Calculate maximum fault short-circuit current (Isc) based on transformer %Z and cable distance, and verify breaker interrupting capacity (Icu).',
-      c1: 'Transformer & Cable Run Parameters',
-      c2: 'Short-Circuit Current & Breaker Verdict'
-    },
-    'tab-motioninertia': {
-      title: 'Mechanism Load Inertia (JL) & Servo Motor Sizing',
-      desc: 'Calculate reflected load inertia (JL) and inertia ratio (JL/JM) for ball screws, timing belts, and rotary tables.',
-      c1: 'Mechanism & Motor Specifications',
-      c2: 'Inertia Ratio & Acceleration Torque'
-    },
-    'tab-tempconversion': {
-      title: 'IEC 60751 PT100 (RTD) & Thermocouple (TC) Converter',
-      desc: 'Precision conversion between temperature, resistance (PT100/1000), and thermo-voltage (K/J/T) with 3-wire lead compensation.',
-      c1: 'Sensor Type & Wiring Configuration',
-      c2: 'Converted Value & Cable Compensation'
-    },
-    'tab-articles': {
-      title: 'Engineering Technical Reference & Field Notes',
-      desc: 'Standards compliance reference and noise suppression field guidelines.',
-      c1: 'Technical Index',
-      c2: 'Detailed Engineering Guides'
-    }
-  }
 };
+
 
 function applyLanguage(lang) {
   currentLanguage = lang;
@@ -5087,6 +5133,10 @@ document.addEventListener('DOMContentLoaded', () => {
   calculateShortCircuit();
   calculateMotionInertia();
   calculateTempConversion();
+  calculateValveCv();
+  calculateAgvBattery();
+  calculateBusbar();
+  calculateCleanESD();
 
 });
 
@@ -5795,3 +5845,227 @@ document.addEventListener('click', () => {
   const menu = document.getElementById('langMenuDropdown');
   if (menu) menu.classList.remove('show');
 });
+
+
+// ==========================================================================
+// TAB 27: VALVE FLOW COEFFICIENT (Cv / Kv) & PIPE SIZING ENGINE
+// ==========================================================================
+
+function calculateValveCv() {
+  const fluid = document.getElementById('vcFluidType')?.value || 'water';
+  const q_lpm = parseFloat(document.getElementById('vcFlowRate')?.value) || 120;
+  const dp_bar = Math.max(parseFloat(document.getElementById('vcDeltaP')?.value) || 1.5, 0.05);
+  const pipe_id_mm = parseFloat(document.getElementById('vcPipeDiameter')?.value) || 32;
+  const margin_pct = parseFloat(document.getElementById('vcSafetyMargin')?.value) || 25;
+
+  // Specific gravity G
+  let G = 1.0;
+  if (fluid === 'oil') G = 0.88;
+  else if (fluid === 'air') G = 0.0012;
+
+  // Q in GPM for Cv formula: Q_gpm = Q_lpm * 0.264172
+  const q_gpm = q_lpm * 0.264172;
+  // dp in psi: dp_psi = dp_bar * 14.5038
+  const dp_psi = dp_bar * 14.5038;
+
+  // Cv = Q_gpm * sqrt(G / dp_psi)
+  let cv = q_gpm * Math.sqrt(G / dp_psi);
+  // Apply design margin
+  cv = cv * (1 + margin_pct / 100);
+  const kv = cv * 0.865;
+
+  // Velocity v = Q / Area (m/s)
+  // Q in m^3/s = (q_lpm / 1000) / 60
+  const q_m3s = (q_lpm / 1000.0) / 60.0;
+  const area_m2 = Math.PI * Math.pow((pipe_id_mm / 1000.0) / 2.0, 2);
+  const vel_ms = area_m2 > 0 ? (q_m3s / area_m2) : 0;
+
+  // Recommended DN port
+  let recPort = 'DN25 (1")';
+  if (cv < 3) recPort = 'DN15 (1/2")';
+  else if (cv < 6) recPort = 'DN20 (3/4")';
+  else if (cv < 12) recPort = 'DN25 ~ DN32 (1" ~ 1-1/4")';
+  else if (cv < 25) recPort = 'DN40 ~ DN50 (1-1/2" ~ 2")';
+  else recPort = 'DN65 이상 (2-1/2"+)';
+
+  // Velocity status
+  let velStatus = '적정 (권장 1~3 m/s)';
+  let isVelSafe = true;
+  if (vel_ms > 3.5) {
+    velStatus = '유속 과대 (배관 확장 권장)';
+    isVelSafe = false;
+  } else if (vel_ms < 0.5) {
+    velStatus = '유속 과소 (침전물 유의)';
+  }
+
+  // Update UI
+  const elCv = document.getElementById('resVcCv');
+  if (elCv) elCv.textContent = `${cv.toFixed(2)} Cv`;
+  const elKv = document.getElementById('resVcKvSubText');
+  if (elKv) elKv.textContent = `미터계 유량계수 Kv = ${kv.toFixed(2)} m³/h (개도율 65% 설계 마진 +${margin_pct}% 반영)`;
+  const elVel = document.getElementById('resVcVelocity');
+  if (elVel) elVel.textContent = `${vel_ms.toFixed(2)} m/s`;
+  const elVelStat = document.getElementById('resVcVelStatus');
+  if (elVelStat) {
+    elVelStat.textContent = velStatus;
+    elVelStat.className = isVelSafe ? 'summary-val font-mono text-safe' : 'summary-val font-mono text-warn';
+  }
+  const elPort = document.getElementById('resVcRecPort');
+  if (elPort) elPort.textContent = recPort;
+
+  const elBadge = document.getElementById('vcVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isVelSafe ? 'OPTIMAL FLOW' : 'VELOCITY HIGH';
+    elBadge.className = isVelSafe ? 'badge-pill badge-safe' : 'badge-pill badge-warn';
+  }
+}
+
+// ==========================================================================
+// TAB 28: AGV / AMR ROBOT BATTERY RUNTIME & CHARGING SIZER ENGINE
+// ==========================================================================
+
+function calculateAgvBattery() {
+  const v_pack = parseFloat(document.getElementById('agvBatteryV')?.value) || 48;
+  const cap_ah = parseFloat(document.getElementById('agvBatteryAh')?.value) || 60;
+  const drive_w = parseFloat(document.getElementById('agvDrivePower')?.value) || 450;
+  const aux_w = parseFloat(document.getElementById('agvPayloadPower')?.value) || 120;
+  const charger_a = Math.max(parseFloat(document.getElementById('agvChargerA')?.value) || 30, 1);
+  const dod_pct = parseFloat(document.getElementById('agvDod')?.value) || 80;
+
+  const total_p_w = drive_w + aux_w;
+  const total_energy_kwh = (v_pack * cap_ah) / 1000.0;
+  const usable_energy_kwh = total_energy_kwh * (dod_pct / 100.0);
+
+  // Runtime in hours
+  const runtime_hrs = total_p_w > 0 ? (usable_energy_kwh * 1000.0 / total_p_w) : 0;
+  const hrs = Math.floor(runtime_hrs);
+  const mins = Math.round((runtime_hrs - hrs) * 60);
+
+  // Discharge current A
+  const dis_a = total_p_w / v_pack;
+
+  // Charge time (hours to DoD%)
+  const charge_ah = cap_ah * (dod_pct / 100.0);
+  const charge_hrs = (charge_ah / charger_a) * 1.1; // 10% CC/CV efficiency buffer
+  const c_rate = charger_a / cap_ah;
+
+  // Update UI
+  const elRt = document.getElementById('resAgvRuntime');
+  if (elRt) elRt.textContent = `${runtime_hrs.toFixed(2)} 시간 (${hrs}시간 ${mins}분)`;
+  const elEg = document.getElementById('resAgvEnergy');
+  if (elEg) elEg.textContent = `총 유효 에너지 ${usable_energy_kwh.toFixed(2)} kWh (소비전력 ${total_p_w}W, DoD ${dod_pct}% 기준)`;
+  const elChg = document.getElementById('resAgvChargeTime');
+  if (elChg) elChg.textContent = `${charge_hrs.toFixed(2)} 시간 (${Math.round(charge_hrs * 60)}분)`;
+  const elCr = document.getElementById('resAgvCrate');
+  if (elCr) elCr.textContent = `${c_rate.toFixed(2)} C`;
+  const elDis = document.getElementById('resAgvDischargeA');
+  if (elDis) elDis.textContent = `${dis_a.toFixed(2)} A`;
+}
+
+// ==========================================================================
+// TAB 29: BUSBAR AMPACITY & SHORT CIRCUIT FORCE ENGINE (DIN 43671)
+// ==========================================================================
+
+function calculateBusbar() {
+  const mat = document.getElementById('bbMaterial')?.value || 'cu';
+  const bars = parseInt(document.getElementById('bbBarsCount')?.value) || 1;
+  const width_mm = parseFloat(document.getElementById('bbWidth')?.value) || 50;
+  const thick_mm = parseFloat(document.getElementById('bbThickness')?.value) || 5;
+  const isc_ka = parseFloat(document.getElementById('bbShortIsc')?.value) || 35;
+  const dist_mm = Math.max(parseFloat(document.getElementById('bbPhaseDist')?.value) || 120, 20);
+
+  const section_sq = width_mm * thick_mm;
+  // DIN 43671 base ampacity approximation for copper bar (dT=35K, Amb 35C)
+  // I_base ~= k * width^0.5 * thick^0.5 * 30
+  let base_amp = Math.pow(section_sq, 0.62) * 28.5;
+  if (mat === 'al') base_amp *= 0.78; // Al conductivity derating
+
+  // Parallel bar factor
+  let mult = 1.0;
+  if (bars === 2) mult = 1.72;
+  else if (bars === 3) mult = 2.25;
+
+  const total_amp = Math.round(base_amp * mult);
+
+  // Electromechanical force between phases F = 0.2 * (Ip^2) / a (N/m) [IEC 60865]
+  // a in meters
+  const dist_m = dist_mm / 1000.0;
+  const force_nm = (0.2 * Math.pow(isc_ka, 2)) / dist_m * 10; // in N/m
+
+  // Insulator support spacing L <= sqrt( 8 * W_mod * sigma / F )
+  let recSpacing = '500 mm 이하';
+  if (force_nm > 4000) recSpacing = '250 mm 이하 (고장력 지지대)';
+  else if (force_nm > 2000) recSpacing = '400 mm 이하';
+  else recSpacing = '600 mm 이하';
+
+  // Weight kg/m
+  const density = mat === 'cu' ? 8.94 : 2.70;
+  const weight_kgm = (section_sq * bars * density) / 1000.0;
+
+  // Update UI
+  const elAmp = document.getElementById('resBbAmpacity');
+  if (elAmp) elAmp.textContent = `${total_amp.toLocaleString()} A`;
+  const elSec = document.getElementById('resBbSectionArea');
+  if (elSec) elSec.textContent = `단면적 ${section_sq * bars} mm² (${mat === 'cu' ? '전기동 E-Cu' : '알루미늄'} ${bars}매, 온도상승 35K 기준)`;
+  const elForce = document.getElementById('resBbElectroForce');
+  if (elForce) elForce.textContent = `${Math.round(force_nm).toLocaleString()} N/m`;
+  const elSpc = document.getElementById('resBbSupportSpacing');
+  if (elSpc) elSpc.textContent = recSpacing;
+  const elWt = document.getElementById('resBbWeight');
+  if (elWt) elWt.textContent = `${weight_kgm.toFixed(2)} kg/m`;
+}
+
+// ==========================================================================
+// TAB 30: CLEANROOM ESD STATIC DECAY & SURFACE RESISTIVITY ENGINE
+// ==========================================================================
+
+function calculateCleanESD() {
+  const item = document.getElementById('esdTargetItem')?.value || 'mat';
+  const v1 = parseFloat(document.getElementById('esdInitVolt')?.value) || 1000;
+  const v2 = Math.max(parseFloat(document.getElementById('esdFinalVolt')?.value) || 100, 1);
+  const t_decay = Math.max(parseFloat(document.getElementById('esdDecayTime')?.value) || 0.8, 0.01);
+  const log_r = parseFloat(document.getElementById('esdSurfaceR')?.value) || 7.2;
+
+  // Static Decay Rate V/s
+  const decay_rate = (v1 - v2) / t_decay;
+
+  // Classification based on surface resistance log10(ohms)
+  let matClass = '정전기 분산성 (Dissipative)';
+  let isCompliant = true;
+
+  if (log_r < 4.0) {
+    matClass = '전도성 재질 (Conductive Rs < 10⁴ Ω)';
+  } else if (log_r >= 4.0 && log_r <= 9.0) {
+    matClass = '정전기 분산성 (Dissipative 10⁴ ~ 10⁹ Ω)';
+  } else if (log_r > 9.0 && log_r <= 11.0) {
+    matClass = '준절연성 재질 (Anti-static 10⁹ ~ 10¹¹ Ω)';
+  } else {
+    matClass = '절연성 재질 (Insulative Rs > 10¹¹ Ω - 위험)';
+    isCompliant = false;
+  }
+
+  // ANSI/ESD S20.20 requires decay time <= 2.0 seconds
+  if (t_decay > 2.0) isCompliant = false;
+
+  // Update UI
+  const elVer = document.getElementById('resEsdVerdict');
+  if (elVer) {
+    elVer.textContent = isCompliant ? 'PASS (규격 적합)' : 'FAIL (기준 미달)';
+    elVer.className = isCompliant ? 'terminal-voltage-big font-mono text-safe' : 'terminal-voltage-big font-mono text-danger';
+  }
+  const elSub = document.getElementById('resEsdSubText');
+  if (elSub) elSub.textContent = `감쇠시간 ${t_decay.toFixed(2)}s (기준 2.0s 이하) / 표면저항 10^${log_r.toFixed(1)} Ω (${matClass})`;
+  const elClass = document.getElementById('resEsdMaterialClass');
+  if (elClass) {
+    elClass.textContent = matClass;
+    elClass.className = isCompliant ? 'summary-val font-mono text-safe' : 'summary-val font-mono text-warn';
+  }
+  const elRate = document.getElementById('resEsdDecayRate');
+  if (elRate) elRate.textContent = `${Math.round(decay_rate).toLocaleString()} V/s`;
+
+  const elBadge = document.getElementById('esdVerdictBadge');
+  if (elBadge) {
+    elBadge.textContent = isCompliant ? 'EPA PASS (정전기 안전)' : 'EPA HAZARD (정전기 위험)';
+    elBadge.className = isCompliant ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
+  }
+}
