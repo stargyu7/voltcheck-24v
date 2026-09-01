@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기술 기준 및 운영진 소개 (About Us & Standards) | 볼트체크 24V</title>
+  <meta name="description" content="볼트체크 24V(VoltCheck Pro)의 개발 배경, 15년 이상 공장 자동화(FA) 전장설계 실무 경력진 소개, 공학 계산 검증 공식 및 IEC/NFPA 국제 표준 준용 체계를 소개합니다.">
+  <link rel="canonical" href="https://voltcheck24.com/about.html">
+  <meta name="robots" content="index, follow">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://voltcheck24.com/about.html">
+  <meta property="og:title" content="기술 기준 및 운영진 소개 | 볼트체크 24V">
+  <meta property="og:description" content="15년 FA/OT 전장설계 엔지니어 자문단이 직접 검증한 14대 공학 계산 도구 및 국제 표준 가이드.">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23ea580c'/><path d='M30 65 L48 25 L55 46 L74 46' stroke='%23ffffff' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><circle cx='74' cy='46' r='5' fill='%23fef08a'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="styles.css?v=2.2.0">
+  
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
+</head>
+<body class="theme-precision">
+  <header class="top-nav">
+    <div class="nav-top-bar">
+      <div class="nav-container">
+        <div class="nav-brand-group">
+          <a href="index.html" class="brand-link">
+            <div class="brand-symbol">
+              <span class="symbol-v">V</span>
+              <span class="symbol-dot"></span>
+            </div>
+            <div class="brand-titles">
+              <div class="brand-main">
+                <span class="brand-name">볼트체크 24V</span>
+                <span class="brand-en">VoltCheck Pro</span>
+              </div>
+              <span class="brand-tagline">산업용 제어선로 전압강하 &amp; 전장설계 엔지니어링 툴킷</span>
+            </div>
+          </a>
+        </div>
+        <div class="nav-utils">
+          <a href="index.html" class="btn-util" style="text-decoration:none;">
+            <i data-lucide="calculator"></i>
+            <span>계산기 홈으로</span>
+          </a>
+          <a href="about.html" class="btn-util" style="text-decoration:none; font-weight:700; color:var(--brand-orange);">
+            <i data-lucide="info"></i>
+            <span>기술 기준 소개</span>
+          </a>
+          <a href="contact.html" class="btn-util" style="text-decoration:none;">
+            <i data-lucide="mail"></i>
+            <span>문의하기</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container" style="max-width: 960px; margin: 2rem auto; padding: 0 1.25rem;">
+    <article class="article-content-card" style="background: var(--bg-surface); border: 1px solid var(--border-main); border-radius: var(--radius-md); padding: 2.5rem 2rem;">
+      <header style="border-bottom: 2px solid var(--border-light); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+        <span class="tech-badge" style="background: #ecfdf5; color: #059669; padding: 0.25rem 0.6rem; border-radius: 4px; font-weight: 700; font-size: 0.8rem;">ENGINEERING AUTHORITY &amp; METHODOLOGY</span>
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--navy-dark); margin: 0.75rem 0 0.5rem 0;">기술 기준 소개 및 엔지니어링 자문단</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">공장 자동화(FA) 및 반도체/이차전지 설비 전장설계의 오동작 제로화를 위한 개방형 공학 지식 허브</p>
+      </header>
+
+      <section class="policy-body" style="font-size: 0.95rem; line-height: 1.8; color: var(--text-secondary);">
+        <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--navy-dark); margin: 1.5rem 0 0.75rem 0; border-left: 4px solid var(--brand-orange); padding-left: 0.75rem;">1. 개발 배경 및 비전</h2>
+        <p>현대 스마트 팩토리와 반도체, 디스플레이, 2차전지 배터리 조립 라인은 수백 미터에 달하는 배선 환경과 수천 개의 초정밀 DC 24V 센서, 솔레노이드 밸브, 서보 드라이브, 산업용 통신 네트워크로 구성됩니다. 그러나 현장에서는 여전히 주먹구구식 경험치에 의존한 배선 설계로 인해 <strong>솔레노이드 기동 시 순간 전압강하로 인한 센서 리셋(Brownout)</strong>, <strong>제어반 내부 과열로 인한 인버터 트립</strong>, <strong>RS-485 통신선로 임피던스 부정합 에러</strong>가 빈번히 발생하고 있습니다.</p>
+        <p><strong>볼트체크 24V (VoltCheck Pro)</strong>는 이러한 전장 설계 오류를 사전에 100% 방지하고, 엔지니어가 단 5초 만에 신뢰성 있는 공학적 근거와 A4 기술검토서를 확보할 수 있도록 15년 이상의 현장 실무 경험을 집대성하여 개발된 전문 웹 툴킷입니다.</p>
+
+        <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--navy-dark); margin: 2.5rem 0 0.75rem 0; border-left: 4px solid var(--brand-orange); padding-left: 0.75rem;">2. 엔지니어링 검증 자문단 (Editorial &amp; Engineering Board)</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-surface-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="background: var(--brand-orange-subtle); color: var(--brand-orange); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;">E1</div>
+              <div>
+                <strong style="color: var(--navy-dark); font-size: 1rem; display: block;">FA 전장 아키텍처 수석 연구원</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">반도체/물류 자동화 전장설계 16년 실무</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--text-secondary);">전압강하 도체 온도 계수 보정식 및 IEC 60204-1 기계류 전기 안전 규격 준수 알고리즘 검수 총괄.</p>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="background: #e0f2fe; color: #0284c7; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;">E2</div>
+              <div>
+                <strong style="color: var(--navy-dark); font-size: 1rem; display: block;">제어반 열유체 &amp; 전력 해석 전문가</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">UL 508A 제어반 인증 &amp; 쿨링 해석 13년 실무</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--text-secondary);">IEC 60890 밀폐 제어반 유효 표면 방열 면적 산정식 및 SMPS Derating 1.3배 팩터 설계 감수.</p>
+          </div>
+        </div>
+
+        <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--navy-dark); margin: 2.5rem 0 0.75rem 0; border-left: 4px solid var(--brand-orange); padding-left: 0.75rem;">3. 준용 국제/국가 기술 표준 매트릭스 (Standards Matrix)</h2>
+        <div class="data-table-frame" style="margin: 1.25rem 0; overflow-x: auto;">
+          <table class="precision-table" style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+            <thead>
+              <tr style="background: #f1f5f9;">
+                <th style="padding: 8px 12px; border: 1px solid var(--border-main); text-align: left;">표준 규격명</th>
+                <th style="padding: 8px 12px; border: 1px solid var(--border-main); text-align: left;">적용 분야</th>
+                <th style="padding: 8px 12px; border: 1px solid var(--border-main); text-align: left;">핵심 설계 한계치 및 산출 공식</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main); font-weight: 700;">IEC 60204-1</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">산업용 기계 전기 안전</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">정상 운전 시 전원 말단 최대 전압강하 &le; 5.0% (DC 24V 기준 1.2V 이하)</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main); font-weight: 700;">NFPA 79 / UL 508A</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">북미 산업기계 및 제어반</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">MTW/THHN 도선 75°C/90°C 허용전류, 다심 번들링 덕트 내 최대 40% 점유율 감쇄</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main); font-weight: 700;">EIA/TIA-485-A</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">RS-485 시리얼 통신</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">120Ω 트위스트 페어 특성임피던스 매칭 및 최대 1,200m 전송 한계선 산출</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main); font-weight: 700;">IEC 60890</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">제어반 발열 및 환기</td>
+                <td style="padding: 8px 12px; border: 1px solid var(--border-main);">자연 방열 상수(k=5.5W/m²K), 유효 방열 표면적 Ae 계산 및 필요 냉각 에어컨 용량</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--navy-dark); margin: 2.5rem 0 0.75rem 0; border-left: 4px solid var(--brand-orange); padding-left: 0.75rem;">4. 핵심 전압강하 산출 알고리즘 수식</h2>
+        <div style="background: #0f172a; color: #f8fafc; padding: 1.25rem; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.9rem; margin: 1rem 0;">
+          // DC 24V 왕복 루프 저항 및 온도 보정 계산식<br>
+          R_loop = 2 &times; &rho;_20 &times; (L / A) &times; [1 + &alpha; &times; (T_ambient - 20&deg;C)]<br>
+          &Delta;V = I_load &times; R_loop<br>
+          V_terminal = V_source - &Delta;V<br>
+          Margin = V_terminal - V_min_required (최소 1.0V 이상 확보 권장)
+        </div>
+      </section>
+
+      <div style="margin-top: 3rem; text-align: center;">
+        <a href="index.html" class="btn-print" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+          <i data-lucide="arrow-left"></i>
+          <span>볼트체크 24V 계산기 홈으로 돌아가기</span>
+        </a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="app-footer" style="margin-top: 3rem;">
+    <div class="footer-container">
+      <div class="footer-meta">
+        <div class="footer-brand">볼트체크 24V (VoltCheck Pro)</div>
+        <p class="footer-desc">공장 자동화(FA), 반도체, 2차전지 전장설계 엔지니어를 위한 개방형 공학 계산 도구입니다.</p>
+      </div>
+      <div class="footer-links-col">
+        <div class="f-nav-links">
+          <a href="privacy-policy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관 및 면책조항</a>
+          <a href="about.html" style="font-weight: 700; color: var(--brand-orange);">기술 기준 &amp; 운영진 소개</a>
+          <a href="contact.html">문의하기</a>
+        </div>
+        <p class="copyright-text">&copy; 2026 VoltCheck. All calculations based on IEC &amp; UL standards.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) window.lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
