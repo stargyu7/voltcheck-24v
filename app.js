@@ -410,12 +410,15 @@ function populateGaugeSelect() {
   const select = document.getElementById('wireGaugeValue');
   if (!select) return;
   select.innerHTML = '';
+  const isEn = currentLanguage === 'en';
 
   if (currentUnitStandard === 'AWG') {
     WIRE_DATABASE.forEach(item => {
       const opt = document.createElement('option');
       opt.value = item.awg;
-      opt.textContent = `${item.awg} (단면적 ${item.sq} mm² • 저항 ${item.r20} Ω/km)`;
+      opt.textContent = isEn
+        ? `${item.awg} (Area ${item.sq} mm² • R ${item.r20} Ω/km)`
+        : `${item.awg} (단면적 ${item.sq} mm² • 저항 ${item.r20} Ω/km)`;
       if (item.awg === 'AWG 24') opt.selected = true;
       select.appendChild(opt);
     });
@@ -423,7 +426,9 @@ function populateGaugeSelect() {
     METRIC_SQ_DATABASE.forEach(item => {
       const opt = document.createElement('option');
       opt.value = item.sqName;
-      opt.textContent = `${item.sqName} (단면적 ${item.sq} mm² • 저항 ${item.r20} Ω/km)`;
+      opt.textContent = isEn
+        ? `${item.sqName} (Area ${item.sq} mm² • R ${item.r20} Ω/km)`
+        : `${item.sqName} (단면적 ${item.sq} mm² • 저항 ${item.r20} Ω/km)`;
       if (item.sqName === '0.5 SQ') opt.selected = true;
       select.appendChild(opt);
     });
@@ -460,6 +465,226 @@ function applyPreset(presetKey) {
 
   calculateVoltageDrop();
 }
+
+// ==========================================================================
+// 100% PURE ZERO-KOREAN AUTOMATIC DOM TRANSLATION ENGINE
+// ==========================================================================
+
+const GLOBAL_EN_REPLACEMENTS = [
+  // Top Nav & Header
+  [/볼트체크 24V/g, "VoltCheck 24V"],
+  [/산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷/g, "Industrial Cable Voltage Drop & Control Panel Engineering Suite"],
+  [/실무 엑셀·CAD 팩/g, "Pro Excel·CAD Pack"],
+  [/단위 환산/g, "Unit Converter"],
+  [/내 보관함/g, "Saved Calcs"],
+  [/조건 공유/g, "Share Link"],
+  [/검토서 인쇄/g, "Print Report"],
+  [/규정 알림/g, "Updates"],
+  [/소개/g, "About"],
+  [/기술 검증 기준 및 설계 자문단 소개 →/g, "Standards Compliance & Verification Advisory →"],
+  [/STANDARDS COMPLIANT/g, "STANDARDS COMPLIANT"],
+
+  // Tab 1 Presets & Inputs
+  [/빠른 부하 선택:/g, "Quick Load Presets:"],
+  [/포토\/근접센서 \(35mA\)/g, "Photo Sensor (35mA)"],
+  [/솔레노이드 밸브 \(0.45A\)/g, "Solenoid Valve (0.45A)"],
+  [/IO-Link 마스터 \(2.0A\)/g, "IO-Link Master (2.0A)"],
+  [/서보 브레이크 \(1.2A\)/g, "Servo Brake (1.2A)"],
+  [/비전 조명 \(3.5A\)/g, "Vision Light (3.5A)"],
+  [/상세 환경 설정/g, "Advanced Settings"],
+  [/선로 편도 배선 거리 \(L\)/g, "One-Way Cable Distance (L)"],
+  [/※ 전류가 왕복하는 폐루프 특성상 2배 거리\(\d+m\) 저항이 계산됩니다\./g, "※ 2x loop distance resistance is calculated for return circuit path."],
+  [/※ 전류가 왕복하는 폐루프 특성상 2배 거리/g, "※ 2x loop distance resistance is calculated"],
+  [/케이블 도선 규격/g, "Wire Gauge Specification"],
+  [/말단 부하 소비전류 \(I\)/g, "Load Operating Current (I)"],
+  [/35mA \(센서\)/g, "35mA (Sensor)"],
+  [/200mA \(I\/O\)/g, "200mA (I/O)"],
+  [/0.5A \(밸브\)/g, "0.5A (Valve)"],
+  [/1.5A \(중간부하\)/g, "1.5A (Mid Load)"],
+  [/3.0A \(대용량\)/g, "3.0A (Heavy Load)"],
+
+  // Tab 1 Readouts & Gauges
+  [/TERMINAL VOLTAGE \(말단 수전 전압\)/g, "TERMINAL VOLTAGE (Terminal Operating Voltage)"],
+  [/말단 수전 전압/g, "Terminal Operating Voltage"],
+  [/선로 전압강하:/g, "Voltage Drop:"],
+  [/전원 안전마진:/g, "Voltage Margin:"],
+  [/전압 마진 레벨 게이지 \(Voltage Margin Gauge\)/g, "Voltage Margin Level Gauge"],
+  [/동작 불가 \(FAIL - 저전압\)/g, "FAIL (Undervoltage)"],
+  [/주의 영역 \(CAUTION - 마진 협소\)/g, "CAUTION (Narrow Margin)"],
+  [/안전 영역 \(SAFE - 정상 마진\)/g, "SAFE (Optimal Margin)"],
+  [/18.0V \(위험\)/g, "18.0V (Risk)"],
+  [/20.4V \(경고\)/g, "20.4V (Warn)"],
+  [/21.6V \(최저\)/g, "21.6V (Min)"],
+  [/24.0V \(정격\)/g, "24.0V (Nom)"],
+
+  // Circuit Strip & Chart
+  [/선로 전위 분포/g, "Line Potential Profile"],
+  [/SMPS 전원/g, "SMPS Source"],
+  [/센서 \/ 부하/g, "Sensor / Load"],
+  [/선로 거리별 전압 강하 구배 곡선 \(Voltage Gradient Curve\)/g, "Voltage Gradient Curve (Distance vs Drop)"],
+  [/■ 선로 전압 곡선/g, "■ Voltage Curve"],
+  [/--- 최저 전압 \(V_min\)/g, "--- Min Threshold (V_min)"],
+  [/■ 브라운아웃 위험선 \(18V\)/g, "■ Brownout Risk (18V)"],
+
+  // Specs Grid
+  [/왕복 선로 저항/g, "Total Loop Resistance"],
+  [/선로 발열 손실 \(I²R\)/g, "Line Thermal Loss (I²R)"],
+  [/허용전류 사용률/g, "Ampacity Usage Ratio"],
+  [/추천 최소 규격/g, "Recommended Gauge"],
+  [/정상 발열 범위/g, "Normal Thermal Dissipation"],
+  [/정상 방열 범위/g, "Normal Thermal Dissipation"],
+  [/마진 1.0V 기준 충족/g, "Meets 1.0V Margin Req"],
+
+  // AI Audit
+  [/AI 스마트 진단/g, "AI Smart Audit"],
+  [/FA 전장설계 6대 항목 종합 안전 진단서/g, "6-Point Comprehensive Engineering Safety Audit"],
+  [/GRADE F \(위험\)/g, "GRADE F (CRITICAL)"],
+  [/GRADE A \(우수\)/g, "GRADE A (EXCELLENT)"],
+  [/GRADE A\+ \(최우수\)/g, "GRADE A+ (OPTIMAL)"],
+  [/\/ 100점/g, "/ 100 pts"],
+  [/1\. 수전 전압 마진:/g, "1. Supply Voltage Margin:"],
+  [/1\. 전원 전압 마진:/g, "1. Supply Voltage Margin:"],
+  [/2\. 도체 열용량 안전율:/g, "2. Conductor Ampacity Margin:"],
+  [/2\. 도선 허용전류 마진:/g, "2. Conductor Ampacity Margin:"],
+  [/2\. 도체 허용전류 마진:/g, "2. Conductor Ampacity Margin:"],
+  [/3\. 기동 돌입 브라운아웃:/g, "3. Inrush Brownout:"],
+  [/3\. 과도 돌입전류 브라운아웃 내성:/g, "3. Inrush Brownout:"],
+  [/3\. 기동 시 브라운아웃:/g, "3. Inrush Brownout:"],
+  [/4\. 닥트 내 I²R 손실:/g, "4. Raceway I²R Loss:"],
+  [/4\. 선로 발열 및 전력 손실 \(I²R Loss\):/g, "4. Thermal Loss:"],
+  [/4\. 닥트 내 I²R 발열손실:/g, "4. Raceway I²R Loss:"],
+  [/5\. 단락 보호 협조:/g, "5. CP Coordination:"],
+  [/5\. 단락 고장 시 차단기 협조 제어 \(CP Coordination\):/g, "5. CP Coordination:"],
+  [/5\. 단락보호 협조제어:/g, "5. CP Coordination:"],
+  [/6\. 배선 토폴로지 균일성:/g, "6. Topology Uniformity:"],
+  [/6\. 배선 토폴로지 전압강하 감쇄율:/g, "6. Topology Factor:"],
+  [/6\. 배선 토폴로지 감쇄율:/g, "6. Topology Factor:"],
+
+  // Buttons & Actions
+  [/요약 복사/g, "Copy Summary"],
+  [/마크다운 복사/g, "Copy Markdown"],
+  [/부품 견적 요청 \(BOM\)/g, "Request BOM Quote"],
+  [/프로젝트에 담기/g, "Add to Project"],
+
+  // Field Log & BOM
+  [/현장 실측값 비교 & 오차 검증 로그 \(Field Measurement Log\)/g, "Field Measurement Comparison & Verification Log"],
+  [/실제 현장 계측치를 입력하여 계산 정합성을 검증하고 커뮤니티 벤치마크에 기여합니다\./g, "Enter field measurements to verify model accuracy and benchmark."],
+  [/누적 (\d+)건 실측 \(평균 오차 ([\d.]+)%\)/g, "Total $1 Measurements (Avg Error $2%)"],
+  [/현장 실측 말단 전압 \(V_measured\)/g, "Measured Terminal Voltage (V_measured)"],
+  [/측정 환경 \/ 설비 라인/g, "Operating Environment / Facility Line"],
+  [/사용 계측기 \(DMM \/ Scope\)/g, "Measurement Tool (DMM / Scope)"],
+  [/계측 기기 \(DMM \/ Scope\)/g, "Measurement Tool (DMM / Scope)"],
+  [/계산 예측 전압:/g, "Predicted Voltage:"],
+  [/현장 실측 전압:/g, "Measured Voltage:"],
+  [/전압 편차\(오차율\):/g, "Voltage Deviation (Error):"],
+  [/정합성 판정:/g, "Verification Status:"],
+  [/초정밀 일치 \(99%\+ Accuracy\)/g, "High Precision Match (99%+ Accuracy)"],
+  [/익명 실측 데이터 제출 & 벤치마크 저장/g, "Submit Anonymous Measurement & Save"],
+  [/현장 공인 추천 정밀 계측 장비:/g, "Recommended Field Precision Instruments:"],
+  [/정밀 산업용 DMM \/ True-RMS/g, "Precision Industrial DMM / True-RMS"],
+  [/현장 계측 표준 DMM/g, "Standard Field Measurement DMM"],
+
+  // BOM Part Matching Cards
+  [/추천 규격 실제 구매 부품 \(BOM Part Matching\)/g, "Recommended Conductor BOM Part Matching"],
+  [/계산된 전선 규격 및 SMPS 용량에 일치하는 국내외 공인 제조사 공식 카탈로그 품번입니다\./g, "Industrial genuine component catalog parts matching calculated wire size and SMPS capacity."],
+  [/대한전선/g, "Taihan Cable"],
+  [/LS전선/g, "LS Cable & System"],
+  [/삼원ACT/g, "Samwon ACT"],
+  [/M12 센서용 4심 쉴드 케이블 \(0.2SQ\)/g, "M12 Sensor 4-Core Shielded Cable (0.2SQ)"],
+  [/고굴곡 4심 로봇 케이블 \(PVC\/내유\)/g, "High-Flex 4-Core Robotic Cable (PVC/Oil-Resistant)"],
+  [/PLC I\/O 전용 4심 슬림 케이블/g, "PLC I/O Dedicated 4-Core Slimline Cable"],
+  [/DIN레일 4A C-curve 배선보호 차단기/g, "DIN-Rail 4A C-Curve Circuit Protector"],
+  [/추천 회로보호기 \(CP\)/g, "Recommended Circuit Protector (CP)"],
+  [/규격: AWG (\d+)/g, "Spec: AWG $1"],
+  [/규격: ([\d.]+) SQ/g, "Spec: $1 SQ"],
+  [/\+ 담기/g, "+ Add to BOM"],
+  [/\+ 견적함/g, "+ Add"],
+  [/([\d,]+)~([\d,]+)원\/m/g, "\$$1~$2/m"],
+  [/([\d,]+)~([\d,]+)원/g, "\$$1~$2 KRW"],
+  [/(\d+)V 강하/g, "$1V Drop"],
+  [/([\d.]+)V 강하/g, "$1V Drop"],
+
+  // Common Units & Patterns
+  [/편도 (\d+)m • 왕복 (\d+)m • R_loop: ([\d.]+)Ω/g, "One-Way $1m • Loop $2m • R_loop: $3Ω"],
+  [/단위: ([\d.]+) Ω\/km @(\d+)°C/g, "Unit: $1 Ω/km @$2°C"],
+  [/단위: ([\d.]+) Ω\/km/g, "Unit: $1 Ω/km"],
+  [/정격 ([\d.]+)A 중 ([\d.]+)A 사용/g, "$2A of $1A Rated"],
+  [/([\d.]+)A 중 ([\d.]+)A 사용/g, "$2A of $1A Rated"],
+  [/([\d.]+)V \(최저\)/g, "$1V (Min)"],
+  [/단면적 ([\d.]+) mm² • 저항 ([\d.]+) Ω\/km @(\d+)°C • 허용전류 ([\d.]+)A/g, "Area $1 mm² • R $2 Ω/km @$3°C • Ampacity $4A"]
+  // Tab 9: PLC Scaling Specific
+  [/지멘스 \(Siemens S7-1200\/1500\)/g, "Siemens S7-1200/1500"],
+  [/미쓰비시 \(Mitsubishi Q\/iQ-R 12-bit\)/g, "Mitsubishi Q/iQ-R 12-bit"],
+  [/미쓰비시 \(Mitsubishi Q\/iQ-R 16-bit\)/g, "Mitsubishi Q/iQ-R 16-bit"],
+  [/LS ELECTRIC \(XGB\/XGK\)/g, "LS ELECTRIC (XGB/XGK)"],
+  [/LS ELECTRIC \(XGK\/XGI 고분해능\)/g, "LS ELECTRIC (XGK/XGI High-Res)"],
+  [/오므론 \(Omron CJ\/NJ\)/g, "Omron CJ/NJ"],
+  [/사용자 정의 \(Custom Digital Range\)/g, "Custom Digital Range"],
+  [/DC 4 ~ 20 mA \(전류 루프\)/g, "DC 4 ~ 20 mA (Current Loop)"],
+  [/DC 0 ~ 10 V \(전압\)/g, "DC 0 ~ 10 V (Voltage)"],
+  [/DC -10 ~ \+10 V \(바이폴라\)/g, "DC -10 ~ +10 V (Bipolar)"],
+  [/정상 스케일링/g, "VALID SCALING"],
+  [/신호 백분율 \(%\):/g, "Signal Ratio (%):"],
+  [/변환 물리량 \(EU\):/g, "Scaled EU:"],
+  [/테스트 입력 물리량 \(Engineering Value\)/g, "Test Input Engineering Value (EU)"],
+  [/테스트 입력 물리량/g, "Test Input Engineering Value"],
+  [/Raw 디지털 출력값/g, "Raw Digital Output Value"],
+  [/신호값:/g, "Signal:"],
+  [/PLC 제조사 및 아날로그 모듈 분해능 \(Raw Count\)/g, "PLC Maker & Analog Module Resolution (Raw Count)"],
+  [/디지털 Raw 하한 \(D_min\)/g, "Digital Raw Min (D_min)"],
+  [/디지털 Raw 상한 \(D_max\)/g, "Digital Raw Max (D_max)"],
+  [/아날로그 입력 신호 형식/g, "Analog Signal Format"],
+  [/물리량 최소값 \(EU_min\)/g, "Engineering Unit Min (EU_min)"],
+  [/물리량 최대값 \(EU_max\)/g, "Engineering Unit Max (EU_max)"],
+  [/물리량 최소값/g, "Engineering Unit Min"],
+  [/물리량 최대값/g, "Engineering Unit Max"],
+  [/PLC 래더\(ST\) 선형 변환 수식/g, "PLC Structured Text (ST) Linear Scaling Formula"],
+  [/테스트 입력 물리량 \(Engineering Value\)/g, "Test Input Engineering Value (EU)"],
+  [/테스트 입력 물리량/g, "Test Input Engineering Value"],
+  [/Raw 디지털 출력값/g, "Raw Digital Output Value"],
+  [/변환 물리량 \(EU\):/g, "Converted EU:"],
+  [/신호 전송률 \(%\):/g, "Signal Percentage (%):"],
+  [/신호값:/g, "Signal:"],
+  [/PLC 제조사 및 아날로그 모듈 분해능/g, "PLC Maker & Analog Module Resolution"],
+  [/디지털 Raw 하한/g, "Digital Raw Min"],
+  [/디지털 Raw 상한/g, "Digital Raw Max"],
+  [/아날로그 입력 신호 형식/g, "Analog Signal Format"],
+  [/물리량 최소값/g, "Engineering Unit Min"],
+  [/물리량 최대값/g, "Engineering Unit Max"],
+  [/PLC 래더\(ST\) 선형 변환 수식/g, "PLC Structured Text (ST) Linear Scaling Formula"],
+];
+
+function sanitizeDomToPureEnglish(rootNode) {
+  if (!rootNode) return;
+  try {
+    const walker = document.createTreeWalker(
+      rootNode,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    let textNode;
+    while ((textNode = walker.nextNode())) {
+      if (!textNode || !textNode.nodeValue) continue;
+      let str = textNode.nodeValue;
+      if (!str.trim()) continue;
+
+      for (let i = 0; i < GLOBAL_EN_REPLACEMENTS.length; i++) {
+        const item = GLOBAL_EN_REPLACEMENTS[i];
+        if (item && item.length >= 2) {
+          str = str.replace(item[0], item[1]);
+        }
+      }
+      textNode.nodeValue = str;
+    }
+  } catch (err) {
+    console.log('Sanitize error:', err);
+  }
+}
+
+
+
 
 // ==========================================================================
 // 1. DC 24V Voltage Drop Calculation
@@ -554,17 +779,18 @@ function calculateVoltageDrop() {
     if (vMargin < 0) marginEl.style.color = 'var(--fail-crimson)';
   }
 
-  document.getElementById('schematicSummaryText').textContent =
-    `편도 ${lengthM}m • 왕복 ${Math.round(lengthM * loopMultiplier)}m • R_loop: ${totalLoopR.toFixed(2)}Ω`;
+  document.getElementById('schematicSummaryText').textContent = isEn
+    ? `One-Way ${lengthM}m • Loop ${Math.round(lengthM * loopMultiplier)}m • R_loop: ${totalLoopR.toFixed(2)}Ω`
+    : `편도 ${lengthM}m • 왕복 ${Math.round(lengthM * loopMultiplier)}m • R_loop: ${totalLoopR.toFixed(2)}Ω`;
   document.getElementById('scSourceV').textContent = `${vSource.toFixed(1)} V`;
-  document.getElementById('scDropBadge').textContent = `-${vDrop.toFixed(2)}V 강하`;
+  document.getElementById('scDropBadge').textContent = isEn ? `-${vDrop.toFixed(2)}V Drop` : `-${vDrop.toFixed(2)}V 강하`;
   document.getElementById('scTermV').textContent = `${vTerm.toFixed(2)} V`;
 
   document.getElementById('resLoopR').textContent = `${totalLoopR.toFixed(2)} Ω`;
-  document.getElementById('resUnitR').textContent = `단위: ${rTPerKm.toFixed(1)} Ω/km @${ambientT}°C`;
+  document.getElementById('resUnitR').textContent = isEn ? `Unit: ${rTPerKm.toFixed(1)} Ω/km @${ambientT}°C` : `단위: ${rTPerKm.toFixed(1)} Ω/km @${ambientT}°C`;
   document.getElementById('resPowerLoss').textContent = `${powerLossW.toFixed(2)} W`;
   document.getElementById('resAmpacityUsage').textContent = `${ampUsagePct}%`;
-  document.getElementById('resAmpLimit').textContent = `정격 ${ampRating}A 중 ${iLoad}A 사용`;
+  document.getElementById('resAmpLimit').textContent = isEn ? `${iLoad}A of ${ampRating}A Rated` : `정격 ${ampRating}A 중 ${iLoad}A 사용`;
 
   const recGaugeName = getRecommendedGauge(vSource, lengthM, loopMultiplier, matKey, ambientT, iLoad, vMinReq);
   document.getElementById('resRecGauge').textContent = recGaugeName;
@@ -591,26 +817,27 @@ function calculateVoltageDrop() {
     levelPointer.style.left = `${pct}%`;
     pointerVal.textContent = `${vTerm.toFixed(2)}V`;
     if (levelMinThresholdLine) levelMinThresholdLine.style.left = `${minPct}%`;
-    if (levelScaleMinV) levelScaleMinV.textContent = `${vMinReq.toFixed(1)}V (최저)`;
+    if (levelScaleMinV) levelScaleMinV.textContent = isEn ? `${vMinReq.toFixed(1)}V (Min)` : `${vMinReq.toFixed(1)}V (최저)`;
     if (levelStatusLabel) {
       if (vMargin < 0) {
-        levelStatusLabel.textContent = '동작 불가 (FAIL - 저전압)';
+        levelStatusLabel.textContent = isEn ? 'FAIL (Undervoltage)' : '동작 불가 (FAIL - 저전압)';
         levelStatusLabel.className = 'font-mono text-warn';
         levelStatusLabel.style.color = 'var(--fail-crimson)';
       } else if (vMargin < 0.8) {
-        levelStatusLabel.textContent = '주의 영역 (CAUTION - 마진 협소)';
+        levelStatusLabel.textContent = isEn ? 'CAUTION (Narrow Margin)' : '주의 영역 (CAUTION - 마진 협소)';
         levelStatusLabel.className = 'font-mono text-warn';
         levelStatusLabel.style.color = 'var(--warn-amber)';
       } else {
-        levelStatusLabel.textContent = '안전 영역 (SAFE - 정상 마진)';
+        levelStatusLabel.textContent = isEn ? 'SAFE (Optimal Margin)' : '안전 영역 (SAFE - 정상 마진)';
         levelStatusLabel.className = 'font-mono text-safe';
         levelStatusLabel.style.color = 'var(--safe-green)';
       }
     }
   }
 
-  document.getElementById('gaugeDetailHint').textContent =
-    `단면적 ${crossSectionSq} mm² • 저항 ${rTPerKm.toFixed(1)} Ω/km @${ambientT}°C • 허용전류 ${ampRating}A`;
+  document.getElementById('gaugeDetailHint').textContent = isEn
+    ? `Area ${crossSectionSq} mm² • R ${rTPerKm.toFixed(1)} Ω/km @${ambientT}°C • Ampacity ${ampRating}A`
+    : `단면적 ${crossSectionSq} mm² • 저항 ${rTPerKm.toFixed(1)} Ω/km @${ambientT}°C • 허용전류 ${ampRating}A`;
 
   // Update AI 6-Point Comprehensive Safety Audit [KILLER FEATURE]
   updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource, vTerm, topology);
@@ -633,25 +860,32 @@ function calculateVoltageDrop() {
     const devPct = vTerm > 0 ? (devV / vTerm) * 100 : 0;
     const devPctEl = document.getElementById('fmDevPct');
     const verdictEl = document.getElementById('fmVerdictBadge');
-    if (devPctEl) devPctEl.textContent = `${devPct.toFixed(2)}% (${devV.toFixed(2)}V 편차)`;
+    if (devPctEl) devPctEl.textContent = isEn ? `${devPct.toFixed(2)}% (${devV.toFixed(2)}V Dev)` : `${devPct.toFixed(2)}% (${devV.toFixed(2)}V 편차)`;
     if (verdictEl) {
       if (devPct <= 2.0) {
         verdictEl.className = 'badge-pill badge-safe';
-        verdictEl.textContent = '초정밀 일치 (98%+ Match)';
+        verdictEl.textContent = isEn ? 'High Precision Match (98%+ Match)' : '초정밀 일치 (98%+ Match)';
       } else if (devPct <= 5.0) {
         verdictEl.className = 'badge-pill';
         verdictEl.style.background = '#e0f2fe';
         verdictEl.style.color = '#0369a1';
-        verdictEl.textContent = '규격 허용 오차 이내 (Normal)';
+        verdictEl.textContent = isEn ? 'Within Tolerance (Normal)' : '규격 허용 오차 이내 (Normal)';
       } else {
         verdictEl.className = 'badge-pill badge-warn';
-        verdictEl.textContent = '환경 편차 주의 (접촉저항/온도 확인)';
+        verdictEl.textContent = isEn ? 'Environmental Deviation (Check Temp/Contacts)' : '환경 편차 주의 (접촉저항/온도 확인)';
       }
     }
+  }
+
+  // Ensure 100% Zero-Korean DOM sanitization for tab 1 in English mode
+  if (currentLanguage === 'en') {
+    const tab1 = document.getElementById('tab-voltagedrop');
+    if (tab1) sanitizeDomToPureEnglish(tab1);
   }
 }
 
 function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource, vTerm, topology) {
+  const isEn = currentLanguage === 'en';
   let score = 100;
   if (vMargin < 0) score -= 50;
   else if (vMargin < 0.8) score -= 20;
@@ -671,7 +905,7 @@ function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource
   else if (score >= 80) { grade = 'GRADE A'; gradeClass = 'grade-a'; }
   else if (score >= 70) { grade = 'GRADE B'; gradeClass = 'grade-b'; }
   else if (score >= 55) { grade = 'GRADE C'; gradeClass = 'grade-c'; }
-  else { grade = 'GRADE F (위험)'; gradeClass = 'grade-f'; }
+  else { grade = isEn ? 'GRADE F (CRITICAL)' : 'GRADE F (위험)'; gradeClass = 'grade-f'; }
 
   const scoreEl = document.getElementById('auditScore');
   const gradeEl = document.getElementById('auditGrade');
@@ -682,7 +916,6 @@ function updateAiSafetyAudit(vMargin, ampUsagePct, vDropPct, powerLossW, vSource
   }
 
   // 1. Voltage Margin Text
-  const isEn = currentLanguage === 'en';
   const t1 = document.getElementById('auditText1');
   const it1 = document.getElementById('auditItem1');
   if (t1 && it1) {
@@ -1234,6 +1467,7 @@ function applyPlcVendorPreset(preset) {
 }
 
 function calculatePlcScaling() {
+  const isEn = currentLanguage === 'en';
   const dMin = parseFloat(document.getElementById('plcRawMin')?.value) || 0;
   const dMax = parseFloat(document.getElementById('plcRawMax')?.value) || 27648;
   const euMin = parseFloat(document.getElementById('plcEuMin')?.value) || 0.0;
@@ -1248,22 +1482,23 @@ function calculatePlcScaling() {
   const pct = clampedFraction * 100.0;
 
   // Signal Equivalent
+  const prefix = isEn ? 'Signal:' : '신호값:';
   let sigText = '';
   if (sigType === '4-20') {
     const ma = 4.0 + clampedFraction * 16.0;
-    sigText = `신호값: ${ma.toFixed(2)} mA (${pct.toFixed(1)}%)`;
+    sigText = `${prefix} ${ma.toFixed(2)} mA (${pct.toFixed(1)}%)`;
   } else if (sigType === '0-20') {
     const ma = clampedFraction * 20.0;
-    sigText = `신호값: ${ma.toFixed(2)} mA (${pct.toFixed(1)}%)`;
+    sigText = `${prefix} ${ma.toFixed(2)} mA (${pct.toFixed(1)}%)`;
   } else if (sigType === '0-10') {
     const v = clampedFraction * 10.0;
-    sigText = `신호값: ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
+    sigText = `${prefix} ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
   } else if (sigType === '1-5') {
     const v = 1.0 + clampedFraction * 4.0;
-    sigText = `신호값: ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
+    sigText = `${prefix} ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
   } else if (sigType === '-10-10') {
     const v = -10.0 + clampedFraction * 20.0;
-    sigText = `신호값: ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
+    sigText = `${prefix} ${v.toFixed(2)} V (${pct.toFixed(1)}%)`;
   }
 
   document.getElementById('resPlcRawValue').textContent = rawCount.toLocaleString();
@@ -1275,6 +1510,11 @@ function calculatePlcScaling() {
   const formula = `EU = ((Raw - ${dMin}) / (${dMax} - ${dMin})) * (${euMax} - ${euMin}) + ${euMin}`;
   document.getElementById('plcFormulaBox').textContent = formula;
   document.getElementById('plcStSnippet').innerHTML = `// Structured Text (ST)<br>fScaledValue := ((INT_TO_REAL(iRawInput) - ${dMin}.0) / ${dMax - dMin}.0) * ${(euMax - euMin).toFixed(2)} + ${euMin.toFixed(2)};`;
+
+  if (isEn) {
+    const tab9 = document.getElementById('tab-plcscaling');
+    if (tab9) sanitizeDomToPureEnglish(tab9);
+  }
 }
 
 // ==========================================================================
@@ -2258,6 +2498,12 @@ function applyLanguage(lang) {
   if (langText) langText.textContent = lang.toUpperCase();
 
   // 1. Top Nav Buttons & Brand
+  const brandName = document.querySelector('.brand-name');
+  if (brandName) brandName.textContent = isEn ? 'VoltCheck 24V' : '볼트체크 24V';
+
+  const brandTag = document.querySelector('.brand-tagline');
+  if (brandTag) brandTag.textContent = isEn ? 'Industrial Cable Voltage Drop & Control Panel Engineering Suite' : '산업용 제어선로 전압강하 & 전장설계 엔지니어링 툴킷';
+
   const digitalBtn = document.querySelector('#openDigitalProductBtn span:first-of-type');
   if (digitalBtn) digitalBtn.textContent = isEn ? 'Pro Excel·CAD Pack' : '실무 엑셀·CAD 팩';
 
@@ -2318,7 +2564,122 @@ function applyLanguage(lang) {
     if (c2El) c2El.textContent = data[tabId].c2;
   });
 
-  // 4. Tab 9: PLC Scaling Specific Labels & Code Output (As in user screenshot)
+  // 4. Tab 1: 24V Voltage Drop Specific Translations
+  const presetLabel = document.querySelector('.quick-preset-bar .preset-label');
+  if (presetLabel) presetLabel.textContent = isEn ? 'Quick Load Presets:' : '빠른 부하 선택:';
+
+  const presetBtns = document.querySelectorAll('.quick-preset-bar .pill-btn');
+  if (presetBtns.length >= 5) {
+    presetBtns[0].textContent = isEn ? 'Photo Sensor (35mA)' : '포토/근접센서 (35mA)';
+    presetBtns[1].textContent = isEn ? 'Solenoid Valve (0.45A)' : '솔레노이드 밸브 (0.45A)';
+    presetBtns[2].textContent = isEn ? 'IO-Link Master (2.0A)' : 'IO-Link 마스터 (2.0A)';
+    presetBtns[3].textContent = isEn ? 'Servo Brake (1.2A)' : '서보 브레이크 (1.2A)';
+    presetBtns[4].textContent = isEn ? 'Vision Light (3.5A)' : '비전 조명 (3.5A)';
+  }
+
+  const advBtnText = document.getElementById('advModeBtnText');
+  if (advBtnText) advBtnText.textContent = isEn ? 'Advanced Settings' : '상세 환경 설정';
+
+  const lLen = document.querySelector('label[for="wireLength"]');
+  if (lLen) lLen.textContent = isEn ? 'One-Way Cable Distance (L)' : '선로 편도 배선 거리 (L)';
+
+  const lLenHelp = document.querySelector('.field-help-text');
+  if (lLenHelp) lLenHelp.textContent = isEn ? '※ 2x distance (loop) resistance is calculated for return circuit path.' : '※ 전류가 왕복하는 폐루프 특성상 2배 거리(80m) 저항이 계산됩니다.';
+
+  const lGauge = document.querySelector('label[for="wireGaugeValue"]');
+  if (lGauge) lGauge.textContent = isEn ? 'Wire Gauge Specification' : '케이블 도선 규격';
+
+  const lCur = document.querySelector('label[for="loadCurrent"]');
+  if (lCur) lCur.textContent = isEn ? 'Load Operating Current (I)' : '말단 부하 소비전류 (I)';
+
+  const stepChips = document.querySelectorAll('.quick-step-chips .step-chip');
+  if (stepChips.length >= 5) {
+    stepChips[0].textContent = isEn ? '35mA (Sensor)' : '35mA (센서)';
+    stepChips[1].textContent = isEn ? '200mA (I/O)' : '200mA (I/O)';
+    stepChips[2].textContent = isEn ? '0.5A (Valve)' : '0.5A (밸브)';
+    stepChips[3].textContent = isEn ? '1.5A (Mid Load)' : '1.5A (중간부하)';
+    stepChips[4].textContent = isEn ? '3.0A (Heavy Load)' : '3.0A (대용량)';
+  }
+
+  const readoutHeader = document.querySelector('.main-meter-panel .meter-header span:first-child');
+  if (readoutHeader) readoutHeader.textContent = isEn ? 'TERMINAL VOLTAGE (Operating Voltage)' : 'TERMINAL VOLTAGE (말단 수전 전압)';
+
+  const dropLbl = document.querySelector('.drop-item span:first-child');
+  if (dropLbl) dropLbl.textContent = isEn ? 'Voltage Drop:' : '선로 전압강하:';
+
+  const marginLbl = document.querySelector('.margin-item span:first-child');
+  if (marginLbl) marginLbl.textContent = isEn ? 'Voltage Margin:' : '전원 안전마진:';
+
+  const gaugeTitle = document.querySelector('.level-meter-box .level-title');
+  if (gaugeTitle) gaugeTitle.textContent = isEn ? 'Voltage Margin Level Gauge' : '전압 마진 레벨 게이지 (Voltage Margin Gauge)';
+
+  const gaugeTicks = document.querySelectorAll('.level-scale-track .scale-mark');
+  if (gaugeTicks.length >= 4) {
+    gaugeTicks[0].textContent = isEn ? '18.0V (Risk)' : '18.0V (위험)';
+    gaugeTicks[1].textContent = isEn ? '20.4V (Warn)' : '20.4V (경고)';
+    gaugeTicks[3].textContent = isEn ? '24.0V (Nom)' : '24.0V (정격)';
+  }
+
+  const flowTitle = document.querySelector('.circuit-strip .strip-header span:first-child');
+  if (flowTitle) flowTitle.textContent = isEn ? 'Line Potential Profile' : '선로 전위 분포';
+
+  const scSourceLbl = document.querySelector('.sc-node-source span');
+  if (scSourceLbl) scSourceLbl.textContent = isEn ? 'SMPS Source' : 'SMPS 전원';
+
+  const scLoadLbl = document.querySelector('.sc-node-load span');
+  if (scLoadLbl) scLoadLbl.textContent = isEn ? 'Sensor / Load' : '센서 / 부하';
+
+  const chartTitle = document.querySelector('#tab-voltagedrop .chart-title');
+  if (chartTitle) chartTitle.innerHTML = `<i data-lucide="trending-down"></i> ${isEn ? 'Voltage Gradient Curve (Line Length vs Drop)' : '선로 거리별 전압 강하 구배 곡선 (Voltage Gradient Curve)'}`;
+
+  const chartLegends = document.querySelectorAll('#tab-voltagedrop .chart-legend .leg-item');
+  if (chartLegends.length >= 3) {
+    chartLegends[0].textContent = isEn ? '■ Voltage Curve' : '■ 선로 전압 곡선';
+    chartLegends[1].textContent = isEn ? '--- Min Threshold (V_min)' : '--- 최저 전압 (V_min)';
+    chartLegends[2].textContent = isEn ? '■ Brownout Risk (18V)' : '■ 브라운아웃 위험선 (18V)';
+  }
+
+  const specLabels = document.querySelectorAll('#tab-voltagedrop .specs-mini-grid .spec-cell .s-label');
+  if (specLabels.length >= 4) {
+    specLabels[0].textContent = isEn ? 'Total Loop Resistance' : '왕복 선로 저항';
+    specLabels[1].textContent = isEn ? 'Line Thermal Loss (I²R)' : '선로 발열 손실 (I²R)';
+    specLabels[2].textContent = isEn ? 'Ampacity Usage Ratio' : '허용전류 사용률';
+    specLabels[3].textContent = isEn ? 'Recommended Gauge' : '추천 최소 규격';
+  }
+
+  const specSubs = document.querySelectorAll('#tab-voltagedrop .specs-mini-grid .spec-cell .s-sub');
+  if (specSubs.length >= 4 && isEn) {
+    specSubs[1].textContent = 'Normal Dissipation';
+    specSubs[3].textContent = 'Meets 1.0V Margin Req';
+  }
+
+  // AI Audit Box Translations
+  const aiBadge = document.querySelector('.audit-badge');
+  if (aiBadge) aiBadge.innerHTML = `<i data-lucide="shield-check"></i> ${isEn ? 'AI Smart Audit' : 'AI 스마트 진단'}`;
+
+  const aiH4 = document.querySelector('.audit-title-group h4');
+  if (aiH4) aiH4.textContent = isEn ? '6-Point Comprehensive Engineering Safety Audit' : 'FA 전장설계 6대 항목 종합 안전 진단서';
+
+  const auditHeaders = document.querySelectorAll('.audit-item h5');
+  if (auditHeaders.length >= 6) {
+    auditHeaders[0].textContent = isEn ? '1. Supply Voltage Margin (V_term vs V_min)' : '1. 전원 전압 마진 (V_term vs V_min)';
+    auditHeaders[1].textContent = isEn ? '2. Conductor Ampacity Margin' : '2. 도선 허용전류 마진 (Ampacity Safety)';
+    auditHeaders[2].textContent = isEn ? '3. Transient Inrush Brownout Immunity' : '3. 과도 돌입전류 브라운아웃 내성';
+    auditHeaders[3].textContent = isEn ? '4. Thermal Dissipation & Power Loss (I²R)' : '4. 선로 발열 및 전력 손실 (I²R Loss)';
+    auditHeaders[4].textContent = isEn ? '5. Short Circuit CP Coordination' : '5. 단락 고장 시 차단기 협조 제어 (CP Coordination)';
+    auditHeaders[5].textContent = isEn ? '6. Wiring Topology Loss Factor' : '6. 배선 토폴로지 전압강하 감쇄율';
+  }
+
+  const copySumBtn = document.querySelector('#copyResultSummaryBtn span');
+  if (copySumBtn) copySumBtn.textContent = isEn ? 'Copy Summary' : '요약 복사';
+
+  const copyMdBtn = document.querySelector('#copyMarkdownBtn span');
+  if (copyMdBtn) copyMdBtn.textContent = isEn ? 'Copy Markdown' : '마크다운 복사';
+
+  const reqQuoteBtn = document.querySelector('#openQuoteModalBtn span');
+  if (reqQuoteBtn) reqQuoteBtn.textContent = isEn ? 'Request BOM Quote' : '부품 견적 요청 (BOM)';
+
+  // 5. Tab 9: PLC Scaling Specific Labels
   const plcLabels = {
     'label[for="plcMakerSelect"]': isEn ? 'PLC Manufacturer & Resolution (Raw Count)' : 'PLC 제조사 및 아날로그 모듈 분해능 (Raw Count)',
     'label[for="plcRawMin"]': isEn ? 'Digital Raw Min (D_min)' : '디지털 Raw 하한 (D_min)',
@@ -2338,7 +2699,7 @@ function applyLanguage(lang) {
     plcCodeHeader.textContent = isEn ? 'PLC Structured Text (ST) Linear Scaling Formula' : 'PLC 래더(ST) 선형 변환 수식';
   }
 
-  // 5. Sponsored Automation Cards
+  // 6. Sponsored Automation Cards
   const spHeader = document.querySelector('.bottom-showcase-bar .sponsor-tag');
   if (spHeader) spHeader.textContent = isEn ? 'SPONSORED AUTOMATION COMPONENTS' : 'SPONSORED AUTOMATION COMPONENTS';
 
@@ -2357,7 +2718,15 @@ function applyLanguage(lang) {
     const p2 = spCards[2].querySelector('p'); if (p2) p2.textContent = isEn ? 'Extends distance up to 1.2km, 2.5kV surge isolation protection' : '최대 1.2km 장거리 확장, 2.5kV 서지 절연 보호';
   }
 
-  // 6. Recalculate Active Tab
+  // Populate Gauge Select with translated options
+  populateGaugeSelect();
+
+  // 6.5 If English mode, run zero-korean DOM sanitization
+  if (isEn) {
+    sanitizeDomToPureEnglish(document.body);
+  }
+
+  // 7. Recalculate Active Tab
   const activeTab = document.querySelector('.tab-panel.active')?.id || 'tab-voltagedrop';
   if (activeTab === 'tab-voltagedrop') calculateVoltageDrop();
   else if (activeTab === 'tab-rs485') calculateRS485();
@@ -2700,62 +3069,62 @@ window.addEventListener('resize', () => {
 const PARTS_DATABASE = {
   CABLE_PARTS: {
     'AWG 24': [
-      { maker: '대한전선 (Taihan)', partNo: 'DH-M12-4C-0.2SQ', desc: 'M12 센서용 4심 실드 케이블 (0.2SQ)', priceRange: '1,200~1,600원/m' },
-      { maker: 'LAPP Korea', partNo: 'ÖLFLEX CLASSIC 100 4G0.2', desc: '가동형 4심 제어 케이블 (PVC/유연)', priceRange: '2,000~2,500원/m' },
-      { maker: '삼원ACT (IOLINK)', partNo: 'SAMWON-CC-4C-0.2', desc: 'PLC I/O 전용 4심 컬러 케이블', priceRange: '950~1,300원/m' }
+      { maker: '대한전선 (Taihan)', makerEn: 'Taihan Cable', partNo: 'DH-M12-4C-0.2SQ', desc: 'M12 센서용 4심 실드 케이블 (0.2SQ)', descEn: 'M12 Sensor 4-Core Shielded Cable (0.2SQ)', priceRange: '1,200~1,600원/m', priceEn: '1,200~1,600 KRW/m' },
+      { maker: 'LAPP Korea', makerEn: 'LAPP Korea', partNo: 'ÖLFLEX CLASSIC 100 4G0.2', desc: '가동형 4심 제어 케이블 (PVC/유연)', descEn: 'Flexible 4-Core Control Cable (PVC/Flex)', priceRange: '2,000~2,500원/m', priceEn: '2,000~2,500 KRW/m' },
+      { maker: '삼원ACT (IOLINK)', makerEn: 'Samwon ACT (IOLINK)', partNo: 'SAMWON-CC-4C-0.2', desc: 'PLC I/O 전용 4심 컬러 케이블', descEn: 'PLC I/O 4-Core Color-Coded Cable', priceRange: '950~1,300원/m', priceEn: '950~1,300 KRW/m' }
     ],
     'AWG 22': [
-      { maker: '대한전선 (Taihan)', partNo: 'DH-CVV-S 4C-0.3SQ', desc: '차폐 제어용 비닐 절연 비닐 시스 케이블', priceRange: '1,400~1,800원/m' },
-      { maker: 'LS전선 (LS Cable)', partNo: 'LS-F-CVV-S 4C-0.3SQ', desc: '난연성 차폐 4심 제어 배선', priceRange: '1,500~2,000원/m' },
-      { maker: 'LAPP Korea', partNo: 'ÖLFLEX 110 4G0.34', desc: '오일 저항성 산업용 배선 케이블', priceRange: '2,300~2,800원/m' }
+      { maker: '대한전선 (Taihan)', makerEn: 'Taihan Cable', partNo: 'DH-CVV-S 4C-0.3SQ', desc: '차폐 제어용 비닐 절연 비닐 시스 케이블', descEn: 'Shielded Vinyl Insulated Control Cable', priceRange: '1,400~1,800원/m', priceEn: '1,400~1,800 KRW/m' },
+      { maker: 'LS전선 (LS Cable)', makerEn: 'LS Cable & System', partNo: 'LS-F-CVV-S 4C-0.3SQ', desc: '난연성 차폐 4심 제어 배선', descEn: 'Flame-Retardant Shielded 4-Core Cable', priceRange: '1,500~2,000원/m', priceEn: '1,500~2,000 KRW/m' },
+      { maker: 'LAPP Korea', makerEn: 'LAPP Korea', partNo: 'ÖLFLEX 110 4G0.34', desc: '오일 저항성 산업용 배선 케이블', descEn: 'Oil-Resistant Industrial Wiring Cable', priceRange: '2,300~2,800원/m', priceEn: '2,300~2,800 KRW/m' }
     ],
     'AWG 20': [
-      { maker: '삼원ACT (IOLINK)', partNo: 'SAMWON-IOLINK-4C-0.5', desc: 'IO-Link 센서 허브 전원 공급선', priceRange: '1,600~2,100원/m' },
-      { maker: 'LAPP Korea', partNo: 'ÖLFLEX 110 4G0.5', desc: '0.5SQ 4심 산업 기계 표준 배선', priceRange: '2,500~3,100원/m' },
-      { maker: '가온전선 (Gaon)', partNo: 'GAON-VCTF 4C-0.5SQ', desc: '유연성 비닐 캡타이어 코드', priceRange: '1,300~1,700원/m' }
+      { maker: '삼원ACT (IOLINK)', makerEn: 'Samwon ACT (IOLINK)', partNo: 'SAMWON-IOLINK-4C-0.5', desc: 'IO-Link 센서 허브 전원 공급선', descEn: 'IO-Link Sensor Hub Power Cable', priceRange: '1,600~2,100원/m', priceEn: '1,600~2,100 KRW/m' },
+      { maker: 'LAPP Korea', makerEn: 'LAPP Korea', partNo: 'ÖLFLEX 110 4G0.5', desc: '0.5SQ 4심 산업 기계 표준 배선', descEn: '0.5SQ 4-Core Industrial Machine Wiring', priceRange: '2,500~3,100원/m', priceEn: '2,500~3,100 KRW/m' },
+      { maker: '가온전선 (Gaon)', makerEn: 'Gaon Cable', partNo: 'GAON-VCTF 4C-0.5SQ', desc: '유연성 비닐 캡타이어 코드', descEn: 'Flexible Vinyl Cabtyre Cord', priceRange: '1,300~1,700원/m', priceEn: '1,300~1,700 KRW/m' }
     ],
     'AWG 18': [
-      { maker: '대한전선 (Taihan)', partNo: 'DH-KIV 0.75SQ', desc: '전기 기기 배선용 비닐 절연 전선 (KIV)', priceRange: '450~650원/m' },
-      { maker: 'LS전선 (LS Cable)', partNo: 'LS-HFIX 0.75SQ', desc: '저독성 난연 폴리올레핀 절연 전선', priceRange: '550~750원/m' },
-      { maker: 'LAPP Korea', partNo: 'ÖLFLEX CLASSIC 110 4G0.75', desc: '4심 0.75SQ 오일 저항 제어선', priceRange: '2,900~3,600원/m' }
+      { maker: '대한전선 (Taihan)', makerEn: 'Taihan Cable', partNo: 'DH-KIV 0.75SQ', desc: '전기 기기 배선용 비닐 절연 전선 (KIV)', descEn: 'Vinyl Insulated Appliance Wire (KIV)', priceRange: '450~650원/m', priceEn: '450~650 KRW/m' },
+      { maker: 'LS전선 (LS Cable)', makerEn: 'LS Cable & System', partNo: 'LS-HFIX 0.75SQ', desc: '저독성 난연 폴리올레핀 절연 전선', descEn: 'Halogen-Free Flame-Retardant Wire', priceRange: '550~750원/m', priceEn: '550~750 KRW/m' },
+      { maker: 'LAPP Korea', makerEn: 'LAPP Korea', partNo: 'ÖLFLEX CLASSIC 110 4G0.75', desc: '4심 0.75SQ 오일 저항 제어선', descEn: '4-Core 0.75SQ Oil-Resistant Control Cable', priceRange: '2,900~3,600원/m', priceEn: '2,900~3,600 KRW/m' }
     ],
     'AWG 16': [
-      { maker: '대한전선 (Taihan)', partNo: 'DH-TFR-CV 1.25SQ', desc: '트레이용 난연 전력·제어 케이블', priceRange: '1,800~2,400원/m' },
-      { maker: '삼원ACT', partNo: 'SAMWON-PWR-4C-1.25', desc: '솔레노이드 밸브 아일랜드 전원선', priceRange: '2,200~2,800원/m' }
+      { maker: '대한전선 (Taihan)', makerEn: 'Taihan Cable', partNo: 'DH-TFR-CV 1.25SQ', desc: '트레이용 난연 전력·제어 케이블', descEn: 'Tray Flame-Retardant Power & Control Cable', priceRange: '1,800~2,400원/m', priceEn: '1,800~2,400 KRW/m' },
+      { maker: '삼원ACT', makerEn: 'Samwon ACT', partNo: 'SAMWON-PWR-4C-1.25', desc: '솔레노이드 밸브 아일랜드 전원선', descEn: 'Solenoid Valve Island Power Supply Cable', priceRange: '2,200~2,800원/m', priceEn: '2,200~2,800 KRW/m' }
     ],
     'AWG 14': [
-      { maker: 'LS전선 (LS Cable)', partNo: 'LS-HFIX 2.0SQ (450/750V)', desc: '2.0SQ 내열 난연 단심 동력선', priceRange: '850~1,150원/m' },
-      { maker: '대한전선', partNo: 'DH-HIV 2.0SQ', desc: '2종 내열 비닐절연전선 (90°C)', priceRange: '750~1,050원/m' }
+      { maker: 'LS전선 (LS Cable)', makerEn: 'LS Cable & System', partNo: 'LS-HFIX 2.0SQ (450/750V)', desc: '2.0SQ 내열 난연 단심 동력선', descEn: '2.0SQ Heat/Flame Resistant Single Core Wire', priceRange: '850~1,150원/m', priceEn: '850~1,150 KRW/m' },
+      { maker: '대한전선', makerEn: 'Taihan Cable', partNo: 'DH-HIV 2.0SQ', desc: '2종 내열 비닐절연전선 (90°C)', descEn: 'Class 2 Heat-Resistant Vinyl Wire (90°C)', priceRange: '750~1,050원/m', priceEn: '750~1,050 KRW/m' }
     ]
   },
   CP_BREAKERS: {
     '2A': [
-      { maker: 'LS ELECTRIC', partNo: 'BKN-32C 2A 1P', desc: 'DIN레일 장착형 소형 차단기 C-curve 2A', priceRange: '6,500~8,500원' },
-      { maker: 'Schneider Electric', partNo: 'iC60N 1P 2A C-curve', desc: 'Acti9 산업용 미니어처 회로차단기', priceRange: '12,000~15,000원' }
+      { maker: 'LS ELECTRIC', makerEn: 'LS ELECTRIC', partNo: 'BKN-32C 2A 1P', desc: 'DIN레일 장착형 소형 차단기 C-curve 2A', descEn: 'DIN-Rail MCB Circuit Breaker C-Curve 2A', priceRange: '6,500~8,500원', priceEn: '6,500~8,500 KRW' },
+      { maker: 'Schneider Electric', makerEn: 'Schneider Electric', partNo: 'iC60N 1P 2A C-curve', desc: 'Acti9 산업용 미니어처 회로차단기', descEn: 'Acti9 Industrial Miniature Circuit Breaker', priceRange: '12,000~15,000원', priceEn: '12,000~15,000 KRW' }
     ],
     '4A': [
-      { maker: 'LS ELECTRIC', partNo: 'BKN-32C 4A 1P', desc: 'DIN레일 4A C-curve 배선보호 차단기', priceRange: '6,500~8,500원' },
-      { maker: 'Fuji Electric', partNo: 'CP31D 1P 4A C-curve', desc: '고신뢰도 전자기식 서킷 프로텍터', priceRange: '14,000~18,000원' }
+      { maker: 'LS ELECTRIC', makerEn: 'LS ELECTRIC', partNo: 'BKN-32C 4A 1P', desc: 'DIN레일 4A C-curve 배선보호 차단기', descEn: 'DIN-Rail 4A C-Curve Circuit Protector', priceRange: '6,500~8,500원', priceEn: '6,500~8,500 KRW' },
+      { maker: 'Fuji Electric', makerEn: 'Fuji Electric', partNo: 'CP31D 1P 4A C-curve', desc: '고신뢰도 전자기식 서킷 프로텍터', descEn: 'High-Reliability Magnetic Circuit Protector', priceRange: '14,000~18,000원', priceEn: '14,000~18,000 KRW' }
     ],
     '6A': [
-      { maker: 'LS ELECTRIC', partNo: 'BKN-32C 6A 1P', desc: '6A C-curve 단상 DIN레일 차단기', priceRange: '6,500~8,500원' },
-      { maker: 'ABB', partNo: 'S200M 1P 6A C-curve', desc: 'System pro M compact 10kA 차단기', priceRange: '13,500~17,000원' }
+      { maker: 'LS ELECTRIC', makerEn: 'LS ELECTRIC', partNo: 'BKN-32C 6A 1P', desc: '6A C-curve 단상 DIN레일 차단기', descEn: '6A C-Curve 1-Phase DIN-Rail MCB', priceRange: '6,500~8,500원', priceEn: '6,500~8,500 KRW' },
+      { maker: 'ABB', makerEn: 'ABB', partNo: 'S200M 1P 6A C-curve', desc: 'System pro M compact 10kA 차단기', descEn: 'System Pro M Compact 10kA MCB', priceRange: '13,500~17,000원', priceEn: '13,500~17,000 KRW' }
     ],
     '10A': [
-      { maker: 'LS ELECTRIC', partNo: 'BKN-32C 10A 1P', desc: '10A C-curve 제어반 전원용 차단기', priceRange: '6,500~8,500원' },
-      { maker: 'Schneider Electric', partNo: 'iC60N 1P 10A C-curve', desc: '산업용 고신뢰 차단기', priceRange: '12,500~16,000원' }
+      { maker: 'LS ELECTRIC', makerEn: 'LS ELECTRIC', partNo: 'BKN-32C 10A 1P', desc: '10A C-curve 제어반 전원용 차단기', descEn: '10A C-Curve Control Panel Power MCB', priceRange: '6,500~8,500원', priceEn: '6,500~8,500 KRW' },
+      { maker: 'Schneider Electric', makerEn: 'Schneider Electric', partNo: 'iC60N 1P 10A C-curve', desc: '산업용 고신뢰 차단기', descEn: 'Industrial High-Reliability MCB', priceRange: '12,500~16,000원', priceEn: '12,500~16,000 KRW' }
     ],
     '16A': [
-      { maker: 'LS ELECTRIC', partNo: 'BKN-32C 16A 1P', desc: '16A C-curve SMPS 입력보호 차단기', priceRange: '6,500~8,500원' },
-      { maker: 'Siemens', partNo: '5SY4116-7 1P 16A C', desc: 'Sentron DIN레일 회로차단기', priceRange: '15,000~19,500원' }
+      { maker: 'LS ELECTRIC', makerEn: 'LS ELECTRIC', partNo: 'BKN-32C 16A 1P', desc: '16A C-curve SMPS 입력보호 차단기', descEn: '16A C-Curve SMPS Input Protection MCB', priceRange: '6,500~8,500원', priceEn: '6,500~8,500 KRW' },
+      { maker: 'Siemens', makerEn: 'Siemens', partNo: '5SY4116-7 1P 16A C', desc: 'Sentron DIN레일 회로차단기', descEn: 'Sentron DIN-Rail Circuit Breaker', priceRange: '15,000~19,500원', priceEn: '15,000~19,500 KRW' }
     ]
   },
   SMPS_UNITS: [
-    { maker: 'MEAN WELL', partNo: 'NDR-120-24', spec: '24V 5.0A (120W)', desc: 'DIN레일 슬림형 산업용 파워서플라이', priceRange: '32,000~38,000원' },
-    { maker: 'MEAN WELL', partNo: 'NDR-240-24', spec: '24V 10.0A (240W)', desc: 'DIN레일 고효율 240W 전원공급장치', priceRange: '48,000~56,000원' },
-    { maker: 'LS ELECTRIC', partNo: 'LDU-240-24', spec: '24V 10.0A (240W)', desc: '산업 자동화 전용 파워 서플라이', priceRange: '52,000~60,000원' },
-    { maker: 'OMRON', partNo: 'S8VK-G24024', spec: '24V 10.0A (240W)', desc: '내진동/고내구성 프리미엄 SMPS', priceRange: '85,000~98,000원' },
-    { maker: 'MEAN WELL', partNo: 'NDR-480-24', spec: '24V 20.0A (480W)', desc: '대용량 480W DIN레일 파워', priceRange: '88,000~99,000원' }
+    { maker: 'MEAN WELL', makerEn: 'MEAN WELL', partNo: 'NDR-120-24', spec: '24V 5.0A (120W)', desc: 'DIN레일 슬림형 산업용 파워서플라이', descEn: 'DIN-Rail Slimline Industrial Power Supply', priceRange: '32,000~38,000원', priceEn: '32,000~38,000 KRW' },
+    { maker: 'MEAN WELL', makerEn: 'MEAN WELL', partNo: 'NDR-240-24', spec: '24V 10.0A (240W)', desc: 'DIN레일 고효율 240W 전원공급장치', descEn: 'DIN-Rail High Efficiency 240W Power Supply', priceRange: '48,000~56,000원', priceEn: '48,000~56,000 KRW' },
+    { maker: 'LS ELECTRIC', makerEn: 'LS ELECTRIC', partNo: 'LDU-240-24', spec: '24V 10.0A (240W)', desc: '산업 자동화 전용 파워 서플라이', descEn: 'Industrial Automation Power Supply', priceRange: '52,000~60,000원', priceEn: '52,000~60,000 KRW' },
+    { maker: 'OMRON', makerEn: 'OMRON', partNo: 'S8VK-G24024', spec: '24V 10.0A (240W)', desc: '내진동/고내구성 프리미엄 SMPS', descEn: 'Vibration-Resistant Premium SMPS', priceRange: '85,000~98,000원', priceEn: '85,000~98,000 KRW' },
+    { maker: 'MEAN WELL', makerEn: 'MEAN WELL', partNo: 'NDR-480-24', spec: '24V 20.0A (480W)', desc: '대용량 480W DIN레일 파워', descEn: 'High Capacity 480W DIN-Rail Power Supply', priceRange: '88,000~99,000원', priceEn: '88,000~99,000 KRW' }
   ]
 };
 
@@ -2849,29 +3218,33 @@ function renderBomParts(gaugeKey = 'AWG 22') {
   const container = document.getElementById('vdBomPartsList');
   if (!container) return;
 
+  const isEn = currentLanguage === 'en';
   const key = PARTS_DATABASE.CABLE_PARTS[gaugeKey] ? gaugeKey : 'AWG 22';
   const cableList = PARTS_DATABASE.CABLE_PARTS[key] || PARTS_DATABASE.CABLE_PARTS['AWG 22'];
   const breakerList = PARTS_DATABASE.CP_BREAKERS['4A'] || [];
-  const smpsList = PARTS_DATABASE.SMPS_UNITS.slice(0, 2);
 
   let html = '';
 
   // Render Cable Parts
   cableList.forEach(item => {
+    const maker = isEn ? (item.makerEn || item.maker) : item.maker;
+    const desc = isEn ? (item.descEn || item.desc) : item.desc;
+    const price = isEn ? (item.priceEn || item.priceRange) : item.priceRange;
+
     html += `
       <div class="bom-part-card">
         <div>
           <div class="bom-part-top">
-            <span class="bom-maker">${item.maker}</span>
-            <span class="bom-price">${item.priceRange}</span>
+            <span class="bom-maker">${maker}</span>
+            <span class="bom-price">${price}</span>
           </div>
           <div class="bom-part-no mt-1">${item.partNo}</div>
-          <p class="bom-part-desc mt-1">${item.desc}</p>
+          <p class="bom-part-desc mt-1">${desc}</p>
         </div>
         <div class="bom-part-bottom">
-          <span style="font-size:0.75rem; color:var(--text-muted);">규격: ${gaugeKey}</span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">${isEn ? 'Spec:' : '규격:'} ${gaugeKey}</span>
           <button type="button" class="btn-util btn-add-bom-item" data-part="${item.partNo}" style="font-size:0.75rem; padding:0.25rem 0.6rem;">
-            + 견적함
+            ${isEn ? '+ Add' : '+ 견적함'}
           </button>
         </div>
       </div>
@@ -2881,20 +3254,24 @@ function renderBomParts(gaugeKey = 'AWG 22') {
   // Render Breaker Card
   if (breakerList.length > 0) {
     const cp = breakerList[0];
+    const cpMaker = isEn ? (cp.makerEn || cp.maker) : cp.maker;
+    const cpDesc = isEn ? (cp.descEn || cp.desc) : cp.desc;
+    const cpPrice = isEn ? (cp.priceEn || cp.priceRange) : cp.priceRange;
+
     html += `
       <div class="bom-part-card" style="border-left: 3px solid #3b82f6;">
         <div>
           <div class="bom-part-top">
-            <span class="bom-maker">${cp.maker}</span>
-            <span class="bom-price">${cp.priceRange}</span>
+            <span class="bom-maker">${cpMaker}</span>
+            <span class="bom-price">${cpPrice}</span>
           </div>
           <div class="bom-part-no mt-1">${cp.partNo}</div>
-          <p class="bom-part-desc mt-1">${cp.desc}</p>
+          <p class="bom-part-desc mt-1">${cpDesc}</p>
         </div>
         <div class="bom-part-bottom">
-          <span style="font-size:0.75rem; color:var(--text-muted);">추천 회로보호기 (CP)</span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">${isEn ? 'Recommended Circuit Protector (CP)' : '추천 회로보호기 (CP)'}</span>
           <button type="button" class="btn-util btn-add-bom-item" data-part="${cp.partNo}" style="font-size:0.75rem; padding:0.25rem 0.6rem;">
-            + 견적함
+            ${isEn ? '+ Add' : '+ 견적함'}
           </button>
         </div>
       </div>
@@ -2907,10 +3284,7 @@ function renderBomParts(gaugeKey = 'AWG 22') {
   container.querySelectorAll('.btn-add-bom-item').forEach(btn => {
     btn.addEventListener('click', () => {
       const part = btn.getAttribute('data-part');
-      alert(`[BOM 견적함 추가]
-품번: ${part}
-
-'부품 견적 요청(BOM)' 양식에 해당 부품이 등록되었습니다.`);
+      alert(isEn ? `[Added to BOM Quote]\nPart No: ${part}\n\nItem registered to BOM form.` : `[BOM 견적함 추가]\n품번: ${part}\n\n'부품 견적 요청(BOM)' 양식에 해당 부품이 등록되었습니다.`);
     });
   });
 }
