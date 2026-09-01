@@ -6396,3 +6396,41 @@ function copyCurrentTabSummary(tabId) {
     });
   }
 }
+
+
+// ==========================================================================
+// GLOBAL DIGITAL ASSET MODAL CONTROLLER & TIER SELECTION
+// ==========================================================================
+
+function openDigitalModal() {
+  const modal = document.getElementById('digitalProductModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    if (window.lucide) window.lucide.createIcons();
+  }
+}
+window.openDigitalModal = openDigitalModal;
+
+function closeDigitalModal() {
+  const modal = document.getElementById('digitalProductModal');
+  if (modal) modal.classList.add('hidden');
+}
+window.closeDigitalModal = closeDigitalModal;
+
+function selectTierAndBuy(price, tierName) {
+  const orderBox = document.getElementById('digitalOrderBox');
+  const priceNum = document.getElementById('checkoutPriceNum');
+  const titleEl = document.getElementById('selectedTierTitle');
+  const badgeEl = document.getElementById('checkoutTierBadge');
+
+  if (orderBox) orderBox.style.display = 'block';
+  if (priceNum) priceNum.textContent = price.toLocaleString('ko-KR');
+  if (titleEl) titleEl.textContent = tierName;
+  if (badgeEl) badgeEl.textContent = `SELECTED: ${price.toLocaleString('ko-KR')} KRW TIER`;
+
+  // Scroll to checkout box smoothly
+  if (orderBox) {
+    orderBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+window.selectTierAndBuy = selectTierAndBuy;
