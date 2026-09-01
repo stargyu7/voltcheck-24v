@@ -4225,7 +4225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // [토스페이먼츠 공식 클라이언트 키 설정]
 // 상점 실서버 전환 시 developers.tosspayments.com에서 발급받은 'live_ck_...'로 교체하시면 즉시 사장님 계좌로 실결제 정산됩니다.
-const TOSS_PAYMENTS_CLIENT_KEY = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq';
+const TOSS_PAYMENTS_CLIENT_KEY = 'test_ck_ZLKGPx4M3MnjGvZzgZYeVBaWypv1';
 
 function executeRealCheckoutAndDownload() {
   const name = document.getElementById('orderName')?.value || '엔지니어';
