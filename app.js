@@ -4363,7 +4363,7 @@ let SELECTED_DIGITAL_TIER = {
 const VOLTCHECK_BANK_INFO = {
   bank: '카카오뱅크',
   account: '3333-12-0080848',
-  owner: '이규정'
+  owner: '이*정'
 };
 
 function selectTierAndBuy(price, title) {
