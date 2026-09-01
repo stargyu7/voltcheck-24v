@@ -4577,3 +4577,114 @@ body, h1, h2, h3, h4, h5, p, span, div, label, li {
     display: none;
   }
 }
+
+
+/* ==========================================================================
+   DYNAMIC VISUAL GAUGES, ENGINEERING RULE BOXES & 1-CLICK COPY
+   ========================================================================== */
+
+/* Visual Multi-Zone Gauge Bar */
+.visual-gauge-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.85rem;
+  margin: 0.75rem 0;
+}
+
+.visual-gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 0.4rem;
+}
+
+.visual-gauge-track {
+  position: relative;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+}
+
+.gauge-zone {
+  height: 100%;
+}
+.gauge-zone.zone-safe { background: #22c55e; }
+.gauge-zone.zone-warn { background: #f59e0b; }
+.gauge-zone.zone-danger { background: #ef4444; }
+
+.visual-gauge-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #0f172a;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  transition: left 0.3s ease;
+}
+
+.visual-gauge-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Practical Engineering Rule & Field Tip Box */
+.engineering-rule-box {
+  background: #f8fafc;
+  border-left: 3.5px solid var(--brand-orange);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--navy-dark);
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.engineering-rule-box i {
+  color: var(--brand-orange);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.engineering-rule-box strong {
+  color: var(--brand-orange);
+}
+
+/* 1-Click Copy Result Button */
+.btn-copy-summary {
+  background: transparent;
+  border: 1px dashed var(--border-main);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.15s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-copy-summary:hover {
+  border-color: var(--navy-dark);
+  color: var(--navy-dark);
+  background: #ffffff;
+}

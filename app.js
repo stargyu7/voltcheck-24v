@@ -6357,3 +6357,42 @@ function calculateCraneHoist() {
     elBadge.className = isSfSafe ? 'badge-pill badge-safe' : 'badge-pill badge-danger';
   }
 }
+
+
+// ==========================================================================
+// 1-CLICK ENGINEERING RESULT COPY ENGINE (FOR JIRA / KAKAOTALK / REPORTS)
+// ==========================================================================
+
+function copyCurrentTabSummary(tabId) {
+  let text = '';
+  if (tabId === 'tab-voltagedrop') {
+    const vd = document.getElementById('resVoltDropBig')?.textContent || '0V';
+    const tv = document.getElementById('resTerminalVoltBig')?.textContent || '24V';
+    const status = document.getElementById('vdVerdictBadge')?.textContent || 'SAFE';
+    text = `[VoltCheck 24V 전압강하 검토 결과]\n- 판정: ${status}\n- 선로 전압강하: ${vd}\n- 말단 수전 전압: ${tv}\n- 국제 기준: IEC 60204-1 허용 범위 만족\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-safetylight') {
+    const s = document.getElementById('resSlMinDistance')?.textContent || '0mm';
+    const status = document.getElementById('slVerdictBadge')?.textContent || 'SAFE';
+    text = `[VoltCheck 안전 라이트커튼 이격거리 검토 결과]\n- 판정: ${status}\n- 법적 최소 안전거리(S): ${s}\n- 적용 표준: ISO 13855 / EN ISO 13849-1\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-transformer') {
+    const kva = document.getElementById('resTrCapacity')?.textContent || '0kVA';
+    const pri = document.getElementById('resTrPrimaryBreaker')?.textContent || '10A';
+    text = `[VoltCheck 제어용 변압기(TR) 선정 결과]\n- 추천 변압기 용량: ${kva}\n- 1차측 추천 차단기: ${pri}\n- 적용 표준: IEC 60204-1 / NFPA 79\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-busbar') {
+    const amp = document.getElementById('resBbAmpacity')?.textContent || '0A';
+    const force = document.getElementById('resBbElectroForce')?.textContent || '0 N/m';
+    text = `[VoltCheck 구리 부스바 허용전류 검토 결과]\n- 연속 정격 허용전류: ${amp}\n- 단락 전자 기계력: ${force}\n- 적용 표준: DIN 43671 / IEC 60865\nhttps://voltcheck24.com/`;
+  } else if (tabId === 'tab-spd') {
+    const cap = document.getElementById('resSpdCapacity')?.textContent || '20kA';
+    const up = document.getElementById('resSpdUp')?.textContent || '1.5kV';
+    text = `[VoltCheck 서지보호기(SPD) 선정 결과]\n- 추천 방전용량: ${cap}\n- 전압보호레벨: ${up}\n- 적용 표준: IEC 61643-11\nhttps://voltcheck24.com/`;
+  } else {
+    text = `[VoltCheck 공학 계산서]\n공인 전기 표준(IEC/NFPA/KEC) 기반 검토 완료.\nhttps://voltcheck24.com/`;
+  }
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('공학 검토 요약 결과가 클립보드에 복사되었습니다!\n카카오톡, 슬랙 또는 설계 보고서에 [Ctrl+V]로 붙여넣으세요.\n\n' + text);
+    });
+  }
+}

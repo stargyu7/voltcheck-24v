@@ -3372,6 +3372,20 @@
             <div class="terminal-voltage-big font-mono" id="resSlMinDistance">288 mm</div>
             <div class="tv-sub" id="resSlFormulaText">S = (2000 mm/s × 0.120s) + 48mm = 288 mm</div>
           </div>
+
+          <!-- Practical Tip & Copy -->
+          <div class="engineering-rule-box">
+            <i data-lucide="shield-check"></i>
+            <div>
+              <strong>ISO 13855 안전 수칙:</strong> 신체 침투 속도(2,000mm/s) 기준으로 산출된 최소 거리(S)보다 실제 설치 거리가 반드시 커야 안전 인증(PLe/SIL3)을 통과합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-safetylight')">
+              <i data-lucide="copy"></i> <span>안전거리 결과 복사</span>
+            </button>
+          </div>
           <div class="summary-grid-hero">
             <div class="summary-item-hero">
               <span class="summary-label">총 시스템 정지시간(T)</span>
@@ -4135,6 +4149,20 @@
             <div class="terminal-voltage-big font-mono" id="resBbAmpacity">630 A</div>
             <div class="tv-sub" id="resBbSectionArea">단면적 250 mm² (온도상승 35K, 주위온도 35°C 기준)</div>
           </div>
+
+          <!-- Practical Tip & Copy -->
+          <div class="engineering-rule-box">
+            <i data-lucide="zap"></i>
+            <div>
+              <strong>배전반 시공 팁:</strong> 3상 단락 시 발생하는 상간 전자력(N/m)을 안전하게 지지하기 위해 부스바 지지애자 간격을 400mm 이내로 체결하십시오.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-busbar')">
+              <i data-lucide="copy"></i> <span>부스바 결과 복사</span>
+            </button>
+          </div>
           <div class="summary-grid-hero">
             <div class="summary-item-hero">
               <span class="summary-label">단락 전자력 (Force F)</span>
@@ -4333,6 +4361,20 @@
             <span class="tv-label font-mono">RECOMMENDED DISCHARGE CAPACITY (In / Imax)</span>
             <div class="terminal-voltage-big font-mono" id="resSpdCapacity">In 20 kA / Imax 40 kA</div>
             <div class="tv-sub" id="resSpdUcSubText">최대연속운전전압 Uc &ge; 275V (TN-S 220V 상전압 &times; 1.15 안전계수 만족)</div>
+          </div>
+
+          <!-- Practical Tip & Copy -->
+          <div class="engineering-rule-box">
+            <i data-lucide="shield-alert"></i>
+            <div>
+              <strong>IEC 61643 배선 수칙:</strong> SPD는 리드선 인덕턴스로 인한 전압 상승을 방지하기 위해 연결 배선 총 길이(L1+L2)를 0.5m 이하로 짧게 시공해야 합니다.
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <button type="button" class="btn-copy-summary" onclick="copyCurrentTabSummary('tab-spd')">
+              <i data-lucide="copy"></i> <span>SPD 결과 복사</span>
+            </button>
           </div>
           <div class="summary-grid-hero">
             <div class="summary-item-hero">
