@@ -2758,6 +2758,22 @@ function applyLanguage(lang) {
   const sBox = document.getElementById('statutoryNoticeBox');
   if (sBox) sBox.innerHTML = isEn ? '<strong>[Statutory Digital Content Disclosure]</strong><br>This product is an instantly delivered digital asset. In accordance with digital content consumer regulations, returns are limited once file delivery begins. (Lifetime free calculation revisions supported.)' : '<strong>[전자상거래법 제17조 제2항에 따른 법정 고지]</strong><br>본 상품은 결제/입금 확인 즉시 영구 다운로드 링크 및 파일이 제공되는 디지털 콘텐츠로서, 다운로드 개시 후에는 전자상거래 등에서의 소비자보호에 관한 법률에 따라 단순 변심에 의한 청약철회가 제한될 수 있습니다. (설계 수식 오류 시 평생 무상 개정판 지원)';
 
+  // Mobile Bottom Nav Labels
+  const mbV = document.getElementById('mbTextVolt');
+  if (mbV) mbV.textContent = isEn ? 'VoltDrop' : '전압강하';
+  const mbS = document.getElementById('mbTextSmps');
+  if (mbS) mbS.textContent = isEn ? 'SMPS' : 'SMPS/CP';
+  const mbA = document.getElementById('mbTextAll');
+  if (mbA) mbA.textContent = isEn ? '21 Tools' : '전체 21종';
+  const mbP = document.getElementById('mbTextProj');
+  if (mbP) mbP.textContent = isEn ? 'Project' : '보관함';
+
+  // Mobile Drawer Titles
+  const mdT = document.getElementById('mdTitle');
+  if (mdT) mdT.textContent = isEn ? '21 Engineering Tool Suite' : '21대 전장설계 공학 도구';
+  const mdS = document.getElementById('mdSub');
+  if (mdS) mdS.textContent = isEn ? 'One-Tap Instant Sizing Suite' : '원터치 계산기 즉시 전환';
+
   // 5. Tab 9: PLC Scaling Specific Labels
   const plcLabels = {
     'label[for="plcMakerSelect"]': isEn ? 'PLC Manufacturer & Resolution (Raw Count)' : 'PLC 제조사 및 아날로그 모듈 분해능 (Raw Count)',
@@ -5167,3 +5183,65 @@ function executeFinalSubmittalPrint() {
   closePrintCustomizer();
   generateAndPrintReport();
 }
+
+
+// ==========================================================================
+// MOBILE-DEDICATED BOTTOM NAVIGATION & DRAWER LOGIC
+// ==========================================================================
+
+function openMobileToolsDrawer() {
+  const drawer = document.getElementById('mobileToolsDrawer');
+  if (drawer) {
+    drawer.style.display = 'flex';
+    if (window.lucide) window.lucide.createIcons();
+  }
+}
+
+function closeMobileToolsDrawer() {
+  const drawer = document.getElementById('mobileToolsDrawer');
+  if (drawer) drawer.style.display = 'none';
+}
+
+function selectDrawerTool(tabId) {
+  closeMobileToolsDrawer();
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  if (btn) btn.click();
+
+  // Update mobile bottom nav highlights
+  document.querySelectorAll('.mb-nav-item').forEach(el => el.classList.remove('active'));
+  if (tabId === 'tab-voltagedrop') {
+    document.getElementById('mbNavVolt')?.classList.add('active');
+  } else if (tabId === 'tab-smpsbudget') {
+    document.getElementById('mbNavSmps')?.classList.add('active');
+  }
+}
+
+function switchMobileTab(tabId) {
+  selectDrawerTool(tabId);
+}
+
+// Enhance copySummaryToClipboard with Mobile Native Web Share API
+const originalCopySummary = copySummaryToClipboard;
+copySummaryToClipboard = function() {
+  const vSource = document.getElementById('sourceVoltage')?.value || '24';
+  const l = document.getElementById('wireLength')?.value || '40';
+  const gauge = document.getElementById('wireGaugeValue')?.value || 'AWG 24';
+  const i = document.getElementById('loadCurrent')?.value || '0.5';
+  const vTerm = document.getElementById('resTerminalV')?.textContent || '23.33';
+  const vDrop = document.getElementById('resDropV')?.textContent || '-0.67V';
+  const status = document.getElementById('verdictBadgeText')?.textContent || 'PASS';
+
+  const shareText = `[볼트체크 24V 전압강하 검토 결과]\n- 공급: DC ${vSource}V / 부하: ${i}A\n- 선로: ${l}m (${gauge})\n- 전압강하: ${vDrop}\n- 말단전압: ${vTerm}V (${status})\nhttps://voltcheck24.com/`;
+
+  if (navigator.share && /Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    navigator.share({
+      title: 'VoltCheck 24V 계산서',
+      text: shareText,
+      url: 'https://voltcheck24.com/'
+    }).catch(() => {
+      originalCopySummary();
+    });
+  } else {
+    originalCopySummary();
+  }
+};

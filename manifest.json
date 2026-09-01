@@ -1,0 +1,17 @@
+{
+  "name": "볼트체크 24V (VoltCheck Pro)",
+  "short_name": "VoltCheck",
+  "description": "공장 자동화 및 전장설계 21대 공학 계산 도구 및 표준 가이드",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#f97316",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

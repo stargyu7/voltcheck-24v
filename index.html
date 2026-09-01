@@ -2,7 +2,13 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <!-- PWA & Mobile Web App Capabilities -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="manifest.json">
   <title>볼트체크 24V | 산업용 제어선로 전압강하 & 센서 마진 검증기</title>
   <meta name="description" content="공장 자동화(FA), 반도체/배터리 팹 전장설계용 DC 24V 케이블 전압강하, 4-20mA 아날로그 루프 마진, SMPS 전원 용량 계산, 제어반 발열 쿨링, AWG 허용전류, RS-485 통신선로, 공압 소모량 통합 엔지니어링 웹 도구.">
   <meta name="keywords" content="볼트체크, DC 24V 전압강하 계산기, 4-20mA 전압강하, SMPS 용량 계산, 제어반 발열량 계산기, 제어반 에어컨 용량, AWG 허용전류표, RS485 종단저항, 공압 실린더 소모량">
@@ -309,7 +315,7 @@
               <div class="field-header">
                 <label for="wireLength">선로 편도 배선 거리 (L)</label>
                 <div class="val-input-group">
-                  <input type="number" id="wireLength" value="40" min="1" max="500" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="wireLength" value="40" min="1" max="500" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -348,7 +354,7 @@
               <div class="field-header">
                 <label for="loadCurrent">말단 부하 소비전류 (I)</label>
                 <div class="val-input-group">
-                  <input type="number" id="loadCurrent" value="0.5" min="0.001" max="50" step="0.05" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="loadCurrent" value="0.5" min="0.001" max="50" step="0.05" class="input-val font-mono">
                   <span class="val-unit">A</span>
                 </div>
               </div>
@@ -368,7 +374,7 @@
                 <div class="adv-col">
                   <label for="sourceVoltage">SMPS 출력 전압</label>
                   <div class="val-input-group">
-                    <input type="number" id="sourceVoltage" value="24.0" step="0.1" min="12.0" max="48.0" class="input-val font-mono">
+                    <input type="number" inputmode="decimal" id="sourceVoltage" value="24.0" step="0.1" min="12.0" max="48.0" class="input-val font-mono">
                     <span class="val-unit">V</span>
                   </div>
                 </div>
@@ -376,7 +382,7 @@
                 <div class="adv-col">
                   <label for="minDeviceVoltage">센서 최소 동작 전압</label>
                   <div class="val-input-group">
-                    <input type="number" id="minDeviceVoltage" value="21.6" step="0.1" min="10.0" max="30.0" class="input-val font-mono">
+                    <input type="number" inputmode="decimal" id="minDeviceVoltage" value="21.6" step="0.1" min="10.0" max="30.0" class="input-val font-mono">
                     <span class="val-unit">V</span>
                   </div>
                 </div>
@@ -384,7 +390,7 @@
                 <div class="adv-col">
                   <label for="ambientTemp">배선 주위 온도</label>
                   <div class="val-input-group">
-                    <input type="number" id="ambientTemp" value="40" step="5" min="-20" max="90" class="input-val font-mono">
+                    <input type="number" inputmode="decimal" id="ambientTemp" value="40" step="5" min="-20" max="90" class="input-val font-mono">
                     <span class="val-unit">°C</span>
                   </div>
                 </div>
@@ -645,7 +651,7 @@
                 <div class="field-box">
                   <label for="fmMeasuredV">현장 실측 말단 전압 (V_measured)</label>
                   <div class="val-input-group">
-                    <input type="number" id="fmMeasuredV" value="23.20" step="0.05" min="0" max="30" class="input-val font-mono">
+                    <input type="number" inputmode="decimal" id="fmMeasuredV" value="23.20" step="0.05" min="0" max="30" class="input-val font-mono">
                     <span class="val-unit">V</span>
                   </div>
                 </div>
@@ -756,14 +762,14 @@
               <div class="adv-col">
                 <label for="loopPowerV">루프 전원 전압 (V_loop)</label>
                 <div class="val-input-group">
-                  <input type="number" id="loopPowerV" value="24.0" step="0.5" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="loopPowerV" value="24.0" step="0.5" class="input-val font-mono">
                   <span class="val-unit">V</span>
                 </div>
               </div>
               <div class="adv-col">
                 <label for="transMinV">트랜스미터 최소 동작 전압</label>
                 <div class="val-input-group">
-                  <input type="number" id="transMinV" value="12.0" step="0.5" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="transMinV" value="12.0" step="0.5" class="input-val font-mono">
                   <span class="val-unit">V</span>
                 </div>
                 <span class="field-caption">보통 10.5V ~ 12.0V 요구</span>
@@ -774,7 +780,7 @@
               <div class="field-header">
                 <label for="loopWireLen">선로 편도 배선 거리 (L)</label>
                 <div class="val-input-group">
-                  <input type="number" id="loopWireLen" value="150" min="1" max="2000" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="loopWireLen" value="150" min="1" max="2000" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -806,7 +812,7 @@
               <div class="adv-col full-span">
                 <label for="loopBarrierR">방폭 배리어 / 기타 직렬 저항</label>
                 <div class="val-input-group">
-                  <input type="number" id="loopBarrierR" value="0" min="0" max="500" step="5" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="loopBarrierR" value="0" min="0" max="500" step="5" class="input-val font-mono">
                   <span class="val-unit">Ω</span>
                 </div>
                 <span class="field-caption">절연 안전 배리어 사용 시 약 50~150Ω 추가 저항 적용</span>
@@ -896,7 +902,7 @@
               <div class="adv-col">
                 <label for="smpsSensorsQty">포토/근접센서 (개당 35mA)</label>
                 <div class="val-input-group">
-                  <input type="number" id="smpsSensorsQty" value="16" min="0" max="200" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="smpsSensorsQty" value="16" min="0" max="200" class="input-val font-mono">
                   <span class="val-unit">개</span>
                 </div>
               </div>
@@ -904,7 +910,7 @@
               <div class="adv-col">
                 <label for="smpsValvesQty">솔레노이드 밸브 (개당 0.45A)</label>
                 <div class="val-input-group">
-                  <input type="number" id="smpsValvesQty" value="6" min="0" max="64" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="smpsValvesQty" value="6" min="0" max="64" class="input-val font-mono">
                   <span class="val-unit">개</span>
                 </div>
               </div>
@@ -912,7 +918,7 @@
               <div class="adv-col">
                 <label for="smpsPlcAmps">PLC CPU 및 분산 I/O</label>
                 <div class="val-input-group">
-                  <input type="number" id="smpsPlcAmps" value="1.5" step="0.1" min="0" max="20" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="smpsPlcAmps" value="1.5" step="0.1" min="0" max="20" class="input-val font-mono">
                   <span class="val-unit">A</span>
                 </div>
               </div>
@@ -920,7 +926,7 @@
               <div class="adv-col">
                 <label for="smpsHmiAmps">HMI 터치스크린 (7~15인치)</label>
                 <div class="val-input-group">
-                  <input type="number" id="smpsHmiAmps" value="0.8" step="0.1" min="0" max="10" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="smpsHmiAmps" value="0.8" step="0.1" min="0" max="10" class="input-val font-mono">
                   <span class="val-unit">A</span>
                 </div>
               </div>
@@ -928,7 +934,7 @@
               <div class="adv-col">
                 <label for="smpsRelayQty">릴레이 / 시그널 타워</label>
                 <div class="val-input-group">
-                  <input type="number" id="smpsRelayQty" value="8" min="0" max="50" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="smpsRelayQty" value="8" min="0" max="50" class="input-val font-mono">
                   <span class="val-unit">개</span>
                 </div>
               </div>
@@ -936,7 +942,7 @@
               <div class="adv-col">
                 <label for="smpsEtcAmps">기타 부하 (조명/카메라 등)</label>
                 <div class="val-input-group">
-                  <input type="number" id="smpsEtcAmps" value="1.0" step="0.5" min="0" max="30" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="smpsEtcAmps" value="1.0" step="0.5" min="0" max="30" class="input-val font-mono">
                   <span class="val-unit">A</span>
                 </div>
               </div>
@@ -1025,7 +1031,7 @@
               <div class="adv-col">
                 <label for="cabHeight">제어반 높이 (H)</label>
                 <div class="val-input-group">
-                  <input type="number" id="cabHeight" value="1800" step="100" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="cabHeight" value="1800" step="100" class="input-val font-mono">
                   <span class="val-unit">mm</span>
                 </div>
               </div>
@@ -1033,7 +1039,7 @@
               <div class="adv-col">
                 <label for="cabWidth">제어반 폭 (W)</label>
                 <div class="val-input-group">
-                  <input type="number" id="cabWidth" value="800" step="100" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="cabWidth" value="800" step="100" class="input-val font-mono">
                   <span class="val-unit">mm</span>
                 </div>
               </div>
@@ -1041,7 +1047,7 @@
               <div class="adv-col">
                 <label for="cabDepth">제어반 깊이 (D)</label>
                 <div class="val-input-group">
-                  <input type="number" id="cabDepth" value="600" step="50" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="cabDepth" value="600" step="50" class="input-val font-mono">
                   <span class="val-unit">mm</span>
                 </div>
               </div>
@@ -1049,7 +1055,7 @@
               <div class="adv-col">
                 <label for="cabHeatWatts">내부 총 발열량 (Q_in)</label>
                 <div class="val-input-group">
-                  <input type="number" id="cabHeatWatts" value="650" step="50" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="cabHeatWatts" value="650" step="50" class="input-val font-mono">
                   <span class="val-unit">W</span>
                 </div>
                 <span class="field-caption">SMPS + 인버터 + PLC 손실</span>
@@ -1058,7 +1064,7 @@
               <div class="adv-col">
                 <label for="cabAmbTemp">공장 외기 최고 온도</label>
                 <div class="val-input-group">
-                  <input type="number" id="cabAmbTemp" value="35" step="1" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="cabAmbTemp" value="35" step="1" class="input-val font-mono">
                   <span class="val-unit">°C</span>
                 </div>
               </div>
@@ -1066,7 +1072,7 @@
               <div class="adv-col">
                 <label for="cabSetTemp">제어반 내부 목표 온도</label>
                 <div class="val-input-group">
-                  <input type="number" id="cabSetTemp" value="35" step="1" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="cabSetTemp" value="35" step="1" class="input-val font-mono">
                   <span class="val-unit">°C</span>
                 </div>
                 <span class="field-caption">권장: 35°C 이하 유지</span>
@@ -1248,7 +1254,7 @@
               <div class="field-header">
                 <label for="rs485Length">전체 버스 배선 길이</label>
                 <div class="val-input-group">
-                  <input type="number" id="rs485Length" value="200" min="1" max="1500" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="rs485Length" value="200" min="1" max="1500" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -1268,14 +1274,14 @@
               <div class="adv-col">
                 <label for="rs485Nodes">연결 슬레이브 수</label>
                 <div class="val-input-group">
-                  <input type="number" id="rs485Nodes" value="16" min="1" max="128" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="rs485Nodes" value="16" min="1" max="128" class="input-val font-mono">
                   <span class="val-unit">대</span>
                 </div>
               </div>
               <div class="adv-col">
                 <label for="rs485MaxStub">분기(Stub) 길이</label>
                 <div class="val-input-group">
-                  <input type="number" id="rs485MaxStub" value="0.3" step="0.1" min="0" max="20" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="rs485MaxStub" value="0.3" step="0.1" min="0" max="20" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -1380,7 +1386,7 @@
               <div class="adv-col">
                 <label for="pneuStroke">스트로크 (Stroke)</label>
                 <div class="val-input-group">
-                  <input type="number" id="pneuStroke" value="150" step="10" min="5" max="1500" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="pneuStroke" value="150" step="10" min="5" max="1500" class="input-val font-mono">
                   <span class="val-unit">mm</span>
                 </div>
               </div>
@@ -1388,7 +1394,7 @@
               <div class="adv-col">
                 <label for="pneuPressure">공급 압력</label>
                 <div class="val-input-group">
-                  <input type="number" id="pneuPressure" value="0.5" step="0.05" min="0.2" max="0.9" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="pneuPressure" value="0.5" step="0.05" min="0.2" max="0.9" class="input-val font-mono">
                   <span class="val-unit">MPa</span>
                 </div>
               </div>
@@ -1396,7 +1402,7 @@
               <div class="adv-col">
                 <label for="pneuCpm">분당 사이클</label>
                 <div class="val-input-group">
-                  <input type="number" id="pneuCpm" value="20" step="1" min="1" max="200" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="pneuCpm" value="20" step="1" min="1" max="200" class="input-val font-mono">
                   <span class="val-unit">CPM</span>
                 </div>
               </div>
@@ -1404,7 +1410,7 @@
               <div class="adv-col">
                 <label for="pneuQuantity">동일 실린더 수량</label>
                 <div class="val-input-group">
-                  <input type="number" id="pneuQuantity" value="4" min="1" max="50" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="pneuQuantity" value="4" min="1" max="50" class="input-val font-mono">
                   <span class="val-unit">대</span>
                 </div>
               </div>
@@ -1412,7 +1418,7 @@
               <div class="adv-col">
                 <label for="pneuTubingLen">튜브 배관 길이</label>
                 <div class="val-input-group">
-                  <input type="number" id="pneuTubingLen" value="2.0" step="0.5" min="0.5" max="20" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="pneuTubingLen" value="2.0" step="0.5" min="0.5" max="20" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -1492,14 +1498,14 @@
               <div class="adv-col">
                 <label for="ductWidth">덕트 폭 (Width)</label>
                 <div class="val-input-group">
-                  <input type="number" id="ductWidth" value="60" step="10" min="20" max="300" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="ductWidth" value="60" step="10" min="20" max="300" class="input-val font-mono">
                   <span class="val-unit">mm</span>
                 </div>
               </div>
               <div class="adv-col">
                 <label for="ductHeight">덕트 높이 (Height)</label>
                 <div class="val-input-group">
-                  <input type="number" id="ductHeight" value="60" step="10" min="20" max="300" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="ductHeight" value="60" step="10" min="20" max="300" class="input-val font-mono">
                   <span class="val-unit">mm</span>
                 </div>
               </div>
@@ -1524,7 +1530,7 @@
               <div class="field-header">
                 <label for="ductCableQty">포설 케이블 수량</label>
                 <div class="val-input-group">
-                  <input type="number" id="ductCableQty" value="28" min="1" max="500" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="ductCableQty" value="28" min="1" max="500" class="input-val font-mono">
                   <span class="val-unit">가닥</span>
                 </div>
               </div>
@@ -1694,11 +1700,11 @@
             <div class="adv-inputs-grid mt-2">
               <div class="adv-col">
                 <label for="plcRawMin">디지털 Raw 하한 (D_min)</label>
-                <input type="number" id="plcRawMin" value="0" class="input-val font-mono">
+                <input type="number" inputmode="decimal" id="plcRawMin" value="0" class="input-val font-mono">
               </div>
               <div class="adv-col">
                 <label for="plcRawMax">디지털 Raw 상한 (D_max)</label>
-                <input type="number" id="plcRawMax" value="27648" class="input-val font-mono">
+                <input type="number" inputmode="decimal" id="plcRawMax" value="27648" class="input-val font-mono">
               </div>
             </div>
 
@@ -1717,14 +1723,14 @@
               <div class="adv-col">
                 <label for="plcEuMin">물리량 최소값 (EU_min)</label>
                 <div class="val-input-group">
-                  <input type="number" id="plcEuMin" value="0.0" step="0.1" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="plcEuMin" value="0.0" step="0.1" class="input-val font-mono">
                   <span class="val-unit" id="plcEuUnitLabel">MPa</span>
                 </div>
               </div>
               <div class="adv-col">
                 <label for="plcEuMax">물리량 최대값 (EU_max)</label>
                 <div class="val-input-group">
-                  <input type="number" id="plcEuMax" value="1.0" step="0.1" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="plcEuMax" value="1.0" step="0.1" class="input-val font-mono">
                   <span class="val-unit" id="plcEuUnitLabel2">MPa</span>
                 </div>
               </div>
@@ -1734,7 +1740,7 @@
               <div class="field-header">
                 <label for="plcTestEuVal">테스트 입력 물리량 (Engineering Value)</label>
                 <div class="val-input-group">
-                  <input type="number" id="plcTestEuVal" value="0.5" step="0.05" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="plcTestEuVal" value="0.5" step="0.05" class="input-val font-mono">
                   <span class="val-unit" id="plcEuUnitLabel3">MPa</span>
                 </div>
               </div>
@@ -1839,14 +1845,14 @@
               </div>
               <div class="adv-col">
                 <label for="motorEfficiency">모터 효율 (η)</label>
-                <input type="number" id="motorEfficiency" value="0.88" step="0.01" min="0.7" max="0.98" class="input-val font-mono">
+                <input type="number" inputmode="decimal" id="motorEfficiency" value="0.88" step="0.01" min="0.7" max="0.98" class="input-val font-mono">
               </div>
             </div>
 
             <div class="adv-inputs-grid mt-2">
               <div class="adv-col">
                 <label for="motorPowerFactor">역률 (cos θ)</label>
-                <input type="number" id="motorPowerFactor" value="0.85" step="0.01" min="0.6" max="0.99" class="input-val font-mono">
+                <input type="number" inputmode="decimal" id="motorPowerFactor" value="0.85" step="0.01" min="0.6" max="0.99" class="input-val font-mono">
               </div>
               <div class="adv-col">
                 <label for="motorStartMethod">기동 방식</label>
@@ -1933,7 +1939,7 @@
               <div class="field-header">
                 <label for="bendCableDia">포설 케이블 중 최대 외경 (Maximum Diameter d)</label>
                 <div class="val-input-group">
-                  <input type="number" id="bendCableDia" value="12.0" step="0.5" min="2" max="60" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="bendCableDia" value="12.0" step="0.5" min="2" max="60" class="input-val font-mono">
                   <span class="val-unit">mm</span>
                 </div>
               </div>
@@ -2113,7 +2119,7 @@
               <div class="field-header">
                 <label for="servoInertia" data-i18n="lbl_servo_inertia">총 부하 관성 모멘트 (Total Inertia J_total)</label>
                 <div class="val-input-group">
-                  <input type="number" id="servoInertia" value="5.0" step="0.5" min="0.1" max="200" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="servoInertia" value="5.0" step="0.5" min="0.1" max="200" class="input-val font-mono">
                   <span class="val-unit">kg·cm²</span>
                 </div>
               </div>
@@ -2124,14 +2130,14 @@
               <div class="adv-col">
                 <label for="servoMaxRpm" data-i18n="lbl_servo_rpm">감속 직전 최고 회전수 (N)</label>
                 <div class="val-input-group">
-                  <input type="number" id="servoMaxRpm" value="3000" step="100" min="100" max="10000" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="servoMaxRpm" value="3000" step="100" min="100" max="10000" class="input-val font-mono">
                   <span class="val-unit">RPM</span>
                 </div>
               </div>
               <div class="adv-col">
                 <label for="servoDecelTime" data-i18n="lbl_servo_dec">급감속 시간 (t_dec)</label>
                 <div class="val-input-group">
-                  <input type="number" id="servoDecelTime" value="0.20" step="0.05" min="0.01" max="10" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="servoDecelTime" value="0.20" step="0.05" min="0.01" max="10" class="input-val font-mono">
                   <span class="val-unit">s</span>
                 </div>
               </div>
@@ -2150,7 +2156,7 @@
               <div class="adv-col">
                 <label for="servoBusCap" data-i18n="lbl_servo_cap">드라이브 내부 평활 커패시터</label>
                 <div class="val-input-group">
-                  <input type="number" id="servoBusCap" value="1000" step="100" min="100" max="20000" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="servoBusCap" value="1000" step="100" min="100" max="20000" class="input-val font-mono">
                   <span class="val-unit">μF</span>
                 </div>
               </div>
@@ -2253,7 +2259,7 @@
               <div class="field-header">
                 <label for="copperOrderLength">발주 배선 길이 (Order Length)</label>
                 <div class="val-input-group">
-                  <input type="number" id="copperOrderLength" value="100" step="10" min="10" max="5000" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="copperOrderLength" value="100" step="10" min="10" max="5000" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -2275,7 +2281,7 @@
               <div class="adv-field">
                 <label for="copperSpotPrice">구리 시세 (LME 기준 KRW/kg)</label>
                 <div class="val-input-group">
-                  <input type="number" id="copperSpotPrice" value="13200" step="100" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="copperSpotPrice" value="13200" step="100" class="input-val font-mono">
                   <span class="val-unit">원/kg</span>
                 </div>
               </div>
@@ -2425,7 +2431,7 @@
               <div class="adv-field">
                 <label for="sldWireLength">선로 편도 길이 (L)</label>
                 <div class="val-input-group">
-                  <input type="number" id="sldWireLength" value="40" step="5" min="1" max="500" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="sldWireLength" value="40" step="5" min="1" max="500" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -2545,7 +2551,7 @@
               <div class="adv-field">
                 <label for="iolinkTrunkLen">제어반 간 트렁크 케이블 길이 (L)</label>
                 <div class="val-input-group">
-                  <input type="number" id="iolinkTrunkLen" value="25" min="1" max="100" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="iolinkTrunkLen" value="25" min="1" max="100" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -2575,7 +2581,7 @@
               <div class="adv-field">
                 <label for="safetyLoopLen">안전 스위치 선로 편도 길이</label>
                 <div class="val-input-group">
-                  <input type="number" id="safetyLoopLen" value="30" min="1" max="200" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="safetyLoopLen" value="30" min="1" max="200" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -2683,14 +2689,14 @@
               <div class="adv-field">
                 <label for="peFaultCurrent">상정 단락 고장전류 (I_k)</label>
                 <div class="val-input-group">
-                  <input type="number" id="peFaultCurrent" value="5.0" step="0.5" min="0.5" max="50" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="peFaultCurrent" value="5.0" step="0.5" min="0.5" max="50" class="input-val font-mono">
                   <span class="val-unit">kA</span>
                 </div>
               </div>
               <div class="adv-field">
                 <label for="peTripTime">차단기 트립 동작시간 (t)</label>
                 <div class="val-input-group">
-                  <input type="number" id="peTripTime" value="0.10" step="0.01" min="0.01" max="5.0" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="peTripTime" value="0.10" step="0.01" min="0.01" max="5.0" class="input-val font-mono">
                   <span class="val-unit">초 (sec)</span>
                 </div>
               </div>
@@ -2842,14 +2848,14 @@
               <div class="adv-field">
                 <label for="npnSensorCurrent">센서 부하 전류 (I_load)</label>
                 <div class="val-input-group">
-                  <input type="number" id="npnSensorCurrent" value="35" min="5" max="200" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="npnSensorCurrent" value="35" min="5" max="200" class="input-val font-mono">
                   <span class="val-unit">mA</span>
                 </div>
               </div>
               <div class="adv-field">
                 <label for="npnWireLength">배선 거리 (m)</label>
                 <div class="val-input-group">
-                  <input type="number" id="npnWireLength" value="25" min="1" max="100" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="npnWireLength" value="25" min="1" max="100" class="input-val font-mono">
                   <span class="val-unit">m</span>
                 </div>
               </div>
@@ -2959,14 +2965,14 @@
               <div class="adv-field">
                 <label for="coilCurrentA">코일 정상 전류 (I_coil)</label>
                 <div class="val-input-group">
-                  <input type="number" id="coilCurrentA" value="0.45" step="0.05" min="0.01" max="10.0" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="coilCurrentA" value="0.45" step="0.05" min="0.01" max="10.0" class="input-val font-mono">
                   <span class="val-unit">A</span>
                 </div>
               </div>
               <div class="adv-field">
                 <label for="coilInductanceMh">코일 인덕턴스 (L)</label>
                 <div class="val-input-group">
-                  <input type="number" id="coilInductanceMh" value="150" min="1" max="5000" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="coilInductanceMh" value="150" min="1" max="5000" class="input-val font-mono">
                   <span class="val-unit">mH</span>
                 </div>
               </div>
@@ -3077,7 +3083,7 @@
               <div class="adv-field">
                 <label for="inrushSmpsCount">동시 투입 SMPS 대수</label>
                 <div class="val-input-group">
-                  <input type="number" id="inrushSmpsCount" value="2" min="1" max="10" class="input-val font-mono">
+                  <input type="number" inputmode="decimal" id="inrushSmpsCount" value="2" min="1" max="10" class="input-val font-mono">
                   <span class="val-unit">대</span>
                 </div>
               </div>
@@ -3780,7 +3786,7 @@
           <div class="converter-box">
             <h5>공압 / 유압 압력 환산</h5>
             <div class="conv-row">
-              <input type="number" id="convPressMpa" value="0.5" step="0.05" class="input-precision font-mono">
+              <input type="number" inputmode="decimal" id="convPressMpa" value="0.5" step="0.05" class="input-precision font-mono">
               <span class="conv-unit">MPa</span>
               <span class="conv-eq">=</span>
               <span id="convPressBar" class="conv-res font-mono">5.00 bar</span>
@@ -3795,7 +3801,7 @@
           <div class="converter-box mt-2">
             <h5>공기 유량 환산</h5>
             <div class="conv-row">
-              <input type="number" id="convFlowNl" value="100" step="10" class="input-precision font-mono">
+              <input type="number" inputmode="decimal" id="convFlowNl" value="100" step="10" class="input-precision font-mono">
               <span class="conv-unit">Nℓ/min</span>
               <span class="conv-eq">=</span>
               <span id="convFlowScfm" class="conv-res font-mono">3.53 SCFM</span>
@@ -3832,7 +3838,7 @@
           <div class="converter-box mt-2">
             <h5>냉각 열량 & 전력 환산</h5>
             <div class="conv-row">
-              <input type="number" id="convPowerWatts" value="1000" step="100" class="input-precision font-mono">
+              <input type="number" inputmode="decimal" id="convPowerWatts" value="1000" step="100" class="input-precision font-mono">
               <span class="conv-unit">Watts (W)</span>
               <span class="conv-eq">=</span>
               <span id="convPowerBtu" class="conv-res font-mono">3,412 BTU/h</span>
@@ -4411,6 +4417,133 @@
           
           <h5>2. 구매자 부담 비용 0원 보증</h5>
           <p>제휴 링크를 통해 구매하더라도 구매자가 지불하는 부품 가격에는 일체의 추가 비용이나 할증이 발생하지 않으며, 공식 유통사의 정가 및 할인 혜택이 100% 동일하게 적용됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Mobile-Dedicated App Bottom Navigation Bar [SHOWN <= 768px] -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav">
+    <button type="button" class="mb-nav-item active" onclick="switchMobileTab('tab-voltagedrop')" id="mbNavVolt">
+      <i data-lucide="zap"></i>
+      <span id="mbTextVolt">전압강하</span>
+    </button>
+    <button type="button" class="mb-nav-item" onclick="switchMobileTab('tab-smpsbudget')" id="mbNavSmps">
+      <i data-lucide="battery-charging"></i>
+      <span id="mbTextSmps">SMPS/CP</span>
+    </button>
+    <button type="button" class="mb-nav-item mb-highlight" onclick="openMobileToolsDrawer()" id="mbNavAll">
+      <div class="mb-icon-circle">
+        <i data-lucide="layout-grid"></i>
+      </div>
+      <span id="mbTextAll">전체 21종</span>
+    </button>
+    <button type="button" class="mb-nav-item" onclick="document.getElementById('floatingProjectBasketBtn').click()" id="mbNavProj">
+      <i data-lucide="folder-check"></i>
+      <span id="mbTextProj">보관함</span>
+    </button>
+    <button type="button" class="mb-nav-item" onclick="toggleLanguage()" id="mbNavLang">
+      <i data-lucide="globe"></i>
+      <span id="mbTextLang">EN/KO</span>
+    </button>
+  </nav>
+
+  <!-- Mobile 21-Tool Slide-Up Bottom Sheet Drawer -->
+  <div id="mobileToolsDrawer" class="mobile-tools-drawer" onclick="if(event.target === this) closeMobileToolsDrawer()">
+    <div class="mobile-drawer-sheet">
+      <div class="drawer-handle-bar"></div>
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <h4 id="mdTitle">21대 전장설계 공학 도구</h4>
+          <span id="mdSub">원터치 계산기 즉시 전환</span>
+        </div>
+        <button type="button" class="btn-close" onclick="closeMobileToolsDrawer()">&times;</button>
+      </div>
+
+      <div class="drawer-grid-container">
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-voltagedrop')">
+          <div class="drawer-tool-icon"><i data-lucide="zap"></i></div>
+          <span class="drawer-tool-name" id="dtn1">24V 전압강하</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-analogloop')">
+          <div class="drawer-tool-icon"><i data-lucide="activity"></i></div>
+          <span class="drawer-tool-name" id="dtn2">4-20mA 루프</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-smpsbudget')">
+          <div class="drawer-tool-icon"><i data-lucide="battery-charging"></i></div>
+          <span class="drawer-tool-name" id="dtn3">SMPS 용량</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cabinetcooling')">
+          <div class="drawer-tool-icon"><i data-lucide="fan"></i></div>
+          <span class="drawer-tool-name" id="dtn4">제어반 쿨링</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cabletable')">
+          <div class="drawer-tool-icon"><i data-lucide="table"></i></div>
+          <span class="drawer-tool-name" id="dtn5">AWG/SQ 규격</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-rs485')">
+          <div class="drawer-tool-icon"><i data-lucide="network"></i></div>
+          <span class="drawer-tool-name" id="dtn6">RS-485 통신</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-pneumatics')">
+          <div class="drawer-tool-icon"><i data-lucide="wind"></i></div>
+          <span class="drawer-tool-name" id="dtn7">공압 소모량</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-ductutility')">
+          <div class="drawer-tool-icon"><i data-lucide="box"></i></div>
+          <span class="drawer-tool-name" id="dtn8">덕트 점유율</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-plcscaling')">
+          <div class="drawer-tool-icon"><i data-lucide="cpu"></i></div>
+          <span class="drawer-tool-name" id="dtn9">PLC 스케일링</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-motorcalc')">
+          <div class="drawer-tool-icon"><i data-lucide="gauge"></i></div>
+          <span class="drawer-tool-name" id="dtn10">3상 모터·MC</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-bendingradius')">
+          <div class="drawer-tool-icon"><i data-lucide="repeat"></i></div>
+          <span class="drawer-tool-name" id="dtn11">케이블 베어</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-otethernet')">
+          <div class="drawer-tool-icon"><i data-lucide="server"></i></div>
+          <span class="drawer-tool-name" id="dtn12">OT 이더넷·IP</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-servoregen')">
+          <div class="drawer-tool-icon"><i data-lucide="flame"></i></div>
+          <span class="drawer-tool-name" id="dtn13">서보 회생저항</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-coppercost')">
+          <div class="drawer-tool-icon"><i data-lucide="trending-up"></i></div>
+          <span class="drawer-tool-name" id="dtn14">구리시세·원가</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-sldgenerator')">
+          <div class="drawer-tool-icon"><i data-lucide="git-merge"></i></div>
+          <span class="drawer-tool-name" id="dtn15">단선도 CAD</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-iolinksafety')">
+          <div class="drawer-tool-icon"><i data-lucide="shield-check"></i></div>
+          <span class="drawer-tool-name" id="dtn16">IO-Link·안전</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-grounding')">
+          <div class="drawer-tool-icon"><i data-lucide="shield"></i></div>
+          <span class="drawer-tool-name" id="dtn17">접지(PE)·EMC</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-npnpnp')">
+          <div class="drawer-tool-icon"><i data-lucide="toggle-left"></i></div>
+          <span class="drawer-tool-name" id="dtn18">NPN·PNP 결선</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-flybacksurge')">
+          <div class="drawer-tool-icon"><i data-lucide="zap-off"></i></div>
+          <span class="drawer-tool-name" id="dtn19">역기전력 서지</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-inrushbreaker')">
+          <div class="drawer-tool-icon"><i data-lucide="power"></i></div>
+          <span class="drawer-tool-name" id="dtn20">돌입전류·트립</span>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
+          <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>
+          <span class="drawer-tool-name" id="dtn21">기술 노트</span>
         </div>
       </div>
     </div>

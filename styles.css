@@ -3425,3 +3425,220 @@ body:not(.theme-dark) .interactive-canvas {
   line-height: 1.45;
   margin-top: 0.75rem;
 }
+
+
+/* ==========================================================================
+   MOBILE-DEDICATED APP BAR, BOTTOM SHEET & TOUCH STYLES
+   ========================================================================== */
+
+/* Mobile Bottom Sticky Action Bar (Shown only <= 768px) */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Add safe area bottom padding to main app container so content is never covered */
+  body {
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 15px)) !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(60px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    z-index: 9000;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .mb-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 0.35rem 0.2rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+    gap: 0.15rem;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mb-nav-item i {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.15s ease;
+  }
+
+  .mb-nav-item:active i {
+    transform: scale(0.9);
+  }
+
+  .mb-nav-item.active {
+    color: #f97316;
+  }
+
+  .mb-nav-item.mb-highlight {
+    color: #ffffff;
+  }
+  .mb-nav-item.mb-highlight .mb-icon-circle {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -14px;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    border: 2px solid #0f172a;
+  }
+  .mb-nav-item.mb-highlight .mb-icon-circle i {
+    color: #ffffff;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Optimize Touch Targets */
+  .pill-btn, .btn-primary-action, .btn-secondary-action, .input-val, .select-precision {
+    min-height: 42px;
+  }
+
+  /* Floating basket positioning above mobile bar */
+  .floating-project-basket {
+    bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 1rem !important;
+  }
+
+  .cookie-consent-banner {
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+    width: calc(100% - 1.5rem) !important;
+  }
+}
+
+/* Mobile Slide-Up 21-Tool Bottom Sheet Drawer */
+.mobile-tools-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: none;
+  align-items: flex-end;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.mobile-drawer-sheet {
+  background: #ffffff;
+  width: 100%;
+  max-height: 85vh;
+  border-radius: 20px 20px 0 0;
+  padding: 1.25rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) 1rem;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  animation: slideUpDrawer 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpDrawer {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.drawer-handle-bar {
+  width: 36px;
+  height: 4px;
+  background: #cbd5e1;
+  border-radius: 2px;
+  margin: -0.5rem auto 0.75rem auto;
+}
+
+.drawer-title-group h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin: 0;
+}
+
+.drawer-title-group span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.drawer-grid-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 65vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+  padding-right: 2px;
+}
+
+.drawer-tool-item {
+  background: var(--bg-main);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.drawer-tool-item:active, .drawer-tool-item.active {
+  background: var(--brand-orange-subtle);
+  border-color: var(--brand-orange);
+  color: var(--brand-orange);
+}
+
+.drawer-tool-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--brand-orange);
+  border: 1px solid var(--border-main);
+}
+
+.drawer-tool-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+  line-height: 1.25;
+}
