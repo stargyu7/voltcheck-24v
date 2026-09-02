@@ -7520,3 +7520,338 @@ function shareCurrentTool(platform) {
   }
 }
 window.shareCurrentTool = shareCurrentTool;
+
+
+// ==========================================================================
+// [UPGRADE] LOCALSTORAGE PROJECT SAVE / LOAD ENGINE
+// ==========================================================================
+
+const LOCAL_STORAGE_PROJECT_KEY = 'voltcheck_saved_engineering_projects';
+
+function getSavedProjects() {
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.warn("Failed to parse saved projects from LocalStorage", e);
+    return [];
+  }
+}
+
+function saveProjectsList(list) {
+  try {
+    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, JSON.stringify(list));
+  } catch (e) {
+    console.error("Failed to save projects to LocalStorage", e);
+  }
+}
+
+function openProjectStorageModal() {
+  const modal = document.getElementById('projectStorageModal');
+  if (!modal) return;
+
+  const activeBtn = document.querySelector('.tab-btn.active');
+  const activeToolName = activeBtn?.querySelector('span')?.textContent || '현재 도구';
+  const nameLabel = document.getElementById('saveCurrentToolName');
+  if (nameLabel) nameLabel.textContent = activeToolName;
+
+  const input = document.getElementById('newProjectNameInput');
+  if (input) {
+    const now = new Date();
+    const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+    input.value = `${activeToolName} (${timeStr})`;
+  }
+
+  renderSavedProjectsList();
+  modal.style.display = 'flex';
+}
+
+function closeProjectStorageModal() {
+  const modal = document.getElementById('projectStorageModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveCurrentProject() {
+  const input = document.getElementById('newProjectNameInput');
+  const projectName = input?.value.trim() || '이름 없는 설계 프로젝트';
+
+  const activeBtn = document.querySelector('.tab-btn.active');
+  const activeTabId = activeBtn?.getAttribute('data-tab') || 'tab-voltagedrop';
+  const activeToolName = activeBtn?.querySelector('span')?.textContent || '공학 도구';
+
+  const activePanel = document.getElementById(activeTabId);
+  if (!activePanel) return;
+
+  // Capture all inputs and selects inside the active panel
+  const inputs = activePanel.querySelectorAll('input, select, textarea');
+  const formData = {};
+  inputs.forEach(el => {
+    if (el.id) {
+      if (el.type === 'checkbox') {
+        formData[el.id] = el.checked;
+      } else {
+        formData[el.id] = el.value;
+      }
+    }
+  });
+
+  const newProj = {
+    id: 'proj_' + Date.now(),
+    name: projectName,
+    tabId: activeTabId,
+    toolName: activeToolName,
+    createdAt: new Date().toISOString(),
+    data: formData
+  };
+
+  const list = getSavedProjects();
+  list.unshift(newProj);
+  saveProjectsList(list);
+
+  alert(`[저장 완료] '${projectName}' 프로젝트가 브라우저에 안전하게 저장되었습니다.`);
+  renderSavedProjectsList();
+}
+
+function renderSavedProjectsList() {
+  const container = document.getElementById('savedProjectsListContainer');
+  const countSpan = document.getElementById('savedProjectCount');
+  if (!container) return;
+
+  const list = getSavedProjects();
+  if (countSpan) countSpan.textContent = list.length;
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.82rem; background:#f8fafc; border-radius:6px; border:1px dashed #cbd5e1;">
+        저장된 설계 프로젝트가 없습니다.<br>위에서 이름을 입력하고 [설계 저장]을 눌러보세요!
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map(proj => {
+    const d = new Date(proj.createdAt);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    return `
+      <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:0.65rem 0.85rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem;">
+        <div style="flex:1; min-width:0;">
+          <div style="display:flex; align-items:center; gap:0.4rem;">
+            <span class="badge-pill font-mono" style="background:#eff6ff; color:#2563eb; font-size:0.65rem; padding:0.1rem 0.35rem; font-weight:800;">${proj.toolName}</span>
+            <strong style="font-size:0.85rem; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${proj.name}</strong>
+          </div>
+          <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.2rem;">저장일: ${dateStr}</div>
+        </div>
+        <div style="display:flex; gap:0.35rem; flex-shrink:0;">
+          <button type="button" onclick="loadProjectById('${proj.id}')" style="background:#2563eb; color:#fff; border:none; padding:0.35rem 0.65rem; border-radius:4px; font-size:0.75rem; font-weight:800; cursor:pointer;">
+            불러오기
+          </button>
+          <button type="button" onclick="deleteProjectById('${proj.id}')" style="background:#fee2e2; color:#dc2626; border:none; padding:0.35rem 0.55rem; border-radius:4px; font-size:0.75rem; font-weight:800; cursor:pointer;" title="삭제">
+            &times;
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function loadProjectById(id) {
+  const list = getSavedProjects();
+  const proj = list.find(p => p.id === id);
+  if (!proj) return;
+
+  if (typeof switchTab === 'function') {
+    switchTab(proj.tabId);
+  }
+
+  setTimeout(() => {
+    const activePanel = document.getElementById(proj.tabId);
+    if (activePanel && proj.data) {
+      Object.keys(proj.data).forEach(fieldId => {
+        const el = activePanel.querySelector('#' + fieldId);
+        if (el) {
+          if (el.type === 'checkbox') {
+            el.checked = proj.data[fieldId];
+          } else {
+            el.value = proj.data[fieldId];
+          }
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
+    }
+    closeProjectStorageModal();
+    alert(`[불러오기 완료] '${proj.name}' 설계 데이터가 화면에 복원되었습니다.`);
+  }, 100);
+}
+
+function deleteProjectById(id) {
+  if (!confirm("이 프로젝트 설계를 보관함에서 삭제하시겠습니까?")) return;
+  let list = getSavedProjects();
+  list = list.filter(p => p.id !== id);
+  saveProjectsList(list);
+  renderSavedProjectsList();
+}
+
+function exportProjectsJSON() {
+  const list = getSavedProjects();
+  const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `VoltCheck_Saved_Projects_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importProjectsJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (Array.isArray(imported)) {
+          saveProjectsList(imported);
+          renderSavedProjectsList();
+          alert(`[복원 완료] ${imported.length}개의 프로젝트 설계를 성공적으로 복원했습니다.`);
+        }
+      } catch (err) {
+        alert("올바르지 않은 JSON 백업 파일입니다.");
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// Global Exports
+window.openProjectStorageModal = openProjectStorageModal;
+window.closeProjectStorageModal = closeProjectStorageModal;
+window.saveCurrentProject = saveCurrentProject;
+window.loadProjectById = loadProjectById;
+window.deleteProjectById = deleteProjectById;
+window.exportProjectsJSON = exportProjectsJSON;
+window.importProjectsJSON = importProjectsJSON;
+
+
+// ==========================================================================
+// [UPGRADE] 48-TOOL RELATED ENGINES RECOMMENDATION MATRIX
+// ==========================================================================
+
+const RELATED_TOOLS_MATRIX = {
+  'tab-voltagedrop': [
+    { id: 'tab-smpsbudget', name: 'SMPS·CP 용량', icon: 'cpu' },
+    { id: 'tab-analogloop', name: '4-20mA 루프', icon: 'gauge' },
+    { id: 'tab-cabletable', name: 'AWG 조견표', icon: 'table' }
+  ],
+  'tab-analogloop': [
+    { id: 'tab-plcscaling', name: 'PLC 스케일링', icon: 'binary' },
+    { id: 'tab-voltagedrop', name: '24V 전압강하', icon: 'activity' },
+    { id: 'tab-iolinksafety', name: 'IO-Link 안전', icon: 'shield-alert' }
+  ],
+  'tab-motorcalc': [
+    { id: 'tab-inrushbreaker', name: '돌입전류 차단기', icon: 'zap-off' },
+    { id: 'tab-transformer', name: '변압기 용량', icon: 'box' },
+    { id: 'tab-powerfactor', name: '역률개선 콘덴서', icon: 'zap' }
+  ],
+  'tab-cabinetcooling': [
+    { id: 'tab-smpsbudget', name: 'SMPS 용량', icon: 'cpu' },
+    { id: 'tab-batterythermal', name: '배터리 발열칠러', icon: 'thermometer' },
+    { id: 'tab-hvacblower', name: 'HVAC 송풍기', icon: 'wind' }
+  ],
+  'tab-hydraulics': [
+    { id: 'tab-pneumatics', name: '공압 소모량', icon: 'wind' },
+    { id: 'tab-pumphead', name: '펌프 양정 kW', icon: 'droplet' },
+    { id: 'tab-valvecv', name: '밸브 Cv 계산', icon: 'sliders' }
+  ],
+  'tab-vacuumchamber': [
+    { id: 'tab-cleanesd', name: '클린룸 ESD', icon: 'sparkles' },
+    { id: 'tab-heatexchanger', name: '열교환기 LMTD', icon: 'flame' },
+    { id: 'tab-steampipe', name: '스팀 배관경', icon: 'flame' }
+  ]
+};
+
+function renderRelatedToolsForTab(tabId) {
+  const panel = document.getElementById(tabId);
+  if (!panel) return;
+
+  let existingBar = panel.querySelector('.related-tools-bar');
+  if (existingBar) existingBar.remove();
+
+  const related = RELATED_TOOLS_MATRIX[tabId] || [
+    { id: 'tab-voltagedrop', name: '24V 전압강하', icon: 'activity' },
+    { id: 'tab-motorcalc', name: '3상 모터·MC', icon: 'zap' },
+    { id: 'tab-cabletable', name: 'AWG 조견표', icon: 'table' }
+  ];
+
+  const bar = document.createElement('div');
+  bar.className = 'related-tools-bar mt-3 mb-2';
+  bar.style.cssText = 'background:#f8fafc; border:1px solid #e2e8f0; border-radius:var(--radius-sm); padding:0.6rem 0.9rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;';
+  
+  bar.innerHTML = `
+    <div style="display:flex; align-items:center; gap:0.4rem;">
+      <span class="badge-pill font-mono" style="background:#e0f2fe; color:#0369a1; font-weight:800; font-size:0.65rem;">RELATED ENGINES</span>
+      <span style="font-size:0.78rem; font-weight:700; color:#334155;">연관 공학 도구 함께 검토:</span>
+    </div>
+    <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+      ${related.map(r => `
+        <button type="button" onclick="switchTab('${r.id}')" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:4px; padding:0.3rem 0.6rem; font-size:0.74rem; font-weight:700; color:#0f172a; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+          <span>${r.name} &rarr;</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+
+  const meterGrid = panel.querySelector('.meter-workbench-grid');
+  if (meterGrid) {
+    meterGrid.after(bar);
+  }
+}
+
+// Attach related tools rendering to tab switches
+const originalSwitchTab = window.switchTab;
+window.switchTab = function(targetTabId) {
+  if (typeof originalSwitchTab === 'function') {
+    originalSwitchTab(targetTabId);
+  }
+  renderRelatedToolsForTab(targetTabId);
+};
+
+
+// ==========================================================================
+// [UPGRADE] LEMONSQUEEZY GLOBAL CURRENCY SWITCHER (USD / KRW)
+// ==========================================================================
+
+const LEMONSQUEEZY_STARTER_URL = 'https://voltcheck.lemonsqueezy.com/buy/starter-excel-pack';
+const LEMONSQUEEZY_PRO_URL = 'https://voltcheck.lemonsqueezy.com/buy/pro-master-bundle';
+const CTEE_KR_STORE_URL = 'https://ctee.kr/item/store/104555';
+
+function updateDigitalModalForGlobalCurrency(lang) {
+  const isGlobal = (lang && lang !== 'ko');
+  const starterPriceEls = document.querySelectorAll('.price-tier-starter');
+  const proPriceEls = document.querySelectorAll('.price-tier-pro');
+  const digitalCheckoutLinks = document.querySelectorAll('.digital-checkout-link');
+
+  if (isGlobal) {
+    starterPriceEls.forEach(el => el.textContent = '$9.99 USD');
+    proPriceEls.forEach(el => el.textContent = '$24.99 USD');
+    digitalCheckoutLinks.forEach(el => {
+      el.href = LEMONSQUEEZY_PRO_URL;
+      el.innerHTML = '<i data-lucide="credit-card"></i> <span>Buy Global Edition ($24.99 USD via LemonSqueezy)</span>';
+    });
+  } else {
+    starterPriceEls.forEach(el => el.textContent = '9,900원');
+    proPriceEls.forEach(el => el.textContent = '29,000원');
+    digitalCheckoutLinks.forEach(el => {
+      el.href = CTEE_KR_STORE_URL;
+      el.innerHTML = '<i data-lucide="zap"></i> <span>크티(Ctee) 공식 1초 결제하기 (29,000원)</span>';
+    });
+  }
+  if (window.lucide) lucide.createIcons();
+}
+
+window.updateDigitalModalForGlobalCurrency = updateDigitalModalForGlobalCurrency;

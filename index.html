@@ -6109,6 +6109,23 @@
           </div>
         </article>
 
+      <!-- ========================================================================= -->
+      <!-- GOOGLE ADSENSE HIGH-CPC RESPONSIVE AD SLOT (IN-ARTICLE PLACEMENT) -->
+      <!-- ========================================================================= -->
+      <div class="adsense-slot-container my-3" style="background:#ffffff; border:1px dashed #cbd5e1; border-radius:var(--radius-md); padding:0.85rem; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.02); overflow:hidden;">
+        <span style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:0.35rem;">SPONSORED LINKS / ADVERTISEMENT</span>
+        <div class="adsense-placeholder" style="min-height:90px; display:flex; align-items:center; justify-content:center; background:#f8fafc; border-radius:4px; color:#64748b; font-size:0.8rem;">
+          <!-- Google AdSense Code Ready: Replace with your ca-pub ID when approved -->
+          <ins class="adsbygoogle"
+               style="display:block; width:100%; height:90px;"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="1234567890"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <span class="ad-placeholder-text">⚡ 산업용 FA 제어기기 및 엔지니어링 솔루션 공식 스폰서 링크</span>
+        </div>
+      </div>
+
         <!-- Interactive Daily Troubleshooting Diagnostic Flowchart Engine [KILLER FEATURE] -->
         <div class="troubleshooting-tree-card my-3" style="grid-column: 1 / -1; background: var(--bg-surface); border: 2px solid var(--brand-orange); border-radius: var(--radius-md); padding: 1.75rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
@@ -8026,6 +8043,55 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- PROJECT STORAGE & LOCAL RECOVERY MODAL [PROJECT SAVE / LOAD ENGINE] -->
+  <!-- ========================================================================= -->
+  <div id="projectStorageModal" class="custom-modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.7); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px); padding:1rem;">
+    <div class="custom-modal-dialog" style="background:#ffffff; border-radius:var(--radius-md); max-width:620px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3); border:1.5px solid #cbd5e1; padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem; margin-bottom:1rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <i data-lucide="folder-kanban" style="color:#2563eb; width:22px; height:22px;"></i>
+          <h3 style="margin:0; font-size:1.15rem; font-weight:800; color:#0f172a;">내 공학 설계 프로젝트 보관함</h3>
+        </div>
+        <button type="button" onclick="closeProjectStorageModal()" style="background:none; border:none; cursor:pointer; color:#64748b; font-size:1.4rem; line-height:1;">&times;</button>
+      </div>
+
+      <!-- Save Current Form Section -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:1rem; margin-bottom:1.25rem;">
+        <label style="font-size:0.82rem; font-weight:800; color:#334155; display:block; margin-bottom:0.4rem;">
+          💾 현재 계산 화면(<span id="saveCurrentToolName">현재 도구</span>) 파라미터 저장:
+        </label>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <input type="text" id="newProjectNameInput" placeholder="예: A공장 1호기 컨베이어 전압강하 검토" style="flex:1; min-width:200px; padding:0.5rem 0.75rem; border:1px solid #cbd5e1; border-radius:4px; font-size:0.85rem;">
+          <button type="button" onclick="saveCurrentProject()" class="btn-primary-action" style="background:#2563eb; padding:0.5rem 1rem; font-size:0.85rem; font-weight:800; border-radius:4px;">
+            <i data-lucide="save"></i> <span>설계 저장</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Saved Project List Section -->
+      <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem 0;">📁 저장된 프로젝트 목록 (<span id="savedProjectCount">0</span>개)</h4>
+      <div id="savedProjectsListContainer" style="display:flex; flex-direction:column; gap:0.6rem; max-height:280px; overflow-y:auto; padding-right:0.25rem; margin-bottom:1.25rem;">
+        <!-- Dynamically rendered -->
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; border-top:1px solid #e2e8f0; padding-top:0.75rem;">
+        <div style="display:flex; gap:0.4rem;">
+          <button type="button" onclick="exportProjectsJSON()" class="btn-secondary-action" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:0.4rem 0.7rem; font-size:0.75rem; border-radius:4px;">
+            <i data-lucide="download"></i> <span>JSON 백업</span>
+          </button>
+          <button type="button" onclick="importProjectsJSON()" class="btn-secondary-action" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:0.4rem 0.7rem; font-size:0.75rem; border-radius:4px;">
+            <i data-lucide="upload"></i> <span>JSON 복원</span>
+          </button>
+        </div>
+        <button type="button" onclick="closeProjectStorageModal()" class="btn-secondary-action" style="padding:0.45rem 1rem; font-size:0.82rem; border-radius:4px;">
+          닫기
+        </button>
+      </div>
     </div>
   </div>
 
