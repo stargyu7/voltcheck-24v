@@ -185,6 +185,28 @@
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 진공·방폭·열교환기</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 펌프·송풍기·스팀·트레이</button>
         </div>
+
+        <!-- Favorites & Smart Sync Quick Strip [UX PILLAR 1 & 2] -->
+        <div class="user-favorites-quick-bar" id="userFavoritesQuickBar" style="background:#f8fafc; border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; padding:0.4rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; font-size:0.78rem;">
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;" id="favoritesChipsContainer">
+            <div style="display:flex; align-items:center; gap:0.3rem; color:#b45309; font-weight:800;">
+              <span>⭐ 내 즐겨찾기:</span>
+            </div>
+            <!-- Dynamically populated favorite tool chips -->
+            <span id="noFavsHint" style="color:#94a3b8; font-size:0.74rem;">(탭 이름 옆의 ☆을 눌러 자주 쓰는 도구를 핀 고정하세요)</span>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <label style="display:flex; align-items:center; gap:0.35rem; cursor:pointer; font-weight:700; color:#334155; font-size:0.75rem;">
+              <input type="checkbox" id="smartSyncToggle" onchange="toggleSmartSync(this.checked)" checked style="accent-color:#2563eb; width:15px; height:15px; cursor:pointer;">
+              <span>🔗 파라미터 스마트 연동</span>
+            </label>
+            <button type="button" onclick="openReportCartModal()" id="reportCartTopBadgeBtn" style="background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; padding:0.25rem 0.6rem; border-radius:4px; font-size:0.75rem; font-weight:800; display:inline-flex; align-items:center; gap:0.25rem; cursor:pointer;">
+              <i data-lucide="file-text" style="width:14px; height:14px;"></i>
+              <span>통합결재서 (<strong id="reportCartCountTop">0</strong>)</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Segmented Track with Left/Right Scroll Arrows -->
@@ -8056,6 +8078,46 @@
         <button type="button" onclick="closeProjectStorageModal()" class="btn-secondary-action" style="padding:0.45rem 1rem; font-size:0.82rem; border-radius:4px;">
           닫기
         </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MULTI-TOOL UNIFIED REPORT CART MODAL [UX PILLAR 3] -->
+  <!-- ========================================================================= -->
+  <div id="reportCartModal" class="custom-modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.7); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px); padding:1rem;">
+    <div class="custom-modal-dialog" style="background:#ffffff; border-radius:var(--radius-md); max-width:650px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3); border:1.5px solid #cbd5e1; padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem; margin-bottom:1rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <i data-lucide="file-stack" style="color:#2563eb; width:22px; height:22px;"></i>
+          <h3 style="margin:0; font-size:1.15rem; font-weight:800; color:#0f172a;">📑 다중 공학 도구 통합 기술검토서 바구니</h3>
+        </div>
+        <button type="button" onclick="closeReportCartModal()" style="background:none; border:none; cursor:pointer; color:#64748b; font-size:1.4rem; line-height:1;">&times;</button>
+      </div>
+
+      <p style="font-size:0.8rem; color:#64748b; margin:0 0 1rem 0; line-height:1.4;">
+        각 공학 계산기에서 산출한 핵심 검증 결과를 하나로 묶어 <strong>사내 결재 및 고객사 제출용 1장 종합 A4 기술검토서</strong>로 일괄 출력합니다.
+      </p>
+
+      <!-- Cart Items List -->
+      <div id="reportCartItemsContainer" style="display:flex; flex-direction:column; gap:0.6rem; max-height:300px; overflow-y:auto; padding-right:0.25rem; margin-bottom:1.25rem;">
+        <!-- Dynamically rendered cart items -->
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; border-top:1px solid #e2e8f0; padding-top:0.75rem;">
+        <button type="button" onclick="clearReportCart()" class="btn-secondary-action" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#ef4444; padding:0.45rem 0.8rem; font-size:0.78rem; border-radius:4px; font-weight:700;">
+          <i data-lucide="trash-2"></i> <span>바구니 비우기</span>
+        </button>
+
+        <div style="display:flex; gap:0.5rem;">
+          <button type="button" onclick="closeReportCartModal()" class="btn-secondary-action" style="padding:0.45rem 0.9rem; font-size:0.82rem; border-radius:4px;">
+            닫기
+          </button>
+          <button type="button" onclick="printUnifiedMasterReport()" class="btn-primary-action" style="background:#2563eb; padding:0.5rem 1.15rem; font-size:0.85rem; font-weight:800; border-radius:4px;">
+            <i data-lucide="printer"></i> <span>📑 통합 기술검토서 A4 출력 &rarr;</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

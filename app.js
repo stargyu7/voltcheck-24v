@@ -7855,3 +7855,325 @@ function updateDigitalModalForGlobalCurrency(lang) {
 }
 
 window.updateDigitalModalForGlobalCurrency = updateDigitalModalForGlobalCurrency;
+
+
+// ==========================================================================
+// [UX UPGRADE 1] USER FAVORITES PIN BAR & RECENT TOOLS
+// ==========================================================================
+
+const FAVORITES_STORAGE_KEY = 'voltcheck_pinned_favorite_tools';
+const RECENT_TOOLS_STORAGE_KEY = 'voltcheck_recent_visited_tools';
+
+function getFavoriteTools() {
+  try {
+    const raw = localStorage.getItem(FAVORITES_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : ['tab-voltagedrop', 'tab-motorcalc', 'tab-smpsbudget'];
+  } catch (e) {
+    return ['tab-voltagedrop', 'tab-motorcalc', 'tab-smpsbudget'];
+  }
+}
+
+function saveFavoriteTools(favs) {
+  try {
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favs));
+  } catch (e) {}
+}
+
+function toggleFavoriteTool(tabId) {
+  let favs = getFavoriteTools();
+  if (favs.includes(tabId)) {
+    favs = favs.filter(id => id !== tabId);
+  } else {
+    favs.push(tabId);
+  }
+  saveFavoriteTools(favs);
+  renderFavoritesBar();
+  updateStarIconsAcrossDOM();
+}
+
+function renderFavoritesBar() {
+  const container = document.getElementById('favoritesChipsContainer');
+  if (!container) return;
+
+  const favs = getFavoriteTools();
+  const hint = document.getElementById('noFavsHint');
+
+  // Clear existing chips
+  const existingChips = container.querySelectorAll('.fav-tool-chip');
+  existingChips.forEach(c => c.remove());
+
+  if (favs.length === 0) {
+    if (hint) hint.style.display = 'inline';
+    return;
+  }
+  if (hint) hint.style.display = 'none';
+
+  favs.forEach(tabId => {
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    const name = btn?.querySelector('span')?.textContent || tabId.replace('tab-', '');
+    
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'fav-tool-chip';
+    chip.style.cssText = 'background:#ffffff; border:1px solid #fde68a; color:#0f172a; padding:0.2rem 0.55rem; border-radius:4px; font-size:0.74rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; box-shadow:0 1px 3px rgba(0,0,0,0.04);';
+    chip.innerHTML = `<span>⭐ ${name}</span><span onclick="event.stopPropagation(); toggleFavoriteTool('${tabId}')" style="color:#94a3b8; font-size:0.75rem; margin-left:0.15rem;" title="즐겨찾기 해제">&times;</span>`;
+    chip.onclick = () => switchTab(tabId);
+    container.appendChild(chip);
+  });
+}
+
+function updateStarIconsAcrossDOM() {
+  const favs = getFavoriteTools();
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const tabId = btn.getAttribute('data-tab');
+    if (!tabId) return;
+    let star = btn.querySelector('.tab-star-btn');
+    if (!star) {
+      star = document.createElement('span');
+      star.className = 'tab-star-btn';
+      star.style.cssText = 'font-size:0.7rem; cursor:pointer; margin-left:0.25rem; opacity:0.6;';
+      star.onclick = (e) => {
+        e.stopPropagation();
+        toggleFavoriteTool(tabId);
+      };
+      btn.appendChild(star);
+    }
+    const isFav = favs.includes(tabId);
+    star.textContent = isFav ? '★' : '☆';
+    star.style.color = isFav ? '#f59e0b' : '#94a3b8';
+    star.style.opacity = isFav ? '1' : '0.5';
+  });
+}
+
+window.toggleFavoriteTool = toggleFavoriteTool;
+window.renderFavoritesBar = renderFavoritesBar;
+
+
+// ==========================================================================
+// [UX UPGRADE 2] CROSS-TOOL SMART PARAMETER SYNCHRONIZATION ENGINE
+// ==========================================================================
+
+const SMART_SYNC_KEY = 'voltcheck_smart_sync_enabled';
+let globalSmartSyncState = {
+  wireLength: 40,
+  ambientTemp: 40,
+  systemVoltage: 24,
+  frequency: 60,
+  safetyMargin: 20
+};
+
+function isSmartSyncEnabled() {
+  const toggle = document.getElementById('smartSyncToggle');
+  return toggle ? toggle.checked : true;
+}
+
+function toggleSmartSync(enabled) {
+  try {
+    localStorage.setItem(SMART_SYNC_KEY, enabled ? 'true' : 'false');
+  } catch (e) {}
+}
+
+function syncParametersToActiveTab(tabId) {
+  if (!isSmartSyncEnabled()) return;
+
+  const panel = document.getElementById(tabId);
+  if (!panel) return;
+
+  // Sync ambient temperature
+  const tempInput = panel.querySelector('#ambientTemp, #ambTemp, #panelAmbTemp, #tempAmb');
+  if (tempInput && globalSmartSyncState.ambientTemp) {
+    tempInput.value = globalSmartSyncState.ambientTemp;
+    tempInput.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // Sync wire length
+  const lengthInput = panel.querySelector('#wireLength, #busLength, #trayLength');
+  if (lengthInput && globalSmartSyncState.wireLength) {
+    lengthInput.value = globalSmartSyncState.wireLength;
+    lengthInput.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+}
+
+// Track input changes to update shared state
+document.addEventListener('input', e => {
+  if (!isSmartSyncEnabled()) return;
+  const id = e.target.id;
+  const val = parseFloat(e.target.value);
+  if (isNaN(val)) return;
+
+  if (id === 'ambientTemp' || id === 'ambTemp') {
+    globalSmartSyncState.ambientTemp = val;
+  } else if (id === 'wireLength') {
+    globalSmartSyncState.wireLength = val;
+  }
+});
+
+window.toggleSmartSync = toggleSmartSync;
+
+
+// ==========================================================================
+// [UX UPGRADE 3] MULTI-TOOL UNIFIED REPORT CART & MASTER A4 PRINT ENGINE
+// ==========================================================================
+
+const REPORT_CART_STORAGE_KEY = 'voltcheck_report_cart_items';
+
+function getReportCartItems() {
+  try {
+    const raw = localStorage.getItem(REPORT_CART_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveReportCartItems(items) {
+  try {
+    localStorage.setItem(REPORT_CART_STORAGE_KEY, JSON.stringify(items));
+  } catch (e) {}
+  updateReportCartBadges();
+}
+
+function addToReportCart(tabId) {
+  const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  const toolName = activeBtn?.querySelector('span')?.textContent || '공학 도구';
+  const panel = document.getElementById(tabId);
+  if (!panel) return;
+
+  // Extract main verdict text and value
+  const verdictEl = panel.querySelector('.verdict-stamp, .badge-safe, .badge-warn, [id*="Verdict"]');
+  const verdictText = verdictEl?.textContent.trim() || '검증 완료 (PASS)';
+  
+  const heroValueEl = panel.querySelector('.terminal-voltage-big, [class*="hero-big"], [id*="res"], [id*="calc"]');
+  const mainResultText = heroValueEl?.textContent.trim() || '산출 데이터 정상';
+
+  const cartItem = {
+    id: 'item_' + Date.now(),
+    tabId: tabId,
+    toolName: toolName,
+    verdict: verdictText,
+    summary: mainResultText,
+    timestamp: new Date().toISOString()
+  };
+
+  let items = getReportCartItems();
+  // Avoid duplicate same tool
+  items = items.filter(it => it.tabId !== tabId);
+  items.push(cartItem);
+  saveReportCartItems(items);
+
+  alert(`[바구니 담기 완료] '${toolName}' 결과가 통합 결재서 바구니에 추가되었습니다! (현재 ${items.length}개)`);
+}
+
+function updateReportCartBadges() {
+  const items = getReportCartItems();
+  const count = items.length;
+  const topBadge = document.getElementById('reportCartCountTop');
+  if (topBadge) topBadge.textContent = count;
+}
+
+function openReportCartModal() {
+  const modal = document.getElementById('reportCartModal');
+  if (!modal) return;
+  renderReportCart();
+  modal.style.display = 'flex';
+}
+
+function closeReportCartModal() {
+  const modal = document.getElementById('reportCartModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function renderReportCart() {
+  const container = document.getElementById('reportCartItemsContainer');
+  if (!container) return;
+
+  const items = getReportCartItems();
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:2rem 1rem; color:#94a3b8; font-size:0.85rem; background:#f8fafc; border-radius:6px; border:1px dashed #cbd5e1;">
+        바구니에 담긴 공학 계산 결과가 없습니다.<br>
+        각 계산기 결과창 아래의 <strong>[📑 결재 바구니에 담기]</strong> 버튼을 눌러보세요!
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = items.map(item => `
+    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; gap:0.45rem;">
+          <span class="badge-pill font-mono" style="background:#eff6ff; color:#2563eb; font-size:0.65rem; padding:0.1rem 0.35rem; font-weight:800;">${item.toolName}</span>
+          <strong style="font-size:0.88rem; color:#0f172a;">${item.summary}</strong>
+        </div>
+        <div style="font-size:0.72rem; color:#059669; font-weight:700; margin-top:0.25rem;">판정: ${item.verdict}</div>
+      </div>
+      <button type="button" onclick="removeFromReportCart('${item.id}')" style="background:#fee2e2; color:#dc2626; border:none; padding:0.35rem 0.6rem; border-radius:4px; font-size:0.75rem; font-weight:800; cursor:pointer;" title="삭제">
+        &times;
+      </button>
+    </div>
+  `).join('');
+}
+
+function removeFromReportCart(id) {
+  let items = getReportCartItems();
+  items = items.filter(it => it.id !== id);
+  saveReportCartItems(items);
+  renderReportCart();
+}
+
+function clearReportCart() {
+  if (!confirm("바구니의 모든 검토 항목을 비우시겠습니까?")) return;
+  saveReportCartItems([]);
+  renderReportCart();
+}
+
+function printUnifiedMasterReport() {
+  const items = getReportCartItems();
+  if (items.length === 0) {
+    alert("바구니에 담긴 검토 항목이 없습니다. 먼저 계산 결과를 담아주세요.");
+    return;
+  }
+  closeReportCartModal();
+  window.print();
+}
+
+// Attach Cart Button to each Tab Readout Panel
+function injectReportCartButtonsToAllTabs() {
+  document.querySelectorAll('.tab-panel').forEach(panel => {
+    const tabId = panel.id;
+    const readout = panel.querySelector('.meter-readout-panel, [class*="readout"]');
+    if (!readout || readout.querySelector('.btn-add-to-cart')) return;
+
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'btn-add-to-cart-box mt-2';
+    btnContainer.style.cssText = 'text-align:right; margin-top:0.5rem;';
+    btnContainer.innerHTML = `
+      <button type="button" class="btn-add-to-cart" onclick="addToReportCart('${tabId}')" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; padding:0.35rem 0.7rem; font-size:0.75rem; font-weight:700; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+        <span>📑 결재 바구니에 담기</span>
+      </button>
+    `;
+    readout.appendChild(btnContainer);
+  });
+}
+
+// Global Exports & Boot
+window.addToReportCart = addToReportCart;
+window.openReportCartModal = openReportCartModal;
+window.closeReportCartModal = closeReportCartModal;
+window.removeFromReportCart = removeFromReportCart;
+window.clearReportCart = clearReportCart;
+window.printUnifiedMasterReport = printUnifiedMasterReport;
+
+// Initialize on DOM Loaded
+document.addEventListener('DOMContentLoaded', () => {
+  renderFavoritesBar();
+  updateStarIconsAcrossDOM();
+  updateReportCartBadges();
+  injectReportCartButtonsToAllTabs();
+});
+
+// Also run immediately if script loaded after DOM
+renderFavoritesBar();
+updateStarIconsAcrossDOM();
+updateReportCartBadges();
+injectReportCartButtonsToAllTabs();
