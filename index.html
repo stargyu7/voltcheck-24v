@@ -411,34 +411,28 @@
     <!-- TAB 1: DC 24V 전압강하 & 센서 전원 마진 검증기 -->
     <!-- ========================================================================= -->
     <section id="tab-voltagedrop" class="tab-panel active">
-      <div class="section-title-bar">
+      <div class="section-title-bar" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
         <div style="flex:1; min-width:280px;">
           <h1 class="main-title">DC 24V 선로 전압강하 및 말단 전원 마진 검토</h1>
           <p class="main-desc">배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.</p>
+          
+          <div class="preset-pill-group" style="margin-top:0.75rem;">
+            <span class="preset-title">빠른 부하 선택:</span>
+            <div class="preset-pill-items">
+              <button type="button" class="pill-btn active" data-preset="photo_sensor">포토/근접센서 (35mA)</button>
+              <button type="button" class="pill-btn" data-preset="solenoid">솔레노이드 밸브 (0.45A)</button>
+              <button type="button" class="pill-btn" data-preset="iolink">IO-Link 마스터 (2.0A)</button>
+              <button type="button" class="pill-btn" data-preset="servo_brake">서보 브레이크 (1.2A)</button>
+              <button type="button" class="pill-btn" data-preset="led_light">비전 조명 (3.5A)</button>
+            </div>
+          </div>
         </div>
 
-        <!-- Top Right Sponsored Partner Badge [EXACT USER REQUEST LOCATION] -->
-        <div class="top-titlebar-sponsor-badge" style="display:inline-flex; align-items:center; gap:0.5rem; background:linear-gradient(135deg, #ffffff 0%, #eff6ff 100%); border:1.5px solid #93c5fd; border-radius:6px; padding:0.35rem 0.65rem; box-shadow:0 2px 6px rgba(59,130,246,0.08);">
-          <div style="display:flex; align-items:center; gap:0.35rem;">
-            <span class="badge-pill font-mono" style="background:#2563eb; color:#fff; font-size:0.6rem; padding:0.08rem 0.3rem; font-weight:800;">공식 스폰서</span>
-            <strong style="font-size:0.78rem; color:#0f172a;">✨ Shop Themes</strong>
-          </div>
-          <span style="font-size:0.72rem; color:#475569;">Trending Styles &amp; Best-Selling</span>
-          <a href="https://www.dpbolvw.net/click-101874326-17267160" target="_blank" rel="noopener noreferrer" style="background:#2563eb; color:#fff; padding:0.25rem 0.6rem; font-size:0.72rem; font-weight:800; text-decoration:none; border-radius:3px; display:inline-flex; align-items:center; gap:0.25rem;">
-            <span>스토어 방문 &rarr;</span>
+        <!-- Top Right Sponsored Image Banner (500x200) [EXACT USER CIRCLED POSITION] -->
+        <div class="top-titlebar-banner-box" style="flex-shrink:0;">
+          <a href="https://www.tkqlhce.com/click-101874326-17327791" target="_top" rel="noopener noreferrer" style="display:inline-block; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;">
+            <img src="https://www.tqlkg.com/image-101874326-17327791" width="380" height="152" alt="Official Sponsored Banner" border="0" style="max-width:100%; height:auto; display:block; border-radius:8px;"/>
           </a>
-          <img src="https://www.tqlkg.com/image-101874326-17267160" width="1" height="1" border="0" alt="" style="display:none;"/>
-        </div>
-
-        <div class="preset-pill-group" style="width:100%;">
-          <span class="preset-title">빠른 부하 선택:</span>
-          <div class="preset-pill-items">
-            <button type="button" class="pill-btn active" data-preset="photo_sensor">포토/근접센서 (35mA)</button>
-            <button type="button" class="pill-btn" data-preset="solenoid">솔레노이드 밸브 (0.45A)</button>
-            <button type="button" class="pill-btn" data-preset="iolink">IO-Link 마스터 (2.0A)</button>
-            <button type="button" class="pill-btn" data-preset="servo_brake">서보 브레이크 (1.2A)</button>
-            <button type="button" class="pill-btn" data-preset="led_light">비전 조명 (3.5A)</button>
-          </div>
         </div>
       </div>
 
