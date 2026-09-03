@@ -6195,6 +6195,9 @@ function filterNavCategory(cat) {
   if (cat === 'all') document.getElementById('cfAll')?.classList.add('active');
   else if (cat === 'power') document.getElementById('cfPower')?.classList.add('active');
   else if (cat === 'motion') document.getElementById('cfMotion')?.classList.add('active');
+  else if (cat === 'mech') document.getElementById('cfMech')?.classList.add('active');
+  else if (cat === 'fluid') document.getElementById('cfFluid')?.classList.add('active');
+  else if (cat === 'nuclear') document.getElementById('cfNuclear')?.classList.add('active');
   else if (cat === 'signal') document.getElementById('cfSignal')?.classList.add('active');
   else if (cat === 'specs') document.getElementById('cfSpecs')?.classList.add('active');
 
@@ -8177,3 +8180,273 @@ renderFavoritesBar();
 updateStarIconsAcrossDOM();
 updateReportCartBadges();
 injectReportCartButtonsToAllTabs();
+
+
+// ==========================================================================
+// TAB 49: 기계요소 정격 수명 계산기 (calcMechLife)
+// ==========================================================================
+function calcMechLife() {
+  const type = document.getElementById('mlComponentType')?.value || 'bearing_ball';
+  const C = parseFloat(document.getElementById('mlDynamicRatingC')?.value) || 28.5;
+  const P = parseFloat(document.getElementById('mlEquivLoadP')?.value) || 4.2;
+  const n = parseFloat(document.getElementById('mlRpm')?.value) || 1750;
+  const fw = parseFloat(document.getElementById('mlLoadFactorFw')?.value) || 1.2;
+  const hoursPerDay = parseFloat(document.getElementById('mlHoursPerDay')?.value) || 16;
+
+  let p = (type === 'bearing_roller') ? 3.333 : 3.0;
+  const effectiveP = P * fw;
+  const loadRatio = C / effectiveP;
+  
+  let L10_revs = Math.pow(loadRatio, p) * 1e6; // Total revolutions
+  let L10h = L10_revs / (60 * n); // Hours
+
+  if (type === 'lm_guide') {
+    // 50km nominal travel rating
+    const travelKm = Math.pow(loadRatio, 3) * 50;
+    L10h = (travelKm * 1000) / (2 * 0.5 * n * 60); // assuming 0.5m stroke
+  }
+
+  const days = Math.round(L10h / hoursPerDay);
+  const years = (days / 365).toFixed(2);
+  const totalMrev = (L10_revs / 1e6).toFixed(0);
+  const greaseInterval = Math.round(Math.min(L10h * 0.12, 4500));
+
+  const lifeHoursEl = document.getElementById('mlLifeHours');
+  if (lifeHoursEl) lifeHoursEl.textContent = Math.round(L10h).toLocaleString();
+
+  const lifeYearsEl = document.getElementById('mlLifeYears');
+  if (lifeYearsEl) lifeYearsEl.textContent = years;
+
+  const lifeDaysEl = document.getElementById('mlLifeDays');
+  if (lifeDaysEl) lifeDaysEl.textContent = days.toLocaleString();
+
+  const totalRevsEl = document.getElementById('mlTotalRevs');
+  if (totalRevsEl) totalRevsEl.textContent = `${totalMrev} Mrev`;
+
+  const greaseEl = document.getElementById('mlGreaseInterval');
+  if (greaseEl) greaseEl.textContent = `${greaseInterval.toLocaleString()} h (${(greaseInterval / (hoursPerDay * 30)).toFixed(1)}개월)`;
+
+  const marginPct = Math.round((L10h / 20000) * 100);
+  const pctEl = document.getElementById('mlLifePercent');
+  if (pctEl) pctEl.textContent = `${marginPct}%`;
+
+  const barEl = document.getElementById('mlLifeBar');
+  if (barEl) {
+    barEl.style.width = `${Math.min(marginPct, 100)}%`;
+    barEl.style.background = marginPct >= 100 ? '#10b981' : (marginPct >= 50 ? '#f59e0b' : '#ef4444');
+  }
+
+  const badgeEl = document.getElementById('mlVerdictBadge');
+  if (badgeEl) {
+    badgeEl.textContent = L10h >= 20000 ? 'PASS (장수명)' : (L10h >= 8000 ? 'WARN (교체계획)' : 'CRITICAL (과부하)');
+    badgeEl.className = 'verdict-stamp font-mono ' + (L10h >= 20000 ? 'badge-safe' : (L10h >= 8000 ? 'badge-warn' : 'badge-danger'));
+  }
+}
+window.calcMechLife = calcMechLife;
+
+// ==========================================================================
+// TAB 50: CNC 절삭력 & 주축 동력 (calcCuttingForce)
+// ==========================================================================
+function calcCuttingForce() {
+  const mat = document.getElementById('cfMaterial')?.value || 'steel';
+  const Vc = parseFloat(document.getElementById('cfCuttingSpeed')?.value) || 180;
+  const ap = parseFloat(document.getElementById('cfDepthAp')?.value) || 3.0;
+  const fz = parseFloat(document.getElementById('cfFeedFz')?.value) || 0.15;
+  const ae = parseFloat(document.getElementById('cfWidthAe')?.value) || 25;
+  const pRating = parseFloat(document.getElementById('cfSpindleRatingKw')?.value) || 7.5;
+
+  let kc1_1 = 1800;
+  let mc = 0.25;
+  if (mat === 'alloy_steel') { kc1_1 = 2100; mc = 0.26; }
+  else if (mat === 'stainless') { kc1_1 = 2200; mc = 0.28; }
+  else if (mat === 'aluminum') { kc1_1 = 800; mc = 0.20; }
+  else if (mat === 'cast_iron') { kc1_1 = 1200; mc = 0.22; }
+
+  const kc = kc1_1 * Math.pow(fz, -mc);
+  const A = ap * fz; // Chip area mm2
+  const Fc = kc * A; // Cutting force N
+  const Pc = (Fc * Vc) / (60 * 1000 * 0.85); // Required spindle power in kW with 85% mechanical efficiency
+  const loadPct = ((Pc / pRating) * 100).toFixed(1);
+  const mrr = (ap * ae * (Vc * 1000 * fz) / (Math.PI * 50 * 1000)).toFixed(1); // approximate cm3/min
+  const torqueNm = ((Pc * 9550) / (Vc / (Math.PI * 0.05))).toFixed(1);
+
+  const pEl = document.getElementById('cfPowerKw');
+  if (pEl) pEl.textContent = Pc.toFixed(2);
+
+  const loadEl = document.getElementById('cfLoadPercent');
+  if (loadEl) loadEl.textContent = `${loadPct}%`;
+
+  const fcEl = document.getElementById('cfMainForceFc');
+  if (fcEl) fcEl.textContent = `${Math.round(Fc).toLocaleString()} N`;
+
+  const mrrEl = document.getElementById('cfMrrVal');
+  if (mrrEl) mrrEl.textContent = `${(ap * ae * fz * 1.5).toFixed(1)} cm³/min`;
+
+  const torqEl = document.getElementById('cfTorqueNm');
+  if (torqEl) torqEl.textContent = `${(Pc * 15).toFixed(1)} N·m`;
+
+  const kcEl = document.getElementById('cfKcVal');
+  if (kcEl) kcEl.textContent = `${Math.round(kc).toLocaleString()} N/mm²`;
+
+  const badgeEl = document.getElementById('cfVerdictBadge');
+  if (badgeEl) {
+    badgeEl.textContent = loadPct <= 85 ? `SAFE (${loadPct}%)` : (loadPct <= 100 ? `WARN (${loadPct}%)` : `OVERLOAD (${loadPct}%)`);
+    badgeEl.className = 'verdict-stamp font-mono ' + (loadPct <= 85 ? 'badge-safe' : (loadPct <= 100 ? 'badge-warn' : 'badge-danger'));
+  }
+}
+window.calcCuttingForce = calcCuttingForce;
+
+// ==========================================================================
+// TAB 51: 고압 유압 축압기 용량 (calcAccumulator)
+// ==========================================================================
+function calcAccumulator() {
+  const p2 = parseFloat(document.getElementById('accMaxPressureP2')?.value) || 210;
+  const p1 = parseFloat(document.getElementById('accMinPressureP1')?.value) || 140;
+  const deltaV = parseFloat(document.getElementById('accDeltaV')?.value) || 6.5;
+  const proc = document.getElementById('accProcessType')?.value || 'adiabatic';
+  const ratio = parseFloat(document.getElementById('accPrechargeRatio')?.value) || 0.9;
+
+  const n = (proc === 'adiabatic') ? 1.4 : 1.0;
+  const p0 = p1 * ratio; // Precharge pressure
+
+  // Polytropic expansion formula: V0 = deltaV / [ (p0/p1)^(1/n) - (p0/p2)^(1/n) ]
+  const term1 = Math.pow(p0 / p1, 1 / n);
+  const term2 = Math.pow(p0 / p2, 1 / n);
+  const exactV0 = deltaV / (term1 - term2);
+
+  // Standard commercial tank sizing
+  let nominalV0 = 10;
+  const standardSizes = [1, 2.5, 4, 6, 10, 16, 20, 25, 32, 40, 50, 60, 100];
+  for (let s of standardSizes) {
+    if (s >= exactV0) { nominalV0 = s; break; }
+  }
+
+  const storedEnergy = Math.round(exactV0 * (p2 - p1) * 0.08);
+
+  const nomEl = document.getElementById('accNominalVolV0');
+  if (nomEl) nomEl.textContent = nominalV0.toFixed(1);
+
+  const exactEl = document.getElementById('accExactVol');
+  if (exactEl) exactEl.textContent = `${exactV0.toFixed(1)} L`;
+
+  const p0El = document.getElementById('accN2PrechargeP0');
+  if (p0El) p0El.textContent = `${Math.round(p0)} bar`;
+
+  const energyEl = document.getElementById('accStoredEnergyKj');
+  if (energyEl) energyEl.textContent = `${storedEnergy} kJ`;
+
+  const v2El = document.getElementById('accGasVolV2');
+  if (v2El) v2El.textContent = `${(exactV0 * term2).toFixed(1)} L`;
+
+  const actDvEl = document.getElementById('accActualDeltaV');
+  if (actDvEl) actDvEl.textContent = `${deltaV.toFixed(1)} L`;
+}
+window.calcAccumulator = calcAccumulator;
+
+// ==========================================================================
+// TAB 52: 화학 반응기 재킷 열수지 (calcReactorHeat)
+// ==========================================================================
+function calcReactorHeat() {
+  const V = parseFloat(document.getElementById('rhBatchVolume')?.value) || 3.0;
+  const dH = parseFloat(document.getElementById('rhHeatReaction')?.value) || 450;
+  const tHours = parseFloat(document.getElementById('rhBatchHours')?.value) || 2.0;
+  const U = parseFloat(document.getElementById('rhOverallU')?.value) || 450;
+  const Trxn = parseFloat(document.getElementById('rhTempRxn')?.value) || 85;
+  const TcwIn = parseFloat(document.getElementById('rhTempCwIn')?.value) || 25;
+
+  const totalHeatKj = V * 1000 * dH; // assuming density 1000 kg/m3
+  const qKw = totalHeatKj / (tHours * 3600); // kW
+  const TcwOut = Math.min(TcwIn + 10, Trxn - 15);
+  const dt1 = Trxn - TcwOut;
+  const dt2 = Trxn - TcwIn;
+  const lmtd = (dt2 - dt1) / Math.log(dt2 / dt1);
+  const areaM2 = (qKw * 1000) / (U * lmtd);
+  const flowLpm = (qKw / (4.184 * (TcwOut - TcwIn))) * 60;
+
+  const qEl = document.getElementById('rhTotalHeatKw');
+  if (qEl) qEl.textContent = qKw.toFixed(1);
+
+  const flowEl = document.getElementById('rhCoolingFlowLpm');
+  if (flowEl) flowEl.textContent = flowLpm.toFixed(1);
+
+  const areaEl = document.getElementById('rhRequiredArea');
+  if (areaEl) areaEl.textContent = `${areaM2.toFixed(1)} m²`;
+
+  const lmtdEl = document.getElementById('rhLmtdVal');
+  if (lmtdEl) lmtdEl.textContent = `${lmtd.toFixed(1)} °C`;
+
+  const toutEl = document.getElementById('rhTempCwOut');
+  if (toutEl) toutEl.textContent = `${TcwOut.toFixed(1)} °C`;
+}
+window.calcReactorHeat = calcReactorHeat;
+
+// ==========================================================================
+// TAB 53: 원자로 감쇠열 & 차폐 (calcNuclearDecay)
+// ==========================================================================
+function calcNuclearDecay() {
+  const P0 = parseFloat(document.getElementById('ndThermalPowerMw')?.value) || 300;
+  const tSec = parseFloat(document.getElementById('ndDecayTime')?.value) || 3600;
+  const mat = document.getElementById('ndShieldMaterial')?.value || 'lead';
+  const thCm = parseFloat(document.getElementById('ndShieldThicknessCm')?.value) || 12;
+
+  // Wigner-Way decay heat fraction: P/P0 = 0.066 * (t^-0.2 - (t + 1e7)^-0.2)
+  const fraction = 0.066 * Math.pow(Math.max(tSec, 1), -0.2);
+  const P_decay = P0 * fraction;
+
+  let hvl = 1.2;
+  if (mat === 'concrete') hvl = 6.5;
+  else if (mat === 'steel') hvl = 2.2;
+  else if (mat === 'water') hvl = 18.0;
+
+  const nHvl = thCm / hvl;
+  const atten = Math.pow(2, -nHvl);
+
+  const pEl = document.getElementById('ndDecayPowerMw');
+  if (pEl) pEl.textContent = P_decay.toFixed(2);
+
+  const pctEl = document.getElementById('ndDecayPercent');
+  if (pctEl) pctEl.textContent = `${(fraction * 100).toFixed(2)}%`;
+
+  const attenEl = document.getElementById('ndAttenuationFactor');
+  if (attenEl) attenEl.textContent = `1 / ${Math.round(1 / atten).toLocaleString()} (${(atten * 100).toFixed(4)}%)`;
+
+  const hvlEl = document.getElementById('ndHvlCount');
+  if (hvlEl) hvlEl.textContent = `${nHvl.toFixed(1)} HVL`;
+}
+window.calcNuclearDecay = calcNuclearDecay;
+
+// ==========================================================================
+// TAB 54: 6축 로봇 관절 토크 (calcRobotTorque)
+// ==========================================================================
+function calcRobotTorque() {
+  const payload = parseFloat(document.getElementById('rtPayloadKg')?.value) || 20;
+  const reachMm = parseFloat(document.getElementById('rtReachMm')?.value) || 1650;
+  const alpha = parseFloat(document.getElementById('rtAngAccel')?.value) || 15.0;
+  const ratio = parseFloat(document.getElementById('rtReducerRatio')?.value) || 120;
+  const duty = parseFloat(document.getElementById('rtDutyPercent')?.value) || 65;
+
+  const reachM = reachMm / 1000;
+  const armMass = 45; // kg
+  const staticGravityTorque = (payload * reachM * 9.81) + (armMass * (reachM * 0.5) * 9.81);
+  const I_total = (payload * Math.pow(reachM, 2)) + (armMass * Math.pow(reachM * 0.5, 2));
+  const dynamicAccelTorque = I_total * alpha;
+  const peakTorque = staticGravityTorque + dynamicAccelTorque;
+  const motorTorque = peakTorque / (ratio * 0.9); // with 90% reducer efficiency
+  const recMotorKw = (peakTorque * (alpha * 0.5) / 1000 * 1.5).toFixed(1);
+
+  const peakEl = document.getElementById('rtPeakTorqueNm');
+  if (peakEl) peakEl.textContent = Math.round(peakTorque).toLocaleString();
+
+  const motEl = document.getElementById('rtMotorTorqueNm');
+  if (motEl) motEl.textContent = `${motorTorque.toFixed(2)} N·m`;
+
+  const statEl = document.getElementById('rtStaticGravityTorque');
+  if (statEl) statEl.textContent = `${Math.round(staticGravityTorque)} N·m`;
+
+  const dynEl = document.getElementById('rtDynamicAccelTorque');
+  if (dynEl) dynEl.textContent = `${Math.round(dynamicAccelTorque)} N·m`;
+
+  const kwEl = document.getElementById('rtRecommendedMotorKw');
+  if (kwEl) kwEl.textContent = `${Math.max(parseFloat(recMotorKw), 1.0)} kW (3,000 RPM)`;
+}
+window.calcRobotTorque = calcRobotTorque;

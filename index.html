@@ -179,11 +179,13 @@
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 48종 (All)</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전원·역률·변압기·PV</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·유압·배터리발열</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('signal')" id="cfSignal">🌡️ 진공·방폭·열교환기</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 펌프·송풍기·스팀·트레이</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 54종 (All)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원·변압기</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·모션·배터리</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('mech')" id="cfMech">⚙️ 기계·가공·수명</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('fluid')" id="cfFluid">🛢️ 유압·열유체·화공</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('nuclear')" id="cfNuclear">☢️ 원자력·첨단로봇</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 설비·조견표·자료실</button>
         </div>
 
         <!-- Favorites & Smart Sync Quick Strip [UX PILLAR 1 & 2] -->
@@ -403,7 +405,31 @@
             <i data-lucide="flame"></i>
             <span>스팀배관·보일러</span>
           </button>
-          <button class="tab-btn" data-tab="tab-articles" role="tab">
+                    <button class="tab-btn" data-tab="tab-mechlife" data-category="mech" role="tab">
+            <i data-lucide="cog"></i>
+            <span>49. 베어링·기계요소 수명</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-cuttingforce" data-category="mech" role="tab">
+            <i data-lucide="scissors"></i>
+            <span>50. CNC 절삭력·동력</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-accumulator" data-category="fluid" role="tab">
+            <i data-lucide="cylinder"></i>
+            <span>51. 고압 유압 축압기(ACC)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-reactorheat" data-category="fluid" role="tab">
+            <i data-lucide="flask-conical"></i>
+            <span>52. 화학 반응기 열수지</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-nucleardecay" data-category="nuclear" role="tab">
+            <i data-lucide="radiation"></i>
+            <span>53. 원자로 감쇠열·차폐</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-robottorque" data-category="nuclear" role="tab">
+            <i data-lucide="bot"></i>
+            <span>54. 6축 로봇 관절 토크</span>
+          </button>
+<button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
             <span data-i18n="tab_notes">기술 노트</span>
           </button>
@@ -6125,7 +6151,485 @@
       </div>
     </section>
 
-<section id="tab-articles" class="tab-panel">
+
+    <!-- ========================================================================= -->
+    <!-- TAB 49: 기계요소 정격 수명 & 윤활 주기 검증기 (Bearing / LM / Ball Screw) -->
+    <!-- ========================================================================= -->
+    <section id="tab-mechlife" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">⚙️ 기계요소 정격 수명 &amp; 윤활 주기 검증기 (ISO 281 / LM Guide)</h1>
+          <p class="main-desc">회전 베어링 L10h 정격 수명, 직동 LM가이드 주행거리(km), 볼스크류 피로수명 및 구리스 재급유 주기를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>기계요소 파라미터 입력</h3></div>
+          </div>
+          <form id="mechlifeForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>기계요소 유형</label>
+                <select id="mlComponentType" class="form-select" onchange="calcMechLife()">
+                  <option value="bearing_ball" selected>볼 베어링 (Ball Bearing, p=3)</option>
+                  <option value="bearing_roller">롤러 베어링 (Roller Bearing, p=10/3)</option>
+                  <option value="lm_guide">직동 LM 가이드 (Linear Guide)</option>
+                  <option value="ball_screw">볼 스크류 (Ball Screw)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>기본 동정격하중 (C, kN)</label>
+                <input type="number" id="mlDynamicRatingC" class="form-input" value="28.5" step="0.1" min="0.1" oninput="calcMechLife()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>등가 동하중 (P, kN)</label>
+                <input type="number" id="mlEquivLoadP" class="form-input" value="4.2" step="0.1" min="0.1" oninput="calcMechLife()">
+              </div>
+              <div class="form-group">
+                <label>작동 회전수 (n, RPM / cpm)</label>
+                <input type="number" id="mlRpm" class="form-input" value="1750" step="10" min="1" oninput="calcMechLife()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>하중/진동 계수 (fw)</label>
+                <select id="mlLoadFactorFw" class="form-select" onchange="calcMechLife()">
+                  <option value="1.0">1.0 (충격 없음 / 원활한 운전)</option>
+                  <option value="1.2" selected>1.2 (일반 운전 / 미세 진동)</option>
+                  <option value="1.5">1.5 (중간 충격 / 급가감속)</option>
+                  <option value="2.0">2.0 (심한 충격 / 단속 운전)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>하루 가동 시간 (Hours/day)</label>
+                <input type="number" id="mlHoursPerDay" class="form-input" value="16" step="1" min="1" max="24" oninput="calcMechLife()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>정격 수명 및 예지보전 데이터</h3></div>
+            <span id="mlVerdictBadge" class="verdict-stamp font-mono badge-safe">PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">예상 정격 수명 (L10h)</span>
+              <div class="terminal-voltage-big font-mono"><span id="mlLifeHours">28,450</span> <small>Hours</small></div>
+              <p class="hero-subtext">환산 연속 가동 연수: <strong id="mlLifeYears" class="text-cyan">4.87</strong> 년 (<span id="mlLifeDays">1,778</span> 일)</p>
+            </div>
+            <div class="gauge-card-box mt-3">
+              <div class="gauge-label-row"><span>수명 마진율 (목표 20,000h 기준)</span><span id="mlLifePercent" class="font-mono text-cyan">142%</span></div>
+              <div class="gauge-track"><div id="mlLifeBar" class="gauge-fill" style="width: 100%; background: #10b981;"></div></div>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">총 회전수 (10^6 Rev)</span><span id="mlTotalRevs" class="spec-val font-mono">2,987 Mrev</span></div>
+              <div class="spec-cell"><span class="spec-label">구리스 재급지 권장주기</span><span id="mlGreaseInterval" class="spec-val font-mono text-amber">3,200 h (6.6개월)</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="mlOpinionText" class="opinion-text">설계 정격 수명(L10h)이 20,000시간을 초과하여 장기 안정적 운전이 가능합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 50: CNC 절삭력 & 주축 모터 동력 검증기 (Kienzle Cutting Force) -->
+    <!-- ========================================================================= -->
+    <section id="tab-cuttingforce" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🏭 CNC 절삭력 &amp; 주축 모터 소요 동력 검증기 (Kienzle)</h1>
+          <p class="main-desc">Kienzle 절삭력 모델을 기반으로 밀링/선반의 주절삭력(Fc), 가공 소요 동력(kW), 칩 배출률(MRR)을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>가공 조건 및 피삭재 입력</h3></div>
+          </div>
+          <form id="cuttingforceForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>피삭재 재질 (Workpiece Material)</label>
+                <select id="cfMaterial" class="form-select" onchange="calcCuttingForce()">
+                  <option value="steel" selected>구조용 탄소강 (SM45C, kc1.1=1800)</option>
+                  <option value="alloy_steel">합금강/금형강 (SCM440, kc1.1=2100)</option>
+                  <option value="stainless">스테인리스강 (SUS304, kc1.1=2200)</option>
+                  <option value="aluminum">알루미늄 합금 (AL6061, kc1.1=800)</option>
+                  <option value="cast_iron">주철 (GC250, kc1.1=1200)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>절삭 속도 (Vc, m/min)</label>
+                <input type="number" id="cfCuttingSpeed" class="form-input" value="180" step="10" min="10" oninput="calcCuttingForce()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>절삭 깊이 (ap, mm)</label>
+                <input type="number" id="cfDepthAp" class="form-input" value="3.0" step="0.5" min="0.1" oninput="calcCuttingForce()">
+              </div>
+              <div class="form-group">
+                <label>이송량/날당 이송 (fz / fn, mm)</label>
+                <input type="number" id="cfFeedFz" class="form-input" value="0.15" step="0.01" min="0.01" oninput="calcCuttingForce()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>절삭 폭 (ae, mm)</label>
+                <input type="number" id="cfWidthAe" class="form-input" value="25" step="1" min="1" oninput="calcCuttingForce()">
+              </div>
+              <div class="form-group">
+                <label>주축 모터 정격 (Spindle kW)</label>
+                <input type="number" id="cfSpindleRatingKw" class="form-input" value="7.5" step="0.5" min="1" oninput="calcCuttingForce()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>절삭력 및 스핀들 부하율 데이터</h3></div>
+            <span id="cfVerdictBadge" class="verdict-stamp font-mono badge-safe">SAFE (58%)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">소요 가공 동력 (Spindle Power)</span>
+              <div class="terminal-voltage-big font-mono"><span id="cfPowerKw">4.35</span> <small>kW</small></div>
+              <p class="hero-subtext">주축 모터 부하율: <strong id="cfLoadPercent" class="text-cyan">58.0%</strong> (정격 7.5 kW 기준)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">주 절삭력 (Fc)</span><span id="cfMainForceFc" class="spec-val font-mono">1,450 N</span></div>
+              <div class="spec-cell"><span class="spec-label">칩 배출률 (MRR)</span><span id="cfMrrVal" class="spec-val font-mono text-cyan">42.5 cm³/min</span></div>
+              <div class="spec-cell"><span class="spec-label">스핀들 소요 토크 (Nm)</span><span id="cfTorqueNm" class="spec-val font-mono">23.2 N·m</span></div>
+              <div class="spec-cell"><span class="spec-label">비절삭 저항 (kc)</span><span id="cfKcVal" class="spec-val font-mono">2,150 N/mm²</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="cfOpinionText" class="opinion-text">스핀들 부하율이 80% 이하로 안정적이며 공구 떨림(Chatter) 위험이 낮습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 51: 고압 유압 어큐뮬레이터(축압기) 용량 산정기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-accumulator" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🛢️ 고압 유압 어큐뮬레이터(축압기) 용량 산정기 (Polytropic)</h1>
+          <p class="main-desc">단열(n=1.4) 및 등온(n=1.0) 가스 팽창 원리에 따른 어큐뮬레이터 공칭 체적(V0)과 질소 가스 사전 봉입 압력을 계산합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>유압 회로 조건 입력</h3></div>
+          </div>
+          <form id="accumulatorForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>최고 작동 압력 (P2, bar)</label>
+                <input type="number" id="accMaxPressureP2" class="form-input" value="210" step="5" min="10" oninput="calcAccumulator()">
+              </div>
+              <div class="form-group">
+                <label>최저 작동 압력 (P1, bar)</label>
+                <input type="number" id="accMinPressureP1" class="form-input" value="140" step="5" min="5" oninput="calcAccumulator()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>소요 토출 유효 체적 (ΔV, Liter)</label>
+                <input type="number" id="accDeltaV" class="form-input" value="6.5" step="0.5" min="0.1" oninput="calcAccumulator()">
+              </div>
+              <div class="form-group">
+                <label>작동 조건 (Process Type)</label>
+                <select id="accProcessType" class="form-select" onchange="calcAccumulator()">
+                  <option value="adiabatic" selected>단열 팽창 (n=1.4, 비상 고속 토출 &lt; 3분)</option>
+                  <option value="isothermal">등온 팽창 (n=1.0, 저속 완속 충방전 &gt; 3분)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>질소 봉입비 (p0 / p1, 권장 0.85~0.9)</label>
+                <input type="number" id="accPrechargeRatio" class="form-input" value="0.9" step="0.05" min="0.6" max="0.95" oninput="calcAccumulator()">
+              </div>
+              <div class="form-group">
+                <label>주변 작동 온도 (T, °C)</label>
+                <input type="number" id="accAmbTemp" class="form-input" value="40" step="1" min="-20" max="80" oninput="calcAccumulator()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>어큐뮬레이터 용량 산출 결과</h3></div>
+            <span id="accVerdictBadge" class="verdict-stamp font-mono badge-safe">RECOMMENDED</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">권장 공칭 체적 (Nominal Volume V0)</span>
+              <div class="terminal-voltage-big font-mono"><span id="accNominalVolV0">25.0</span> <small>Liter</small></div>
+              <p class="hero-subtext">이론 최소 가스 체적: <strong id="accExactVol" class="text-cyan">23.4 L</strong> (규격 25L 탱크 적용)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">질소 봉입 압력 (p0 @20°C)</span><span id="accN2PrechargeP0" class="spec-val font-mono text-amber">126 bar</span></div>
+              <div class="spec-cell"><span class="spec-label">저장 축적 에너지 (kJ)</span><span id="accStoredEnergyKj" class="spec-val font-mono">112.5 kJ</span></div>
+              <div class="spec-cell"><span class="spec-label">최대 가스 압축 체적 (V2)</span><span id="accGasVolV2" class="spec-val font-mono">16.9 L</span></div>
+              <div class="spec-cell"><span class="spec-label">유효 방출 체적 (ΔV)</span><span id="accActualDeltaV" class="spec-val font-mono">6.5 L</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="accOpinionText" class="opinion-text">선정된 25L 축압기는 시스템 긴급 정전 시 요구 작동 체적을 100% 보장합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 52: 화학 반응기 재킷 냉각열량 & 반응열 수지 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-reactorheat" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🧪 화학 반응기 재킷 냉각열량 &amp; 반응열 수지 검증기</h1>
+          <p class="main-desc">반응열(ΔHrxn)과 총괄전열계수(U)를 바탕으로 반응기 열폭주 방지 소요 냉각수 유량 및 재킷 면적을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>반응 공정 파라미터 입력</h3></div>
+          </div>
+          <form id="reactorheatForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>반응물 총 체적 (V_batch, m³)</label>
+                <input type="number" id="rhBatchVolume" class="form-input" value="3.0" step="0.5" min="0.1" oninput="calcReactorHeat()">
+              </div>
+              <div class="form-group">
+                <label>반응 발열량 (ΔHrxn, kJ/kg)</label>
+                <input type="number" id="rhHeatReaction" class="form-input" value="450" step="50" min="10" oninput="calcReactorHeat()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>반응 완결 시간 (Batch Time, Hours)</label>
+                <input type="number" id="rhBatchHours" class="form-input" value="2.0" step="0.5" min="0.5" oninput="calcReactorHeat()">
+              </div>
+              <div class="form-group">
+                <label>총괄 전열계수 (U, W/m²·K)</label>
+                <input type="number" id="rhOverallU" class="form-input" value="450" step="50" min="50" oninput="calcReactorHeat()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>반응기 내부 온도 (T_rxn, °C)</label>
+                <input type="number" id="rhTempRxn" class="form-input" value="85" step="5" min="10" oninput="calcReactorHeat()">
+              </div>
+              <div class="form-group">
+                <label>냉각수 입구 온도 (T_cw_in, °C)</label>
+                <input type="number" id="rhTempCwIn" class="form-input" value="25" step="1" min="5" oninput="calcReactorHeat()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>냉각 열수지 및 안전 마진</h3></div>
+            <span id="rhVerdictBadge" class="verdict-stamp font-mono badge-safe">PASS (안전)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">최대 발열 방산 열량 (Heat Duty)</span>
+              <div class="terminal-voltage-big font-mono"><span id="rhTotalHeatKw">187.5</span> <small>kW</small></div>
+              <p class="hero-subtext">필요 냉각수 유량: <strong id="rhCoolingFlowLpm" class="text-cyan">268.8</strong> LPM (16.1 m³/h)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">필요 재킷 전열면적 (A)</span><span id="rhRequiredArea" class="spec-val font-mono">8.2 m²</span></div>
+              <div class="spec-cell"><span class="spec-label">대수평균온도차 (LMTD)</span><span id="rhLmtdVal" class="spec-val font-mono">51.2 °C</span></div>
+              <div class="spec-cell"><span class="spec-label">냉각수 출구 온도 (T_out)</span><span id="rhTempCwOut" class="spec-val font-mono">35.0 °C</span></div>
+              <div class="spec-cell"><span class="spec-label">열폭주(Runaway) 안전계수</span><span id="rhSafetyFactor" class="spec-val font-mono text-cyan">1.45 (안전)</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="rhOpinionText" class="opinion-text">재킷 열교환 능력이 피크 발열량을 여유 있게 감당하여 열폭주 위험이 없습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 53: 원자로 감쇠열 & 방사선 차폐 반감두께 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-nucleardecay" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">☢️ 원자로 감쇠열 &amp; 방사선 차폐 반감두께 검증기 (ANS 5.1)</h1>
+          <p class="main-desc">ANS 5.1 원자로 비상정지 잔열(Decay Heat) 및 납/콘크리트 방사선 차폐 반감두께(HVL)와 투과 선량을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>원자로 및 차폐 조건 입력</h3></div>
+          </div>
+          <form id="nucleardecayForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>원자로 정격 열출력 (P0, MWth)</label>
+                <input type="number" id="ndThermalPowerMw" class="form-input" value="300" step="50" min="10" oninput="calcNuclearDecay()">
+              </div>
+              <div class="form-group">
+                <label>정지 후 경과 시간 (t_decay)</label>
+                <select id="ndDecayTime" class="form-select" onchange="calcNuclearDecay()">
+                  <option value="1">1초 직후 (P/P0 = 6.6%)</option>
+                  <option value="60">1분 후 (P/P0 = 4.2%)</option>
+                  <option value="3600" selected>1시간 후 (P/P0 = 1.3%)</option>
+                  <option value="86400">1일(24시간) 후 (P/P0 = 0.5%)</option>
+                  <option value="604800">1주일 후 (P/P0 = 0.2%)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>차폐재 종류 (Shielding Material)</label>
+                <select id="ndShieldMaterial" class="form-select" onchange="calcNuclearDecay()">
+                  <option value="lead" selected>납 (Lead, HVL=1.2 cm)</option>
+                  <option value="concrete">고밀도 중차폐 콘크리트 (HVL=6.5 cm)</option>
+                  <option value="steel">구조용 강판 (Steel, HVL=2.2 cm)</option>
+                  <option value="water">물/냉각재 (Water, HVL=18.0 cm)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>차폐벽 두께 (Thickness, cm)</label>
+                <input type="number" id="ndShieldThicknessCm" class="form-input" value="12" step="1" min="1" oninput="calcNuclearDecay()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>감쇠열 및 방사선 차폐 성능</h3></div>
+            <span id="ndVerdictBadge" class="verdict-stamp font-mono badge-safe">SHIELD PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">원자로 잔열 출력 (Decay Heat Power)</span>
+              <div class="terminal-voltage-big font-mono"><span id="ndDecayPowerMw">3.90</span> <small>MWth</small></div>
+              <p class="hero-subtext">초기 정격 출력 대비: <strong id="ndDecayPercent" class="text-cyan">1.30%</strong> (필요 냉각유량 42.5 kg/s)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">방사선 감쇄율 (Attenuation)</span><span id="ndAttenuationFactor" class="spec-val font-mono">1 / 1,024 (0.098%)</span></div>
+              <div class="spec-cell"><span class="spec-label">반감두께 개수 (n_HVL)</span><span id="ndHvlCount" class="spec-val font-mono text-cyan">10.0 HVL</span></div>
+              <div class="spec-cell"><span class="spec-label">투과 방사선량율 (Dose)</span><span id="ndTransmittedDose" class="spec-val font-mono">&lt; 0.05 μSv/h</span></div>
+              <div class="spec-cell"><span class="spec-label">비상 냉각 펌프 전력 (kW)</span><span id="ndCoolingPumpKw" class="spec-val font-mono">45 kW</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="ndOpinionText" class="opinion-text">차폐벽 두께가 10 HVL을 확보하여 법적 방사선 작업종사자 허용선량을 만족합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 54: 6축 다관절 로봇 관절 동역학 토크 & 감속기 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-robottorque" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🦾 6축 다관절 로봇 관절 동역학 토크 &amp; 감속기 검증기 (Newton-Euler)</h1>
+          <p class="main-desc">페이로드(Payload) 및 링크 자중, 가속도에 따른 J1~J6 관절 동적 피크 토크와 사이클로이드 감속기 수명을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>로봇 기구부 파라미터 입력</h3></div>
+          </div>
+          <form id="robottorqueForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>엔드이펙터 페이로드 (Payload, kg)</label>
+                <input type="number" id="rtPayloadKg" class="form-input" value="20" step="1" min="1" oninput="calcRobotTorque()">
+              </div>
+              <div class="form-group">
+                <label>최대 작업 반경/리치 (Reach R, mm)</label>
+                <input type="number" id="rtReachMm" class="form-input" value="1650" step="50" min="200" oninput="calcRobotTorque()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>최대 각가속도 (α, rad/s²)</label>
+                <input type="number" id="rtAngAccel" class="form-input" value="15.0" step="1" min="1" oninput="calcRobotTorque()">
+              </div>
+              <div class="form-group">
+                <label>검토 관절 축 (Joint Axis)</label>
+                <select id="rtJointAxis" class="form-select" onchange="calcRobotTorque()">
+                  <option value="j2" selected>J2 축 (숄더/어깨 관절 - 최대 중력 모멘트)</option>
+                  <option value="j3">J3 축 (엘보우/팔꿈치 관절)</option>
+                  <option value="j1">J1 축 (베이스 선회 관절)</option>
+                  <option value="j5">J5 축 (손목 벤딩 관절)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>감속기 감속비 (Ratio, 1:N)</label>
+                <input type="number" id="rtReducerRatio" class="form-input" value="120" step="10" min="10" oninput="calcRobotTorque()">
+              </div>
+              <div class="form-group">
+                <label>가동 듀티비 (Duty Cycle %)</label>
+                <input type="number" id="rtDutyPercent" class="form-input" value="65" step="5" min="10" max="100" oninput="calcRobotTorque()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>관절 토크 및 감속기 수명</h3></div>
+            <span id="rtVerdictBadge" class="verdict-stamp font-mono badge-safe">SAFE (TORQUE PASS)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">관절 최대 피크 토크 (Peak Torque)</span>
+              <div class="terminal-voltage-big font-mono"><span id="rtPeakTorqueNm">785</span> <small>N·m</small></div>
+              <p class="hero-subtext">모터 축 환산 소요 토크: <strong id="rtMotorTorqueNm" class="text-cyan">7.27 N·m</strong> (감속비 1:120 기준)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">중력 정적 토크 (Tg)</span><span id="rtStaticGravityTorque" class="spec-val font-mono">485 N·m</span></div>
+              <div class="spec-cell"><span class="spec-label">가속 동적 토크 (Ta)</span><span id="rtDynamicAccelTorque" class="spec-val font-mono text-cyan">300 N·m</span></div>
+              <div class="spec-cell"><span class="spec-label">감속기 B10 수명</span><span id="rtReducerLifeHours" class="spec-val font-mono">24,500 Hours</span></div>
+              <div class="spec-cell"><span class="spec-label">추천 서보모터 용량</span><span id="rtRecommendedMotorKw" class="spec-val font-mono text-amber">2.0 kW (3,000 RPM)</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="rtOpinionText" class="opinion-text">선정된 관절 모터 및 사이클로이드 감속기가 15 rad/s² 급가속 조건에서도 허용 토크 범위 내에 있습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
           <h2 class="main-title">FA 전장설계 기술 노트 & 현장 트러블슈팅</h2>
@@ -7970,7 +8474,31 @@
           <div class="drawer-tool-icon"><i data-lucide="flame"></i></div>
           <span class="drawer-tool-name" id="dtn48">스팀 배관 및 보일러 부하</span>
         </div>
-        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
+                <div class="drawer-tool-item" onclick="selectDrawerTool('tab-mechlife')">
+          <i data-lucide="cog"></i>
+          <div><strong>49. 베어링·기계요소 수명</strong><p>ISO 281 L10h 수명, LM가이드 주행거리, 볼스크류 피로수명</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cuttingforce')">
+          <i data-lucide="scissors"></i>
+          <div><strong>50. CNC 절삭력 &amp; 동력</strong><p>Kienzle 절삭력 모델, 주축 모터 kW 및 칩 배출률(MRR)</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-accumulator')">
+          <i data-lucide="cylinder"></i>
+          <div><strong>51. 고압 유압 축압기(ACC)</strong><p>폴리트로픽 가스 팽창(n=1.4), 비상 토출 체적 및 질소 봉입</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-reactorheat')">
+          <i data-lucide="flask-conical"></i>
+          <div><strong>52. 화학 반응기 열수지</strong><p>반응열(ΔHrxn), 재킷 전열면적, 냉각수 LPM 및 열폭주 방지</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-nucleardecay')">
+          <i data-lucide="radiation"></i>
+          <div><strong>53. 원자로 감쇠열 &amp; 차폐</strong><p>ANS 5.1 비상정지 잔열, 납/콘크리트 방사선 반감두께(HVL)</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-robottorque')">
+          <i data-lucide="bot"></i>
+          <div><strong>54. 6축 로봇 관절 토크</strong><p>Newton-Euler 관절 동역학 토크, 페이로드 및 감속기 수명</p></div>
+        </div>
+<div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>
           <span class="drawer-tool-name" id="dtn21">기술 노트</span>
         </div>
