@@ -179,7 +179,7 @@
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 72종 (All)</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 78종 (All)</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원·변압기</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·모션·배터리</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('mech')" id="cfMech">⚙️ 기계·가공·수명</button>
@@ -500,6 +500,30 @@
           <button class="tab-btn" data-tab="tab-cleanroomdp" data-category="specs" role="tab">
             <i data-lucide="wind"></i>
             <span>72. 클린룸 차압·환기횟수</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-fanaffinity" data-category="specs" role="tab">
+            <i data-lucide="fan"></i>
+            <span>73. 송풍기 상사법칙·인버터</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-pressureshell" data-category="fluid" role="tab">
+            <i data-lucide="cylinder"></i>
+            <span>74. 압력용기 ASME 두께</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-couplingkey" data-category="mech" role="tab">
+            <i data-lucide="key"></i>
+            <span>75. 축 커플링·키홈 전단</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-foulingheat" data-category="fluid" role="tab">
+            <i data-lucide="thermometer-snowflake"></i>
+            <span>76. 열교환기 파울링·오염</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-waterhammer" data-category="fluid" role="tab">
+            <i data-lucide="activity"></i>
+            <span>77. 배관 수격작용(서지)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-ctptburden" data-category="power" role="tab">
+            <i data-lucide="zap"></i>
+            <span>78. 변성기 CT·PT 부담(VA)</span>
           </button>
 <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -6777,6 +6801,43 @@
               <div class="spec-cell"><span class="spec-label">노즐 출구 압력 (Pe)</span><span id="rnExitPressure" class="spec-val font-mono">0.38 bar</span></div>
               <div class="spec-cell"><span class="spec-label">출구 직경 (De)</span><span id="rnExitDiameter" class="spec-val font-mono">710 mm</span></div>
             </div>
+            
+            <!-- Rocket Nozzle Supersonic Expansion Schematic -->
+            <div class="schematic-viz-card">
+              <div class="schematic-header">
+                <h4><i data-lucide="rocket" style="width:15px;height:15px;"></i> 드라발(De Laval) 초음속 노즐 등엔트로피 가스 팽창 도식도</h4>
+              </div>
+              <svg class="schematic-svg-canvas" viewBox="0 0 420 115">
+                <!-- Nozzle Contour Upper -->
+                <path d="M 20 20 L 100 20 Q 140 20 160 45 Q 180 50 200 48 L 380 15" fill="none" stroke="#00e5ff" stroke-width="2.5"/>
+                <!-- Nozzle Contour Lower -->
+                <path d="M 20 95 L 100 95 Q 140 95 160 70 Q 180 65 200 67 L 380 100" fill="none" stroke="#00e5ff" stroke-width="2.5"/>
+                
+                <!-- Chamber Background -->
+                <path d="M 20 20 L 100 20 Q 140 20 160 45 L 160 70 Q 140 95 100 95 L 20 95 Z" fill="rgba(244,63,94,0.15)"/>
+                <text x="70" y="55" fill="#f43f5e" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">연소실 (Pc, Tc)</text>
+                <text x="70" y="67" fill="#cbd5e1" font-size="7.5" text-anchor="middle" font-family="monospace">아음속 (M < 1)</text>
+                
+                <!-- Throat -->
+                <line x1="160" y1="45" x2="160" y2="70" stroke="#f59e0b" stroke-width="2" stroke-dasharray="2,2"/>
+                <text x="160" y="38" fill="#f59e0b" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="monospace">목 (Dt, M=1)</text>
+                
+                <!-- Supersonic Expansion Cone -->
+                <path d="M 160 45 L 380 15 L 380 100 L 160 70 Z" fill="rgba(0,229,255,0.08)"/>
+                <line x1="180" y1="58" x2="360" y2="58" stroke="#10b981" stroke-width="1.5"/>
+                <polygon points="340,54 365,58 340,62" fill="#10b981"/>
+                <text x="270" y="52" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">초음속 가스 팽창 (Me > 1, Isp)</text>
+                
+                <!-- Exit -->
+                <line x1="380" y1="15" x2="380" y2="100" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="2,2"/>
+                <text x="380" y="110" fill="#00e5ff" font-size="8" text-anchor="middle" font-family="monospace">출구 (De, Pe)</text>
+              </svg>
+              <div class="schematic-legend-grid">
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-rose"></span>연소실 고온고압 (Pc, Tc)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-amber"></span>초크 음속 목 (M = 1.0)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-emerald"></span>초음속 분사 속도 (Ve, Isp)</div>
+              </div>
+            </div>
             <div class="engineer-opinion-box mt-3">
               <i data-lucide="check-circle" class="opinion-icon"></i>
               <p id="rnOpinionText" class="opinion-text">진공 팽창비가 적절하여 박리(Flow Separation) 없이 최고의 비추력 효율을 발휘합니다.</p>
@@ -7141,6 +7202,54 @@
               <div class="spec-cell"><span class="spec-label">부심 높이 (KB)</span><span id="ssHeightKb" class="spec-val font-mono">4.51 m</span></div>
               <div class="spec-cell"><span class="spec-label">메타센터 반경 (BM)</span><span id="ssRadiusBm" class="spec-val font-mono">6.74 m</span></div>
             </div>
+            
+            <!-- Ship Stability Metacenter GM Schematic -->
+            <div class="schematic-viz-card">
+              <div class="schematic-header">
+                <h4><i data-lucide="anchor" style="width:15px;height:15px;"></i> 선박 횡경사 메타센터(M) 복원 모멘트 암(GZ) 도식도</h4>
+              </div>
+              <svg class="schematic-svg-canvas" viewBox="0 0 420 115">
+                <!-- Waterline -->
+                <line x1="20" y1="55" x2="400" y2="55" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="4,2"/>
+                <text x="45" y="50" fill="#0284c7" font-size="8.5" font-family="monospace">수선면 (WL)</text>
+                
+                <!-- Inclined Ship Hull Cross-Section -->
+                <polygon points="120,25 300,35 270,95 150,90" fill="rgba(15,43,72,0.6)" stroke="#00e5ff" stroke-width="1.8"/>
+                
+                <!-- Centerline (CL) -->
+                <line x1="210" y1="10" x2="210" y2="105" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3"/>
+                
+                <!-- Key Points: K, B, G, M -->
+                <!-- K (Keel) -->
+                <circle cx="210" cy="92" r="3.5" fill="#f59e0b"/>
+                <text x="198" y="95" fill="#f59e0b" font-size="9" font-weight="bold" font-family="monospace">K (선저)</text>
+                
+                <!-- B (Buoyancy) -->
+                <circle cx="225" cy="72" r="3.5" fill="#0284c7"/>
+                <text x="240" y="75" fill="#0284c7" font-size="9" font-weight="bold" font-family="monospace">B' (부심)</text>
+                
+                <!-- G (Center of Gravity) -->
+                <circle cx="210" cy="48" r="3.5" fill="#f43f5e"/>
+                <text x="195" y="50" fill="#f43f5e" font-size="9" font-weight="bold" font-family="monospace">G (무게중심)</text>
+                
+                <!-- M (Metacenter) -->
+                <circle cx="210" cy="20" r="3.5" fill="#10b981"/>
+                <text x="195" y="22" fill="#10b981" font-size="9" font-weight="bold" font-family="monospace">M (메타센터)</text>
+                
+                <!-- GM Dimension & GZ Righting Arm -->
+                <line x1="210" y1="48" x2="225" y2="48" stroke="#10b981" stroke-width="2"/>
+                <text x="245" y="48" fill="#10b981" font-size="8.5" font-weight="bold" font-family="monospace">복원정 GZ</text>
+                
+                <!-- GM Dimension Indicator -->
+                <line x1="218" y1="20" x2="218" y2="48" stroke="#00e5ff" stroke-width="1"/>
+                <text x="228" y="36" fill="#00e5ff" font-size="8.5" font-weight="bold" font-family="monospace">GM 높이</text>
+              </svg>
+              <div class="schematic-legend-grid">
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-emerald"></span>M (메타센터) & GM 높이</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-rose"></span>G (무게중심 KG)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-cyan"></span>GZ 복원 모멘트 암</div>
+              </div>
+            </div>
             <div class="engineer-opinion-box mt-3">
               <i data-lucide="check-circle" class="opinion-icon"></i>
               <p id="ssOpinionText" class="opinion-text">메타센터 높이 GM이 1.45m로 우수하여 강풍 및 파랑 조건에서도 최상의 복원력을 유지합니다.</p>
@@ -7221,6 +7330,46 @@
               <div class="spec-cell"><span class="spec-label">벨트 원주 속도 (v)</span><span id="tbBeltSpeedMps" class="spec-val font-mono text-cyan">12.8 m/s</span></div>
               <div class="spec-cell"><span class="spec-label">베어링 축 하중 (Fs)</span><span id="tbShaftLoadFs" class="spec-val font-mono">750 N</span></div>
               <div class="spec-cell"><span class="spec-label">풀리 피치경 (dp)</span><span id="tbPitchDiameterDp" class="spec-val font-mono">44.56 mm</span></div>
+            </div>
+            
+            <!-- Timing Belt Sonic Tension Schematic -->
+            <div class="schematic-viz-card">
+              <div class="schematic-header">
+                <h4><i data-lucide="disc" style="width:15px;height:15px;"></i> 타이밍 벨트 소닉 텐션미터 주파수(Hz) 측정 도식도</h4>
+              </div>
+              <svg class="schematic-svg-canvas" viewBox="0 0 420 115">
+                <!-- Driver Pulley -->
+                <circle cx="80" cy="57" r="32" fill="#1e293b" stroke="#00e5ff" stroke-width="2"/>
+                <circle cx="80" cy="57" r="8" fill="#475569"/>
+                <text x="80" y="60" fill="#00e5ff" font-size="8" text-anchor="middle" font-family="monospace">구동 z1</text>
+                
+                <!-- Driven Pulley -->
+                <circle cx="340" cy="57" r="42" fill="#1e293b" stroke="#00e5ff" stroke-width="2"/>
+                <circle cx="340" cy="57" r="10" fill="#475569"/>
+                <text x="340" y="60" fill="#00e5ff" font-size="8" text-anchor="middle" font-family="monospace">피동 z2</text>
+                
+                <!-- Belt Upper Strand with Vibration Wave -->
+                <path d="M 80 25 Q 210 12 340 15" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+                <path d="M 80 25 Q 210 38 340 15" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="2,2"/>
+                
+                <!-- Sonic Sensor Probe -->
+                <rect x="200" y="0" width="20" height="14" rx="2" fill="#f43f5e"/>
+                <line x1="210" y1="14" x2="210" y2="22" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="2,2"/>
+                <text x="210" y="-3" fill="#f43f5e" font-size="8" font-weight="bold" text-anchor="middle" font-family="monospace">소닉 센서 마이크</text>
+                <text x="255" y="24" fill="#f59e0b" font-size="8.5" font-weight="bold" font-family="monospace">고유진동수 f (Hz)</text>
+                
+                <!-- Belt Lower Strand -->
+                <line x1="80" y1="89" x2="340" y2="99" stroke="#f59e0b" stroke-width="2.5"/>
+                
+                <!-- Span Ls Dimension -->
+                <line x1="80" y1="108" x2="340" y2="108" stroke="#64748b" stroke-width="1"/>
+                <text x="210" y="105" fill="#cbd5e1" font-size="8" text-anchor="middle" font-family="monospace">스팬 길이 Ls (mm)</text>
+              </svg>
+              <div class="schematic-legend-grid">
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-amber"></span>타이밍 벨트 장력 (T0, N)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-rose"></span>소닉 주파수 검출 센서</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-cyan"></span>풀리 피치원 (dp)</div>
+              </div>
             </div>
             <div class="engineer-opinion-box mt-3">
               <i data-lucide="check-circle" class="opinion-icon"></i>
@@ -7366,6 +7515,47 @@
               <div class="spec-cell"><span class="spec-label">배관 평균 유속 (v_pipe)</span><span id="ofPipeVelocity" class="spec-val font-mono text-cyan">2.65 m/s</span></div>
               <div class="spec-cell"><span class="spec-label">오리피스 통과 유속 (v_orifice)</span><span id="ofOrificeVelocity" class="spec-val font-mono">7.37 m/s</span></div>
               <div class="spec-cell"><span class="spec-label">유출 계수 (Cd)</span><span id="ofDischargeCd" class="spec-val font-mono">0.605</span></div>
+            </div>
+            
+            <!-- Orifice Differential Flow Schematic -->
+            <div class="schematic-viz-card">
+              <div class="schematic-header">
+                <h4><i data-lucide="gauge" style="width:15px;height:15px;"></i> ISO 5167 동심 오리피스 차압 유량계 유동 도식도</h4>
+              </div>
+              <svg class="schematic-svg-canvas" viewBox="0 0 420 115">
+                <!-- Pipe Walls -->
+                <rect x="20" y="25" width="380" height="8" fill="#334155"/>
+                <rect x="20" y="82" width="380" height="8" fill="#334155"/>
+                
+                <!-- Orifice Plate -->
+                <rect x="200" y="25" width="12" height="26" fill="#f59e0b" stroke="#fff" stroke-width="0.5"/>
+                <rect x="200" y="64" width="12" height="26" fill="#f59e0b" stroke="#fff" stroke-width="0.5"/>
+                <text x="206" y="20" fill="#f59e0b" font-size="8" text-anchor="middle" font-family="monospace">오리피스 판 (d)</text>
+                
+                <!-- Flow Streamlines -->
+                <path d="M 30 40 L 170 40 Q 200 40 210 54 Q 240 54 390 42" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+                <path d="M 30 75 L 170 75 Q 200 75 210 61 Q 240 61 390 73" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+                <path d="M 30 57 L 390 57" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="3,3"/>
+                
+                <!-- Vena Contracta -->
+                <line x1="230" y1="48" x2="230" y2="67" stroke="#f43f5e" stroke-width="1.5"/>
+                <text x="230" y="44" fill="#f43f5e" font-size="8" text-anchor="middle" font-family="monospace">축류부 (Vena Contracta)</text>
+                
+                <!-- Pressure Taps P1 & P2 -->
+                <line x1="160" y1="10" x2="160" y2="25" stroke="#10b981" stroke-width="2"/>
+                <text x="160" y="8" fill="#10b981" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="monospace">P1 (고압측)</text>
+                
+                <line x1="250" y1="10" x2="250" y2="25" stroke="#10b981" stroke-width="2"/>
+                <text x="250" y="8" fill="#10b981" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="monospace">P2 (저압측)</text>
+                
+                <line x1="160" y1="15" x2="250" y2="15" stroke="#10b981" stroke-width="1"/>
+                <text x="205" y="12" fill="#10b981" font-size="7.5" text-anchor="middle" font-family="monospace">차압 ΔP</text>
+              </svg>
+              <div class="schematic-legend-grid">
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-cyan"></span>유선 흐름 (Streamline)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-amber"></span>조절 오리피스 (β=d/D)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-emerald"></span>차압 탭 P1 - P2</div>
+              </div>
             </div>
             <div class="engineer-opinion-box mt-3">
               <i data-lucide="check-circle" class="opinion-icon"></i>
@@ -7596,6 +7786,52 @@
               <div class="spec-cell"><span class="spec-label">최대 휨응력 (σ_bending)</span><span id="sbBendingStressMpa" class="spec-val font-mono text-cyan">112.9 MPa</span></div>
               <div class="spec-cell"><span class="spec-label">항복강도 안전율 (SS275)</span><span id="sbSafetyFactor" class="spec-val font-mono">2.43 (안전)</span></div>
               <div class="spec-cell"><span class="spec-label">지점 반력 (Reaction R)</span><span id="sbReactionKn" class="spec-val font-mono">23.0 kN</span></div>
+            </div>
+            
+            <!-- H-Beam Structural Deflection Schematic -->
+            <div class="schematic-viz-card">
+              <div class="schematic-header">
+                <h4><i data-lucide="box" style="width:15px;height:15px;"></i> 구조용 H형강 굽힘 모멘트 및 처짐 탄성곡선 도식도</h4>
+              </div>
+              <svg class="schematic-svg-canvas" viewBox="0 0 420 115">
+                <!-- Supports -->
+                <polygon points="40,85 30,102 50,102" fill="#475569" stroke="#94a3b8" stroke-width="1"/>
+                <polygon points="380,85 370,102 390,102" fill="#475569" stroke="#94a3b8" stroke-width="1"/>
+                <line x1="20" y1="103" x2="60" y2="103" stroke="#64748b" stroke-width="1.5"/>
+                <line x1="360" y1="103" x2="400" y2="103" stroke="#64748b" stroke-width="1.5"/>
+                <text x="40" y="112" fill="#94a3b8" font-size="8" text-anchor="middle" font-family="monospace">R1 반력</text>
+                <text x="380" y="112" fill="#94a3b8" font-size="8" text-anchor="middle" font-family="monospace">R2 반력</text>
+                
+                <!-- Original Beam Line -->
+                <line x1="40" y1="55" x2="380" y2="55" stroke="#475569" stroke-width="1" stroke-dasharray="3,3"/>
+                
+                <!-- Deflected Elastic Curve -->
+                <path d="M 40 55 Q 210 95 380 55" fill="none" stroke="#00e5ff" stroke-width="2.5"/>
+                
+                <!-- Uniform Load Arrows -->
+                <path d="M 50,30 L 50,50 M 100,30 L 100,50 M 150,30 L 150,50 M 260,30 L 260,50 M 310,30 L 310,50 M 360,30 L 360,50" stroke="#f59e0b" stroke-width="1.2"/>
+                <line x1="40" y1="30" x2="380" y2="30" stroke="#f59e0b" stroke-width="1.5"/>
+                <text x="120" y="24" fill="#f59e0b" font-size="8.5" font-family="monospace">등분포 하중 w (kN/m)</text>
+                
+                <!-- Point Load Center -->
+                <line x1="210" y1="10" x2="210" y2="52" stroke="#f43f5e" stroke-width="2.5"/>
+                <polygon points="206,45 210,54 214,45" fill="#f43f5e"/>
+                <text x="210" y="8" fill="#f43f5e" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">집중하중 P (kN)</text>
+                
+                <!-- Max Deflection Delta -->
+                <line x1="210" y1="56" x2="210" y2="76" stroke="#10b981" stroke-width="1.5"/>
+                <text x="225" y="70" fill="#10b981" font-size="9" font-weight="bold" font-family="monospace">최대 처짐량 δ</text>
+                
+                <!-- Span Dimension -->
+                <line x1="40" y1="98" x2="380" y2="98" stroke="#64748b" stroke-width="1"/>
+                <text x="210" y="95" fill="#cbd5e1" font-size="8.5" text-anchor="middle" font-family="monospace">지지 스팬 L (m)</text>
+              </svg>
+              <div class="schematic-legend-grid">
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-rose"></span>집중하중 P (kN)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-amber"></span>등분포하중 w (kN/m)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-cyan"></span>처짐 탄성곡선 (δ)</div>
+                <div class="schematic-legend-item"><span class="schematic-legend-dot dot-emerald"></span>허용 한계 (L/300)</div>
+              </div>
             </div>
             <div class="engineer-opinion-box mt-3">
               <i data-lucide="check-circle" class="opinion-icon"></i>
@@ -8083,6 +8319,487 @@
             <div class="engineer-opinion-box mt-3">
               <i data-lucide="check-circle" class="opinion-icon"></i>
               <p id="crdpOpinionText" class="opinion-text">환기횟수 45 ACH로 ISO Class 7 청정도 및 15Pa 양압 유지가 완벽히 보장됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- ========================================================================= -->
+    <!-- TAB 73: 송풍기 상사법칙 & 풍량·풍압 변환기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-fanaffinity" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🌪️ 송풍기 상사법칙 &amp; 인버터 주파수 변환기 (Fan Affinity)</h1>
+          <p class="main-desc">송풍기 회전수(RPM) 또는 인버터 주파수(Hz) 변경에 따른 풍량(Q), 풍압(P) 및 소요 동력(kW)을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>기준 사양 및 변경 조건 입력</h3></div>
+          </div>
+          <form id="fanaffinityForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>기준 회전수 (Original Speed N1, RPM)</label>
+                <input type="number" id="faRpmN1" class="form-input" value="1750" step="50" min="100" oninput="calcFanAffinity()">
+              </div>
+              <div class="form-group">
+                <label>변경 목표 회전수 (Target Speed N2, RPM)</label>
+                <input type="number" id="faRpmN2" class="form-input" value="1400" step="50" min="100" oninput="calcFanAffinity()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>기준 풍량 (Original Q1, CMM)</label>
+                <input type="number" id="faFlowQ1" class="form-input" value="120" step="10" min="1" oninput="calcFanAffinity()">
+              </div>
+              <div class="form-group">
+                <label>기준 정압 (Original P1, mmAq)</label>
+                <input type="number" id="faPressP1" class="form-input" value="150" step="10" min="1" oninput="calcFanAffinity()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>기준 축 동력 (Original Power Pw1, kW)</label>
+                <input type="number" id="faPowerKw1" class="form-input" value="7.5" step="0.5" min="0.1" oninput="calcFanAffinity()">
+              </div>
+              <div class="form-group">
+                <label>인버터 제어 모드 (Hz 기준 연동)</label>
+                <select id="faInverterOption" class="form-select" onchange="calcFanAffinity()">
+                  <option value="direct_rpm" selected>RPM 직접 지정 모드</option>
+                  <option value="hz_60_to_50">60Hz → 50Hz 감속 (83.3%)</option>
+                  <option value="hz_60_to_40">60Hz → 40Hz 감속 (66.7%)</option>
+                  <option value="hz_60_to_30">60Hz → 30Hz 감속 (50.0%)</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>변경 후 풍량·풍압·절감 전력</h3></div>
+            <span id="faVerdictBadge" class="verdict-stamp font-mono badge-safe">ENERGY SAVED 48.8%</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">변경 후 소요 동력 (New Power Pw2)</span>
+              <div class="terminal-voltage-big font-mono"><span id="faNewPowerKw">3.84</span> <small>kW</small></div>
+              <p class="hero-subtext">전력 절감율: <strong id="faPowerSavingPct" class="text-cyan">48.8% 절감</strong> (3.66 kW 축소)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">변경 후 풍량 (New Q2)</span><span id="faNewFlowCmm" class="spec-val font-mono text-cyan">96.0 CMM</span></div>
+              <div class="spec-cell"><span class="spec-label">변경 후 정압 (New P2)</span><span id="faNewPressMmaq" class="spec-val font-mono">96.0 mmAq</span></div>
+              <div class="spec-cell"><span class="spec-label">속도 변화 비율 (N2 / N1)</span><span id="faSpeedRatio" class="spec-val font-mono">0.800 (80.0%)</span></div>
+              <div class="spec-cell"><span class="spec-label">연간 전기요금 절감액</span><span id="faAnnualSavingsWon" class="spec-val font-mono text-amber">3,040,000 원/년</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="faOpinionText" class="opinion-text">상사법칙 3승 법칙에 따라 20% 속도 저감만으로 약 49%의 막대한 전력이 절감됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 74: 압력용기 ASME 두께 & 응력 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-pressureshell" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🛢️ 고압 가스용기 / 압력용기 ASME 두께 &amp; 응력 검증기</h1>
+          <p class="main-desc">ASME Section VIII Div.1 기준 원통형 셸 및 경판의 내압 최소 요구 두께(mm), 후프응력, 부식여유를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>용기 설계 조건 및 재질 입력</h3></div>
+          </div>
+          <form id="pressureshellForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>설계 압력 (Design Pressure P, bar)</label>
+                <input type="number" id="psDesignPressBar" class="form-input" value="16.0" step="1" min="1" oninput="calcPressureShell()">
+              </div>
+              <div class="form-group">
+                <label>용기 내경 (Inside Diameter Di, mm)</label>
+                <input type="number" id="psInsideDiaMm" class="form-input" value="1200" step="50" min="200" oninput="calcPressureShell()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>재질 최대 허용응력 (Allowable Stress S, MPa)</label>
+                <select id="psMaterialAllowStress" class="form-select" onchange="calcPressureShell()">
+                  <option value="138" selected>SA-516 Gr.70 탄소강 (S=138 MPa @100°C)</option>
+                  <option value="115">SA-240 304 스테인리스 (S=115 MPa @100°C)</option>
+                  <option value="118">SA-240 316L 스테인리스 (S=118 MPa @100°C)</option>
+                  <option value="165">SA-537 Cl.1 고장력강 (S=165 MPa @100°C)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>용접 이음 효율 (Joint Efficiency E)</label>
+                <select id="psJointEfficiency" class="form-select" onchange="calcPressureShell()">
+                  <option value="1.0" selected>E = 1.0 (100% RT 전수 방사선 투과)</option>
+                  <option value="0.85">E = 0.85 (Spot RT 부분 방사선 투과)</option>
+                  <option value="0.70">E = 0.70 (No RT 비방사선 검사)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>부식 여유 (Corrosion Allowance CA, mm)</label>
+                <input type="number" id="psCorrosionAllowMm" class="form-input" value="3.0" step="0.5" min="0" oninput="calcPressureShell()">
+              </div>
+              <div class="form-group">
+                <label>실제 적용 제작 판두께 (t_actual, mm)</label>
+                <input type="number" id="psActualThickMm" class="form-input" value="12.0" step="1" min="3" oninput="calcPressureShell()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>요구 두께 및 후프 응력 판정</h3></div>
+            <span id="psShellVerdictBadge" class="verdict-stamp font-mono badge-safe">ASME SEC.VIII PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">원통 셸 최소 요구 두께 (Min Required t)</span>
+              <div class="terminal-voltage-big font-mono"><span id="psMinRequiredThickMm">10.0</span> <small>mm</small></div>
+              <p class="hero-subtext">적용 두께 마진: <strong id="psThicknessMarginPct" class="text-cyan">+20.0% 여유</strong> (12.0 mm 시공)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">후프 원주응력 (Hoop Stress)</span><span id="psHoopStressMpa" class="spec-val font-mono text-cyan">107.4 MPa</span></div>
+              <div class="spec-cell"><span class="spec-label">경판 요구 두께 (2:1 Semi-Ellip)</span><span id="psHeadMinThickMm" class="spec-val font-mono">9.96 mm</span></div>
+              <div class="spec-cell"><span class="spec-label">최대 허용 사용압력 (MAWP)</span><span id="psMawpBar" class="spec-val font-mono">19.8 bar</span></div>
+              <div class="spec-cell"><span class="spec-label">수압 시험 압력 (Hydrotest 1.3x)</span><span id="psHydroTestBar" class="spec-val font-mono text-amber">25.7 bar</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="psShellOpinionText" class="opinion-text">ASME Sec.VIII Div.1 기준 최소 두께 및 수압 시험 압력을 완벽히 만족합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 75: 축 커플링 & 평행 키홈 전단응력 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-couplingkey" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">⚙️ 동력전달 축 커플링 &amp; 평행 키홈 전단·면압응력 검증기</h1>
+          <p class="main-desc">KS B 1311 / JIS B 1301 평행 키의 비틀림 전달 토크에 따른 전단응력(τ), 면압 찌그러짐 응력(σc) 및 안전계수를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>축 직경 및 키 제원 입력</h3></div>
+          </div>
+          <form id="couplingkeyForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>구동축 직경 (Shaft Dia d, mm)</label>
+                <input type="number" id="ckShaftDiaMm" class="form-input" value="50" step="5" min="10" oninput="calcCouplingKey()">
+              </div>
+              <div class="form-group">
+                <label>전달 동력 (Power P, kW)</label>
+                <input type="number" id="ckTransmittedKw" class="form-input" value="22.0" step="2" min="0.5" oninput="calcCouplingKey()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>축 회전수 (Speed N, RPM)</label>
+                <input type="number" id="ckShaftRpm" class="form-input" value="1750" step="50" min="10" oninput="calcCouplingKey()">
+              </div>
+              <div class="form-group">
+                <label>키 규격 (Width b × Height h, mm)</label>
+                <select id="ckKeySize" class="form-select" onchange="calcCouplingKey()">
+                  <option value="12x8" selected>12 × 8 mm (축경 44~50mm 표준)</option>
+                  <option value="14x9">14 × 9 mm (축경 50~58mm 표준)</option>
+                  <option value="16x10">16 × 10 mm (축경 58~65mm 표준)</option>
+                  <option value="10x8">10 × 8 mm (축경 38~44mm 표준)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>유효 키 길이 (Key Length L, mm)</label>
+                <input type="number" id="ckKeyLengthMm" class="form-input" value="65" step="5" min="10" oninput="calcCouplingKey()">
+              </div>
+              <div class="form-group">
+                <label>키 재질 (Material)</label>
+                <select id="ckKeyMaterial" class="form-select" onchange="calcCouplingKey()">
+                  <option value="sm45c" selected>기계구조용 탄소강 (SM45C, 허용전단 75 MPa, 허용면압 145 MPa)</option>
+                  <option value="scm440">합금강 (SCM440, 허용전단 120 MPa, 허용면압 220 MPa)</option>
+                  <option value="sus304">스테인리스강 (SUS304, 허용전단 45 MPa, 허용면압 85 MPa)</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>키 응력 및 강도 안전율 데이터</h3></div>
+            <span id="ckVerdictBadge" class="verdict-stamp font-mono badge-safe">KEY PASS (SF=1.92)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">키 전단 응력 (Shear Stress, τ)</span>
+              <div class="terminal-voltage-big font-mono"><span id="ckShearStressMpa">39.0</span> <small>MPa</small></div>
+              <p class="hero-subtext">전단 안전계수: <strong id="ckShearSafetyFactor" class="text-cyan">1.92</strong> (기준 SF ≥ 1.5 만족)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">면압 찌그러짐 응력 (σc)</span><span id="ckBearingStressMpa" class="spec-val font-mono text-cyan">117.0 MPa</span></div>
+              <div class="spec-cell"><span class="spec-label">면압 안전계수 (SF_c)</span><span id="ckBearingSafetyFactor" class="spec-val font-mono">1.24 (안전)</span></div>
+              <div class="spec-cell"><span class="spec-label">전달 토크 (Torque T)</span><span id="ckTorqueNm" class="spec-val font-mono">120.0 N·m</span></div>
+              <div class="spec-cell"><span class="spec-label">키 접선 전단력 (Ft)</span><span id="ckTangentialForceN" class="spec-val font-mono">4,802 N</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="ckOpinionText" class="opinion-text">선정된 65mm 키 길이가 전달 토크에 대해 충분한 전단 및 면압 강도를 가집니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 76: 열교환기 파울링(오염) 계수 & 열관류율 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-foulingheat" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🧪 다관식 열교환기 파울링(Fouling) 계수 &amp; 열관류율(U) 검증기</h1>
+          <p class="main-desc">냉각수/오일/스팀 열교환기의 스케일 및 파울링 저항($R_f$) 증가에 따른 총괄열전달계수($U$) 저하 및 세정 주기를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>열교환기 초기 설계 사양 입력</h3></div>
+          </div>
+          <form id="foulingheatForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>청결 상태 초기 총괄열전달계수 (U_clean, W/m²·K)</label>
+                <input type="number" id="fhCleanUVal" class="form-input" value="1200" step="50" min="100" oninput="calcFoulingHeat()">
+              </div>
+              <div class="form-group">
+                <label>설계 전열 면적 (Design Area A, m²)</label>
+                <input type="number" id="fhDesignAreaM2" class="form-input" value="45.0" step="5" min="1" oninput="calcFoulingHeat()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>유체 오염 종류 (Fouling Factor Rf)</label>
+                <select id="fhFoulingType" class="form-select" onchange="calcFoulingHeat()">
+                  <option value="cooling_tower" selected>냉각탑 순환수 (Rf = 0.00035 m²·K/W)</option>
+                  <option value="river_water">하천수 / 지하수 (Rf = 0.00050 m²·K/W)</option>
+                  <option value="heavy_oil">중유 / 원유 슬러지 (Rf = 0.00090 m²·K/W)</option>
+                  <option value="boiler_feed">보일러 급수 / 청정수 (Rf = 0.00010 m²·K/W)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>대수평균온도차 (LMTD, °C)</label>
+                <input type="number" id="fhLmtdVal" class="form-input" value="28.0" step="2" min="5" oninput="calcFoulingHeat()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>오염 후 열교환 성능 및 세정 주기</h3></div>
+            <span id="fhVerdictBadge" class="verdict-stamp font-mono badge-safe">FOULING MARGIN PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">오염 운전 시 총괄열전달계수 (U_dirty)</span>
+              <div class="terminal-voltage-big font-mono"><span id="fhDirtyUVal">845.1</span> <small>W/m²·K</small></div>
+              <p class="hero-subtext">열교환 성능 저하율: <strong id="fhPerformanceDropPct" class="text-cyan">29.6% 감소</strong></p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">오염 상태 교환열량 (Q_dirty)</span><span id="fhDirtyHeatKw" class="spec-val font-mono text-cyan">1,065 kW</span></div>
+              <div class="spec-cell"><span class="spec-label">청결 초기 교환열량 (Q_clean)</span><span id="fhCleanHeatKw" class="spec-val font-mono">1,512 kW</span></div>
+              <div class="spec-cell"><span class="spec-label">설계 과잉 면적 여유 (Excess A)</span><span id="fhExcessAreaMargin" class="spec-val font-mono">42.0% 확보</span></div>
+              <div class="spec-cell"><span class="spec-label">추천 화학 세정(CIP) 주기</span><span id="fhCleaningIntervalMonths" class="spec-val font-mono text-amber">6 ~ 8 개월</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="fhOpinionText" class="opinion-text">설계 과잉 면적 여유율이 42%로 파울링 발생 후에도 정격 열교환 용량을 완벽히 유지합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 77: 배관 수격작용(Water Hammer) 서지 압력 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-waterhammer" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">💧 배관 수격작용(Water Hammer) 서지 압력 &amp; 밸브 폐쇄시간</h1>
+          <p class="main-desc">Joukowsky 수격 모델을 바탕으로 밸브 급폐쇄 또는 펌프 급정지 시 발생하는 최대 서지 압력(bar)과 임계 폐쇄시간을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>배관 제원 및 유동 조건 입력</h3></div>
+          </div>
+          <form id="waterhammerForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배관 연장 길이 (Pipe Length L, m)</label>
+                <input type="number" id="whPipeLengthM" class="form-input" value="350" step="50" min="10" oninput="calcWaterHammer()">
+              </div>
+              <div class="form-group">
+                <label>배관 공칭 외경 (Outer Dia D, mm)</label>
+                <input type="number" id="whPipeDiaMm" class="form-input" value="216.3" step="20" min="20" oninput="calcWaterHammer()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배관 두께 (Thickness t, mm)</label>
+                <input type="number" id="whPipeThickMm" class="form-input" value="8.2" step="0.5" min="2" oninput="calcWaterHammer()">
+              </div>
+              <div class="form-group">
+                <label>정상 상태 유속 (Initial Velocity v0, m/s)</label>
+                <input type="number" id="whInitialVelocity" class="form-input" value="2.8" step="0.2" min="0.5" oninput="calcWaterHammer()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>밸브 차단 폐쇄 시간 (Valve Time tc, sec)</label>
+                <input type="number" id="whValveCloseTimeSec" class="form-input" value="1.5" step="0.5" min="0.1" oninput="calcWaterHammer()">
+              </div>
+              <div class="form-group">
+                <label>정상 운전 압력 (Working Pressure P0, bar)</label>
+                <input type="number" id="whWorkingPressBar" class="form-input" value="6.0" step="1" min="1" oninput="calcWaterHammer()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>수격 서지 압력 및 안전 판정</h3></div>
+            <span id="whVerdictBadge" class="verdict-stamp font-mono badge-safe">SURGE PASS (14.2 bar)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">피크 합성 서지 압력 (Peak Surge Pressure)</span>
+              <div class="terminal-voltage-big font-mono"><span id="whPeakPressureBar">14.2</span> <small>bar</small></div>
+              <p class="hero-subtext">순수 수격 상승압 (ΔP): <strong id="whDeltaSurgeBar" class="text-cyan">+8.2 bar</strong></p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">음속파 전파 속도 (Wave a)</span><span id="whWaveSpeedMps" class="spec-val font-mono text-cyan">1,085 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">임계 왕복시간 (2L/a)</span><span id="whCriticalTimeSec" class="spec-val font-mono">0.65 초</span></div>
+              <div class="spec-cell"><span class="spec-label">수격 현상 유형</span><span id="whHammerType" class="spec-val font-mono">완만 폐쇄 (Slow Closure)</span></div>
+              <div class="spec-cell"><span class="spec-label">추천 밸브 최소 폐쇄시간</span><span id="whRecMinCloseTimeSec" class="spec-val font-mono text-amber">&ge; 2.5 초</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="whOpinionText" class="opinion-text">밸브 폐쇄시간 1.5초로 배관 정격압력(16bar) 내에서 안전하게 서지 압력이 제어됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 78: 변성기 CT·PT 부담(Burden) & 정밀도 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-ctptburden" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">⚡ 수배전반 계기용 변성기 CT·PT 정격 부담(VA) 검증기</h1>
+          <p class="main-desc">IEC 61869 / ANSI 기준 변류기(CT 5A) 및 계기용변압기(PT 110V) 2차측 전선 저항과 계전기 부하(VA) 적합성을 검증합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>변성기 사양 및 2차 배선 입력</h3></div>
+          </div>
+          <form id="ctptburdenForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>CT 정격 부담 (Rated CT Burden, VA)</label>
+                <select id="ctRatedBurdenVa" class="form-select" onchange="calcCtPtBurden()">
+                  <option value="15" selected>15 VA (표준 디지털 계전기용)</option>
+                  <option value="25">25 VA (중거리 복합 계전기용)</option>
+                  <option value="40">40 VA (대용량 아날로그+디지털)</option>
+                  <option value="5">5 VA (소형 전자식 미터용)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>CT 2차 정격 전류 (I_sec)</label>
+                <select id="ctSecCurrentA" class="form-select" onchange="calcCtPtBurden()">
+                  <option value="5" selected>5 A (대한민국/글로벌 표준)</option>
+                  <option value="1">1 A (원거리 장거리 배선용)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>2차측 전선 굵기 (Wire Size, mm²)</label>
+                <select id="ctWireSizeSq" class="form-select" onchange="calcCtPtBurden()">
+                  <option value="2.5">2.5 mm² (저항 7.41 Ω/km)</option>
+                  <option value="4.0" selected>4.0 mm² (저항 4.61 Ω/km)</option>
+                  <option value="6.0">6.0 mm² (저항 3.08 Ω/km)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>CT - 수배전반 배선 편도 거리 (L, m)</label>
+                <input type="number" id="ctWireLengthM" class="form-input" value="35" step="5" min="2" oninput="calcCtPtBurden()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>연결 디지털 계전기 자체 부담 (Relay VA)</label>
+                <input type="number" id="ctRelayBurdenVa" class="form-input" value="1.5" step="0.5" min="0.1" oninput="calcCtPtBurden()">
+              </div>
+              <div class="form-group">
+                <label>단자대 접촉 저항 (Contact R, Ω)</label>
+                <input type="number" id="ctContactResist" class="form-input" value="0.05" step="0.01" min="0" oninput="calcCtPtBurden()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>실제 합성 부담 및 포화 안전도</h3></div>
+            <span id="ctVerdictBadge" class="verdict-stamp font-mono badge-safe">BURDEN PASS (64.2%)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">실제 총 2차 부담 (Total Actual Burden)</span>
+              <div class="terminal-voltage-big font-mono"><span id="ctTotalActualVa">9.63</span> <small>VA</small></div>
+              <p class="hero-subtext">정격 부담 대비 사용률: <strong id="ctBurdenRatioPct" class="text-cyan">64.2%</strong> (정격 15 VA 이하 합격)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">2차 전선 왕복 저항 (R_loop)</span><span id="ctLoopResistance" class="spec-val font-mono text-cyan">0.323 Ω</span></div>
+              <div class="spec-cell"><span class="spec-label">전선로 자체 소비 전력</span><span id="ctWirePowerLossVa" class="spec-val font-mono">8.07 VA</span></div>
+              <div class="spec-cell"><span class="spec-label">CT 2차측 총 임피던스 (Z)</span><span id="ctTotalImpedance" class="spec-val font-mono">0.385 Ω</span></div>
+              <div class="spec-cell"><span class="spec-label">계전기 오차 등급 유지</span><span id="ctAccuracyClass" class="spec-val font-mono">Class 0.5 (유효)</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="ctOpinionText" class="opinion-text">총 부담이 정격 15VA의 64%로 적정하여 대전류 단락 시에도 계전기 CT 포화 왜곡이 발생하지 않습니다.</p>
             </div>
           </div>
         </div>
@@ -10029,6 +10746,30 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cleanroomdp')">
           <i data-lucide="wind"></i>
           <div><strong>72. 클린룸 차압·환기횟수</strong><p>실간 차압(Pa), 도어 틈새 누설풍량, 시간당 환기횟수(ACH)</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-fanaffinity')">
+          <i data-lucide="fan"></i>
+          <div><strong>73. 송풍기 상사법칙·인버터</strong><p>회전수/주파수(Hz) 변경에 따른 풍량(CMM), 정압(mmAq) 및 동력(kW)</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-pressureshell')">
+          <i data-lucide="cylinder"></i>
+          <div><strong>74. 압력용기 ASME 두께</strong><p>ASME Sec.VIII 원통 셸/경판 최소 요구 두께, 후프 응력 및 부식여유</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-couplingkey')">
+          <i data-lucide="key"></i>
+          <div><strong>75. 축 커플링·키홈 전단</strong><p>평행키 전단응력(τ), 면압 찌그러짐 응력(σc), 전달 허용 토크</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-foulingheat')">
+          <i data-lucide="thermometer-snowflake"></i>
+          <div><strong>76. 열교환기 파울링·오염</strong><p>오염 계수(Fouling Rf), 총괄 열전달 계수(U), 스케일 세정 주기</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-waterhammer')">
+          <i data-lucide="activity"></i>
+          <div><strong>77. 배관 수격작용(서지)</strong><p>Joukowsky 수격 서지압력(bar), 음속파 전파속도, 밸브 임계 폐쇄시간</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-ctptburden')">
+          <i data-lucide="zap"></i>
+          <div><strong>78. 변성기 CT·PT 부담(VA)</strong><p>계기용 변류기/변압기 2차측 전선 임피던스, 정격 부담(VA) 및 포화 검증</p></div>
         </div>
 <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>

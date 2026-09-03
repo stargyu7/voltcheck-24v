@@ -9237,3 +9237,265 @@ function calcCleanroomDp() {
   if (ratioEl) ratioEl.textContent = `${((leakCmh / supplyCmh) * 100).toFixed(1)}%`;
 }
 window.calcCleanroomDp = calcCleanroomDp;
+
+
+// ==========================================================================
+// TAB 73: 송풍기 상사법칙 (calcFanAffinity)
+// ==========================================================================
+function calcFanAffinity() {
+  let N1 = parseFloat(document.getElementById('faRpmN1')?.value) || 1750;
+  let N2 = parseFloat(document.getElementById('faRpmN2')?.value) || 1400;
+  const Q1 = parseFloat(document.getElementById('faFlowQ1')?.value) || 120;
+  const P1 = parseFloat(document.getElementById('faPressP1')?.value) || 150;
+  const Pw1 = parseFloat(document.getElementById('faPowerKw1')?.value) || 7.5;
+  const opt = document.getElementById('faInverterOption')?.value || 'direct_rpm';
+
+  if (opt === 'hz_60_to_50') N2 = N1 * (50 / 60);
+  else if (opt === 'hz_60_to_40') N2 = N1 * (40 / 60);
+  else if (opt === 'hz_60_to_30') N2 = N1 * (30 / 60);
+
+  const ratio = N2 / Math.max(N1, 1);
+  const Q2 = Q1 * ratio;
+  const P2 = P1 * Math.pow(ratio, 2);
+  const Pw2 = Pw1 * Math.pow(ratio, 3);
+  const savingPct = (1 - (Pw2 / Pw1)) * 100;
+  const annualWon = (Pw1 - Pw2) * 8760 * 95; // 95 KRW per kWh
+
+  const pwEl = document.getElementById('faNewPowerKw');
+  if (pwEl) pwEl.textContent = Pw2.toFixed(2);
+
+  const spEl = document.getElementById('faPowerSavingPct');
+  if (spEl) spEl.textContent = `${savingPct.toFixed(1)}% 절감 (${(Pw1 - Pw2).toFixed(2)} kW 축소)`;
+
+  const q2El = document.getElementById('faNewFlowCmm');
+  if (q2El) q2El.textContent = `${Q2.toFixed(1)} CMM`;
+
+  const p2El = document.getElementById('faNewPressMmaq');
+  if (p2El) p2El.textContent = `${P2.toFixed(1)} mmAq`;
+
+  const rEl = document.getElementById('faSpeedRatio');
+  if (rEl) rEl.textContent = `${ratio.toFixed(3)} (${(ratio * 100).toFixed(1)}%)`;
+
+  const wonEl = document.getElementById('faAnnualSavingsWon');
+  if (wonEl) wonEl.textContent = `${Math.round(annualWon).toLocaleString()} 원/년`;
+}
+window.calcFanAffinity = calcFanAffinity;
+
+// ==========================================================================
+// TAB 74: 압력용기 ASME 두께 (calcPressureShell)
+// ==========================================================================
+function calcPressureShell() {
+  const P_bar = parseFloat(document.getElementById('psDesignPressBar')?.value) || 16.0;
+  const Di = parseFloat(document.getElementById('psInsideDiaMm')?.value) || 1200;
+  const S = parseFloat(document.getElementById('psMaterialAllowStress')?.value) || 138;
+  const E = parseFloat(document.getElementById('psJointEfficiency')?.value) || 1.0;
+  const CA = parseFloat(document.getElementById('psCorrosionAllowMm')?.value) || 3.0;
+  const t_act = parseFloat(document.getElementById('psActualThickMm')?.value) || 12.0;
+
+  const P_mpa = P_bar / 10;
+  const R = Di / 2; // mm
+  const t_shell_req = ((P_mpa * R) / (S * E - 0.6 * P_mpa)) + CA;
+  const t_head_req = ((P_mpa * Di * 1.0) / (2 * S * E - 0.2 * P_mpa)) + CA;
+  const t_eff = t_act - CA;
+  const hoopStress = (P_mpa * (R + 0.6 * t_eff)) / t_eff;
+  const mawp_mpa = (S * E * t_eff) / (R + 0.6 * t_eff);
+  const mawp_bar = mawp_mpa * 10;
+  const hydro_bar = P_bar * 1.3 * (138 / S);
+
+  const reqEl = document.getElementById('psMinRequiredThickMm');
+  if (reqEl) reqEl.textContent = t_shell_req.toFixed(2);
+
+  const marEl = document.getElementById('psThicknessMarginPct');
+  if (marEl) marEl.textContent = `+${(((t_act - t_shell_req) / t_shell_req) * 100).toFixed(1)}% 여유`;
+
+  const hsEl = document.getElementById('psHoopStressMpa');
+  if (hsEl) hsEl.textContent = `${hoopStress.toFixed(1)} MPa`;
+
+  const hdEl = document.getElementById('psHeadMinThickMm');
+  if (hdEl) hdEl.textContent = `${t_head_req.toFixed(2)} mm`;
+
+  const mwEl = document.getElementById('psMawpBar');
+  if (mwEl) mwEl.textContent = `${mawp_bar.toFixed(1)} bar`;
+
+  const htEl = document.getElementById('psHydroTestBar');
+  if (htEl) htEl.textContent = `${hydro_bar.toFixed(1)} bar`;
+}
+window.calcPressureShell = calcPressureShell;
+
+// ==========================================================================
+// TAB 75: 축 키홈 전단응력 (calcCouplingKey)
+// ==========================================================================
+function calcCouplingKey() {
+  const d = parseFloat(document.getElementById('ckShaftDiaMm')?.value) || 50;
+  const P = parseFloat(document.getElementById('ckTransmittedKw')?.value) || 22.0;
+  const N = parseFloat(document.getElementById('ckShaftRpm')?.value) || 1750;
+  const keySz = document.getElementById('ckKeySize')?.value || '12x8';
+  const L = parseFloat(document.getElementById('ckKeyLengthMm')?.value) || 65;
+  const mat = document.getElementById('ckKeyMaterial')?.value || 'sm45c';
+
+  let b = 12, h = 8;
+  if (keySz === '14x9') { b = 14; h = 9; }
+  else if (keySz === '16x10') { b = 16; h = 10; }
+  else if (keySz === '10x8') { b = 10; h = 8; }
+
+  let allowTau = 75, allowSigmaC = 145;
+  if (mat === 'scm440') { allowTau = 120; allowSigmaC = 220; }
+  else if (mat === 'sus304') { allowTau = 45; allowSigmaC = 85; }
+
+  const T_Nm = (P * 9550) / Math.max(N, 1);
+  const Ft_N = (2 * T_Nm * 1000) / d;
+  const tau_mpa = Ft_N / (b * L);
+  const sigmaC_mpa = Ft_N / ((h / 2) * L);
+  const SF_tau = allowTau / Math.max(tau_mpa, 1e-3);
+  const SF_c = allowSigmaC / Math.max(sigmaC_mpa, 1e-3);
+
+  const tEl = document.getElementById('ckShearStressMpa');
+  if (tEl) tEl.textContent = tau_mpa.toFixed(1);
+
+  const sfEl = document.getElementById('ckShearSafetyFactor');
+  if (sfEl) sfEl.textContent = SF_tau.toFixed(2);
+
+  const cEl = document.getElementById('ckBearingStressMpa');
+  if (cEl) cEl.textContent = `${sigmaC_mpa.toFixed(1)} MPa`;
+
+  const sfcEl = document.getElementById('ckBearingSafetyFactor');
+  if (sfcEl) sfcEl.textContent = `${SF_c.toFixed(2)} (${SF_c >= 1.0 ? '안전' : '위험'})`;
+
+  const torqEl = document.getElementById('ckTorqueNm');
+  if (torqEl) torqEl.textContent = `${T_Nm.toFixed(1)} N·m`;
+
+  const ftEl = document.getElementById('ckTangentialForceN');
+  if (ftEl) ftEl.textContent = `${Math.round(Ft_N).toLocaleString()} N`;
+}
+window.calcCouplingKey = calcCouplingKey;
+
+// ==========================================================================
+// TAB 76: 열교환기 파울링 (calcFoulingHeat)
+// ==========================================================================
+function calcFoulingHeat() {
+  const U_clean = parseFloat(document.getElementById('fhCleanUVal')?.value) || 1200;
+  const A = parseFloat(document.getElementById('fhDesignAreaM2')?.value) || 45.0;
+  const foulType = document.getElementById('fhFoulingType')?.value || 'cooling_tower';
+  const LMTD = parseFloat(document.getElementById('fhLmtdVal')?.value) || 28.0;
+
+  let Rf = 0.00035; // cooling tower
+  if (foulType === 'river_water') Rf = 0.00050;
+  else if (foulType === 'heavy_oil') Rf = 0.00090;
+  else if (foulType === 'boiler_feed') Rf = 0.00010;
+
+  const R_clean = 1 / U_clean;
+  const R_dirty = R_clean + Rf;
+  const U_dirty = 1 / R_dirty;
+  const Q_clean_kw = (U_clean * A * LMTD) / 1000;
+  const Q_dirty_kw = (U_dirty * A * LMTD) / 1000;
+  const dropPct = (1 - (U_dirty / U_clean)) * 100;
+  const excessAreaPct = (Rf / R_clean) * 100;
+
+  const udEl = document.getElementById('fhDirtyUVal');
+  if (udEl) udEl.textContent = U_dirty.toFixed(1);
+
+  const dpEl = document.getElementById('fhPerformanceDropPct');
+  if (dpEl) dpEl.textContent = `${dropPct.toFixed(1)}% 감소`;
+
+  const qdEl = document.getElementById('fhDirtyHeatKw');
+  if (qdEl) qdEl.textContent = `${Math.round(Q_dirty_kw).toLocaleString()} kW`;
+
+  const qcEl = document.getElementById('fhCleanHeatKw');
+  if (qcEl) qcEl.textContent = `${Math.round(Q_clean_kw).toLocaleString()} kW`;
+
+  const exEl = document.getElementById('fhExcessAreaMargin');
+  if (exEl) exEl.textContent = `${excessAreaPct.toFixed(1)}% 확보`;
+}
+window.calcFoulingHeat = calcFoulingHeat;
+
+// ==========================================================================
+// TAB 77: 배관 수격작용 (calcWaterHammer)
+// ==========================================================================
+function calcWaterHammer() {
+  const L = parseFloat(document.getElementById('whPipeLengthM')?.value) || 350;
+  const D_mm = parseFloat(document.getElementById('whPipeDiaMm')?.value) || 216.3;
+  const t_mm = parseFloat(document.getElementById('whPipeThickMm')?.value) || 8.2;
+  const v0 = parseFloat(document.getElementById('whInitialVelocity')?.value) || 2.8;
+  const tc = parseFloat(document.getElementById('whValveCloseTimeSec')?.value) || 1.5;
+  const P0_bar = parseFloat(document.getElementById('whWorkingPressBar')?.value) || 6.0;
+
+  const rho = 1000; // kg/m3
+  const K_water = 2.19e9; // Pa
+  const E_steel = 2.06e11; // Pa
+  const D = D_mm / 1000;
+  const t = t_mm / 1000;
+
+  const a = Math.sqrt((K_water / rho) / (1 + (K_water / E_steel) * (D / t)));
+  const tc_crit = (2 * L) / a;
+
+  let deltaP_pa = 0;
+  let hammerType = '완만 폐쇄 (Slow Closure)';
+  if (tc <= tc_crit) {
+    deltaP_pa = rho * a * v0;
+    hammerType = '급속 급폐쇄 (Rapid Closure - 최대서지)';
+  } else {
+    deltaP_pa = rho * a * v0 * (tc_crit / tc);
+  }
+
+  const deltaP_bar = deltaP_pa / 1e5;
+  const peakP_bar = P0_bar + deltaP_bar;
+  const recMinTime = tc_crit * 3.5;
+
+  const pkEl = document.getElementById('whPeakPressureBar');
+  if (pkEl) pkEl.textContent = peakP_bar.toFixed(1);
+
+  const dsEl = document.getElementById('whDeltaSurgeBar');
+  if (dsEl) dsEl.textContent = `+${deltaP_bar.toFixed(1)} bar`;
+
+  const wsEl = document.getElementById('whWaveSpeedMps');
+  if (wsEl) wsEl.textContent = `${Math.round(a).toLocaleString()} m/s`;
+
+  const tcEl = document.getElementById('whCriticalTimeSec');
+  if (tcEl) tcEl.textContent = `${tc_crit.toFixed(2)} 초`;
+
+  const htEl = document.getElementById('whHammerType');
+  if (htEl) htEl.textContent = hammerType;
+
+  const recEl = document.getElementById('whRecMinCloseTimeSec');
+  if (recEl) recEl.textContent = `≥ ${recMinTime.toFixed(1)} 초`;
+}
+window.calcWaterHammer = calcWaterHammer;
+
+// ==========================================================================
+// TAB 78: 변성기 CT 부담 (calcCtPtBurden)
+// ==========================================================================
+function calcCtPtBurden() {
+  const ratedVa = parseFloat(document.getElementById('ctRatedBurdenVa')?.value) || 15;
+  const I_sec = parseFloat(document.getElementById('ctSecCurrentA')?.value) || 5;
+  const wireSq = parseFloat(document.getElementById('ctWireSizeSq')?.value) || 4.0;
+  const L = parseFloat(document.getElementById('ctWireLengthM')?.value) || 35;
+  const relayVa = parseFloat(document.getElementById('ctRelayBurdenVa')?.value) || 1.5;
+  const R_contact = parseFloat(document.getElementById('ctContactResist')?.value) || 0.05;
+
+  let r_per_km = 4.61; // 4.0 sq
+  if (wireSq === 2.5) r_per_km = 7.41;
+  else if (wireSq === 6.0) r_per_km = 3.08;
+
+  const R_wire_loop = (2 * L / 1000) * r_per_km;
+  const R_total = R_wire_loop + R_contact;
+  const wireVa = Math.pow(I_sec, 2) * R_total;
+  const totalActualVa = wireVa + relayVa;
+  const ratioPct = (totalActualVa / ratedVa) * 100;
+  const zTotal = totalActualVa / Math.pow(I_sec, 2);
+
+  const vaEl = document.getElementById('ctTotalActualVa');
+  if (vaEl) vaEl.textContent = totalActualVa.toFixed(2);
+
+  const brEl = document.getElementById('ctBurdenRatioPct');
+  if (brEl) brEl.textContent = `${ratioPct.toFixed(1)}%`;
+
+  const rlEl = document.getElementById('ctLoopResistance');
+  if (rlEl) rlEl.textContent = `${R_total.toFixed(3)} Ω`;
+
+  const wpEl = document.getElementById('ctWirePowerLossVa');
+  if (wpEl) wpEl.textContent = `${wireVa.toFixed(2)} VA`;
+
+  const ztEl = document.getElementById('ctTotalImpedance');
+  if (ztEl) ztEl.textContent = `${zTotal.toFixed(3)} Ω`;
+}
+window.calcCtPtBurden = calcCtPtBurden;
