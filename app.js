@@ -9499,3 +9499,65 @@ function calcCtPtBurden() {
   if (ztEl) ztEl.textContent = `${zTotal.toFixed(3)} Ω`;
 }
 window.calcCtPtBurden = calcCtPtBurden;
+
+
+// ==========================================================================
+// MEGA ENGINEERING HUB MODAL HANDLERS
+// ==========================================================================
+function openMegaEngineeringHubModal() {
+  const modal = document.getElementById('megaEngineeringHubModal');
+  if (modal) {
+    modal.classList.add('active');
+    setTimeout(() => {
+      document.getElementById('megaHubSearchInput')?.focus();
+    }, 100);
+  }
+}
+window.openMegaEngineeringHubModal = openMegaEngineeringHubModal;
+
+function closeMegaEngineeringHubModal() {
+  const modal = document.getElementById('megaEngineeringHubModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+window.closeMegaEngineeringHubModal = closeMegaEngineeringHubModal;
+
+function jumpToToolFromHub(tabId) {
+  closeMegaEngineeringHubModal();
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  if (btn) {
+    btn.click();
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+  const panel = document.getElementById(tabId);
+  if (panel) {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+window.jumpToToolFromHub = jumpToToolFromHub;
+
+function filterMegaHubTools(query) {
+  const q = query.trim().toLowerCase();
+  const cards = document.querySelectorAll('.hub-tool-card');
+  const sections = document.querySelectorAll('.hub-domain-section');
+
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (!q || text.includes(q)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  sections.forEach(sec => {
+    const visibleCards = sec.querySelectorAll('.hub-tool-card[style*="display: flex"], .hub-tool-card:not([style*="display: none"])');
+    if (visibleCards.length > 0) {
+      sec.style.display = 'block';
+    } else {
+      sec.style.display = 'none';
+    }
+  });
+}
+window.filterMegaHubTools = filterMegaHubTools;

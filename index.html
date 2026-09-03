@@ -178,7 +178,11 @@
           <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="48대 전 산업 토털 공학 도구 검색 (예: 진공, 배터리발열, 역률, 유압, 송풍기, 스팀...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
-        <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
+                <button type="button" class="btn-mega-hub" onclick="openMegaEngineeringHubModal()" id="btnOpenMegaHub" title="78대 전 산업 공학 도구 한눈에 보기 및 빠른 검색">
+          <i data-lucide="layout-grid"></i>
+          <span>🗺️ 78대 공학 도구 맵 (한눈에 보기)</span>
+        </button>
+        <div class="category-filter-strip" id="categoryFilterStrip"  style="margin:0; padding:0;">
           <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 78종 (All)</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원·변압기</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·모션·배터리</button>
@@ -10918,6 +10922,634 @@
           <button type="button" onclick="printUnifiedMasterReport()" class="btn-primary-action" style="background:#2563eb; padding:0.5rem 1.15rem; font-size:0.85rem; font-weight:800; border-radius:4px;">
             <i data-lucide="printer"></i> <span>📑 통합 기술검토서 A4 출력 &rarr;</span>
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Floating Mega Engineering Hub Quick Launcher -->
+  <button type="button" class="hub-floating-trigger" onclick="openMegaEngineeringHubModal()" title="78대 전 공학 도구 맵 열기">
+    <i data-lucide="compass" style="width:18px;height:18px;"></i>
+    <span>78대 공학 도구 맵</span>
+  </button>
+
+
+  <!-- ========================================================================= -->
+  <!-- MEGA ENGINEERING HUB & VISUAL MAP MODAL (78 TOOLS DIRECTORY) -->
+  <!-- ========================================================================= -->
+  <div id="megaEngineeringHubModal" class="mega-hub-overlay" onclick="if(event.target===this) closeMegaEngineeringHubModal()">
+    <div class="mega-hub-modal">
+      <div class="mega-hub-header">
+        <div class="mega-hub-title-group">
+          <h2><i data-lucide="layers" style="color:#00e5ff;"></i> 78대 전 산업 옴니 엔지니어링 마스터 도구 맵</h2>
+          <p>원하는 공학 계산기를 검색하거나 카테고리별로 한눈에 확인 후 즉시 실행하세요.</p>
+        </div>
+        <div class="mega-hub-search-box">
+          <i data-lucide="search"></i>
+          <input type="text" id="megaHubSearchInput" placeholder="키워드 검색 (예: 베어링, 배관, 전압, 로봇, 모터, 오리피스, BESS...)" oninput="filterMegaHubTools(this.value)">
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeMegaEngineeringHubModal()" style="background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer; padding:4px 8px;">&times;</button>
+      </div>
+
+      <div class="mega-hub-body" id="megaHubBodyContent">
+        <!-- Domain 1: Electrical & Power -->
+        <div class="hub-domain-section">
+          <div class="hub-domain-title" style="color:#38bdf8;">
+            <span>⚡ [도메인 1] 전기·전원·변압기 &amp; 전력 인프라 (16종)</span>
+            <small style="font-size:0.75rem; color:#94a3b8;">IEC 60364 / KEC 규격</small>
+          </div>
+          <div class="hub-tools-grid">
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-voltagedrop')">
+              <div class="hub-tool-icon"><i data-lucide="activity"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">01. 24V 전압강하 &amp; 전선굵기</div>
+                <div class="hub-tool-desc">허용 전압강하 &amp; 전선 단면적(sq) 자동 산출</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-smpsbudget')">
+              <div class="hub-tool-icon"><i data-lucide="cpu"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">03. SMPS &amp; CP 차단기 용량</div>
+                <div class="hub-tool-desc">24V 부하 전류 합산 및 마진율 기반 정격 선정</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-coppercost')">
+              <div class="hub-tool-icon"><i data-lucide="coins"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">14. 구리시세 &amp; 케이블 원가</div>
+                <div class="hub-tool-desc">LME 실시간 구리 중량당 케이블 단가 산출</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-sldgenerator')">
+              <div class="hub-tool-icon"><i data-lucide="drafting-compass"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">15. 단선결선도 CAD 생성</div>
+                <div class="hub-tool-desc">수배전반 계통도 DXF / SVG 자동 생성기</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-grounding')">
+              <div class="hub-tool-icon"><i data-lucide="shield"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">17. 접지(PE)선 &amp; EMC 차폐</div>
+                <div class="hub-tool-desc">단락 고장전류 보호도체 및 노이즈 실드</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-flybacksurge')">
+              <div class="hub-tool-icon"><i data-lucide="zap-off"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">19. 역기전력 서지 스너버</div>
+                <div class="hub-tool-desc">솔레노이드/릴레이 코일 다이오드·RC 스너버</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-inrushbreaker')">
+              <div class="hub-tool-icon"><i data-lucide="trending-down"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">20. 돌입전류 &amp; 차단기 트립</div>
+                <div class="hub-tool-desc">SMPS/변압기 피크 전류 및 MCB 곡선 B/C/D 검증</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-transformer')">
+              <div class="hub-tool-icon"><i data-lucide="zap"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">22. 제어용 단상 변압기</div>
+                <div class="hub-tool-desc">1차/2차 전압비, %Z 임피던스, 정격 kVA 용량</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-shortcircuit')">
+              <div class="hub-tool-icon"><i data-lucide="flame"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">23. 3상 단락전류 &amp; 차단용량</div>
+                <div class="hub-tool-desc">배전반 대칭 고장 단락전류(kA) 및 차단기 선정</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-busbar')">
+              <div class="hub-tool-icon"><i data-lucide="layers"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">28. 동부스바 허용전류 규격</div>
+                <div class="hub-tool-desc">배전반 구리 부스바 규격별 허용전류(A) 산정</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-spd')">
+              <div class="hub-tool-icon"><i data-lucide="shield"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">30. 서지보호기(SPD) 용량</div>
+                <div class="hub-tool-desc">낙뢰 서지 방전전류(In, Imax) 및 전압보호레벨</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-solarpv')">
+              <div class="hub-tool-icon"><i data-lucide="sun"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">37. 태양광·ESS DC1500V</div>
+                <div class="hub-tool-desc">PV 어레이 스트링 전압, MPPT 인버터 및 DC 케이블</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-powerfactor')">
+              <div class="hub-tool-icon"><i data-lucide="sparkles"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">44. 진상 콘덴서 역률 개선</div>
+                <div class="hub-tool-desc">목표 역률(95%) 도달 소요 진상용량(kVAR) 및 요금절감</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-besssafety')">
+              <div class="hub-tool-icon"><i data-lucide="shield-alert"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">58. BESS 열폭주 소방배기</div>
+                <div class="hub-tool-desc">NFPA 855 / UL 9540A 방출 오프가스 체적 및 CFM</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-ctptburden')">
+              <div class="hub-tool-icon"><i data-lucide="zap"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">78. 변성기 CT·PT 부담(VA)</div>
+                <div class="hub-tool-desc">계기용 변류기 2차 배선 임피던스 및 포화 검증</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain 2: Motors, Motion & Battery -->
+        <div class="hub-domain-section">
+          <div class="hub-domain-title" style="color:#a855f7;">
+            <span>🛡️ [도메인 2] 모터·모션제어·배터리 &amp; 자동화 (12종)</span>
+            <small style="font-size:0.75rem; color:#94a3b8;">동역학 / 서보 / 리튬배터리</small>
+          </div>
+          <div class="hub-tools-grid">
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-motorcalc')">
+              <div class="hub-tool-icon"><i data-lucide="zap"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">10. 3상 모터·MC 개폐기</div>
+                <div class="hub-tool-desc">정격 전류(A), 전자접촉기(MC), EOCR 열동계전기</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-servoregen')">
+              <div class="hub-tool-icon"><i data-lucide="rotate-ccw"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">13. 서보 회생저항 용량</div>
+                <div class="hub-tool-desc">감속 회생에너지(Joule), 제동 저항값(Ω) 및 W</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-motioninertia')">
+              <div class="hub-tool-icon"><i data-lucide="cog"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">24. 기계부하 관성모멘트(J)</div>
+                <div class="hub-tool-desc">직동/회전 부하 관성비(Inertia Ratio) 및 가감속 토크</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-agvbattery')">
+              <div class="hub-tool-icon"><i data-lucide="truck"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">27. AGV 배터리·주행거리</div>
+                <div class="hub-tool-desc">주행 저항 소요 Ah 용량 및 무인 충전 사이클</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-hoistcrane')">
+              <div class="hub-tool-icon"><i data-lucide="anchor"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">31. 크레인·호이스트 모터</div>
+                <div class="hub-tool-desc">권상 하중(Ton), 속도에 따른 모터 kW 및 와이어로프</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-rolltension')">
+              <div class="hub-tool-icon"><i data-lucide="disc"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">32. 롤투롤 웹 장력제어</div>
+                <div class="hub-tool-desc">언와인더/리와인더 테이퍼 장력 및 파우더 브레이크</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-vfdsurge')">
+              <div class="hub-tool-icon"><i data-lucide="activity"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">33. 인버터(VFD) 반사파 서지</div>
+                <div class="hub-tool-desc">긴 선로 PWM dV/dt 반사파 피크전압 및 AC 리액터</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-batterythermal')">
+              <div class="hub-tool-icon"><i data-lucide="battery-charging"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">43. 배터리 팩 발열 &amp; 수냉</div>
+                <div class="hub-tool-desc">줄열(I²R), 엔트로피 가역열 및 쿨링플레이트 LPM</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-batteryslurry')">
+              <div class="hub-tool-icon"><i data-lucide="battery"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">57. 배터리 슬러리 건조열</div>
+                <div class="hub-tool-desc">NMP 증발 잠열, 건조 존 열풍 풍량(CMM) 및 LEL 25%</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-timingbelt')">
+              <div class="hub-tool-icon"><i data-lucide="disc"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">61. 타이밍벨트·체인 장력</div>
+                <div class="hub-tool-desc">고유진동수 주파수(Hz) 측정값, 전달동력, 벨트 폭</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-fanaffinity')">
+              <div class="hub-tool-icon"><i data-lucide="fan"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">73. 송풍기 상사법칙·인버터</div>
+                <div class="hub-tool-desc">회전수/주파수(Hz) 변경에 따른 풍량/풍압/동력 3승</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain 3: Mechanical Design & Machining -->
+        <div class="hub-domain-section">
+          <div class="hub-domain-title" style="color:#f59e0b;">
+            <span>⚙️ [도메인 3] 기계요소·절삭가공·피로수명 &amp; 구조역학 (12종)</span>
+            <small style="font-size:0.75rem; color:#94a3b8;">ISO 281 / KDS 구조기준</small>
+          </div>
+          <div class="hub-tools-grid">
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-bolttorque')">
+              <div class="hub-tool-icon"><i data-lucide="nut"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">39. 볼트 체결·조임 토크</div>
+                <div class="hub-tool-desc">강도구분 8.8/10.9/12.9 축력 및 체결 토크(N·m)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-beamdeflection')">
+              <div class="hub-tool-icon"><i data-lucide="box"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">41. 보 처짐 &amp; 굽힘 모멘트</div>
+                <div class="hub-tool-desc">단순보/외팔보 단면 2차 모멘트 및 처짐량(mm)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-mechlife')">
+              <div class="hub-tool-icon"><i data-lucide="cog"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">49. 베어링·LM가이드 수명</div>
+                <div class="hub-tool-desc">ISO 281 L10h 정격 수명 및 최적 구리스 급유 주기</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-cuttingforce')">
+              <div class="hub-tool-icon"><i data-lucide="scissors"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">50. CNC 절삭력 &amp; 주축 동력</div>
+                <div class="hub-tool-desc">Kienzle 절삭력 모델, 모터 kW 및 칩 배출률(MRR)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-gearstress')">
+              <div class="hub-tool-icon"><i data-lucide="settings"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">59. 기어 치면·굽힘강도</div>
+                <div class="hub-tool-desc">AGMA / ISO 6336 루이스 굽힘응력 및 면압 안전율</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-ballscrewbuckling')">
+              <div class="hub-tool-icon"><i data-lucide="crosshair"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">62. 볼스크류 좌굴·위험속도</div>
+                <div class="hub-tool-desc">오일러 압축 좌굴 하중(kN) 및 공진 위험속도(RPM)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-steelbeam')">
+              <div class="hub-tool-icon"><i data-lucide="box"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">66. H형강 처짐·모멘트</div>
+                <div class="hub-tool-desc">복합하중 H빔/각관 최대 처짐(δ) 및 허용 처짐비(L/300)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-couplingkey')">
+              <div class="hub-tool-icon"><i data-lucide="key"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">75. 축 커플링·키홈 전단</div>
+                <div class="hub-tool-desc">평행키 전단응력(τ), 면압 찌그러짐(σc) 및 안전계수</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain 4: Fluid Power, Thermal & Piping -->
+        <div class="hub-domain-section">
+          <div class="hub-domain-title" style="color:#10b981;">
+            <span>🛢️ [도메인 4] 유압·열유체·화공 플랜트 &amp; 배관 공학 (16종)</span>
+            <small style="font-size:0.75rem; color:#94a3b8;">ASME / 열역학 / 유체역학</small>
+          </div>
+          <div class="hub-tools-grid">
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-valvecv')">
+              <div class="hub-tool-icon"><i data-lucide="gauge"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">26. 밸브 유량계수(Cv)</div>
+                <div class="hub-tool-desc">액체/가스 압력강하(ΔP)에 따른 제어밸브 Cv/Kv</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-pumphead')">
+              <div class="hub-tool-icon"><i data-lucide="droplet"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">38. 펌프 전양정 &amp; 배관 손실</div>
+                <div class="hub-tool-desc">실양정, 배관 마찰손실 수두(m) 및 펌프 소요 kW</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-heatexchanger')">
+              <div class="hub-tool-icon"><i data-lucide="thermometer-snowflake"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">40. 열교환기·LMTD 전열면적</div>
+                <div class="hub-tool-desc">대수평균온도차(LMTD), 총괄열전달 U, 전열면적(m²)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-hydraulics')">
+              <div class="hub-tool-icon"><i data-lucide="layers"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">45. 고압 유압실린더 &amp; 펌프</div>
+                <div class="hub-tool-desc">최고 압력(bar), 실린더 추력(Ton), 소요 유량(LPM)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-steampipe')">
+              <div class="hub-tool-icon"><i data-lucide="flame"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">47. 스팀배관 관경 &amp; 보일러</div>
+                <div class="hub-tool-desc">증기 유량(kg/h), 포화증기 압력별 최적 배관경(mm)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-accumulator')">
+              <div class="hub-tool-icon"><i data-lucide="cylinder"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">51. 고압 유압 축압기(ACC)</div>
+                <div class="hub-tool-desc">폴리트로픽(n=1.4) 비상 토출 체적 및 질소 봉입압</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-reactorheat')">
+              <div class="hub-tool-icon"><i data-lucide="flask-conical"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">52. 화학 반응기 열수지</div>
+                <div class="hub-tool-desc">반응열(ΔHrxn), 재킷 전열면적, 냉각수 LPM 및 열폭주</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-shipstability')">
+              <div class="hub-tool-icon"><i data-lucide="anchor"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">60. 선박 복원성(GM)</div>
+                <div class="hub-tool-desc">메타센터 높이(GM), 복원정(GZ), IMO 전복 방지</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-orificeflow')">
+              <div class="hub-tool-icon"><i data-lucide="gauge"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">63. 오리피스 유량·차압</div>
+                <div class="hub-tool-desc">ISO 5167 차압유량계, 베타비(β), 영구 압력손실</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-insulation')">
+              <div class="hub-tool-icon"><i data-lucide="flame"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">64. 배관 보온단열·열손실</div>
+                <div class="hub-tool-desc">ASTM C680 보온재 두께(mm), 방산열량(W/m) 및 절감액</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-mixerpower')">
+              <div class="hub-tool-icon"><i data-lucide="rotate-cw"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">67. 교반기 임펠러 동력</div>
+                <div class="hub-tool-desc">동력수(Np), 교반 레이놀즈수, 러쉬톤/패들 모터 kW</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-pipingloss')">
+              <div class="hub-tool-icon"><i data-lucide="git-commit"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">68. 배관 마찰손실·수두</div>
+                <div class="hub-tool-desc">다알시-바이스바흐 압력강하(bar), 피팅 상당길이</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-refrigerationcop')">
+              <div class="hub-tool-icon"><i data-lucide="snowflake"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">69. 냉매 사이클 COP</div>
+                <div class="hub-tool-desc">R134a/R410A 압축 동력, 냉동톤(RT), 성적계수(COP)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-pipeexpansion')">
+              <div class="hub-tool-icon"><i data-lucide="move-horizontal"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">70. 배관 열팽창·U루프</div>
+                <div class="hub-tool-desc">온도차 신장량(mm), U-루프 신축이음 최소 치수</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-pressureshell')">
+              <div class="hub-tool-icon"><i data-lucide="cylinder"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">74. 압력용기 ASME 두께</div>
+                <div class="hub-tool-desc">ASME Sec.VIII 셸/경판 최소 요구 두께 및 수압시험</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-foulingheat')">
+              <div class="hub-tool-icon"><i data-lucide="thermometer-snowflake"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">76. 열교환기 파울링·오염</div>
+                <div class="hub-tool-desc">오염 계수(Rf), 총괄 열전달 계수(U), 세정 주기</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-waterhammer')">
+              <div class="hub-tool-icon"><i data-lucide="activity"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">77. 배관 수격작용(서지)</div>
+                <div class="hub-tool-desc">Joukowsky 수격 서지압력(bar), 밸브 임계 폐쇄시간</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain 5: Nuclear, Robotics & Advanced Tech -->
+        <div class="hub-domain-section">
+          <div class="hub-domain-title" style="color:#f43f5e;">
+            <span>☢️ [도메인 5] 원자력·첨단 로보틱스·우주 &amp; 반도체 (8종)</span>
+            <small style="font-size:0.75rem; color:#94a3b8;">ANS 5.1 / Newton-Euler / De Laval</small>
+          </div>
+          <div class="hub-tools-grid">
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-vacuumchamber')">
+              <div class="hub-tool-icon"><i data-lucide="gauge"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">42. 반도체 진공챔버 배기</div>
+                <div class="hub-tool-desc">대기압~고진공 도달시간, 진공펌프 용량(m³/h)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-nucleardecay')">
+              <div class="hub-tool-icon"><i data-lucide="radiation"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">53. 원자로 감쇠열 &amp; 차폐</div>
+                <div class="hub-tool-desc">ANS 5.1 정지 잔열, 납/콘크리트 방사선 반감두께(HVL)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-robottorque')">
+              <div class="hub-tool-icon"><i data-lucide="bot"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">54. 6축 로봇 관절 토크</div>
+                <div class="hub-tool-desc">Newton-Euler 관절 동역학 토크, 페이로드 &amp; 감속기</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-rocketnozzle')">
+              <div class="hub-tool-icon"><i data-lucide="rocket"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">55. 로켓 노즐 비추력(Isp)</div>
+                <div class="hub-tool-desc">드라발 노즐 등엔트로피 팽창, 추력(kN), 비추력(초)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-plasmasheath')">
+              <div class="hub-tool-icon"><i data-lucide="zap"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">56. 반도체 플라즈마 쉬스</div>
+                <div class="hub-tool-desc">디바이 길이(Debye), 보옴 유속, 쉬스 두께(mm)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-explosionproof')">
+              <div class="hub-tool-icon"><i data-lucide="flame"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">34. 방폭(Ex)·본질안전 규격</div>
+                <div class="hub-tool-desc">Zone 0/1/2 방폭 구조(Ex d/ia) 및 온도 등급(T1~T6)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain 6: Instrumentation, Specs & Utilities -->
+        <div class="hub-domain-section">
+          <div class="hub-domain-title" style="color:#e2e8f0;">
+            <span>📁 [도메인 6] 제어신호·환경설비 &amp; 엔지니어링 자료실 (14종)</span>
+            <small style="font-size:0.75rem; color:#94a3b8;">센서 / 통신 / 배선 조견표</small>
+          </div>
+          <div class="hub-tools-grid">
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-analogloop')">
+              <div class="hub-tool-icon"><i data-lucide="gauge"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">02. 4-20mA 아날로그 루프</div>
+                <div class="hub-tool-desc">2선식 트랜스미터 루프 저항 및 구동 전압 검증</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-cabinetcooling')">
+              <div class="hub-tool-icon"><i data-lucide="thermometer-snowflake"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">04. 제어반 쿨링·에어컨</div>
+                <div class="hub-tool-desc">내부 발열량 합산 및 판넬 쿨러 소요 W/BTU 선정</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-cabletable')">
+              <div class="hub-tool-icon"><i data-lucide="table"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">05. AWG-SQ 배선 조견표</div>
+                <div class="hub-tool-desc">AWG 대 단면적(sq), 도체 저항, 허용전류 환산</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-rs485')">
+              <div class="hub-tool-icon"><i data-lucide="git-commit"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">06. RS-485 통신 거리·노드</div>
+                <div class="hub-tool-desc">보레이트별 최대 통신거리, 120Ω 종단저항, 노드수</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-pneumatics')">
+              <div class="hub-tool-icon"><i data-lucide="wind"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">07. 공압 실린더 공기소모량</div>
+                <div class="hub-tool-desc">보어경/행정 에어 소비량(NL/min) 및 콤프레셔 HP</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-ductutility')">
+              <div class="hub-tool-icon"><i data-lucide="wrench"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">08. 배선 덕트·후렉시블 점유율</div>
+                <div class="hub-tool-desc">내선규정 20%/40% 점유율 및 최적 덕트 사이즈</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-plcscaling')">
+              <div class="hub-tool-icon"><i data-lucide="binary"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">09. PLC 아날로그 스케일링</div>
+                <div class="hub-tool-desc">4-20mA / 0-10V ➔ 0-16000 Raw Data 변환식</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-bendingradius')">
+              <div class="hub-tool-icon"><i data-lucide="corner-down-right"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">11. 케이블 곡률반경(R)</div>
+                <div class="hub-tool-desc">외경(OD) 기준 고정/가동 케이블베어 최소 반경</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-otethernet')">
+              <div class="hub-tool-icon"><i data-lucide="network"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">12. 산업용 이더넷 대역폭</div>
+                <div class="hub-tool-desc">EtherNet/IP, PROFINET, EtherCAT 네트워크 트래픽</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-iolinksafety')">
+              <div class="hub-tool-icon"><i data-lucide="shield-alert"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">16. IO-Link &amp; 안전회로 카테고리</div>
+                <div class="hub-tool-desc">ISO 13849-1 PLe/Cat.4 및 SIL3 안전 설계 기준</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-npnpnp')">
+              <div class="hub-tool-icon"><i data-lucide="split"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">18. NPN·PNP 센서 결선</div>
+                <div class="hub-tool-desc">싱크(Sink) / 소스(Source) 입출력 배선도</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-safetylight')">
+              <div class="hub-tool-icon"><i data-lucide="shield-alert"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">21. 안전 라이트커튼 안전거리</div>
+                <div class="hub-tool-desc">ISO 13855 작업자 손 진입속도(2m/s) 최소 안전거리</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-tempconversion')">
+              <div class="hub-tool-icon"><i data-lucide="thermometer"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">25. PT100·열전대(TC) 조견표</div>
+                <div class="hub-tool-desc">측온저항체(RTD) Ω값 ➔ °C 및 K/J/T/E 열전대 mV</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-cleanesd')">
+              <div class="hub-tool-icon"><i data-lucide="sparkles"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">29. 클린룸 정전기(ESD) 방지</div>
+                <div class="hub-tool-desc">이오나이저 감쇠시간(Decay Time) 및 제전 매트 표면저항</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-cabletray')">
+              <div class="hub-tool-icon"><i data-lucide="grid"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">35. 케이블트레이 하중·스팬</div>
+                <div class="hub-tool-desc">케이블 포설 중량(kg/m), 안전율 및 지지 서포트 스팬</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-luxlighting')">
+              <div class="hub-tool-icon"><i data-lucide="sun"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">36. 공장 조도(Lux)·LED 수량</div>
+                <div class="hub-tool-desc">KS A 3011 작업장 추천 조도별 LED 등기구 소요 수량</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-hvacblower')">
+              <div class="hub-tool-icon"><i data-lucide="fan"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">46. 공조 덕트 &amp; 송풍기 풍량</div>
+                <div class="hub-tool-desc">등마찰 손실법 덕트 치수(W×H) 및 송풍기 CMM</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-aerationtank')">
+              <div class="hub-tool-icon"><i data-lucide="droplet"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">65. 수처리 폭기조 산소량</div>
+                <div class="hub-tool-desc">BOD 제거 표준 산소요구량(SOR) 및 블로워 동력(kW)</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-pipeerosion')">
+              <div class="hub-tool-icon"><i data-lucide="shield"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">71. 배관 침식·부식 수명</div>
+                <div class="hub-tool-desc">API RP 14E 침식 한계유속, NACE 부식속도 잔여수명</div>
+              </div>
+            </div>
+            <div class="hub-tool-card" onclick="jumpToToolFromHub('tab-cleanroomdp')">
+              <div class="hub-tool-icon"><i data-lucide="wind"></i></div>
+              <div class="hub-tool-info">
+                <div class="hub-tool-name">72. 클린룸 차압·환기횟수</div>
+                <div class="hub-tool-desc">실간 차압(Pa), 도어 틈새 누설풍량 및 환기횟수(ACH)</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
