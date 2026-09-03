@@ -179,7 +179,7 @@
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 60종 (All)</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 66종 (All)</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원·변압기</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·모션·배터리</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('mech')" id="cfMech">⚙️ 기계·가공·수명</button>
@@ -452,6 +452,30 @@
           <button class="tab-btn" data-tab="tab-shipstability" data-category="fluid" role="tab">
             <i data-lucide="anchor"></i>
             <span>60. 선박 복원성(GM)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-timingbelt" data-category="mech" role="tab">
+            <i data-lucide="disc"></i>
+            <span>61. 타이밍벨트·체인 장력</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-ballscrewbuckling" data-category="mech" role="tab">
+            <i data-lucide="crosshair"></i>
+            <span>62. 볼스크류 좌굴·위험속도</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-orificeflow" data-category="fluid" role="tab">
+            <i data-lucide="gauge"></i>
+            <span>63. 오리피스 유량·차압</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-insulation" data-category="fluid" role="tab">
+            <i data-lucide="flame"></i>
+            <span>64. 배관 보온단열·열손실</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-aerationtank" data-category="specs" role="tab">
+            <i data-lucide="droplet"></i>
+            <span>65. 수처리 폭기조 산소량</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-steelbeam" data-category="motion" role="tab">
+            <i data-lucide="box"></i>
+            <span>66. H형강 처짐·모멘트</span>
           </button>
 <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -7102,6 +7126,462 @@
       </div>
     </section>
 
+    
+    <!-- ========================================================================= -->
+    <!-- TAB 61: 타이밍 벨트 & 체인 장력 검토기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-timingbelt" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">⛓️ 동력전달 타이밍 벨트 &amp; 체인 초기 장력 검토기</h1>
+          <p class="main-desc">전달 동력 및 원주 속도에 따른 유효 장력, 소닉 텐션미터 측정용 고유진동수(Hz) 및 권장 벨트 폭을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>구동축 파라미터 입력</h3></div>
+          </div>
+          <form id="timingbeltForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>전달 동력 (Power P, kW)</label>
+                <input type="number" id="tbPowerKw" class="form-input" value="3.7" step="0.5" min="0.1" oninput="calcTimingBelt()">
+              </div>
+              <div class="form-group">
+                <label>구동 풀리 회전수 (n1, RPM)</label>
+                <input type="number" id="tbRpmN1" class="form-input" value="1750" step="50" min="10" oninput="calcTimingBelt()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>벨트 치형 및 피치 (Pitch, mm)</label>
+                <select id="tbBeltPitch" class="form-select" onchange="calcTimingBelt()">
+                  <option value="5" selected>HTD 5M / S5M (피치 5.0 mm)</option>
+                  <option value="8">HTD 8M / S8M (피치 8.0 mm)</option>
+                  <option value="14">HTD 14M (피치 14.0 mm - 대용량)</option>
+                  <option value="3">GT 3M (피치 3.0 mm - 정밀 소형)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>구동 풀리 잇수 (Pulley Teeth, z1)</label>
+                <input type="number" id="tbPulleyTeethZ1" class="form-input" value="28" step="2" min="14" oninput="calcTimingBelt()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>축간 거리 (Span Length Ls, mm)</label>
+                <input type="number" id="tbSpanLengthMm" class="form-input" value="450" step="25" min="50" oninput="calcTimingBelt()">
+              </div>
+              <div class="form-group">
+                <label>벨트 폭 (Belt Width W, mm)</label>
+                <input type="number" id="tbBeltWidthMm" class="form-input" value="25" step="5" min="9" oninput="calcTimingBelt()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>벨트 장력 및 소닉 진동수 데이터</h3></div>
+            <span id="tbVerdictBadge" class="verdict-stamp font-mono badge-safe">TENSION PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">초기 설치 적정 장력 (T0, Static Tension)</span>
+              <div class="terminal-voltage-big font-mono"><span id="tbStaticTensionN">385</span> <small>N</small></div>
+              <p class="hero-subtext">소닉 텐션미터 측정 목표 주파수: <strong id="tbSonicFreqHz" class="text-cyan">58.4 Hz</strong></p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">유효 전달 장력 (Fe)</span><span id="tbEffectiveForceFe" class="spec-val font-mono">295 N</span></div>
+              <div class="spec-cell"><span class="spec-label">벨트 원주 속도 (v)</span><span id="tbBeltSpeedMps" class="spec-val font-mono text-cyan">12.8 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">베어링 축 하중 (Fs)</span><span id="tbShaftLoadFs" class="spec-val font-mono">750 N</span></div>
+              <div class="spec-cell"><span class="spec-label">풀리 피치경 (dp)</span><span id="tbPitchDiameterDp" class="spec-val font-mono">44.56 mm</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="tbOpinionText" class="opinion-text">벨트 속도 및 잇수 맞물림이 적정하여 슬립이나 조기 피로 마모 위험이 없습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 62: 볼스크류 좌굴 하중 & 위험 회전수 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-ballscrewbuckling" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🔩 볼스크류 오일러 좌굴 하중 &amp; 위험 회전수 검증기</h1>
+          <p class="main-desc">볼스크류 축의 양단 지지 조건(고정-지지, 고정-고정)별 오일러 압축 좌굴 하중(kN) 및 위험 회전수(RPM)를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>볼스크류 제원 입력</h3></div>
+          </div>
+          <form id="ballscrewbucklingForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>스크류 공칭 외경 (Diameter d, mm)</label>
+                <input type="number" id="bsScrewDiaMm" class="form-input" value="25" step="5" min="8" oninput="calcBallScrewBuckling()">
+              </div>
+              <div class="form-group">
+                <label>골경 (Root Diameter dr, mm)</label>
+                <input type="number" id="bsScrewRootDiaMm" class="form-input" value="21.5" step="0.5" min="5" oninput="calcBallScrewBuckling()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>유효 행정/지지 스팬 (Span L, mm)</label>
+                <input type="number" id="bsScrewSpanMm" class="form-input" value="1200" step="50" min="100" oninput="calcBallScrewBuckling()">
+              </div>
+              <div class="form-group">
+                <label>최대 축방향 추력 (Axial Load F, kN)</label>
+                <input type="number" id="bsAxialLoadKn" class="form-input" value="8.5" step="0.5" min="0.1" oninput="calcBallScrewBuckling()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>양단 지지 조건 (Support Method)</label>
+                <select id="bsSupportType" class="form-select" onchange="calcBallScrewBuckling()">
+                  <option value="fixed_supported" selected>고정 - 지지 (Fixed - Simple, α=2.0, f=15.1)</option>
+                  <option value="fixed_fixed">고정 - 고정 (Fixed - Fixed, α=4.0, f=21.9)</option>
+                  <option value="supported_supported">지지 - 지지 (Simple - Simple, α=1.0, f=9.7)</option>
+                  <option value="fixed_free">고정 - 자유 (Fixed - Free, α=0.25, f=3.4)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>최대 모터 작동 회전수 (RPM)</label>
+                <input type="number" id="bsOperatingRpm" class="form-input" value="1500" step="100" min="100" oninput="calcBallScrewBuckling()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>좌굴 및 위험 회전수 판정</h3></div>
+            <span id="bsbVerdictBadge" class="verdict-stamp font-mono badge-safe">SAFE (BUCKLING PASS)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">허용 좌굴 하중 (Allowable Buckling Load)</span>
+              <div class="terminal-voltage-big font-mono"><span id="bsbBucklingLoadKn">24.8</span> <small>kN</small></div>
+              <p class="hero-subtext">좌굴 안전율: <strong id="bsbBucklingSafetyFactor" class="text-cyan">2.92</strong> (기준 SF ≥ 2.0 만족)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">위험 회전수 (Critical RPM)</span><span id="bsbCriticalRpm" class="spec-val font-mono text-cyan">2,250 RPM</span></div>
+              <div class="spec-cell"><span class="spec-label">허용 최고 회전수 (0.8Nc)</span><span id="bsbAllowableRpm" class="spec-val font-mono text-amber">1,800 RPM</span></div>
+              <div class="spec-cell"><span class="spec-label">회전수 여유율</span><span id="bsbSpeedMarginPct" class="spec-val font-mono">120% (안전)</span></div>
+              <div class="spec-cell"><span class="spec-label">단면 2차 모멘트 (I)</span><span id="bsbInertiaI" class="spec-val font-mono">10,500 mm⁴</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="bsbOpinionText" class="opinion-text">최대 이송 추력 및 작동 회전수가 좌굴 하중 및 공진 위험속도로부터 충분히 안전합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 63: 오리피스 유량 & 차압 산정기 (ISO 5167) -->
+    <!-- ========================================================================= -->
+    <section id="tab-orificeflow" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">💨 배관 오리피스 유량 &amp; 차압 산정기 (ISO 5167)</h1>
+          <p class="main-desc">ISO 5167 표준 동심 오리피스 차압 유량계의 베타비(β), 차압(ΔP, mbar) 및 영구 압력 손실을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>배관 및 유체 조건 입력</h3></div>
+          </div>
+          <form id="orificeflowForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배관 내경 (Pipe ID, D, mm)</label>
+                <input type="number" id="ofPipeDiaD" class="form-input" value="100" step="5" min="20" oninput="calcOrificeFlow()">
+              </div>
+              <div class="form-group">
+                <label>오리피스 구멍 직경 (Orifice d, mm)</label>
+                <input type="number" id="ofOrificeDiaD" class="form-input" value="60" step="2" min="10" oninput="calcOrificeFlow()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>체적 유량 (Flow Rate Q, m³/h)</label>
+                <input type="number" id="ofFlowRateQ" class="form-input" value="75" step="5" min="1" oninput="calcOrificeFlow()">
+              </div>
+              <div class="form-group">
+                <label>유체 밀도 (Density ρ, kg/m³)</label>
+                <input type="number" id="ofFluidDensity" class="form-input" value="1000" step="50" min="0.5" oninput="calcOrificeFlow()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>차압 및 영구 압력 손실</h3></div>
+            <span id="ofVerdictBadge" class="verdict-stamp font-mono badge-safe">ISO 5167 VALID</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">발생 차압 (Differential Pressure, ΔP)</span>
+              <div class="terminal-voltage-big font-mono"><span id="ofDiffPressureMbar">142.5</span> <small>mbar</small></div>
+              <p class="hero-subtext">베타비 (Beta β = d/D): <strong id="ofBetaRatio" class="text-cyan">0.600</strong> (권장 0.2~0.7 범위)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">영구 압력 손실 (ΔP_perm)</span><span id="ofPermanentLossMbar" class="spec-val font-mono text-amber">71.2 mbar (50%)</span></div>
+              <div class="spec-cell"><span class="spec-label">배관 평균 유속 (v_pipe)</span><span id="ofPipeVelocity" class="spec-val font-mono text-cyan">2.65 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">오리피스 통과 유속 (v_orifice)</span><span id="ofOrificeVelocity" class="spec-val font-mono">7.37 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">유출 계수 (Cd)</span><span id="ofDischargeCd" class="spec-val font-mono">0.605</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="ofOpinionText" class="opinion-text">베타비와 차압 범위가 적정하여 유량 센서 측정 정밀도가 극대화됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 64: 배관 보온단열 & 열손실 검증기 (ASTM C680) -->
+    <!-- ========================================================================= -->
+    <section id="tab-insulation" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🔥 플랜트 배관 보온단열 두께 &amp; 방산 열손실 검증기 (ASTM C680)</h1>
+          <p class="main-desc">스팀/열매유 배관의 보온재(그라스울/미네랄울/에어로젤) 두께별 방산열량(W/m), 표면온도 및 연간 절감액을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>배관 및 단열 조건 입력</h3></div>
+          </div>
+          <form id="insulationForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배관 공칭 관경 (Pipe Size)</label>
+                <select id="inPipeSize" class="form-select" onchange="calcInsulation()">
+                  <option value="50">50A (외경 60.5 mm)</option>
+                  <option value="100" selected>100A (외경 114.3 mm)</option>
+                  <option value="150">150A (외경 165.2 mm)</option>
+                  <option value="200">200A (외경 216.3 mm)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>배관 내부 유체 온도 (T_fluid, °C)</label>
+                <input type="number" id="inFluidTemp" class="form-input" value="180" step="10" min="40" oninput="calcInsulation()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>보온재 종류 (Material)</label>
+                <select id="inMaterial" class="form-select" onchange="calcInsulation()">
+                  <option value="mineral_wool" selected>미네랄울 / 암면 (k=0.040 W/m·K)</option>
+                  <option value="glass_wool">그라스울 (k=0.038 W/m·K)</option>
+                  <option value="calcium_silicate">규산칼슘 (k=0.055 W/m·K - 고온용)</option>
+                  <option value="aerogel">에어로젤 블랭킷 (k=0.018 W/m·K - 초고단열)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>보온재 두께 (Thickness t, mm)</label>
+                <input type="number" id="inThicknessMm" class="form-input" value="50" step="10" min="10" oninput="calcInsulation()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배관 총 연장 길이 (L, m)</label>
+                <input type="number" id="inTotalLengthM" class="form-input" value="100" step="20" min="5" oninput="calcInsulation()">
+              </div>
+              <div class="form-group">
+                <label>주변 대기 온도 (T_amb, °C)</label>
+                <input type="number" id="inAmbientTemp" class="form-input" value="20" step="5" min="-20" max="50" oninput="calcInsulation()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>열손실 및 에너지 절감액</h3></div>
+            <span id="inVerdictBadge" class="verdict-stamp font-mono badge-safe">TOUCH SAFE (38.5°C)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">미터당 방산 열손실 (Heat Loss per Meter)</span>
+              <div class="terminal-voltage-big font-mono"><span id="inHeatLossPerMeter">42.5</span> <small>W/m</small></div>
+              <p class="hero-subtext">외표면 안전 접촉 온도: <strong id="inSurfaceTemp" class="text-cyan">38.5 °C</strong> (화상 한계 60°C 이하 만족)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">총 방산 열량 (Total Loss)</span><span id="inTotalLossKw" class="spec-val font-mono">4.25 kW</span></div>
+              <div class="spec-cell"><span class="spec-label">연간 에너지 절감액</span><span id="inAnnualSavingsWon" class="spec-val font-mono text-cyan">3,450,000 원/년</span></div>
+              <div class="spec-cell"><span class="spec-label">나배관 대비 단열 효율</span><span id="inInsulationEfficiency" class="spec-val font-mono">92.8% 차단</span></div>
+              <div class="spec-cell"><span class="spec-label">나배관 열손실 (Uninsulated)</span><span id="inBarePipeLoss" class="spec-val font-mono">590 W/m</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="inOpinionText" class="opinion-text">표면 온도가 40°C 이하로 유지되어 작업자 화상 방지 안전 기준 및 에너지 절감 효과가 탁월합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 65: 수처리 폭기조 산소요구량 & 송풍기 용량 -->
+    <!-- ========================================================================= -->
+    <section id="tab-aerationtank" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">💧 산업폐수 曝気조 산소요구량 &amp; 송풍기 용량 산정기</h1>
+          <p class="main-desc">BOD/COD 유입 농도와 질산화 요구량에 따른 표준 산소요구량(SOR), 공기 공급량(CMM) 및 블로워 동력을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>폐수 유입 및 폭기 조건 입력</h3></div>
+          </div>
+          <form id="aerationtankForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>일일 폐수 유입량 (Q, m³/day)</label>
+                <input type="number" id="atWastewaterFlow" class="form-input" value="1200" step="100" min="50" oninput="calcAerationTank()">
+              </div>
+              <div class="form-group">
+                <label>유입 BOD 농도 (BOD_in, mg/L)</label>
+                <input type="number" id="atBodInlet" class="form-input" value="350" step="50" min="10" oninput="calcAerationTank()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>목표 방류 BOD 농도 (BOD_eff, mg/L)</label>
+                <input type="number" id="atBodEffluent" class="form-input" value="20" step="5" min="1" oninput="calcAerationTank()">
+              </div>
+              <div class="form-group">
+                <label>수심 (Water Depth H, m)</label>
+                <input type="number" id="atWaterDepthM" class="form-input" value="4.5" step="0.5" min="2" oninput="calcAerationTank()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>산기장치 산소전달효율 (OTE, %)</label>
+                <input type="number" id="atOteEfficiency" class="form-input" value="18" step="2" min="5" max="40" oninput="calcAerationTank()">
+              </div>
+              <div class="form-group">
+                <label>수온 (T, °C)</label>
+                <input type="number" id="atWaterTemp" class="form-input" value="25" step="2" min="5" max="40" oninput="calcAerationTank()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>산소량 및 송풍기 소요 동력</h3></div>
+            <span id="atVerdictBadge" class="verdict-stamp font-mono badge-safe">AOR PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">송풍기 소요 풍량 (Blower Airflow)</span>
+              <div class="terminal-voltage-big font-mono"><span id="atBlowerAirflowCmm">28.5</span> <small>CMM</small></div>
+              <p class="hero-subtext">표준 산소요구량 (SOR): <strong id="atSorKgHr" class="text-cyan">32.4 kg O₂/h</strong> (778 kg/day)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">송풍기 모터 동력 (Blower kW)</span><span id="atBlowerPowerKw" class="spec-val font-mono text-cyan">37.0 kW</span></div>
+              <div class="spec-cell"><span class="spec-label">실제 산소요구량 (AOR)</span><span id="atAorKgHr" class="spec-val font-mono">22.8 kg O₂/h</span></div>
+              <div class="spec-cell"><span class="spec-label">일일 BOD 제거량</span><span id="atBodRemovedKg" class="spec-val font-mono">396.0 kg/day</span></div>
+              <div class="spec-cell"><span class="spec-label">폭기조 토출 압력 (kPa)</span><span id="atDischargeKpa" class="spec-val font-mono">54.1 kPa</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="atOpinionText" class="opinion-text">선정된 37kW 루츠/터보 블로워가 피크 부하 조건에서도 용존산소(DO 2.0mg/L)를 안정적으로 유지합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 66: H형강 처짐 & 구조 굽힘응력 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-steelbeam" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🏗️ 구조용 H형강 &amp; 각파이프 처짐 및 굽힘응력 검증기</h1>
+          <p class="main-desc">등분포 하중 및 집중 하중 작용 시 H빔/각관의 최대 처짐량(δ), 휨응력(σb) 및 허용 처짐비(L/300) 만족 여부를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>보 규격 및 하중 입력</h3></div>
+          </div>
+          <form id="steelbeamForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>H형강 규격 (H × B × t1 × t2)</label>
+                <select id="sbBeamProfile" class="form-select" onchange="calcSteelBeam()">
+                  <option value="h150x150" selected>H 150 × 150 × 7 × 10 (Ix=1,780 cm⁴, Zx=237 cm³)</option>
+                  <option value="h200x200">H 200 × 200 × 8 × 12 (Ix=4,720 cm⁴, Zx=472 cm³)</option>
+                  <option value="h250x250">H 250 × 250 × 9 × 14 (Ix=10,800 cm⁴, Zx=867 cm³)</option>
+                  <option value="h300x300">H 300 × 300 × 10 × 15 (Ix=20,400 cm⁴, Zx=1,360 cm³)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>보 지지 스팬 (Span L, m)</label>
+                <input type="number" id="sbBeamSpanM" class="form-input" value="6.0" step="0.5" min="1" oninput="calcSteelBeam()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>중앙 집중 하중 (Point Load P, kN)</label>
+                <input type="number" id="sbPointLoadKn" class="form-input" value="25" step="5" min="0" oninput="calcSteelBeam()">
+              </div>
+              <div class="form-group">
+                <label>등분포 하중 (Uniform Load w, kN/m)</label>
+                <input type="number" id="sbUniformLoadKnM" class="form-input" value="3.5" step="0.5" min="0" oninput="calcSteelBeam()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>처짐 및 휨응력 구조 검토</h3></div>
+            <span id="sbVerdictBadge" class="verdict-stamp font-mono badge-safe">DEFLECTION PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">최대 처짐량 (Max Deflection, δ)</span>
+              <div class="terminal-voltage-big font-mono"><span id="sbMaxDeflectionMm">11.8</span> <small>mm</small></div>
+              <p class="hero-subtext">허용 처짐 한계 (L/300): <strong id="sbAllowDeflectionMm" class="text-cyan">20.0 mm</strong> (59.0% 여유)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">최대 휨모멘트 (M_max)</span><span id="sbMaxMomentKnM" class="spec-val font-mono">53.3 kN·m</span></div>
+              <div class="spec-cell"><span class="spec-label">최대 휨응력 (σ_bending)</span><span id="sbBendingStressMpa" class="spec-val font-mono text-cyan">112.9 MPa</span></div>
+              <div class="spec-cell"><span class="spec-label">항복강도 안전율 (SS275)</span><span id="sbSafetyFactor" class="spec-val font-mono">2.43 (안전)</span></div>
+              <div class="spec-cell"><span class="spec-label">지점 반력 (Reaction R)</span><span id="sbReactionKn" class="spec-val font-mono">23.0 kN</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="sbOpinionText" class="opinion-text">처짐량 및 휨응력이 건축구조기준(KDS) 허용치를 완벽히 만족합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -8994,6 +9474,30 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-shipstability')">
           <i data-lucide="anchor"></i>
           <div><strong>60. 선박 복원성(GM)</strong><p>메타센터 높이(GM), 복원정(GZ), IMO 내항성 및 전복 방지 안전성</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-timingbelt')">
+          <i data-lucide="disc"></i>
+          <div><strong>61. 타이밍벨트·체인 장력</strong><p>고유진동수 주파수(Hz) 측정값, 전달동력(kW), 권장 벨트 폭</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-ballscrewbuckling')">
+          <i data-lucide="crosshair"></i>
+          <div><strong>62. 볼스크류 좌굴·위험속도</strong><p>오일러 좌굴 하중(kN), 지지조건별 위험회전수(RPM) 안전 한계</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-orificeflow')">
+          <i data-lucide="gauge"></i>
+          <div><strong>63. 오리피스 유량·차압</strong><p>ISO 5167 차압식 차압유량계, 베타비(β), 영구 압력손실</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-insulation')">
+          <i data-lucide="flame"></i>
+          <div><strong>64. 배관 보온단열·열손실</strong><p>ASTM C680 보온재 두께(mm), 방산열량(W/m) 및 연간 절감액</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-aerationtank')">
+          <i data-lucide="droplet"></i>
+          <div><strong>65. 수처리 폭기조 산소량</strong><p>BOD/COD 제거 AOR/SOR 표준 산소요구량 및 송풍기 kW</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-steelbeam')">
+          <i data-lucide="box"></i>
+          <div><strong>66. H형강 처짐·모멘트</strong><p>등분포/집중 하중 H빔 및 각파이프 최대 처짐량(δ)과 휨응력</p></div>
         </div>
 <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>

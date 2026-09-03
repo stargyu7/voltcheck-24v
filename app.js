@@ -8712,3 +8712,266 @@ function calcShipStability() {
   if (bmEl) bmEl.textContent = `${BM.toFixed(2)} m`;
 }
 window.calcShipStability = calcShipStability;
+
+
+// ==========================================================================
+// TAB 61: 타이밍벨트 장력 (calcTimingBelt)
+// ==========================================================================
+function calcTimingBelt() {
+  const P = parseFloat(document.getElementById('tbPowerKw')?.value) || 3.7;
+  const n1 = parseFloat(document.getElementById('tbRpmN1')?.value) || 1750;
+  const pitch = parseFloat(document.getElementById('tbBeltPitch')?.value) || 5;
+  const z1 = parseFloat(document.getElementById('tbPulleyTeethZ1')?.value) || 28;
+  const Ls = parseFloat(document.getElementById('tbSpanLengthMm')?.value) || 450;
+  const W = parseFloat(document.getElementById('tbBeltWidthMm')?.value) || 25;
+
+  const dp = (z1 * pitch) / Math.PI; // mm
+  const v = (Math.PI * (dp / 1000) * n1) / 60; // m/s
+  const Fe = (1000 * P) / Math.max(v, 0.1); // N
+  const T0 = Fe * 1.3; // Static tension
+  const m_unit = (W / 1000) * 0.0035; // kg/m
+  const Ls_m = Ls / 1000;
+  const f_sonic = (1 / (2 * Ls_m)) * Math.sqrt(T0 / Math.max(m_unit, 1e-4));
+  const Fs = 2 * T0;
+
+  const t0El = document.getElementById('tbStaticTensionN');
+  if (t0El) t0El.textContent = Math.round(T0).toLocaleString();
+
+  const fEl = document.getElementById('tbSonicFreqHz');
+  if (fEl) fEl.textContent = `${f_sonic.toFixed(1)} Hz`;
+
+  const feEl = document.getElementById('tbEffectiveForceFe');
+  if (feEl) feEl.textContent = `${Math.round(Fe)} N`;
+
+  const vEl = document.getElementById('tbBeltSpeedMps');
+  if (vEl) vEl.textContent = `${v.toFixed(1)} m/s`;
+
+  const fsEl = document.getElementById('tbShaftLoadFs');
+  if (fsEl) fsEl.textContent = `${Math.round(Fs)} N`;
+
+  const dpEl = document.getElementById('tbPitchDiameterDp');
+  if (dpEl) dpEl.textContent = `${dp.toFixed(2)} mm`;
+}
+window.calcTimingBelt = calcTimingBelt;
+
+// ==========================================================================
+// TAB 62: 볼스크류 좌굴 (calcBallScrewBuckling)
+// ==========================================================================
+function calcBallScrewBuckling() {
+  const d = parseFloat(document.getElementById('bsScrewDiaMm')?.value) || 25;
+  const dr = parseFloat(document.getElementById('bsScrewRootDiaMm')?.value) || 21.5;
+  const L = parseFloat(document.getElementById('bsScrewSpanMm')?.value) || 1200;
+  const F = parseFloat(document.getElementById('bsAxialLoadKn')?.value) || 8.5;
+  const sup = document.getElementById('bsSupportType')?.value || 'fixed_supported';
+  const rpm = parseFloat(document.getElementById('bsOperatingRpm')?.value) || 1500;
+
+  let alpha = 2.0;
+  let f_speed = 15.1;
+  if (sup === 'fixed_fixed') { alpha = 4.0; f_speed = 21.9; }
+  else if (sup === 'supported_supported') { alpha = 1.0; f_speed = 9.7; }
+  else if (sup === 'fixed_free') { alpha = 0.25; f_speed = 3.4; }
+
+  const I = (Math.PI * Math.pow(dr, 4)) / 64; // mm4
+  const E = 206000; // MPa
+  const Pk_N = (alpha * Math.PI * Math.PI * E * I) / Math.pow(L, 2);
+  const Pk_kN = Pk_N / 1000;
+  const SF = Pk_kN / Math.max(F, 0.1);
+  const Nc = (f_speed * dr * 1e7) / Math.pow(L, 2);
+  const N_allow = Nc * 0.8;
+
+  const pkEl = document.getElementById('bsbBucklingLoadKn');
+  if (pkEl) pkEl.textContent = Pk_kN.toFixed(1);
+
+  const sfEl = document.getElementById('bsbBucklingSafetyFactor');
+  if (sfEl) sfEl.textContent = SF.toFixed(2);
+
+  const ncEl = document.getElementById('bsbCriticalRpm');
+  if (ncEl) ncEl.textContent = `${Math.round(Nc).toLocaleString()} RPM`;
+
+  const naEl = document.getElementById('bsbAllowableRpm');
+  if (naEl) naEl.textContent = `${Math.round(N_allow).toLocaleString()} RPM`;
+
+  const iEl = document.getElementById('bsbInertiaI');
+  if (iEl) iEl.textContent = `${Math.round(I).toLocaleString()} mm⁴`;
+}
+window.calcBallScrewBuckling = calcBallScrewBuckling;
+
+// ==========================================================================
+// TAB 63: 오리피스 유량 (calcOrificeFlow)
+// ==========================================================================
+function calcOrificeFlow() {
+  const D = parseFloat(document.getElementById('ofPipeDiaD')?.value) || 100;
+  const d = parseFloat(document.getElementById('ofOrificeDiaD')?.value) || 60;
+  const Q = parseFloat(document.getElementById('ofFlowRateQ')?.value) || 75;
+  const rho = parseFloat(document.getElementById('ofFluidDensity')?.value) || 1000;
+
+  const beta = d / D;
+  const A1 = Math.PI * Math.pow(D / 2000, 2); // m2
+  const A2 = Math.PI * Math.pow(d / 2000, 2);
+  const Q_m3s = Q / 3600;
+  const v_pipe = Q_m3s / A1;
+  const v_ori = Q_m3s / A2;
+  const Cd = 0.605;
+
+  const deltaP_pa = Math.pow(Q_m3s / (Cd * A2 * (1 / Math.sqrt(1 - Math.pow(beta, 4)))), 2) * (rho / 2);
+  const deltaP_mbar = deltaP_pa / 100;
+  const permLoss_mbar = deltaP_mbar * (1 - Math.pow(beta, 1.9));
+
+  const dpEl = document.getElementById('ofDiffPressureMbar');
+  if (dpEl) dpEl.textContent = deltaP_mbar.toFixed(1);
+
+  const betaEl = document.getElementById('ofBetaRatio');
+  if (betaEl) betaEl.textContent = beta.toFixed(3);
+
+  const plEl = document.getElementById('ofPermanentLossMbar');
+  if (plEl) plEl.textContent = `${permLoss_mbar.toFixed(1)} mbar (${Math.round((permLoss_mbar/deltaP_mbar)*100)}%)`;
+
+  const vpEl = document.getElementById('ofPipeVelocity');
+  if (vpEl) vpEl.textContent = `${v_pipe.toFixed(2)} m/s`;
+
+  const voEl = document.getElementById('ofOrificeVelocity');
+  if (voEl) voEl.textContent = `${v_ori.toFixed(2)} m/s`;
+}
+window.calcOrificeFlow = calcOrificeFlow;
+
+// ==========================================================================
+// TAB 64: 배관 보온단열 (calcInsulation)
+// ==========================================================================
+function calcInsulation() {
+  const size = parseFloat(document.getElementById('inPipeSize')?.value) || 100;
+  const T_in = parseFloat(document.getElementById('inFluidTemp')?.value) || 180;
+  const mat = document.getElementById('inMaterial')?.value || 'mineral_wool';
+  const t_mm = parseFloat(document.getElementById('inThicknessMm')?.value) || 50;
+  const L = parseFloat(document.getElementById('inTotalLengthM')?.value) || 100;
+  const T_amb = parseFloat(document.getElementById('inAmbientTemp')?.value) || 20;
+
+  let D_out = 114.3; // 100A
+  if (size === 50) D_out = 60.5;
+  else if (size === 150) D_out = 165.2;
+  else if (size === 200) D_out = 216.3;
+
+  let k = 0.040;
+  if (mat === 'glass_wool') k = 0.038;
+  else if (mat === 'calcium_silicate') k = 0.055;
+  else if (mat === 'aerogel') k = 0.018;
+
+  const r1 = D_out / 2000; // m
+  const r2 = r1 + (t_mm / 1000);
+  const h_out = 9.5; // convective + radiative coeff W/m2.K
+
+  const R_ins = Math.log(r2 / r1) / (2 * Math.PI * k);
+  const R_surf = 1 / (2 * Math.PI * r2 * h_out);
+  const R_total = R_ins + R_surf;
+
+  const q_m = (T_in - T_amb) / R_total; // W/m
+  const T_surf = T_amb + (q_m * R_surf);
+  const totalKw = (q_m * L) / 1000;
+  const bareLoss_m = 2 * Math.PI * r1 * h_out * (T_in - T_amb);
+  const annualSavings = Math.round((bareLoss_m - q_m) * L * 8760 * 0.001 * 95); // 95 KRW per kWh
+
+  const qEl = document.getElementById('inHeatLossPerMeter');
+  if (qEl) qEl.textContent = q_m.toFixed(1);
+
+  const tsEl = document.getElementById('inSurfaceTemp');
+  if (tsEl) tsEl.textContent = `${T_surf.toFixed(1)} °C`;
+
+  const totEl = document.getElementById('inTotalLossKw');
+  if (totEl) totEl.textContent = `${totalKw.toFixed(2)} kW`;
+
+  const savEl = document.getElementById('inAnnualSavingsWon');
+  if (savEl) savEl.textContent = `${annualSavings.toLocaleString()} 원/년`;
+
+  const bareEl = document.getElementById('inBarePipeLoss');
+  if (bareEl) bareEl.textContent = `${Math.round(bareLoss_m)} W/m`;
+}
+window.calcInsulation = calcInsulation;
+
+// ==========================================================================
+// TAB 65: 수처리 폭기조 (calcAerationTank)
+// ==========================================================================
+function calcAerationTank() {
+  const Q = parseFloat(document.getElementById('atWastewaterFlow')?.value) || 1200;
+  const S0 = parseFloat(document.getElementById('atBodInlet')?.value) || 350;
+  const Se = parseFloat(document.getElementById('atBodEffluent')?.value) || 20;
+  const H = parseFloat(document.getElementById('atWaterDepthM')?.value) || 4.5;
+  const OTE = parseFloat(document.getElementById('atOteEfficiency')?.value) || 18;
+
+  const bodRemovedKgDay = (Q * (S0 - Se)) / 1000;
+  const AOR_kgDay = bodRemovedKgDay * 1.35; // with endogenous respiration
+  const AOR_kgHr = AOR_kgDay / 24;
+  const SOR_kgHr = AOR_kgHr / 0.70; // alpha/beta correction
+  const airDensity = 1.2; // kg/m3
+  const O2_fraction = 0.232;
+  const requiredAirflowCmm = (SOR_kgHr / (OTE / 100 * airDensity * O2_fraction * 60));
+  const pressKpa = (H * 9.81) + 10; // with diffuser loss
+  const blowerKw = (requiredAirflowCmm * pressKpa) / (60 * 0.75);
+
+  const cmmEl = document.getElementById('atBlowerAirflowCmm');
+  if (cmmEl) cmmEl.textContent = requiredAirflowCmm.toFixed(1);
+
+  const sorEl = document.getElementById('atSorKgHr');
+  if (sorEl) sorEl.textContent = `${SOR_kgHr.toFixed(1)} kg O₂/h (${Math.round(SOR_kgHr * 24).toLocaleString()} kg/day)`;
+
+  const kwEl = document.getElementById('atBlowerPowerKw');
+  if (kwEl) kwEl.textContent = `${blowerKw.toFixed(1)} kW`;
+
+  const aorEl = document.getElementById('atAorKgHr');
+  if (aorEl) aorEl.textContent = `${AOR_kgHr.toFixed(1)} kg O₂/h`;
+
+  const bodEl = document.getElementById('atBodRemovedKg');
+  if (bodEl) bodEl.textContent = `${bodRemovedKgDay.toFixed(1)} kg/day`;
+
+  const pkpaEl = document.getElementById('atDischargeKpa');
+  if (pkpaEl) pkpaEl.textContent = `${pressKpa.toFixed(1)} kPa`;
+}
+window.calcAerationTank = calcAerationTank;
+
+// ==========================================================================
+// TAB 66: H형강 처짐 (calcSteelBeam)
+// ==========================================================================
+function calcSteelBeam() {
+  const prof = document.getElementById('sbBeamProfile')?.value || 'h150x150';
+  const L = parseFloat(document.getElementById('sbBeamSpanM')?.value) || 6.0;
+  const P = parseFloat(document.getElementById('sbPointLoadKn')?.value) || 25;
+  const w = parseFloat(document.getElementById('sbUniformLoadKnM')?.value) || 3.5;
+
+  let Ix = 1780; // cm4
+  let Zx = 237; // cm3
+  if (prof === 'h200x200') { Ix = 4720; Zx = 472; }
+  else if (prof === 'h250x250') { Ix = 10800; Zx = 867; }
+  else if (prof === 'h300x300') { Ix = 20400; Zx = 1360; }
+
+  const L_mm = L * 1000;
+  const E = 205000; // MPa
+  const Ix_mm4 = Ix * 1e4;
+  const Zx_mm3 = Zx * 1e3;
+
+  // Deflection: point load (P L^3 / 48 E I) + uniform load (5 w L^4 / 384 E I)
+  const delta_P = (P * 1000 * Math.pow(L_mm, 3)) / (48 * E * Ix_mm4);
+  const delta_w = (5 * (w) * Math.pow(L_mm, 4)) / (384 * E * Ix_mm4);
+  const delta_total = delta_P + delta_w;
+
+  const M_max_kNm = (P * L / 4) + (w * Math.pow(L, 2) / 8);
+  const sigma_b_Mpa = (M_max_kNm * 1e6) / Zx_mm3;
+  const allowDef_mm = L_mm / 300;
+  const SF = 275 / Math.max(sigma_b_Mpa, 1);
+
+  const dEl = document.getElementById('sbMaxDeflectionMm');
+  if (dEl) dEl.textContent = delta_total.toFixed(1);
+
+  const adEl = document.getElementById('sbAllowDeflectionMm');
+  if (adEl) adEl.textContent = `${allowDef_mm.toFixed(1)} mm`;
+
+  const mEl = document.getElementById('sbMaxMomentKnM');
+  if (mEl) mEl.textContent = `${M_max_kNm.toFixed(1)} kN·m`;
+
+  const sbEl = document.getElementById('sbBendingStressMpa');
+  if (sbEl) sbEl.textContent = `${sigma_b_Mpa.toFixed(1)} MPa`;
+
+  const sfEl = document.getElementById('sbSafetyFactor');
+  if (sfEl) sfEl.textContent = `${SF.toFixed(2)} (안전)`;
+
+  const rEl = document.getElementById('sbReactionKn');
+  if (rEl) rEl.textContent = `${((P / 2) + (w * L / 2)).toFixed(1)} kN`;
+}
+window.calcSteelBeam = calcSteelBeam;
