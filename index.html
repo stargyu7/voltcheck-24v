@@ -179,7 +179,7 @@
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 54종 (All)</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 60종 (All)</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원·변압기</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·모션·배터리</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('mech')" id="cfMech">⚙️ 기계·가공·수명</button>
@@ -428,6 +428,30 @@
           <button class="tab-btn" data-tab="tab-robottorque" data-category="nuclear" role="tab">
             <i data-lucide="bot"></i>
             <span>54. 6축 로봇 관절 토크</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-rocketnozzle" data-category="nuclear" role="tab">
+            <i data-lucide="rocket"></i>
+            <span>55. 로켓 노즐 비추력(Isp)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-plasmasheath" data-category="nuclear" role="tab">
+            <i data-lucide="zap"></i>
+            <span>56. 반도체 플라즈마 쉬스</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-batteryslurry" data-category="motion" role="tab">
+            <i data-lucide="battery"></i>
+            <span>57. 배터리 슬러리 건조열</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-besssafety" data-category="power" role="tab">
+            <i data-lucide="shield-alert"></i>
+            <span>58. BESS 열폭주 소방배기</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-gearstress" data-category="mech" role="tab">
+            <i data-lucide="settings"></i>
+            <span>59. 기어 치면·굽힘강도</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-shipstability" data-category="fluid" role="tab">
+            <i data-lucide="anchor"></i>
+            <span>60. 선박 복원성(GM)</span>
           </button>
 <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -6629,6 +6653,455 @@
       </div>
     </section>
 
+    
+    <!-- ========================================================================= -->
+    <!-- TAB 55: 로켓 노즐 비추력(Isp) & 팽창비 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-rocketnozzle" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🚀 로켓 노즐 비추력(Isp) &amp; 최적 팽창비 검증기 (De Laval)</h1>
+          <p class="main-desc">드라발 초음속 노즐의 등엔트로피 팽창, 연소실 압력별 진공/해수면 비추력(초) 및 추력(kN)을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>추진체 및 연소 파라미터 입력</h3></div>
+          </div>
+          <form id="rocketnozzleForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>추진제 종류 (Propellant)</label>
+                <select id="rnPropellant" class="form-select" onchange="calcRocketNozzle()">
+                  <option value="lox_kerosene" selected>LOX / 케로신 (RP-1, k=1.24, Tc=3500K)</option>
+                  <option value="lox_lh2">LOX / 액체수소 (LH2, k=1.26, Tc=3300K)</option>
+                  <option value="lox_methane">LOX / 메탄 (Methalox, k=1.22, Tc=3400K)</option>
+                  <option value="solid">고체 추진제 (HTPB, k=1.20, Tc=2800K)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>연소실 압력 (Pc, bar)</label>
+                <input type="number" id="rnChamberPressurePc" class="form-input" value="70" step="5" min="10" oninput="calcRocketNozzle()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>목 단면적 직경 (Throat Dt, mm)</label>
+                <input type="number" id="rnThroatDiameterMm" class="form-input" value="120" step="5" min="10" oninput="calcRocketNozzle()">
+              </div>
+              <div class="form-group">
+                <label>노즐 팽창비 (Ae / At)</label>
+                <input type="number" id="rnExpansionRatio" class="form-input" value="35" step="5" min="2" oninput="calcRocketNozzle()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>작동 고도 환경</label>
+                <select id="rnAmbientType" class="form-select" onchange="calcRocketNozzle()">
+                  <option value="vacuum" selected>진공 우주 공간 (Vacuum, Pa=0)</option>
+                  <option value="sealevel">해수면 대기압 (Sea Level, Pa=1.013 bar)</option>
+                  <option value="high_altitude">고고도 (10 km, Pa=0.26 bar)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>질량 유량 (m_dot, kg/s)</label>
+                <input type="number" id="rnMassFlowKgSec" class="form-input" value="35" step="5" min="1" oninput="calcRocketNozzle()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>추진 성능 및 비추력 데이터</h3></div>
+            <span id="rnVerdictBadge" class="verdict-stamp font-mono badge-safe">OPTIMAL THRUST</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">비추력 (Specific Impulse, Isp)</span>
+              <div class="terminal-voltage-big font-mono"><span id="rnSpecificImpulseIsp">318.5</span> <small>sec</small></div>
+              <p class="hero-subtext">유효 가스 분사 속도 (C_eff): <strong id="rnEffectiveVelocity" class="text-cyan">3,124 m/s</strong> (Mach 4.2)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">총 추력 (Thrust F)</span><span id="rnTotalThrustKn" class="spec-val font-mono">109.3 kN</span></div>
+              <div class="spec-cell"><span class="spec-label">노즐 출구 마하수 (Me)</span><span id="rnExitMach" class="spec-val font-mono text-cyan">Mach 4.15</span></div>
+              <div class="spec-cell"><span class="spec-label">노즐 출구 압력 (Pe)</span><span id="rnExitPressure" class="spec-val font-mono">0.38 bar</span></div>
+              <div class="spec-cell"><span class="spec-label">출구 직경 (De)</span><span id="rnExitDiameter" class="spec-val font-mono">710 mm</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="rnOpinionText" class="opinion-text">진공 팽창비가 적절하여 박리(Flow Separation) 없이 최고의 비추력 효율을 발휘합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 56: 반도체 플라즈마 디바이 길이 & 쉬스 두께 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-plasmasheath" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🔬 반도체 플라즈마 디바이 길이 &amp; 쉬스 두께 검증기 (Plasma Sheath)</h1>
+          <p class="main-desc">드라이 에칭(ICP/CCP) 및 플라즈마 CVD의 전자 온도, 디바이 차폐 길이(λD), 보옴 유속 및 쉬스 전압을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>플라즈마 공정 조건 입력</h3></div>
+          </div>
+          <form id="plasmasheathForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>플라즈마 전자 밀도 (n_e, 10^10 cm⁻³)</label>
+                <input type="number" id="psElectronDensity" class="form-input" value="5.0" step="0.5" min="0.1" oninput="calcPlasmaSheath()">
+              </div>
+              <div class="form-group">
+                <label>전자 온도 (T_e, eV)</label>
+                <input type="number" id="psElectronTempEv" class="form-input" value="3.5" step="0.5" min="0.5" oninput="calcPlasmaSheath()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>인가 RF 바이어스 전압 (V_bias, V)</label>
+                <input type="number" id="psBiasVoltageV" class="form-input" value="250" step="25" min="10" oninput="calcPlasmaSheath()">
+              </div>
+              <div class="form-group">
+                <label>공정 가스 이온 종류</label>
+                <select id="psGasType" class="form-select" onchange="calcPlasmaSheath()">
+                  <option value="argon" selected>아르곤 (Ar⁺, M=40 amu)</option>
+                  <option value="cf4">CF4 (CF3⁺ 식각 가스, M=69 amu)</option>
+                  <option value="o2">산소 (O2⁺ 애싱 가스, M=32 amu)</option>
+                  <option value="cl2">염소 (Cl2⁺ 실리콘 에칭, M=71 amu)</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>쉬스 특성 및 이온 에너지</h3></div>
+            <span id="psVerdictBadge" class="verdict-stamp font-mono badge-safe">ETCH STABLE</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">디바이 길이 (Debye Length, λD)</span>
+              <div class="terminal-voltage-big font-mono"><span id="psDebyeLengthUm">62.2</span> <small>μm</small></div>
+              <p class="hero-subtext">쉬스 두께 (Child-Langmuir s): <strong id="psSheathThicknessMm" class="text-cyan">1.85 mm</strong></p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">보옴 이온 속도 (v_Bohm)</span><span id="psBohmVelocity" class="spec-val font-mono">2,905 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">이온 전류 밀도 (J_i)</span><span id="psIonCurrentDensity" class="spec-val font-mono text-cyan">2.32 mA/cm²</span></div>
+              <div class="spec-cell"><span class="spec-label">웨이퍼 충돌 평균 에너지</span><span id="psIonEnergyEv" class="spec-val font-mono">253.5 eV</span></div>
+              <div class="spec-cell"><span class="spec-label">플라즈마 주파수 (f_pe)</span><span id="psPlasmaFreqGhz" class="spec-val font-mono">2.01 GHz</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="psOpinionText" class="opinion-text">수직 비등방성 식각(Anisotropic Profile)에 적합한 이온 지향성과 쉬스 안정성을 가집니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 57: 이차전지 전극 슬러리 코팅 건조 열풍 수지 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-batteryslurry" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🔋 이차전지 전극 슬러리 코팅 건조 열풍 수지 (Battery Coater)</h1>
+          <p class="main-desc">양극/음극 롤투롤 코터의 NMP/물 솔벤트 증발 잠열, 건조로 열풍 풍량(CMM), LEL 25% 안전 환기량을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>코팅 라인 파라미터 입력</h3></div>
+          </div>
+          <form id="batteryslurryForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>전극 극판 종류</label>
+                <select id="bsElectrodeType" class="form-select" onchange="calcBatterySlurry()">
+                  <option value="cathode_nmp" selected>양극 (Cathode - NMP 솔벤트, LEL=1.3%)</option>
+                  <option value="anode_water">음극 (Anode - 수계 슬러리)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>코팅 라인 속도 (Line Speed, m/min)</label>
+                <input type="number" id="bsLineSpeedMpm" class="form-input" value="45" step="5" min="5" oninput="calcBatterySlurry()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>코팅 폭 (Coating Width, mm)</label>
+                <input type="number" id="bsCoatingWidthMm" class="form-input" value="650" step="50" min="200" oninput="calcBatterySlurry()">
+              </div>
+              <div class="form-group">
+                <label>도포 중량 (Loading, g/m² - Wet)</label>
+                <input type="number" id="bsWetLoadingGsm" class="form-input" value="280" step="20" min="50" oninput="calcBatterySlurry()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>슬러리 고형분율 (Solid Content, %)</label>
+                <input type="number" id="bsSolidPercent" class="form-input" value="70" step="2" min="30" max="90" oninput="calcBatterySlurry()">
+              </div>
+              <div class="form-group">
+                <label>건조 오븐 존 온도 (T_dry, °C)</label>
+                <input type="number" id="bsDryerTemp" class="form-input" value="130" step="5" min="60" max="200" oninput="calcBatterySlurry()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>증발량 및 안전 환기량 데이터</h3></div>
+            <span id="bsVerdictBadge" class="verdict-stamp font-mono badge-safe">LEL 18.5% (SAFE)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">소요 건조 열량 (Heat Duty)</span>
+              <div class="terminal-voltage-big font-mono"><span id="bsTotalHeatKw">168.4</span> <small>kW</small></div>
+              <p class="hero-subtext">솔벤트 증발율: <strong id="bsEvapRateKgHr" class="text-cyan">146.3 kg/h</strong> (2.44 kg/min)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">LEL 25% 안전 필요풍량</span><span id="bsSafetyAirflowCmm" class="spec-val font-mono text-cyan">85.2 CMM</span></div>
+              <div class="spec-cell"><span class="spec-label">현재 체임버 LEL 농도</span><span id="bsLelConcentration" class="spec-val font-mono">18.5% (법적안전)</span></div>
+              <div class="spec-cell"><span class="spec-label">건조 후 건조도포량 (Dry)</span><span id="bsDryLoadingGsm" class="spec-val font-mono">196.0 g/m²</span></div>
+              <div class="spec-cell"><span class="spec-label">NMP 회수 소요 냉각량</span><span id="bsNmpRecoveryKw" class="spec-val font-mono">45.2 kW</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="bsOpinionText" class="opinion-text">건조 존 환기량이 LEL 25% 미만 안전 기준을 충족하여 폭발 위험이 없고 건조 품질이 우수합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 58: 대용량 BESS 열폭주 오프가스 비상 배기 & 소방 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-besssafety" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">⚡ 대용량 BESS 열폭주 오프가스 비상 배기 &amp; 소방 (NFPA 855)</h1>
+          <p class="main-desc">NFPA 855 및 UL 9540A 기준 배터리 랙 열폭주(Thermal Runaway) 시 방출 가스 체적과 비상 환기 배기팬 용량을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>BESS 컨테이너 파라미터 입력</h3></div>
+          </div>
+          <form id="besssafetyForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배터리 셀 케미스트리</label>
+                <select id="bessChemistry" class="form-select" onchange="calcBessSafety()">
+                  <option value="ncm" selected>삼원계 NCM (방출가스 185 L/kWh)</option>
+                  <option value="lfp">인산철 LFP (방출가스 95 L/kWh)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>단일 랙 용량 (Rack Capacity, kWh)</label>
+                <input type="number" id="bessRackCapacityKwh" class="form-input" value="150" step="10" min="20" oninput="calcBessSafety()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>컨테이너 내부 체적 (Volume, m³)</label>
+                <input type="number" id="bessContainerVolM3" class="form-input" value="75" step="5" min="10" oninput="calcBessSafety()">
+              </div>
+              <div class="form-group">
+                <label>동시 열폭주 가정 랙 수</label>
+                <select id="bessFailedRacks" class="form-select" onchange="calcBessSafety()">
+                  <option value="1" selected>1개 랙 (표준 전이 차단 성공 기준)</option>
+                  <option value="2">2개 랙 (인접 랙 1차 전파)</option>
+                  <option value="3">3개 랙 (심각 전파 시나리오)</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>소방 배기 및 소화약제 요구량</h3></div>
+            <span id="bessVerdictBadge" class="verdict-stamp font-mono badge-safe">NFPA 855 PASS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">비상 배기팬 소요 풍량 (Emergency Exhaust)</span>
+              <div class="terminal-voltage-big font-mono"><span id="bessExhaustCfm">4,850</span> <small>CFM</small></div>
+              <p class="hero-subtext">환산 풍량: <strong id="bessExhaustCmm" class="text-cyan">137.3 CMM</strong> (1ACH 이상)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">총 방출 오프가스 체적</span><span id="bessTotalGasVol" class="spec-val font-mono">27.8 m³ (27,750 L)</span></div>
+              <div class="spec-cell"><span class="spec-label">수소(H2) 폭발하한 마진</span><span id="bessH2SafetyMargin" class="spec-val font-mono text-cyan">LEL 22.5% (안전)</span></div>
+              <div class="spec-cell"><span class="spec-label">Novec/FK-5-1-12 약제량</span><span id="bessAgentMassKg" class="spec-val font-mono">58.5 kg</span></div>
+              <div class="spec-cell"><span class="spec-label">비상 배기 가동 지연시간</span><span id="bessResponseSec" class="spec-val font-mono">&lt; 15 초 (가스감지)</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="bessOpinionText" class="opinion-text">소방 설비 비상 배기 능력이 NFPA 855 기준 LEL 25% 이하 유지 조건을 완벽히 만족합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 59: 기어 치면 강도 & 루이스 굽힘응력 검증기 (AGMA / ISO 6336) -->
+    <!-- ========================================================================= -->
+    <section id="tab-gearstress" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">⚙️ 기어 치면 접촉면압 &amp; 루이스 굽힘응력 (AGMA / ISO 6336)</h1>
+          <p class="main-desc">스퍼/헬리컬 기어의 루이스 굽힘 파손 안전계수(SF) 및 헤르츠 접촉 면압(SH) 피팅 한계를 검증합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>기어 사양 및 전달 토크 입력</h3></div>
+          </div>
+          <form id="gearstressForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>모듈 (Module, m)</label>
+                <input type="number" id="gsModuleM" class="form-input" value="3.0" step="0.5" min="0.5" oninput="calcGearStress()">
+              </div>
+              <div class="form-group">
+                <label>피니언 잇수 (Pinion Teeth, z1)</label>
+                <input type="number" id="gsPinionTeethZ1" class="form-input" value="20" step="1" min="12" oninput="calcGearStress()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>치폭 (Face Width b, mm)</label>
+                <input type="number" id="gsFaceWidthB" class="form-input" value="30" step="5" min="5" oninput="calcGearStress()">
+              </div>
+              <div class="form-group">
+                <label>전달 동력 (Power P, kW)</label>
+                <input type="number" id="gsTransmittedKw" class="form-input" value="5.5" step="0.5" min="0.1" oninput="calcGearStress()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>피니언 회전수 (n1, RPM)</label>
+                <input type="number" id="gsPinionRpm" class="form-input" value="1450" step="50" min="10" oninput="calcGearStress()">
+              </div>
+              <div class="form-group">
+                <label>기어 재질 및 열처리</label>
+                <select id="gsMaterialType" class="form-select" onchange="calcGearStress()">
+                  <option value="scm440" selected>침탄 담금질 합금강 (SCM415/440, 허용 450 MPa)</option>
+                  <option value="sm45c">고주파 열처리 탄소강 (SM45C, 허용 280 MPa)</option>
+                  <option value="sus304">스테인리스강 (SUS304, 허용 190 MPa)</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>응력 및 강도 안전율 데이터</h3></div>
+            <span id="gsVerdictBadge" class="verdict-stamp font-mono badge-safe">BENDING PASS (SF=2.4)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">루이스 굽힘 응력 (Bending Stress, σb)</span>
+              <div class="terminal-voltage-big font-mono"><span id="gsBendingStressMpa">115.4</span> <small>MPa</small></div>
+              <p class="hero-subtext">굽힘 파손 안전계수 (SF): <strong id="gsBendingSafetyFactor" class="text-cyan">2.43</strong> (기준 SF ≥ 1.5)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">접선 방향 전달력 (Ft)</span><span id="gsTangentialForceN" class="spec-val font-mono">1,208 N</span></div>
+              <div class="spec-cell"><span class="spec-label">헤르츠 접촉면압 (σH)</span><span id="gsContactStressMpa" class="spec-val font-mono text-cyan">685.2 MPa</span></div>
+              <div class="spec-cell"><span class="spec-label">피치원 직경 (d1)</span><span id="gsPitchDiameterD1" class="spec-val font-mono">60.0 mm</span></div>
+              <div class="spec-cell"><span class="spec-label">전달 토크 (Torque T1)</span><span id="gsTorqueNm" class="spec-val font-mono">36.2 N·m</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="gsOpinionText" class="opinion-text">기어 굽힘 강도 및 치면 접촉면압이 충분하여 피팅 및 이부러짐 위험이 전혀 없습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 60: 선박 복원성 메타센터 높이(GM) & 복원 모멘트 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-shipstability" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">⚓ 선박 복원성 메타센터 높이(GM) &amp; 전복 방지 안전성 (IMO)</h1>
+          <p class="main-desc">IMO 선박 복원성 기준에 따른 메타센터 높이(GM), 복원정(GZ), 횡요 주기 및 해상 전복 방지 안전성을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>선체 및 화물 적재 제원 입력</h3></div>
+          </div>
+          <form id="shipstabilityForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배수량 (Displacement Δ, Ton)</label>
+                <input type="number" id="ssDisplacementTon" class="form-input" value="12500" step="500" min="100" oninput="calcShipStability()">
+              </div>
+              <div class="form-group">
+                <label>선폭 (Beam B, m)</label>
+                <input type="number" id="ssBeamWidthM" class="form-input" value="24.0" step="1" min="3" oninput="calcShipStability()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>흘수 (Draft d, m)</label>
+                <input type="number" id="ssDraftM" class="form-input" value="8.5" step="0.5" min="1" oninput="calcShipStability()">
+              </div>
+              <div class="form-group">
+                <label>선저-무게중심 높이 (KG, m)</label>
+                <input type="number" id="ssHeightKgM" class="form-input" value="9.8" step="0.2" min="1" oninput="calcShipStability()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>복원성 및 횡요 특성 데이터</h3></div>
+            <span id="ssVerdictBadge" class="verdict-stamp font-mono badge-safe">IMO STABLE</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">초기 메타센터 높이 (GM, Transverse)</span>
+              <div class="terminal-voltage-big font-mono"><span id="ssMetacentricHeightGm">1.45</span> <small>m</small></div>
+              <p class="hero-subtext">IMO 최소 안전 기준: <strong class="text-cyan">GM ≥ 0.15 m</strong> (100% 만족)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">최대 복원정 (GZ @30°)</span><span id="ssRightingArmGz" class="spec-val font-mono">0.725 m</span></div>
+              <div class="spec-cell"><span class="spec-label">선체 고유 횡요주기 (T_roll)</span><span id="ssRollPeriodSec" class="spec-val font-mono text-cyan">15.8 초</span></div>
+              <div class="spec-cell"><span class="spec-label">부심 높이 (KB)</span><span id="ssHeightKb" class="spec-val font-mono">4.51 m</span></div>
+              <div class="spec-cell"><span class="spec-label">메타센터 반경 (BM)</span><span id="ssRadiusBm" class="spec-val font-mono">6.74 m</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="ssOpinionText" class="opinion-text">메타센터 높이 GM이 1.45m로 우수하여 강풍 및 파랑 조건에서도 최상의 복원력을 유지합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -8497,6 +8970,30 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-robottorque')">
           <i data-lucide="bot"></i>
           <div><strong>54. 6축 로봇 관절 토크</strong><p>Newton-Euler 관절 동역학 토크, 페이로드 및 감속기 수명</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-rocketnozzle')">
+          <i data-lucide="rocket"></i>
+          <div><strong>55. 로켓 노즐 비추력(Isp)</strong><p>드라발 노즐 등엔트로피 팽창, 추력(kN), 비추력(초) 및 최적 팽창비</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-plasmasheath')">
+          <i data-lucide="zap"></i>
+          <div><strong>56. 반도체 플라즈마 쉬스</strong><p>디바이 길이(Debye), 보옴 유속(Bohm), 차일드-랭뮤어 쉬스 두께</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-batteryslurry')">
+          <i data-lucide="battery"></i>
+          <div><strong>57. 배터리 슬러리 건조열</strong><p>NMP 증발 잠열, 건조 존 열풍 풍량(CMM), LEL 25% 안전 환기량</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-besssafety')">
+          <i data-lucide="shield-alert"></i>
+          <div><strong>58. BESS 열폭주 소방배기</strong><p>NFPA 855 / UL 9540A 오프가스 체적, 비상 배기량 및 가스소화 약제</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-gearstress')">
+          <i data-lucide="settings"></i>
+          <div><strong>59. 기어 치면·굽힘강도</strong><p>AGMA / ISO 6336 루이스 굽힘응력, 피팅 면압 및 전달 허용 토크</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-shipstability')">
+          <i data-lucide="anchor"></i>
+          <div><strong>60. 선박 복원성(GM)</strong><p>메타센터 높이(GM), 복원정(GZ), IMO 내항성 및 전복 방지 안전성</p></div>
         </div>
 <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>

@@ -8450,3 +8450,265 @@ function calcRobotTorque() {
   if (kwEl) kwEl.textContent = `${Math.max(parseFloat(recMotorKw), 1.0)} kW (3,000 RPM)`;
 }
 window.calcRobotTorque = calcRobotTorque;
+
+
+// ==========================================================================
+// TAB 55: 로켓 노즐 비추력 & 팽창비 (calcRocketNozzle)
+// ==========================================================================
+function calcRocketNozzle() {
+  const prop = document.getElementById('rnPropellant')?.value || 'lox_kerosene';
+  const Pc = parseFloat(document.getElementById('rnChamberPressurePc')?.value) || 70;
+  const Dt = parseFloat(document.getElementById('rnThroatDiameterMm')?.value) || 120;
+  const eps = parseFloat(document.getElementById('rnExpansionRatio')?.value) || 35;
+  const amb = document.getElementById('rnAmbientType')?.value || 'vacuum';
+  const mdot = parseFloat(document.getElementById('rnMassFlowKgSec')?.value) || 35;
+
+  let k = 1.24;
+  let Tc = 3500;
+  let R = 360;
+  if (prop === 'lox_lh2') { k = 1.26; Tc = 3300; R = 600; }
+  else if (prop === 'lox_methane') { k = 1.22; Tc = 3400; R = 420; }
+  else if (prop === 'solid') { k = 1.20; Tc = 2800; R = 300; }
+
+  const At = Math.PI * Math.pow(Dt / 2000, 2); // m2
+  const Ae = At * eps;
+  const De = Math.sqrt(Ae * 4 / Math.PI) * 1000; // mm
+
+  const Me = Math.sqrt(2 / (k - 1) * (Math.pow(eps, (k - 1) / (k + 1)) * 1.8 - 1));
+  const Pe = Math.max(Pc / Math.pow(1 + (k - 1) / 2 * Math.pow(Me, 2), k / (k - 1)), 0.05);
+
+  let Pa = 0;
+  if (amb === 'sealevel') Pa = 1.013;
+  else if (amb === 'high_altitude') Pa = 0.26;
+
+  const ve = Math.sqrt(2 * (k / (k - 1)) * R * Tc * (1 - Math.pow(Pe / Pc, (k - 1) / k)));
+  const thrustN = (mdot * ve) + ((Pe - Pa) * 1e5 * Ae);
+  const thrustKn = thrustN / 1000;
+  const Isp = thrustN / (mdot * 9.80665);
+
+  const ispEl = document.getElementById('rnSpecificImpulseIsp');
+  if (ispEl) ispEl.textContent = Isp.toFixed(1);
+
+  const veEl = document.getElementById('rnEffectiveVelocity');
+  if (veEl) veEl.textContent = `${Math.round(ve).toLocaleString()} m/s (Mach ${(ve / 340).toFixed(1)})`;
+
+  const thrustEl = document.getElementById('rnTotalThrustKn');
+  if (thrustEl) thrustEl.textContent = `${thrustKn.toFixed(1)} kN`;
+
+  const machEl = document.getElementById('rnExitMach');
+  if (machEl) machEl.textContent = `Mach ${Me.toFixed(2)}`;
+
+  const peEl = document.getElementById('rnExitPressure');
+  if (peEl) peEl.textContent = `${Pe.toFixed(2)} bar`;
+
+  const deEl = document.getElementById('rnExitDiameter');
+  if (deEl) deEl.textContent = `${Math.round(De)} mm`;
+}
+window.calcRocketNozzle = calcRocketNozzle;
+
+// ==========================================================================
+// TAB 56: 반도체 플라즈마 디바이 길이 & 쉬스 (calcPlasmaSheath)
+// ==========================================================================
+function calcPlasmaSheath() {
+  const ne_10 = parseFloat(document.getElementById('psElectronDensity')?.value) || 5.0;
+  const Te = parseFloat(document.getElementById('psElectronTempEv')?.value) || 3.5;
+  const Vbias = parseFloat(document.getElementById('psBiasVoltageV')?.value) || 250;
+  const gas = document.getElementById('psGasType')?.value || 'argon';
+
+  let M_amu = 40;
+  if (gas === 'cf4') M_amu = 69;
+  else if (gas === 'o2') M_amu = 32;
+  else if (gas === 'cl2') M_amu = 71;
+
+  const ne_m3 = ne_10 * 1e16; // m-3
+  const eps0 = 8.854e-12;
+  const q = 1.602e-19;
+  const kb = 1.38e-23;
+
+  const lambdaD_m = Math.sqrt((eps0 * Te * q) / (ne_m3 * q * q));
+  const lambdaD_um = lambdaD_m * 1e6;
+
+  const vBohm = Math.sqrt((Te * q) / (M_amu * 1.66e-27));
+  const Ji_A_m2 = q * ne_m3 * vBohm;
+  const Ji_mA_cm2 = (Ji_A_m2 / 10000) * 1000;
+
+  // Child-Langmuir sheath thickness s = (sqrt(2)/3) * lambdaD * (2*Vbias/Te)^(3/4)
+  const s_m = (Math.sqrt(2) / 3) * lambdaD_m * Math.pow((2 * Vbias) / Te, 0.75);
+  const s_mm = s_m * 1000;
+
+  const fpe_ghz = (Math.sqrt((ne_m3 * q * q) / (eps0 * 9.109e-31)) / (2 * Math.PI)) / 1e9;
+
+  const dEl = document.getElementById('psDebyeLengthUm');
+  if (dEl) dEl.textContent = lambdaD_um.toFixed(1);
+
+  const sEl = document.getElementById('psSheathThicknessMm');
+  if (sEl) sEl.textContent = `${s_mm.toFixed(2)} mm`;
+
+  const vbEl = document.getElementById('psBohmVelocity');
+  if (vbEl) vbEl.textContent = `${Math.round(vBohm).toLocaleString()} m/s`;
+
+  const jiEl = document.getElementById('psIonCurrentDensity');
+  if (jiEl) jiEl.textContent = `${Ji_mA_cm2.toFixed(2)} mA/cm²`;
+
+  const eEl = document.getElementById('psIonEnergyEv');
+  if (eEl) eEl.textContent = `${(Vbias + Te * 0.5).toFixed(1)} eV`;
+
+  const fEl = document.getElementById('psPlasmaFreqGhz');
+  if (fEl) fEl.textContent = `${fpe_ghz.toFixed(2)} GHz`;
+}
+window.calcPlasmaSheath = calcPlasmaSheath;
+
+// ==========================================================================
+// TAB 57: 배터리 슬러리 코팅 건조 (calcBatterySlurry)
+// ==========================================================================
+function calcBatterySlurry() {
+  const type = document.getElementById('bsElectrodeType')?.value || 'cathode_nmp';
+  const speedMpm = parseFloat(document.getElementById('bsLineSpeedMpm')?.value) || 45;
+  const widthMm = parseFloat(document.getElementById('bsCoatingWidthMm')?.value) || 650;
+  const wetLoading = parseFloat(document.getElementById('bsWetLoadingGsm')?.value) || 280;
+  const solidPct = parseFloat(document.getElementById('bsSolidPercent')?.value) || 70;
+  const dryTemp = parseFloat(document.getElementById('bsDryerTemp')?.value) || 130;
+
+  const widthM = widthMm / 1000;
+  const coatedAreaM2PerMin = speedMpm * widthM;
+  const wetKgMin = (coatedAreaM2PerMin * wetLoading) / 1000;
+  const dryLoading = wetLoading * (solidPct / 100);
+  const solventEvapKgMin = wetKgMin * (1 - solidPct / 100);
+  const solventEvapKgHr = solventEvapKgMin * 60;
+
+  let deltaHv = 525; // NMP latent heat kJ/kg
+  let LEL = 0.013; // 1.3% for NMP
+  if (type === 'anode_water') { deltaHv = 2260; LEL = 1.0; }
+
+  const qKw = (solventEvapKgMin * deltaHv) / 60 * 1.35; // with sensible heat
+  const safetyAirflowCmm = (solventEvapKgMin / (LEL * 0.25 * 3.8)) * 1.2;
+  const lelConc = ((solventEvapKgMin / safetyAirflowCmm) / LEL * 25).toFixed(1);
+
+  const qEl = document.getElementById('bsTotalHeatKw');
+  if (qEl) qEl.textContent = qKw.toFixed(1);
+
+  const evapEl = document.getElementById('bsEvapRateKgHr');
+  if (evapEl) evapEl.textContent = `${solventEvapKgHr.toFixed(1)} kg/h (${solventEvapKgMin.toFixed(2)} kg/min)`;
+
+  const cmmEl = document.getElementById('bsSafetyAirflowCmm');
+  if (cmmEl) cmmEl.textContent = `${safetyAirflowCmm.toFixed(1)} CMM`;
+
+  const lelEl = document.getElementById('bsLelConcentration');
+  if (lelEl) lelEl.textContent = `${lelConc}% (안전)`;
+
+  const dryEl = document.getElementById('bsDryLoadingGsm');
+  if (dryEl) dryEl.textContent = `${dryLoading.toFixed(1)} g/m²`;
+
+  const recEl = document.getElementById('bsNmpRecoveryKw');
+  if (recEl) recEl.textContent = `${(qKw * 0.28).toFixed(1)} kW`;
+}
+window.calcBatterySlurry = calcBatterySlurry;
+
+// ==========================================================================
+// TAB 58: BESS 열폭주 소방 배기 (calcBessSafety)
+// ==========================================================================
+function calcBessSafety() {
+  const chem = document.getElementById('bessChemistry')?.value || 'ncm';
+  const kwh = parseFloat(document.getElementById('bessRackCapacityKwh')?.value) || 150;
+  const volM3 = parseFloat(document.getElementById('bessContainerVolM3')?.value) || 75;
+  const failedRacks = parseFloat(document.getElementById('bessFailedRacks')?.value) || 1;
+
+  let gasRateLPerKwh = 185; // NCM
+  if (chem === 'lfp') gasRateLPerKwh = 95;
+
+  const totalGasL = kwh * failedRacks * gasRateLPerKwh;
+  const totalGasM3 = totalGasL / 1000;
+  const targetTimeMin = 10;
+  const exhaustCmm = (totalGasM3 / (0.25 * 0.04 * targetTimeMin)); // maintain < 25% LEL of H2
+  const exhaustCfm = exhaustCmm * 35.3147;
+  const agentKg = volM3 * 0.78; // Novec 1230 design concentration
+
+  const cfmEl = document.getElementById('bessExhaustCfm');
+  if (cfmEl) cfmEl.textContent = Math.round(exhaustCfm).toLocaleString();
+
+  const cmmEl = document.getElementById('bessExhaustCmm');
+  if (cmmEl) cmmEl.textContent = `${exhaustCmm.toFixed(1)} CMM`;
+
+  const gasEl = document.getElementById('bessTotalGasVol');
+  if (gasEl) gasEl.textContent = `${totalGasM3.toFixed(1)} m³ (${Math.round(totalGasL).toLocaleString()} L)`;
+
+  const agentEl = document.getElementById('bessAgentMassKg');
+  if (agentEl) agentEl.textContent = `${agentKg.toFixed(1)} kg`;
+}
+window.calcBessSafety = calcBessSafety;
+
+// ==========================================================================
+// TAB 59: 기어 치면 강도 & 루이스 응력 (calcGearStress)
+// ==========================================================================
+function calcGearStress() {
+  const m = parseFloat(document.getElementById('gsModuleM')?.value) || 3.0;
+  const z1 = parseFloat(document.getElementById('gsPinionTeethZ1')?.value) || 20;
+  const b = parseFloat(document.getElementById('gsFaceWidthB')?.value) || 30;
+  const P = parseFloat(document.getElementById('gsTransmittedKw')?.value) || 5.5;
+  const n1 = parseFloat(document.getElementById('gsPinionRpm')?.value) || 1450;
+  const mat = document.getElementById('gsMaterialType')?.value || 'scm440';
+
+  let allowBendingMpa = 450;
+  if (mat === 'sm45c') allowBendingMpa = 280;
+  else if (mat === 'sus304') allowBendingMpa = 190;
+
+  const d1 = m * z1; // Pitch diameter mm
+  const T1 = (P * 9550) / n1; // N.m
+  const Ft = (2 * T1 * 1000) / d1; // N
+  const Y = 0.32; // Lewis form factor for 20 teeth
+  const sigmaB = Ft / (b * m * Y);
+  const SF = allowBendingMpa / sigmaB;
+  const sigmaH = 2.5 * Math.sqrt((Ft * 206000) / (b * d1 * 0.5)); // Hertz contact stress approx
+
+  const sbEl = document.getElementById('gsBendingStressMpa');
+  if (sbEl) sbEl.textContent = sigmaB.toFixed(1);
+
+  const sfEl = document.getElementById('gsBendingSafetyFactor');
+  if (sfEl) sfEl.textContent = SF.toFixed(2);
+
+  const ftEl = document.getElementById('gsTangentialForceN');
+  if (ftEl) ftEl.textContent = `${Math.round(Ft).toLocaleString()} N`;
+
+  const shEl = document.getElementById('gsContactStressMpa');
+  if (shEl) shEl.textContent = `${sigmaH.toFixed(1)} MPa`;
+
+  const d1El = document.getElementById('gsPitchDiameterD1');
+  if (d1El) d1El.textContent = `${d1.toFixed(1)} mm`;
+
+  const tEl = document.getElementById('gsTorqueNm');
+  if (tEl) tEl.textContent = `${T1.toFixed(1)} N·m`;
+}
+window.calcGearStress = calcGearStress;
+
+// ==========================================================================
+// TAB 60: 선박 복원성 GM (calcShipStability)
+// ==========================================================================
+function calcShipStability() {
+  const delta = parseFloat(document.getElementById('ssDisplacementTon')?.value) || 12500;
+  const B = parseFloat(document.getElementById('ssBeamWidthM')?.value) || 24.0;
+  const d = parseFloat(document.getElementById('ssDraftM')?.value) || 8.5;
+  const KG = parseFloat(document.getElementById('ssHeightKgM')?.value) || 9.8;
+
+  const KB = 0.53 * d;
+  const BM = (Math.pow(B, 2)) / (12 * d) * 1.4; // approx for commercial hull
+  const KM = KB + BM;
+  const GM = KM - KG;
+  const GZ_30 = GM * Math.sin(30 * Math.PI / 180);
+  const T_roll = (0.8 * B) / Math.sqrt(Math.max(GM, 0.1));
+
+  const gmEl = document.getElementById('ssMetacentricHeightGm');
+  if (gmEl) gmEl.textContent = GM.toFixed(2);
+
+  const gzEl = document.getElementById('ssRightingArmGz');
+  if (gzEl) gzEl.textContent = `${GZ_30.toFixed(3)} m`;
+
+  const rollEl = document.getElementById('ssRollPeriodSec');
+  if (rollEl) rollEl.textContent = `${T_roll.toFixed(1)} 초`;
+
+  const kbEl = document.getElementById('ssHeightKb');
+  if (kbEl) kbEl.textContent = `${KB.toFixed(2)} m`;
+
+  const bmEl = document.getElementById('ssRadiusBm');
+  if (bmEl) bmEl.textContent = `${BM.toFixed(2)} m`;
+}
+window.calcShipStability = calcShipStability;
