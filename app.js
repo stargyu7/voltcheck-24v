@@ -8975,3 +8975,265 @@ function calcSteelBeam() {
   if (rEl) rEl.textContent = `${((P / 2) + (w * L / 2)).toFixed(1)} kN`;
 }
 window.calcSteelBeam = calcSteelBeam;
+
+
+// ==========================================================================
+// TAB 67: 교반기 동력 (calcMixerPower)
+// ==========================================================================
+function calcMixerPower() {
+  const type = document.getElementById('mpImpellerType')?.value || 'rushton';
+  const D_mm = parseFloat(document.getElementById('mpImpellerDiaMm')?.value) || 600;
+  const N_rpm = parseFloat(document.getElementById('mpRpmN')?.value) || 120;
+  const rho = parseFloat(document.getElementById('mpDensity')?.value) || 1100;
+  const mu_cp = parseFloat(document.getElementById('mpViscosityCp')?.value) || 50;
+  const baf = document.getElementById('mpBaffleOption')?.value || 'with_baffles';
+
+  let Np = 5.0; // Rushton
+  if (type === 'pitched_blade') Np = 1.3;
+  else if (type === 'marine_propeller') Np = 0.35;
+  else if (type === 'anchor') Np = 0.8;
+
+  if (baf === 'no_baffles') Np *= 0.70;
+
+  const D = D_mm / 1000; // m
+  const N_rps = N_rpm / 60; // rev/s
+  const mu_Pa_s = mu_cp / 1000;
+
+  const Re_m = (rho * N_rps * Math.pow(D, 2)) / Math.max(mu_Pa_s, 1e-4);
+  const P_watts = Np * rho * Math.pow(N_rps, 3) * Math.pow(D, 5);
+  const P_kw = P_watts / 1000;
+  const recMotorKw = (P_kw / 0.85) * 1.25; // 85% eff + 25% margin
+  const torqueNm = (P_kw * 1000) / (2 * Math.PI * N_rps);
+  const tipSpeed = Math.PI * D * N_rps;
+
+  const pEl = document.getElementById('mpShaftPowerKw');
+  if (pEl) pEl.textContent = P_kw.toFixed(2);
+
+  const motEl = document.getElementById('mpRecommendedMotorKw');
+  if (motEl) motEl.textContent = `${recMotorKw.toFixed(1)} kW (모터 권장)`;
+
+  const reEl = document.getElementById('mpReynoldsNum');
+  if (reEl) reEl.textContent = Math.round(Re_m).toLocaleString();
+
+  const torqEl = document.getElementById('mpShaftTorqueNm');
+  if (torqEl) torqEl.textContent = `${torqueNm.toFixed(1)} N·m`;
+
+  const tipEl = document.getElementById('mpTipSpeedMps');
+  if (tipEl) tipEl.textContent = `${tipSpeed.toFixed(2)} m/s`;
+
+  const npEl = document.getElementById('mpPowerNumber');
+  if (npEl) npEl.textContent = Np.toFixed(2);
+}
+window.calcMixerPower = calcMixerPower;
+
+// ==========================================================================
+// TAB 68: 배관 마찰손실 (calcPipingLoss)
+// ==========================================================================
+function calcPipingLoss() {
+  const D_mm = parseFloat(document.getElementById('plPipeDiaMm')?.value) || 80;
+  const Q_m3h = parseFloat(document.getElementById('plFlowRateM3h')?.value) || 45;
+  const L = parseFloat(document.getElementById('plStraightLengthM')?.value) || 150;
+  const mat = document.getElementById('plMaterialRoughness')?.value || 'commercial_steel';
+  const n_elbow = parseFloat(document.getElementById('plElbowCount')?.value) || 6;
+  const n_valve = parseFloat(document.getElementById('plValveCount')?.value) || 3;
+
+  let eps = 0.045; // mm
+  if (mat === 'stainless_steel') eps = 0.015;
+  else if (mat === 'pvc_hdpe') eps = 0.005;
+  else if (mat === 'cast_iron') eps = 0.26;
+
+  const D = D_mm / 1000;
+  const A = Math.PI * Math.pow(D / 2, 2);
+  const v = (Q_m3h / 3600) / A;
+  const rho = 1000;
+  const mu = 1e-3; // Water
+  const Re = (rho * v * D) / mu;
+
+  const f = 0.25 / Math.pow(Math.log10((eps / (3.7 * D_mm)) + (5.74 / Math.pow(Re, 0.9))), 2);
+  const Le_elbow = 30 * D; // Equivalent length of 90 deg elbow
+  const Le_valve = 8 * D; // Gate valve
+  const L_total = L + (n_elbow * Le_elbow) + (n_valve * Le_valve);
+
+  const deltaP_pa = f * (L_total / D) * (rho * Math.pow(v, 2) / 2);
+  const deltaP_bar = deltaP_pa / 1e5;
+  const headLoss_m = deltaP_pa / (rho * 9.81);
+
+  const dpEl = document.getElementById('plPressureDropBar');
+  if (dpEl) dpEl.textContent = deltaP_bar.toFixed(2);
+
+  const hlEl = document.getElementById('plHeadLossM');
+  if (hlEl) hlEl.textContent = `${headLoss_m.toFixed(2)} m`;
+
+  const velEl = document.getElementById('plVelocityMps');
+  if (velEl) velEl.textContent = `${v.toFixed(2)} m/s`;
+
+  const reEl = document.getElementById('plReynoldsRe');
+  if (reEl) reEl.textContent = `${Math.round(Re).toLocaleString()} (난류)`;
+
+  const fEl = document.getElementById('plDarcyFactorF');
+  if (fEl) fEl.textContent = f.toFixed(4);
+
+  const leEl = document.getElementById('plEquivalentLengthM');
+  if (leEl) leEl.textContent = `${L_total.toFixed(1)} m`;
+}
+window.calcPipingLoss = calcPipingLoss;
+
+// ==========================================================================
+// TAB 69: 냉매 사이클 COP (calcRefrigerationCop)
+// ==========================================================================
+function calcRefrigerationCop() {
+  const type = document.getElementById('rcRefrigerantType')?.value || 'r134a';
+  const Q_kw = parseFloat(document.getElementById('rcCoolingKw')?.value) || 105;
+  const Te = parseFloat(document.getElementById('rcEvapTemp')?.value) || 5.0;
+  const Tc = parseFloat(document.getElementById('rcCondTemp')?.value) || 45.0;
+  const eta_is = (parseFloat(document.getElementById('rcIsentropicEff')?.value) || 75) / 100;
+
+  const Te_K = Te + 273.15;
+  const Tc_K = Tc + 273.15;
+  const cop_carnot = Te_K / (Tc_K - Te_K);
+  const cop_actual = cop_carnot * 0.61 * eta_is;
+  const P_comp_kw = Q_kw / cop_actual;
+  const Q_cond_kw = Q_kw + P_comp_kw;
+  const RT = Q_kw / 3.517;
+  const mdot = Q_kw / 155; // approx delta h = 155 kJ/kg
+
+  const copEl = document.getElementById('rcCopVal');
+  if (copEl) copEl.textContent = cop_actual.toFixed(2);
+
+  const rtEl = document.getElementById('rcCapacityRt');
+  if (rtEl) rtEl.textContent = `${RT.toFixed(1)} RT`;
+
+  const pEl = document.getElementById('rcCompressorPowerKw');
+  if (pEl) pEl.textContent = `${P_comp_kw.toFixed(1)} kW`;
+
+  const qcEl = document.getElementById('rcCondenserHeatKw');
+  if (qcEl) qcEl.textContent = `${Q_cond_kw.toFixed(1)} kW`;
+
+  const carnotEl = document.getElementById('rcCarnotEfficiency');
+  if (carnotEl) carnotEl.textContent = `${((cop_actual / cop_carnot) * 100).toFixed(1)}%`;
+
+  const mdotEl = document.getElementById('rcMassFlowKgS');
+  if (mdotEl) mdotEl.textContent = `${mdot.toFixed(2)} kg/s`;
+}
+window.calcRefrigerationCop = calcRefrigerationCop;
+
+// ==========================================================================
+// TAB 70: 배관 열팽창 U루프 (calcPipeExpansion)
+// ==========================================================================
+function calcPipeExpansion() {
+  const mat = document.getElementById('peMaterial')?.value || 'carbon_steel';
+  const D_mm = parseFloat(document.getElementById('pePipeDiaMm')?.value) || 114.3;
+  const L_m = parseFloat(document.getElementById('peSpanLengthM')?.value) || 80;
+  const Tmax = parseFloat(document.getElementById('peMaxTemp')?.value) || 190;
+  const Tinst = parseFloat(document.getElementById('peInstallTemp')?.value) || 15;
+
+  let alpha = 12.0e-6; // Carbon steel
+  if (mat === 'stainless_304') alpha = 17.3e-6;
+  else if (mat === 'copper') alpha = 16.8e-6;
+  else if (mat === 'aluminum') alpha = 23.1e-6;
+
+  const deltaT = Tmax - Tinst;
+  const deltaL_mm = alpha * (L_m * 1000) * deltaT;
+  const W_loop_m = (Math.sqrt((D_mm / 1000) * (deltaL_mm / 1000)) * 6.5);
+  const H_loop_m = W_loop_m * 2.0;
+  const anchorForceKn = (deltaL_mm * 0.05);
+
+  const expEl = document.getElementById('peTotalExpansionMm');
+  if (expEl) expEl.textContent = deltaL_mm.toFixed(1);
+
+  const dtEl = document.getElementById('peDeltaTemp');
+  if (dtEl) dtEl.textContent = `${deltaT.toFixed(1)} °C`;
+
+  const wEl = document.getElementById('peLoopWidthM');
+  if (wEl) wEl.textContent = `${W_loop_m.toFixed(2)} m`;
+
+  const hEl = document.getElementById('peLoopHeightM');
+  if (hEl) hEl.textContent = `${H_loop_m.toFixed(2)} m`;
+
+  const fEl = document.getElementById('peAnchorForceKn');
+  if (fEl) fEl.textContent = `${anchorForceKn.toFixed(2)} kN`;
+}
+window.calcPipeExpansion = calcPipeExpansion;
+
+// ==========================================================================
+// TAB 71: 배관 침식·부식 수명 (calcPipeErosion)
+// ==========================================================================
+function calcPipeErosion() {
+  const t_nom = parseFloat(document.getElementById('peNominalThickMm')?.value) || 8.18;
+  const t_act = parseFloat(document.getElementById('peActualThickMm')?.value) || 6.45;
+  const t_min = parseFloat(document.getElementById('peMinReqThickMm')?.value) || 3.50;
+  const years = parseFloat(document.getElementById('peServiceYears')?.value) || 5.0;
+  const v_act = parseFloat(document.getElementById('peFluidVelocity')?.value) || 3.8;
+  const rho = parseFloat(document.getElementById('peFluidDensity')?.value) || 980;
+
+  const lostThick = t_nom - t_act;
+  const cr_mm_yr = lostThick / Math.max(years, 0.1);
+  const cr_mpy = cr_mm_yr * 39.37;
+  const remThick = t_act - t_min;
+  const remYears = remThick / Math.max(cr_mm_yr, 1e-4);
+  const ve = 122 / Math.sqrt(Math.max(rho, 1)); // API RP 14E with C=122 metric
+
+  const remEl = document.getElementById('peRemainingYears');
+  if (remEl) remEl.textContent = Math.max(remYears, 0).toFixed(1);
+
+  const crEl = document.getElementById('peCorrosionRateMmYr');
+  if (crEl) crEl.textContent = `${cr_mm_yr.toFixed(3)} mm/년 (${cr_mpy.toFixed(1)} mpy)`;
+
+  const veEl = document.getElementById('peErosionalVelocity');
+  if (veEl) veEl.textContent = `${ve.toFixed(2)} m/s`;
+
+  const vrEl = document.getElementById('peVelocityRatio');
+  if (vrEl) vrEl.textContent = `${((v_act / ve) * 100).toFixed(1)}% (${v_act <= ve ? '침식안전' : '침식위험'})`;
+
+  const caEl = document.getElementById('peRemainingCaMm');
+  if (caEl) caEl.textContent = `${remThick.toFixed(2)} mm`;
+}
+window.calcPipeErosion = calcPipeErosion;
+
+// ==========================================================================
+// TAB 72: 클린룸 차압 환기 (calcCleanroomDp)
+// ==========================================================================
+function calcCleanroomDp() {
+  const area = parseFloat(document.getElementById('crdpAreaM2')?.value) || 120;
+  const H = parseFloat(document.getElementById('crdpHeightM')?.value) || 3.0;
+  const deltaP = parseFloat(document.getElementById('crdpDiffPressurePa')?.value) || 15.0;
+  const iso = document.getElementById('crdpIsoClass')?.value || 'iso7';
+  const P_door = parseFloat(document.getElementById('crdpDoorPerimeterM')?.value) || 12.0;
+  const gap_mm = parseFloat(document.getElementById('crdpGapWidthMm')?.value) || 2.5;
+
+  let targetAch = 45; // ISO 7
+  if (iso === 'iso5') targetAch = 280;
+  else if (iso === 'iso6') targetAch = 120;
+  else if (iso === 'iso8') targetAch = 20;
+
+  const roomVolM3 = area * H;
+  const supplyCmh = roomVolM3 * targetAch;
+  const supplyCmm = supplyCmh / 60;
+  const supplyCfm = supplyCmh * 0.5886;
+
+  const gapAreaM2 = P_door * (gap_mm / 1000);
+  const leakCms = 0.65 * gapAreaM2 * Math.sqrt(2 * deltaP / 1.2);
+  const leakCmh = leakCms * 3600;
+
+  const totEl = document.getElementById('crdpTotalSupplyCmh');
+  if (totEl) totEl.textContent = Math.round(supplyCmh).toLocaleString();
+
+  const cmmEl = document.getElementById('crdpTotalSupplyCmm');
+  if (cmmEl) cmmEl.textContent = `${supplyCmm.toFixed(1)} CMM`;
+
+  const cfmEl = document.getElementById('crdpTotalSupplyCfm');
+  if (cfmEl) cfmEl.textContent = Math.round(supplyCfm).toLocaleString();
+
+  const achEl = document.getElementById('crdpAchVal');
+  if (achEl) achEl.textContent = `${targetAch.toFixed(1)} 회/h`;
+
+  const leakEl = document.getElementById('crdpLeakageCmh');
+  if (leakEl) leakEl.textContent = `${Math.round(leakCmh)} CMH`;
+
+  const volEl = document.getElementById('crdpRoomVolM3');
+  if (volEl) volEl.textContent = `${Math.round(roomVolM3)} m³`;
+
+  const ratioEl = document.getElementById('crdpMakeupRatio');
+  if (ratioEl) ratioEl.textContent = `${((leakCmh / supplyCmh) * 100).toFixed(1)}%`;
+}
+window.calcCleanroomDp = calcCleanroomDp;

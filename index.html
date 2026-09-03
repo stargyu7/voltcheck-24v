@@ -179,7 +179,7 @@
           <span class="quick-search-kbd">Ctrl+K</span>
         </div>
         <div class="category-filter-strip" id="categoryFilterStrip" style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 66종 (All)</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 72종 (All)</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원·변압기</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·모션·배터리</button>
           <button type="button" class="cat-filter-chip" onclick="filterNavCategory('mech')" id="cfMech">⚙️ 기계·가공·수명</button>
@@ -476,6 +476,30 @@
           <button class="tab-btn" data-tab="tab-steelbeam" data-category="motion" role="tab">
             <i data-lucide="box"></i>
             <span>66. H형강 처짐·모멘트</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-mixerpower" data-category="fluid" role="tab">
+            <i data-lucide="rotate-cw"></i>
+            <span>67. 교반기 임펠러 동력</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-pipingloss" data-category="fluid" role="tab">
+            <i data-lucide="git-commit"></i>
+            <span>68. 배관 마찰손실·수두</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-refrigerationcop" data-category="fluid" role="tab">
+            <i data-lucide="snowflake"></i>
+            <span>69. 냉매 사이클 COP</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-pipeexpansion" data-category="fluid" role="tab">
+            <i data-lucide="move-horizontal"></i>
+            <span>70. 배관 열팽창·U루프</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-pipeerosion" data-category="specs" role="tab">
+            <i data-lucide="shield"></i>
+            <span>71. 배관 침식·부식 수명</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-cleanroomdp" data-category="specs" role="tab">
+            <i data-lucide="wind"></i>
+            <span>72. 클린룸 차압·환기횟수</span>
           </button>
 <button class="tab-btn" data-tab="tab-articles" role="tab">
             <i data-lucide="book-open"></i>
@@ -7582,6 +7606,489 @@
       </div>
     </section>
 
+    
+    <!-- ========================================================================= -->
+    <!-- TAB 67: 교반기(Mixer) 임펠러 소요 동력 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-mixerpower" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🌪️ 화학/바이오 교반기(Mixer) 임펠러 소요 동력 검증기</h1>
+          <p class="main-desc">동력수(Np)와 교반 레이놀즈수를 바탕으로 러쉬톤/패들/프로펠러 임펠러의 모터 소요 동력(kW)과 토크를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>교반조 및 임펠러 제원 입력</h3></div>
+          </div>
+          <form id="mixerpowerForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>임펠러 유형 (Impeller Type)</label>
+                <select id="mpImpellerType" class="form-select" onchange="calcMixerPower()">
+                  <option value="rushton" selected>러쉬톤 터빈 (Rushton 6-Blade, Np=5.0)</option>
+                  <option value="pitched_blade">피치 블레이드 터빈 (Pitched 4-Blade, Np=1.3)</option>
+                  <option value="marine_propeller">마린 프로펠러 (Marine 3-Blade, Np=0.35)</option>
+                  <option value="anchor">앵커형 패들 (Anchor Paddle, Np=0.8)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>임펠러 직경 (Impeller D, mm)</label>
+                <input type="number" id="mpImpellerDiaMm" class="form-input" value="600" step="50" min="50" oninput="calcMixerPower()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>교반 회전수 (Agitator Speed N, RPM)</label>
+                <input type="number" id="mpRpmN" class="form-input" value="120" step="10" min="10" oninput="calcMixerPower()">
+              </div>
+              <div class="form-group">
+                <label>액체 밀도 (Density ρ, kg/m³)</label>
+                <input type="number" id="mpDensity" class="form-input" value="1100" step="50" min="500" oninput="calcMixerPower()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>액체 점도 (Viscosity μ, cP / mPa·s)</label>
+                <input type="number" id="mpViscosityCp" class="form-input" value="50" step="10" min="1" oninput="calcMixerPower()">
+              </div>
+              <div class="form-group">
+                <label>방해판(Baffle) 유무</label>
+                <select id="mpBaffleOption" class="form-select" onchange="calcMixerPower()">
+                  <option value="with_baffles" selected>방해판 4개 설치 (표준 완전 난류)</option>
+                  <option value="no_baffles">방해판 없음 (선회와류 발생, Np 30% 감소)</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>교반 동력 및 유동 패턴 데이터</h3></div>
+            <span id="mpVerdictBadge" class="verdict-stamp font-mono badge-safe">TURBULENT (Re=8.6×10⁴)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">임펠러 축 소요 동력 (Shaft Power)</span>
+              <div class="terminal-voltage-big font-mono"><span id="mpShaftPowerKw">3.42</span> <small>kW</small></div>
+              <p class="hero-subtext">추천 모터 용량: <strong id="mpRecommendedMotorKw" class="text-cyan">5.5 kW</strong> (감속기 효율 85% 반영)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">교반 레이놀즈수 (Re_m)</span><span id="mpReynoldsNum" class="spec-val font-mono text-cyan">86,400</span></div>
+              <div class="spec-cell"><span class="spec-label">소요 축 토크 (Torque)</span><span id="mpShaftTorqueNm" class="spec-val font-mono">272.2 N·m</span></div>
+              <div class="spec-cell"><span class="spec-label">팁 선속도 (Tip Speed)</span><span id="mpTipSpeedMps" class="spec-val font-mono">3.77 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">임펠러 동력수 (Np)</span><span id="mpPowerNumber" class="spec-val font-mono">5.00</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="mpOpinionText" class="opinion-text">완전 난류 영역(Re > 10,000)으로 균일한 화학 반응 및 혼합 전단 성능을 발휘합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 68: 배관 마찰손실 & 다알시-바이스바흐 수두 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-pipingloss" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">💧 배관 마찰손실 &amp; 다알시-바이스바흐(Darcy) 압력강하</h1>
+          <p class="main-desc">배관 직경, 연장 길이, 엘보/밸브 피팅류에 따른 마찰계수(f), 압력 손실(bar) 및 펌프 소요 마찰수두(m)를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>관로 및 유체 조건 입력</h3></div>
+          </div>
+          <form id="pipinglossForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배관 내경 (Pipe ID, mm)</label>
+                <input type="number" id="plPipeDiaMm" class="form-input" value="80" step="5" min="15" oninput="calcPipingLoss()">
+              </div>
+              <div class="form-group">
+                <label>체적 유량 (Flow Rate Q, m³/h)</label>
+                <input type="number" id="plFlowRateM3h" class="form-input" value="45" step="5" min="1" oninput="calcPipingLoss()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>직관 연장 길이 (Length L, m)</label>
+                <input type="number" id="plStraightLengthM" class="form-input" value="150" step="25" min="5" oninput="calcPipingLoss()">
+              </div>
+              <div class="form-group">
+                <label>배관 재질 (조도 Roughness ε)</label>
+                <select id="plMaterialRoughness" class="form-select" onchange="calcPipingLoss()">
+                  <option value="commercial_steel" selected>일반 배관용 탄소강관 (SPP, ε=0.045 mm)</option>
+                  <option value="stainless_steel">스테인리스 강관 (SUS304, ε=0.015 mm)</option>
+                  <option value="pvc_hdpe">PVC / HDPE 플라스틱관 (ε=0.005 mm)</option>
+                  <option value="cast_iron">주철관 (DIP, ε=0.26 mm)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>90도 엘보 개수 (90° Elbow)</label>
+                <input type="number" id="plElbowCount" class="form-input" value="6" step="1" min="0" oninput="calcPipingLoss()">
+              </div>
+              <div class="form-group">
+                <label>밸브 개수 (Gate/Globe/Check)</label>
+                <input type="number" id="plValveCount" class="form-input" value="3" step="1" min="0" oninput="calcPipingLoss()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>배관 압력 손실 및 수두 결과</h3></div>
+            <span id="plVerdictBadge" class="verdict-stamp font-mono badge-safe">VELOCITY PASS (2.49 m/s)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">총 배관 마찰 압력강하 (Pressure Drop)</span>
+              <div class="terminal-voltage-big font-mono"><span id="plPressureDropBar">0.82</span> <small>bar</small></div>
+              <p class="hero-subtext">환산 펌프 소요 마찰수두: <strong id="plHeadLossM" class="text-cyan">8.36 m</strong></p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">배관 내 유속 (Velocity)</span><span id="plVelocityMps" class="spec-val font-mono text-cyan">2.49 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">레이놀즈수 (Reynolds Re)</span><span id="plReynoldsRe" class="spec-val font-mono">198,900 (난류)</span></div>
+              <div class="spec-cell"><span class="spec-label">달시 마찰계수 (f)</span><span id="plDarcyFactorF" class="spec-val font-mono">0.0195</span></div>
+              <div class="spec-cell"><span class="spec-label">총 등가길이 (L_total)</span><span id="plEquivalentLengthM" class="spec-val font-mono">175.5 m</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="plOpinionText" class="opinion-text">배관 유속이 표준 권장 유속(1.5 ~ 3.0 m/s) 내에 있어 침식 및 이상 소음 위험이 없습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 69: 냉매 압축 사이클 COP & 냉동 능력 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-refrigerationcop" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">❄️ 냉매 압축 사이클 COP &amp; 칠러 냉동 능력 검증기</h1>
+          <p class="main-desc">R134a/R410A/R32 냉동 사이클의 증발/응축 온도별 성적계수(COP), 압축기 소요 동력(kW) 및 냉동톤(RT)을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>냉동 사이클 운전 조건 입력</h3></div>
+          </div>
+          <form id="refrigerationcopForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>냉매 종류 (Refrigerant)</label>
+                <select id="rcRefrigerantType" class="form-select" onchange="calcRefrigerationCop()">
+                  <option value="r134a" selected>R134a (친환경 칠러 표준)</option>
+                  <option value="r410a">R410A (고압 공조용)</option>
+                  <option value="r32">R32 (차세대 고효율)</option>
+                  <option value="r717">R717 암모니아 (대형 냉동창고)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>요구 냉각 능력 (Cooling Capacity, kW)</label>
+                <input type="number" id="rcCoolingKw" class="form-input" value="105" step="10" min="10" oninput="calcRefrigerationCop()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>증발 온도 (T_evap, °C)</label>
+                <input type="number" id="rcEvapTemp" class="form-input" value="5.0" step="1" min="-40" max="15" oninput="calcRefrigerationCop()">
+              </div>
+              <div class="form-group">
+                <label>응축 온도 (T_cond, °C)</label>
+                <input type="number" id="rcCondTemp" class="form-input" value="45.0" step="1" min="20" max="65" oninput="calcRefrigerationCop()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>압축기 등엔트로피 효율 (η_is, %)</label>
+                <input type="number" id="rcIsentropicEff" class="form-input" value="75" step="5" min="50" max="95" oninput="calcRefrigerationCop()">
+              </div>
+              <div class="form-group">
+                <label>과열도 (Superheat, °C)</label>
+                <input type="number" id="rcSuperheat" class="form-input" value="5.0" step="1" min="2" max="15" oninput="calcRefrigerationCop()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>COP 및 압축기 동력 데이터</h3></div>
+            <span id="rcVerdictBadge" class="verdict-stamp font-mono badge-safe">COP 4.25 (HIGH EFFICIENCY)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">성적계수 (Coefficient of Performance, COP)</span>
+              <div class="terminal-voltage-big font-mono"><span id="rcCopVal">4.25</span> <small>COP</small></div>
+              <p class="hero-subtext">환산 냉동톤: <strong id="rcCapacityRt" class="text-cyan">29.8 RT</strong> (105 kW)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">압축기 소요 전력 (kW)</span><span id="rcCompressorPowerKw" class="spec-val font-mono text-cyan">24.7 kW</span></div>
+              <div class="spec-cell"><span class="spec-label">응축기 방열량 (Condenser kW)</span><span id="rcCondenserHeatKw" class="spec-val font-mono">129.7 kW</span></div>
+              <div class="spec-cell"><span class="spec-label">카르노 역사이클 효율</span><span id="rcCarnotEfficiency" class="spec-val font-mono">61.2%</span></div>
+              <div class="spec-cell"><span class="spec-label">냉매 순환 질량유량</span><span id="rcMassFlowKgS" class="spec-val font-mono">0.68 kg/s</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="rcOpinionText" class="opinion-text">COP 4.0 이상으로 에너지 소비효율 1등급 기준을 만족하는 고효율 냉동 사이클입니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 70: 배관 열팽창 & U-루프 신축이음 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-pipeexpansion" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🔩 금속 배관 열팽창 &amp; U-루프 신축이음 (Expansion Loop)</h1>
+          <p class="main-desc">스팀/고온수 배관의 온도 변화에 따른 열팽창 신장량(mm)과 U자형 팽창 루프 치수 및 앵커 하중을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>배관 및 운전 온도 입력</h3></div>
+          </div>
+          <form id="pipeexpansionForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>배관 재질 (Material)</label>
+                <select id="peMaterial" class="form-select" onchange="calcPipeExpansion()">
+                  <option value="carbon_steel" selected>탄소강관 (Carbon Steel, α=12.0×10⁻⁶ /°C)</option>
+                  <option value="stainless_304">스테인리스강 (SUS304, α=17.3×10⁻⁶ /°C)</option>
+                  <option value="copper">동관 (Copper, α=16.8×10⁻⁶ /°C)</option>
+                  <option value="aluminum">알루미늄관 (AL, α=23.1×10⁻⁶ /°C)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>배관 공칭 외경 (Outer Dia D, mm)</label>
+                <input type="number" id="pePipeDiaMm" class="form-input" value="114.3" step="10" min="20" oninput="calcPipeExpansion()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>고정점 간 배관 길이 (Anchor Span L, m)</label>
+                <input type="number" id="peSpanLengthM" class="form-input" value="80" step="10" min="5" oninput="calcPipeExpansion()">
+              </div>
+              <div class="form-group">
+                <label>최고 운전 온도 (T_max, °C)</label>
+                <input type="number" id="peMaxTemp" class="form-input" value="190" step="10" min="20" oninput="calcPipeExpansion()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>시공 설치 시 온도 (T_install, °C)</label>
+                <input type="number" id="peInstallTemp" class="form-input" value="15" step="5" min="-20" max="40" oninput="calcPipeExpansion()">
+              </div>
+              <div class="form-group">
+                <label>루프 형태 (Loop Style)</label>
+                <select id="peLoopStyle" class="form-select" onchange="calcPipeExpansion()">
+                  <option value="u_loop" selected>U자형 확장 루프 (U-Expansion Loop)</option>
+                  <option value="z_bend">Z자형 벤드 (Z-Bend)</option>
+                  <option value="l_bend">L자형 코너 벤드 (L-Bend)</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>열팽창량 및 U-루프 설계 치수</h3></div>
+            <span id="peVerdictBadge" class="verdict-stamp font-mono badge-safe">LOOP DESIGN VALID</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">총 배관 열팽창 신장량 (Expansion ΔL)</span>
+              <div class="terminal-voltage-big font-mono"><span id="peTotalExpansionMm">168.0</span> <small>mm</small></div>
+              <p class="hero-subtext">온도 상승폭 (ΔT): <strong id="peDeltaTemp" class="text-cyan">175.0 °C</strong></p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">U-루프 권장 돌출너비 (W)</span><span id="peLoopWidthM" class="spec-val font-mono text-cyan">2.85 m</span></div>
+              <div class="spec-cell"><span class="spec-label">U-루프 권장 높이 (H)</span><span id="peLoopHeightM" class="spec-val font-mono">5.70 m</span></div>
+              <div class="spec-cell"><span class="spec-label">앵커 고정점 추력 (Anchor Force)</span><span id="peAnchorForceKn" class="spec-val font-mono">8.45 kN</span></div>
+              <div class="spec-cell"><span class="spec-label">루프 엘보 발생 굽힘응력</span><span id="peLoopBendingStress" class="spec-val font-mono text-amber">92.5 MPa (안전)</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="peOpinionText" class="opinion-text">설계된 U-루프가 168mm의 큰 열팽창을 흡수하여 배관 좌굴 및 플랜지 누설을 완벽히 방지합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 71: 배관 침식·부식 마모 한계 잔여 수명 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-pipeerosion" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🛡️ 배관 침식·부식 마모 한계 잔여 수명 (API RP 14E / NACE)</h1>
+          <p class="main-desc">API RP 14E 한계 유속과 NACE 부식 속도(mm/yr) 및 초음파 잔여 두께(UT)를 바탕으로 배관 잔여 수명을 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>배관 두께 및 유동 부식 입력</h3></div>
+          </div>
+          <form id="pipeerosionForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>초기 공칭 두께 (Nominal t_nom, mm)</label>
+                <input type="number" id="peNominalThickMm" class="form-input" value="8.18" step="0.5" min="2" oninput="calcPipeErosion()">
+              </div>
+              <div class="form-group">
+                <label>현재 측정 두께 (Measured t_act, mm)</label>
+                <input type="number" id="peActualThickMm" class="form-input" value="6.45" step="0.1" min="1" oninput="calcPipeErosion()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>최소 요구 안전 두께 (t_min, mm)</label>
+                <input type="number" id="peMinReqThickMm" class="form-input" value="3.50" step="0.5" min="1" oninput="calcPipeErosion()">
+              </div>
+              <div class="form-group">
+                <label>가동 경과 기간 (Service Time, Years)</label>
+                <input type="number" id="peServiceYears" class="form-input" value="5.0" step="0.5" min="0.5" oninput="calcPipeErosion()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>유체 실제 유속 (v_actual, m/s)</label>
+                <input type="number" id="peFluidVelocity" class="form-input" value="3.8" step="0.5" min="0.1" oninput="calcPipeErosion()">
+              </div>
+              <div class="form-group">
+                <label>유체 밀도 (Density ρ, kg/m³)</label>
+                <input type="number" id="peFluidDensity" class="form-input" value="980" step="50" min="1" oninput="calcPipeErosion()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>잔여 수명 및 침식 한계 판정</h3></div>
+            <span id="peErosionVerdictBadge" class="verdict-stamp font-mono badge-safe">REMAINING 8.5 YRS</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">배관 예상 잔여 수명 (Remaining Useful Life)</span>
+              <div class="terminal-voltage-big font-mono"><span id="peRemainingYears">8.5</span> <small>Years</small></div>
+              <p class="hero-subtext">연간 평균 부식율: <strong id="peCorrosionRateMmYr" class="text-cyan">0.346 mm/년</strong> (13.6 mpy)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">API 14E 침식 한계유속 (v_e)</span><span id="peErosionalVelocity" class="spec-val font-mono text-cyan">4.92 m/s</span></div>
+              <div class="spec-cell"><span class="spec-label">침식 유속 여유도 (v/ve)</span><span id="peVelocityRatio" class="spec-val font-mono">77.2% (침식안전)</span></div>
+              <div class="spec-cell"><span class="spec-label">유효 부식 여유 (CA_rem)</span><span id="peRemainingCaMm" class="spec-val font-mono">2.95 mm</span></div>
+              <div class="spec-cell"><span class="spec-label">차기 정밀 UT 검사 주기</span><span id="peNextInspection" class="spec-val font-mono text-amber">2.5 년 후</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="peErosionOpinionText" class="opinion-text">침식 한계 유속 이하이며 잔여 수명이 8년 이상으로 차기 정기 대정비(Turnaround)까지 안전합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 72: 클린룸/수술실 차압 누설풍량 & 환기횟수 검증기 -->
+    <!-- ========================================================================= -->
+    <section id="tab-cleanroomdp" class="tab-panel">
+      <div class="section-title-bar">
+        <div>
+          <h1 class="main-title">🌬️ 클린룸 &amp; 음압격리실 차압 누설풍량 및 환기횟수(ACH)</h1>
+          <p class="main-desc">ISO 14644 표준 클린룸의 실간 차압(Pa), 도어/벽체 틈새 누설 풍량(CMH) 및 시간당 환기횟수(ACH)를 산출합니다.</p>
+        </div>
+      </div>
+      <div class="meter-workbench-grid">
+        <div class="workbench-card">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">01</span><h3>클린룸 체적 및 차압 조건 입력</h3></div>
+          </div>
+          <form id="cleanroomdpForm" class="workbench-body" onsubmit="return false;">
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>실 바닥 면적 (Room Area, m²)</label>
+                <input type="number" id="crdpAreaM2" class="form-input" value="120" step="10" min="10" oninput="calcCleanroomDp()">
+              </div>
+              <div class="form-group">
+                <label>천장 높이 (Height H, m)</label>
+                <input type="number" id="crdpHeightM" class="form-input" value="3.0" step="0.2" min="2.0" oninput="calcCleanroomDp()">
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>설계 양압/음압 차압 (ΔP, Pa)</label>
+                <input type="number" id="crdpDiffPressurePa" class="form-input" value="15.0" step="2.5" min="2.5" oninput="calcCleanroomDp()">
+              </div>
+              <div class="form-group">
+                <label>클린룸 청정도 등급 (ISO 14644)</label>
+                <select id="crdpIsoClass" class="form-select" onchange="calcCleanroomDp()">
+                  <option value="iso5">ISO Class 5 (Class 100, ACH 240~360)</option>
+                  <option value="iso6">ISO Class 6 (Class 1,000, ACH 90~150)</option>
+                  <option value="iso7" selected>ISO Class 7 (Class 10,000, ACH 30~60)</option>
+                  <option value="iso8">ISO Class 8 (Class 100,000, ACH 15~25)</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row-2">
+              <div class="form-group">
+                <label>도어 둘레 틈새 길이 (Door Perimeter, m)</label>
+                <input type="number" id="crdpDoorPerimeterM" class="form-input" value="12.0" step="2" min="2" oninput="calcCleanroomDp()">
+              </div>
+              <div class="form-group">
+                <label>도어 평균 틈새 폭 (Gap, mm)</label>
+                <input type="number" id="crdpGapWidthMm" class="form-input" value="2.5" step="0.5" min="0.5" oninput="calcCleanroomDp()">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="workbench-card meter-readout-panel">
+          <div class="card-caption">
+            <div class="caption-left"><span class="card-num">02</span><h3>풍량 및 환기횟수(ACH) 검토</h3></div>
+            <span id="crdpVerdictBadge" class="verdict-stamp font-mono badge-safe">ACH 45 (ISO 7 PASS)</span>
+          </div>
+          <div class="readout-body">
+            <div class="voltage-hero-card">
+              <span class="hero-label">총 공급 급기 풍량 (Total Supply Airflow)</span>
+              <div class="terminal-voltage-big font-mono"><span id="crdpTotalSupplyCmh">16,200</span> <small>CMH</small></div>
+              <p class="hero-subtext">환산 풍량: <strong id="crdpTotalSupplyCmm" class="text-cyan">270.0 CMM</strong> (<span id="crdpTotalSupplyCfm">9,535</span> CFM)</p>
+            </div>
+            <div class="spec-table-grid mt-3">
+              <div class="spec-cell"><span class="spec-label">시간당 환기횟수 (ACH)</span><span id="crdpAchVal" class="spec-val font-mono text-cyan">45.0 회/h</span></div>
+              <div class="spec-cell"><span class="spec-label">도어 틈새 누설 풍량 (Leakage)</span><span id="crdpLeakageCmh" class="spec-val font-mono">542 CMH</span></div>
+              <div class="spec-cell"><span class="spec-label">룸 총 체적 (Volume)</span><span id="crdpRoomVolM3" class="spec-val font-mono">360 m³</span></div>
+              <div class="spec-cell"><span class="spec-label">차압 유지 보충 풍량비</span><span id="crdpMakeupRatio" class="spec-val font-mono">3.3%</span></div>
+            </div>
+            <div class="engineer-opinion-box mt-3">
+              <i data-lucide="check-circle" class="opinion-icon"></i>
+              <p id="crdpOpinionText" class="opinion-text">환기횟수 45 ACH로 ISO Class 7 청정도 및 15Pa 양압 유지가 완벽히 보장됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="tab-articles" class="tab-panel">
       <div class="section-title-bar">
         <div>
@@ -9498,6 +10005,30 @@
         <div class="drawer-tool-item" onclick="selectDrawerTool('tab-steelbeam')">
           <i data-lucide="box"></i>
           <div><strong>66. H형강 처짐·모멘트</strong><p>등분포/집중 하중 H빔 및 각파이프 최대 처짐량(δ)과 휨응력</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-mixerpower')">
+          <i data-lucide="rotate-cw"></i>
+          <div><strong>67. 교반기 임펠러 동력</strong><p>동력수(Np), 교반 레이놀즈수, 러쉬톤/피치 블레이드 모터 kW</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-pipingloss')">
+          <i data-lucide="git-commit"></i>
+          <div><strong>68. 배관 마찰손실·수두</strong><p>다알시-바이스바흐 마찰손실, 밸브 피팅 상당길이, 총 수두(m)</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-refrigerationcop')">
+          <i data-lucide="snowflake"></i>
+          <div><strong>69. 냉매 사이클 COP</strong><p>R134a/R410A 압축 동력, 냉동톤(RT), 성적계수(COP) 및 과열도</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-pipeexpansion')">
+          <i data-lucide="move-horizontal"></i>
+          <div><strong>70. 배관 열팽창·U루프</strong><p>온도차 배관 신장량(mm), U-루프 신축이음 최소 치수 및 앵커 하중</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-pipeerosion')">
+          <i data-lucide="shield"></i>
+          <div><strong>71. 배관 침식·부식 수명</strong><p>API RP 14E 침식 한계유속, NACE 부식속도 기반 배관 잔여수명</p></div>
+        </div>
+        <div class="drawer-tool-item" onclick="selectDrawerTool('tab-cleanroomdp')">
+          <i data-lucide="wind"></i>
+          <div><strong>72. 클린룸 차압·환기횟수</strong><p>실간 차압(Pa), 도어 틈새 누설풍량, 시간당 환기횟수(ACH)</p></div>
         </div>
 <div class="drawer-tool-item" onclick="selectDrawerTool('tab-articles')">
           <div class="drawer-tool-icon"><i data-lucide="book-open"></i></div>
