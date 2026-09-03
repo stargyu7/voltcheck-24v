@@ -408,31 +408,35 @@
   <main class="page-container" id="mainAppContent">
 
     <!-- ========================================================================= -->
+    <!-- GLOBAL PERSISTENT SPONSORED BANNER (ALWAYS VISIBLE IN ALL 48 TABS) -->
+    <!-- ========================================================================= -->
+    <div class="global-persistent-sponsor-banner mb-3" style="display:flex; justify-content:flex-end; align-items:center; width:100%;">
+      <div style="display:inline-flex; align-items:center; gap:0.5rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:10px; padding:0.35rem 0.6rem; box-shadow:0 2px 8px rgba(0,0,0,0.05); max-width:100%;">
+        <span class="badge-pill font-mono" style="background:#16a34a; color:#fff; font-weight:800; font-size:0.62rem; padding:0.1rem 0.35rem; flex-shrink:0;">공식 스폰서</span>
+        <a href="https://www.tkqlhce.com/click-101874326-17327791" target="_top" rel="noopener noreferrer" style="display:inline-block; border-radius:6px; overflow:hidden; line-height:0; transition:transform 0.2s;">
+          <img src="https://www.tqlkg.com/image-101874326-17327791" width="380" height="152" alt="Official Sponsored Banner" border="0" style="max-width:100%; max-height:95px; width:auto; height:auto; display:block; border-radius:6px;"/>
+        </a>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
     <!-- TAB 1: DC 24V 전압강하 & 센서 전원 마진 검증기 -->
     <!-- ========================================================================= -->
     <section id="tab-voltagedrop" class="tab-panel active">
-      <div class="section-title-bar" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
-        <div style="flex:1; min-width:280px;">
+      <div class="section-title-bar">
+        <div>
           <h1 class="main-title">DC 24V 선로 전압강하 및 말단 전원 마진 검토</h1>
           <p class="main-desc">배선 거리, 도선 굵기, 부하 전류에 따른 전압 강하량과 센서 오동작(Brownout) 여부를 즉시 산출합니다.</p>
-          
-          <div class="preset-pill-group" style="margin-top:0.75rem;">
-            <span class="preset-title">빠른 부하 선택:</span>
-            <div class="preset-pill-items">
-              <button type="button" class="pill-btn active" data-preset="photo_sensor">포토/근접센서 (35mA)</button>
-              <button type="button" class="pill-btn" data-preset="solenoid">솔레노이드 밸브 (0.45A)</button>
-              <button type="button" class="pill-btn" data-preset="iolink">IO-Link 마스터 (2.0A)</button>
-              <button type="button" class="pill-btn" data-preset="servo_brake">서보 브레이크 (1.2A)</button>
-              <button type="button" class="pill-btn" data-preset="led_light">비전 조명 (3.5A)</button>
-            </div>
-          </div>
         </div>
-
-        <!-- Top Right Sponsored Image Banner (500x200) [EXACT USER CIRCLED POSITION] -->
-        <div class="top-titlebar-banner-box" style="flex-shrink:0;">
-          <a href="https://www.tkqlhce.com/click-101874326-17327791" target="_top" rel="noopener noreferrer" style="display:inline-block; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform 0.2s;">
-            <img src="https://www.tqlkg.com/image-101874326-17327791" width="380" height="152" alt="Official Sponsored Banner" border="0" style="max-width:100%; height:auto; display:block; border-radius:8px;"/>
-          </a>
+        <div class="preset-pill-group">
+          <span class="preset-title">빠른 부하 선택:</span>
+          <div class="preset-pill-items">
+            <button type="button" class="pill-btn active" data-preset="photo_sensor">포토/근접센서 (35mA)</button>
+            <button type="button" class="pill-btn" data-preset="solenoid">솔레노이드 밸브 (0.45A)</button>
+            <button type="button" class="pill-btn" data-preset="iolink">IO-Link 마스터 (2.0A)</button>
+            <button type="button" class="pill-btn" data-preset="servo_brake">서보 브레이크 (1.2A)</button>
+            <button type="button" class="pill-btn" data-preset="led_light">비전 조명 (3.5A)</button>
+          </div>
         </div>
       </div>
 
