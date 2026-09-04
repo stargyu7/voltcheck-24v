@@ -9617,3 +9617,36 @@ function calcCtPtBurden() {
 window.calcCtPtBurden = calcCtPtBurden;
 
 
+
+
+// ==========================================================================
+// DYNAMIC SEO ROUTING & BROWSER URL QUERY SYNCHRONIZATION
+// ==========================================================================
+function updateSeoMetaOnTabSwitch(tabId) {
+  const tool = MASTER_TOOLS_CATALOG?.find(t => t.id === tabId);
+  if (tool) {
+    document.title = `${tool.name} | 볼트체크 PRO (Total Engineering)`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', `${tool.name} - ${tool.desc}. 볼트체크 78대 전 산업 토털 엔지니어링 계산기에서 즉시 검증하세요.`);
+    }
+    // Update URL without reloading
+    const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?calc=${tabId}`;
+    window.history.replaceState({ path: newUrl }, '', newUrl);
+  }
+}
+
+// Check initial URL query on load
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const calcParam = urlParams.get('calc');
+  if (calcParam) {
+    setTimeout(() => {
+      const btn = document.querySelector(`.tab-btn[data-tab="${calcParam}"]`);
+      if (btn) {
+        btn.click();
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }, 150);
+  }
+});

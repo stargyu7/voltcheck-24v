@@ -1,33 +1,15 @@
-# VoltCheck 24V Total Engineering Suite - Global SEO Crawler Policy
 User-agent: *
 Allow: /
-Disallow: /scratch/
-Disallow: /.git/
-
-# Google AdSense & Ads.txt Crawlers
-User-agent: Mediapartners-Google
-Allow: /
-
-User-agent: Google-adstxt
-Allow: /
-
-# Search Engine Specific Optimization
-User-agent: Googlebot
-Allow: /
+Sitemap: https://voltcheck24.com/sitemap.xml
 
 User-agent: Yeti
 Allow: /
 
+User-agent: Googlebot
+Allow: /
+
+User-agent: Daumoa
+Allow: /
+
 User-agent: Bingbot
 Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: Applebot
-Allow: /
-
-Sitemap: https://voltcheck24.com/sitemap.xml
