@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>볼트체크 PRO | 5대 바이럴 숏츠(Shorts) 쇼케이스 플레이어</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --accent-cyan: #00e5ff;
+      --accent-orange: #ea580c;
+      --accent-purple: #a855f7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background: var(--bg-dark); color: #f8fafc; padding: 2rem 1rem; min-height: 100vh; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 2.5rem; }
+    header h1 { font-size: 2rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    header h1 span { color: var(--accent-cyan); }
+    header p { color: #94a3b8; font-size: 0.95rem; margin-top: 0.5rem; }
+
+    .shorts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.75rem;
+    }
+    .short-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .short-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-cyan);
+    }
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-wrapper video {
+      max-height: 100%;
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .card-info {
+      padding: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      width: fit-content;
+    }
+    .badge-orange { background: rgba(234, 88, 12, 0.2); color: #fb923c; border: 1px solid rgba(234, 88, 12, 0.4); }
+    .badge-purple { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+    .badge-yellow { background: rgba(234, 179, 8, 0.2); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.4); }
+    .badge-red { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .badge-blue { background: rgba(14, 165, 233, 0.2); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.4); }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: #fff;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+    }
+    .btn-action-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-play, .btn-copy {
+      flex: 1;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+    .btn-play { background: #2563eb; color: #fff; }
+    .btn-play:hover { background: #1d4ed8; }
+    .btn-copy { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; }
+    .btn-copy:hover { background: #334155; color: #fff; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #10b981;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎬 볼트체크 PRO <span>5대 바이럴 숏츠 MP4 쇼케이스</span></h1>
+      <p>유튜브 쇼츠, 인스타그램 릴스, 틱톡에 즉시 업로드 가능한 9:16 고화질 세로형 비디오 5종 세트</p>
+    </header>
+
+    <div class="shorts-grid">
+      <!-- Short 1 -->
+      <div class="short-card">
+        <div class="video-wrapper">
+          <video controls preload="metadata">
+            <source src="shorts_ep1_voltcheck.mp4" type="video/mp4">
+            브라우저가 비디오 재생을 지원하지 않습니다.
+          </video>
+        </div>
+        <div class="card-info">
+          <div>
+            <span class="card-badge badge-orange">EP.1 전장설계 / 전선굵기</span>
+            <div class="card-title">⚡ 24V 전압강하 3초 컷 종결</div>
+            <div class="card-desc">아직도 엑셀 서식 찾느라 야근? 부하와 거리만 넣으면 전압강하 및 최적 전선굵기(sq) 3초 산출.</div>
+          </div>
+          <div class="btn-action-group">
+            <button class="btn-play" onclick="playVid(this)">▶ 영상 재생</button>
+            <button class="btn-copy" onclick="copyScript(1)">📋 대본 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Short 2 -->
+      <div class="short-card">
+        <div class="video-wrapper">
+          <video controls preload="metadata">
+            <source src="shorts_ep2_motor_mc.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="card-info">
+          <div>
+            <span class="card-badge badge-purple">EP.2 모터 / 전기안전관리자</span>
+            <div class="card-title">🛡️ 3상 모터 정격전류 &amp; MC 차단기</div>
+            <div class="card-desc">15kW 모터 차단기 잘못 고르면 트립! 정격 전류 30.4A와 추천 MC-32a 및 EOCR 세팅값 3초 완성.</div>
+          </div>
+          <div class="btn-action-group">
+            <button class="btn-play" onclick="playVid(this)">▶ 영상 재생</button>
+            <button class="btn-copy" onclick="copyScript(2)">📋 대본 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Short 3 -->
+      <div class="short-card">
+        <div class="video-wrapper">
+          <video controls preload="metadata">
+            <source src="shorts_ep3_bearing_life.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="card-info">
+          <div>
+            <span class="card-badge badge-yellow">EP.3 기계요소 / 수명설계</span>
+            <div class="card-title">⚙️ ISO 281 베어링 L10h 수명 계산</div>
+            <div class="card-desc">고객사 베어링 수명 보증 요구 완벽 대응! 호칭 6205 기준 84,200시간 및 구리스 급유 주기 산출.</div>
+          </div>
+          <div class="btn-action-group">
+            <button class="btn-play" onclick="playVid(this)">▶ 영상 재생</button>
+            <button class="btn-copy" onclick="copyScript(3)">📋 대본 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Short 4 -->
+      <div class="short-card">
+        <div class="video-wrapper">
+          <video controls preload="metadata">
+            <source src="shorts_ep4_bess_safety.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="card-info">
+          <div>
+            <span class="card-badge badge-red">EP.4 2차전지 / 소방설비</span>
+            <div class="card-title">🔥 BESS 배터리 열폭주 소방 배기량</div>
+            <div class="card-desc">NFPA 855 기준 2MWh 랙 오프가스 체적 135m³ 및 비상 배기 블로워 요구 풍량 3,180 CFM 계산.</div>
+          </div>
+          <div class="btn-action-group">
+            <button class="btn-play" onclick="playVid(this)">▶ 영상 재생</button>
+            <button class="btn-copy" onclick="copyScript(4)">📋 대본 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Short 5 -->
+      <div class="short-card">
+        <div class="video-wrapper">
+          <video controls preload="metadata">
+            <source src="shorts_ep5_hbeam_deflection.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="card-info">
+          <div>
+            <span class="card-badge badge-blue">EP.5 토목구조 / 건축역학</span>
+            <div class="card-title">🏗️ H형강 구조 처짐 &amp; 휨모멘트</div>
+            <div class="card-desc">H-200x200 스팬 6m 하중 5톤 최대처짐 8.42mm(L/712) 및 KDS 건축구조기준 안전성 판정.</div>
+          </div>
+          <div class="btn-action-group">
+            <button class="btn-play" onclick="playVid(this)">▶ 영상 재생</button>
+            <button class="btn-copy" onclick="copyScript(5)">📋 대본 복사</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">📋 대본과 해시태그가 클립보드에 복사되었습니다!</div>
+
+  <script>
+    const scripts = {
+      1: "제목: 아직도 엑셀 수식 찾느라 야근하시나요? 3초 만에 끝내는 전압강하 계산법 ⚡\n대본:\n0~3초: 설비 엔지니어 여러분, 아직도 엑셀 서식 찾느라 야근하고 계신가요?\n3~8초: 거리 50m, 부하 3A만 넣으면 3초 만에 허용 전압강하와 최적 전선 굵기가 바로 나옵니다!\n8~12초: 회사 결재용 A4 검토서도 1초 만에 무료 출력! 네이버나 구글에서 '볼트체크'를 검색해 보세요!\n\n해시태그: #전기설비 #전압강하 #전장설계 #PLC #자동화 #볼트체크 #직장인꿀팁",
+      2: "제목: 3상 380V 모터 정격전류 & MC 차단기 용량 3초 만에 완벽 산정하는 법 🛡️\n대본:\n0~3초: 모터 정격 전류 수식 두들기다 차단기 용량 잘못 고르면 현장에서 바로 트립 터집니다!\n3~8초: 볼트체크에서 15킬로와트만 고르면 정격전류 30.4암페어와 최적 MC 및 EOCR 세팅값까지 자동 완결!\n8~12초: 전기부터 모터, 기계까지 78대 계산기가 100% 무료! 프로필 링크나 '볼트체크'에서 바로 써보세요!\n\n해시태그: #전기기사 #3상모터 #전자접촉기 #전기안전관리자 #제어반 #볼트체크",
+      3: "제목: 기계설계자 필수! ISO 281 베어링 L10h 정격수명 10초 검증 ⚙️\n대본:\n0~3초: 기계 설계할 때 베어링이 몇 년 버틸지 고객사가 물어보면 난감하셨죠?\n3~8초: 동정격하중과 RPM만 넣으면 ISO 281 기준 L10h 정격 수명과 최적 구리스 급유 주기까지 한눈에 계산됩니다!\n8~12초: 고객사 제출용 기술검토서도 1초 컷! 지금 네이버에서 '볼트체크'를 검색하세요!\n\n해시태그: #기계설계 #기계공학과 #베어링수명 #LM가이드 #자동화설비 #볼트체크",
+      4: "제목: 요즘 가장 핫한 2차전지 ESS 화재 소방 배기량(CFM) 계산법 🔥\n대본:\n0~3초: 2차전지 ESS 룸 화재 안전, 오프가스 배기 풍량은 어떻게 계산할까요?\n3~8초: NFPA 855 기준 방출 가스 체적과 LEL 25% 도달을 위한 필수 배기 블로워 풍량이 즉시 산출됩니다!\n8~12초: 배터리 엔지니어 필수 포털, 지금 볼트체크에서 바로 검증해 보세요!\n\n해시태그: #2차전지 #배터리 #BESS #ESS소방 #소방설비 #전기차 #볼트체크",
+      5: "제목: H형강 보 처짐량 & 휨모멘트 3초 검증 (토목/건축/기계구조) 🏗️\n대본:\n0~3초: H빔 스팬 6m에 하중 5톤이면 얼마나 처질지 단면 2차 모멘트 공식 외우셨나요?\n3~8초: 볼트체크에서 H-200 규격만 고르면 최대 처짐량 8.42mm와 L/712 건축기준 판정이 3초 만에 나옵니다!\n8~12초: 구조계산서도 1초 만에 A4로 출력! 지금 네이버나 구글에서 '볼트체크'를 검색하세요!\n\n해시태그: #H형강 #구조역학 #건축설계 #토목 #기계공학 #볼트체크"
+    };
+
+    function playVid(btn) {
+      const vid = btn.closest('.short-card').querySelector('video');
+      if (vid.paused) {
+        vid.play();
+        btn.textContent = '⏸ 일시 정지';
+      } else {
+        vid.pause();
+        btn.textContent = '▶ 영상 재생';
+      }
+    }
+
+    function copyScript(id) {
+      navigator.clipboard.writeText(scripts[id]);
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    }
+  </script>
+</body>
+</html>
