@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>볼트체크 PRO | 시네마틱 엔지니어링 숏츠 공식 쇼케이스</title>
+  <title>볼트체크 PRO | 모션 그래픽스 &amp; 엔지니어링 숏츠 공식 쇼케이스</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
     :root {
@@ -11,6 +11,7 @@
       --card-bg: #0f172a;
       --accent-cyan: #00e5ff;
       --accent-gold: #f59e0b;
+      --accent-green: #10b981;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
     body { background: var(--bg-dark); color: #f8fafc; padding: 2rem 1rem; min-height: 100vh; }
@@ -20,7 +21,7 @@
     header h1 span { color: var(--accent-cyan); }
     header p { color: #94a3b8; font-size: 1rem; margin-top: 0.5rem; }
 
-    /* Grand Master Feature Card (Cinematic Realistic Field Footage) */
+    /* Grand Master Feature Card (Animated Motion Graphics) */
     .master-hero-box {
       background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(8, 14, 26, 0.99));
       border: 2px solid var(--accent-cyan);
@@ -76,6 +77,23 @@
       line-height: 1.65;
       margin-bottom: 1.5rem;
     }
+    .feature-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .feature-chip {
+      background: rgba(14, 165, 233, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 0.6rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #7dd3fc;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
     .meta-box {
       background: rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(0, 229, 255, 0.25);
@@ -99,53 +117,52 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .short-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 229, 255, 0.4);
     }
     .video-wrapper {
       position: relative;
       width: 100%;
-      height: 420px;
+      height: 480px;
       background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     .video-wrapper video {
-      max-height: 100%;
-      max-width: 100%;
-      border-radius: 6px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .card-info {
       padding: 1.25rem;
-      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      flex: 1;
     }
     .btn-action-group {
       display: flex;
       gap: 0.5rem;
       margin-top: 1rem;
     }
-    .btn-play, .btn-copy {
+    .btn-copy {
       flex: 1;
-      padding: 0.7rem 0.8rem;
-      font-size: 0.82rem;
-      font-weight: 700;
-      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
       cursor: pointer;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      transition: all 0.15s ease;
+      font-weight: 600;
+      font-size: 0.82rem;
+      transition: all 0.2s ease;
     }
-    .btn-play { background: #2563eb; color: #fff; }
-    .btn-play:hover { background: #1d4ed8; }
-    .btn-copy { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; }
-    .btn-copy:hover { background: #334155; color: #fff; }
-
+    .btn-copy:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+    }
     .toast {
       position: fixed;
       bottom: 2rem;
@@ -164,23 +181,30 @@
 <body>
   <div class="container">
     <header>
-      <h1>🎬 시네마틱 엔지니어링 숏츠 <span>공식 마스터 플레이어</span></h1>
-      <p>실제 단자대/제어반 현장 실사 영상, 켄 번스 줌인, KEC 전압강하 수식 해석 &amp; 1080×1920 Full HD 탑재</p>
+      <h1>⚡ 모션 그래픽스 엔지니어링 숏츠 <span>공식 마스터 쇼케이스</span></h1>
+      <p>실시간 전류 흐름 파티클, 라이브 전압 롤링 카운터, 오실로스코프 파형 모션 &amp; KEC 규격 정밀해석</p>
     </header>
 
-    <!-- GRAND MASTER FEATURED SHORT: CINEMATIC REALISTIC FIELD FOOTAGE -->
+    <!-- GRAND MASTER FEATURED SHORT: ANIMATED MOTION GRAPHICS -->
     <div class="master-hero-box">
       <div class="master-video-frame">
         <video controls autoplay loop muted playsinline>
-          <source src="youtube_shorts_cinematic_engineering.mp4" type="video/mp4">
+          <source src="youtube_shorts_animated_motion.mp4" type="video/mp4">
         </video>
       </div>
       <div class="master-details">
-        <span class="badge-yt-master">💎 플랜트 현장 실사 &amp; KEC 규격 정밀해석 시네마틱 에디션</span>
-        <h2 class="master-title">⚡ 24V 제어 배선 80m 전압강하 &amp; PLC 통신에러 완벽 해석 (KEC 4.0sq 최적화)</h2>
+        <span class="badge-yt-master">✨ 2026 차세대 모션 그래픽스 &amp; 플랜트 실무 해석 에디션</span>
+        <h2 class="master-title">⚡ 24V 제어선로 80m 전압강하 &amp; PLC 통신에러 완벽 해석 (KEC 4.0sq 최적화)</h2>
         <p class="master-desc">
-          실제 <strong>페룰 압착 단자대, 24V 멀티미터 전압 측정, 제어반 배선 덕트 실사 영상</strong>에 켄 번스 부드러운 카메라 무빙, 도체 고유저항 수식($e = rac{2 \cdot L \cdot I \cdot ho}{A}$), 단자 전압강하 게이지 카운팅 및 전문가 한국어 AI 음성이 융합된 최고급 영상입니다.
+          글자 겹침 및 여백을 100% 보정한 정밀 레이아웃 위에, <strong>실시간 전류 흐름 파티클 애니메이션</strong>, <strong>실시간 전압 롤링 카운터 (24.0V → 22.10V FAIL → 23.29V PASS)</strong>, <strong>동적 오실로스코프 리플 노이즈 파형</strong>, 그리고 전문 시니어 엔지니어 보이스오버가 융합된 최고 수준의 홍보 영상입니다.
         </p>
+
+        <div class="feature-points">
+          <div class="feature-chip">⚡ 전류 이동 파티클 모션</div>
+          <div class="feature-chip">🔢 실시간 전압 롤링 카운터</div>
+          <div class="feature-chip">📈 오실로스코프 리플 파형</div>
+          <div class="feature-chip">🎯 글자 겹침 0% 완벽 보정</div>
+        </div>
         
         <div class="meta-box">
           <div><strong>📌 유튜브 추천 제목:</strong> 24V 제어선로 80m 포설 시 PLC 통신에러 원인? 전압강하 완벽 해석 ⚡ #Shorts</div>
@@ -192,7 +216,7 @@
         </div>
 
         <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-          <button class="btn-copy" onclick="copyCinematicMeta()" style="padding:0.85rem 1.5rem; font-size:0.95rem; background:linear-gradient(135deg, #0284c7, #2563eb); color:#fff; border:none; border-radius:8px;">
+          <button class="btn-copy" onclick="copyAnimatedMeta()" style="padding:0.85rem 1.5rem; font-size:0.95rem; background:linear-gradient(135deg, #0284c7, #2563eb); color:#fff; border:none; border-radius:8px;">
             📋 유튜브 제목·설명·태그 1초 복사하기
           </button>
         </div>
@@ -260,9 +284,9 @@
         </div>
         <div class="card-info">
           <div>
-            <div style="color:#f87171; font-size:0.75rem; font-weight:800;">EP.4 2차전지·소방</div>
-            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">NFPA 855 BESS 배터리 열폭주 배기량</div>
-            <div style="color:#94a3b8; font-size:0.8rem;">2MWh 랙 오프가스 체적 135m³ 및 비상 배기 3,180 CFM 산출.</div>
+            <div style="color:#f43f5e; font-size:0.75rem; font-weight:800;">EP.4 배터리·안전</div>
+            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">NFPA 855 BESS 배터리 열폭주 배기</div>
+            <div style="color:#94a3b8; font-size:0.8rem;">수소 가스 방출량 및 방폭 배기팬 풍량(CMH) 3초 검증.</div>
           </div>
           <div class="btn-action-group">
             <button class="btn-copy" onclick="copyScript(4)">📋 대본 복사</button>
@@ -277,9 +301,9 @@
         </div>
         <div class="card-info">
           <div>
-            <div style="color:#38bdf8; font-size:0.75rem; font-weight:800;">EP.5 토목·구조</div>
-            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">H형강 구조 처짐 8.42mm KDS 합격</div>
-            <div style="color:#94a3b8; font-size:0.8rem;">H-200x200 스팬 6m 하중 5톤 처짐비 L/712 및 휨모멘트.</div>
+            <div style="color:#38bdf8; font-size:0.75rem; font-weight:800;">EP.5 건축·구조</div>
+            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">H형강 보 처짐량 L/300 한계 검토</div>
+            <div style="color:#94a3b8; font-size:0.8rem;">H-300x150 등분포 하중 휨모멘트 및 처짐 안전율 즉시 산출.</div>
           </div>
           <div class="btn-action-group">
             <button class="btn-copy" onclick="copyScript(5)">📋 대본 복사</button>
@@ -289,33 +313,44 @@
     </div>
   </div>
 
-  <div id="toast" class="toast">📋 클립보드에 복사되었습니다!</div>
+  <div id="toast" class="toast">클립보드에 복사되었습니다! ✨</div>
 
   <script>
-    function copyCinematicMeta() {
-      const text = "제목: 24V 제어선로 80m 포설 시 PLC 통신에러 원인? 전압강하 완벽 해석 ⚡ #Shorts\n\n설명란:\n산업용 플랜트 현장에서 24V 제어선로 80m 포설 시 단자 전압강하로 인한 PLC 리셋 및 센서 통신 에러를 KEC/IEC 규정에 맞춰 정밀 해석합니다.\n도체 고유저항 공식과 단면적 4.0sq 최적화로 3.0% 이내 전압강하를 달성하는 방법을 확인해 보세요.\n\n🌐 78대 전 산업 무료 공학 계산기 바로가기: https://voltcheck24.com/\n(네이버/구글 검색: '볼트체크')\n\n#Shorts #KEC #전압강하 #전장설계 #PLC #제어반 #전기설비 #볼트체크 #전기기사 #자동화";
-      navigator.clipboard.writeText(text);
-      showToast('시네마틱 엔지니어링 메타데이터가 복사되었습니다!');
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    function copyAnimatedMeta() {
+      const text = `[유튜브 쇼츠 업로드용]
+제목: 24V 제어선로 80m 포설 시 PLC 통신에러 원인? 전압강하 완벽 해석 ⚡ #Shorts
+
+설명:
+산업용 플랜트 현장에서 24V 제어선로 80m 포설 시 단자 전압강하로 인한 PLC 리셋 및 센서 통신 에러를 KEC/IEC 규정에 맞춰 정밀 해석합니다.
+
+✅ 도체 고유저항 전압강하 공식: e = (2 * L * I * rho) / A
+✅ 1.5sq 사용 시: delta V = 1.90V (강하율 7.92% - KEC 기준 초과 REJECT)
+✅ 4.0sq 최적 선정 시: delta V = 0.71V (강하율 2.96% - KEC 3% 이내 PASS)
+
+🌐 78대 전 산업 무료 공학 계산 포털 볼트체크: https://voltcheck24.com/
+(네이버 / 구글 검색: '볼트체크')
+
+#KEC #전압강하 #전장설계 #PLC #제어반 #전기설비 #볼트체크 #Shorts #전기기사 #자동화`;
+      navigator.clipboard.writeText(text).then(() => showToast('유튜브 제목·설명·태그가 복사되었습니다! 🚀'));
     }
 
     const scripts = {
-      1: "제목: 아직도 엑셀 수식 찾느라 야근하시나요? 3초 만에 끝내는 전압강하 계산법 ⚡\n대본: 설비 엔지니어 여러분, 아직도 엑셀 서식 찾느라 야근하고 계신가요? 볼트체크에서 거리 50m, 부하 3.5A만 넣으면 3초 만에 허용 전압강하와 최적 2.5sq 전선 굵기가 바로 나옵니다!\n\n태그: #Shorts #전기설비 #전압강하 #볼트체크",
-      2: "제목: 3상 380V 모터 정격전류 & MC 차단기 용량 3초 만에 완벽 산정하는 법 🛡️\n대본: 모터 정격 전류 수식 두들기다 차단기 잘못 고르면 현장에서 바로 트립 터집니다! 볼트체크에서 15kW만 고르면 정격 30.4A와 MC-32a 추천까지 자동 완성!\n\n태그: #Shorts #3상모터 #전자접촉기 #볼트체크",
-      3: "제목: 기계설계자 필수! ISO 281 베어링 L10h 정격수명 10초 검증 ⚙️\n대본: 기계 설계할 때 베어링 수명 보증 요구 완벽 대응! 동정격하중과 RPM만 넣으면 ISO 281 기준 L10h 수명 84,200시간과 구리스 주기까지 자동 계산!\n\n태그: #Shorts #베어링수명 #기계설계 #볼트체크",
-      4: "제목: 요즘 가장 핫한 2차전지 ESS 화재 소방 배기량(CFM) 계산법 🔥\n대본: 2차전지 ESS 룸 화재 안전! NFPA 855 기준 방출 가스 체적 135m³와 LEL 25% 도달을 위한 비상 배기 블로워 요구 풍량 3,180 CFM 즉시 산출!\n\n태그: #Shorts #2차전지 #BESS #소방설비 #볼트체크",
-      5: "제목: H형강 보 처짐량 & 휨모멘트 3초 검증 (토목/건축/기계구조) 🏗️\n대본: H빔 스팬 6m 하중 5톤 최대처짐 8.42mm와 L/712 건축기준 판정이 3초 만에 나옵니다! 구조계산서도 1초 만에 A4 출력!\n\n태그: #Shorts #H형강 #구조역학 #볼트체크"
+      1: "24V 제어선로 전압강하로 PLC 통신 에러가 났다면? 볼트체크에서 전선 굵기(sq)를 3초 만에 검산하세요! https://voltcheck24.com/",
+      2: "3상 유도전동기 15kW 정격전류 30.4A와 MC-32a 전자접촉기 선정, 차단기 트립 곡선까지 3초 완성! 볼트체크",
+      3: "모터 베어링 L10h 수명 84,200시간! ISO 281 규격 베어링 수명과 윤활 주기를 즉시 계산하세요. 볼트체크",
+      4: "ESS 배터리 룸 화재 안전 규격 NFPA 855! 수소 열폭주 배기팬 용량(CMH)을 실시간 산출합니다. 볼트체크",
+      5: "H형강 구조물 처짐 한계 L/300 검토! 휨모멘트와 안전율을 단 3초 만에 무료 검산하세요. 볼트체크"
     };
 
     function copyScript(id) {
-      navigator.clipboard.writeText(scripts[id]);
-      showToast('대본과 해시태그가 복사되었습니다!');
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = '📋 ' + msg;
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+      navigator.clipboard.writeText(scripts[id]).then(() => showToast(`EP.${id} 대본이 복사되었습니다!`));
     }
   </script>
 </body>
