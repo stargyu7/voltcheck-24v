@@ -173,19 +173,21 @@
     <div class="nav-menu-bar">
       <!-- Centered Global Tool Search & Category Filter Ribbon -->
       <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0.75rem; max-width:1600px; margin:0 auto; padding:0.25rem 0.75rem;">
-        <div class="quick-search-wrapper" style="max-width:490px;">
+         <div class="quick-search-wrapper" style="max-width:520px; position:relative;">
           <i data-lucide="search" class="quick-search-icon"></i>
-          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="48대 전 산업 토털 공학 도구 검색 (예: 진공, 배터리발열, 역률, 유압, 송풍기, 스팀...) [Ctrl+K]" oninput="filterToolsSearch(this.value)">
+          <input type="text" id="globalToolSearch" class="quick-search-input" placeholder="78대 공학 도구 기능 검색 (예: 베어링, 배관, 모터, 압력, 로봇, 전압...) [Ctrl+K]" oninput="filterToolsSearch(this.value)" onfocus="filterToolsSearch(this.value)" autocomplete="off">
           <span class="quick-search-kbd">Ctrl+K</span>
+          <!-- Instant Search Autocomplete Dropdown -->
+          <div id="quickSearchDropdown" class="quick-search-dropdown" style="display:none;"></div>
         </div>
                 <div class="category-filter-strip" id="categoryFilterStrip"  style="margin:0; padding:0;">
-          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 78종 (All)</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원·변압기</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·모션·배터리</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('mech')" id="cfMech">⚙️ 기계·가공·수명</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('fluid')" id="cfFluid">🛢️ 유압·열유체·화공</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('nuclear')" id="cfNuclear">☢️ 원자력·첨단로봇</button>
-          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 설비·조견표·자료실</button>
+          <button type="button" class="cat-filter-chip active" onclick="filterNavCategory('all')" id="cfAll">⭐ 전체 78종</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('power')" id="cfPower">⚡ 전기·전원 (16)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('motion')" id="cfMotion">🛡️ 모터·배터리 (12)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('mech')" id="cfMech">⚙️ 기계·가공 (12)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('fluid')" id="cfFluid">🛢️ 유압·화공 (16)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('nuclear')" id="cfNuclear">☢️ 원자력·로봇 (8)</button>
+          <button type="button" class="cat-filter-chip" onclick="filterNavCategory('specs')" id="cfSpecs">📁 설비·자료실 (14)</button>
         </div>
 
         <!-- Favorites & Smart Sync Quick Strip [UX PILLAR 1 & 2] -->

@@ -4678,3 +4678,69 @@ body, h1, h2, h3, h4, h5, p, span, div, label, li {
   color: var(--navy-dark);
   background: #ffffff;
 }
+
+
+/* ==========================================================================
+   INSTANT SEARCH DROPDOWN STYLES
+   ========================================================================== */
+.quick-search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #0f172a;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  border-radius: 10px;
+  max-height: 380px;
+  overflow-y: auto;
+  z-index: 10000;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 229, 255, 0.15);
+  padding: 6px;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover, .search-result-item.selected {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: rgba(0, 229, 255, 0.4);
+}
+
+.search-res-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.search-res-desc {
+  font-size: 0.73rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.search-res-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(14, 165, 233, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(14, 165, 233, 0.3);
+  white-space: nowrap;
+}

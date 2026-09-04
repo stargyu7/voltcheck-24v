@@ -6467,41 +6467,157 @@ function calculateCleanESD() {
 }
 
 
+
 // ==========================================================================
-// REAL-TIME INSTANT TOOL SEARCH & KEYBOARD SHORTCUT ENGINE [Ctrl+K]
+// 78 TOOLS MASTER METADATA DIRECTORY FOR SEARCH & TOOLTIPS
 // ==========================================================================
+const MASTER_TOOLS_CATALOG = [
+  { id: 'tab-voltagedrop', cat: 'power', name: '01. 24V 전압강하 & 허용거리', desc: '허용 전압강하 & 전선 단면적(sq) 자동 선정' },
+  { id: 'tab-analogloop', cat: 'specs', name: '02. 4-20mA 아날로그 루프', desc: '2선식 트랜스미터 루프 저항 및 구동 전압 검증' },
+  { id: 'tab-smpsbudget', cat: 'power', name: '03. SMPS & CP 차단기 용량', desc: '24V 부하 전류 합산 및 마진율 기반 정격 선정' },
+  { id: 'tab-cabinetcooling', cat: 'specs', name: '04. 제어반 쿨링·에어컨', desc: '내부 발열량 합산 및 판넬 쿨러 소요 W/BTU 선정' },
+  { id: 'tab-cabletable', cat: 'specs', name: '05. AWG-SQ 배선 조견표', desc: 'AWG 대 단면적(sq), 도체 저항, 허용전류 환산' },
+  { id: 'tab-rs485', cat: 'specs', name: '06. RS-485 통신 거리·노드', desc: '보레이트별 최대 통신거리, 120Ω 종단저항' },
+  { id: 'tab-pneumatics', cat: 'specs', name: '07. 공압 실린더 공기소모량', desc: '보어경/행정 에어 소비량(NL/min) 및 콤프레셔 HP' },
+  { id: 'tab-ductutility', cat: 'specs', name: '08. 배선 덕트·후렉시블 점유율', desc: '내선규정 20%/40% 점유율 및 최적 덕트 사이즈' },
+  { id: 'tab-plcscaling', cat: 'specs', name: '09. PLC 아날로그 스케일링', desc: '4-20mA / 0-10V ➔ 0-16000 Raw Data 변환식' },
+  { id: 'tab-motorcalc', cat: 'motion', name: '10. 3상 모터·MC 개폐기', desc: '정격 전류(A), 전자접촉기(MC), EOCR 열동계전기' },
+  { id: 'tab-bendingradius', cat: 'specs', name: '11. 케이블 곡률반경(R)', desc: '외경(OD) 기준 고정/가동 케이블베어 최소 반경' },
+  { id: 'tab-otethernet', cat: 'specs', name: '12. 산업용 이더넷 대역폭', desc: 'EtherNet/IP, PROFINET, EtherCAT 네트워크 트래픽' },
+  { id: 'tab-servoregen', cat: 'motion', name: '13. 서보 회생저항 용량', desc: '감속 회생에너지(Joule), 제동 저항값(Ω) 및 W' },
+  { id: 'tab-coppercost', cat: 'power', name: '14. 구리시세 & 케이블 원가', desc: 'LME 실시간 구리 중량당 케이블 단가 산출' },
+  { id: 'tab-sldgenerator', cat: 'power', name: '15. 단선결선도 CAD 생성', desc: '수배전반 계통도 DXF / SVG 자동 생성기' },
+  { id: 'tab-iolinksafety', cat: 'specs', name: '16. IO-Link & 안전회로 카테고리', desc: 'ISO 13849-1 PLe/Cat.4 및 SIL3 안전 설계 기준' },
+  { id: 'tab-grounding', cat: 'power', name: '17. 접지(PE)선 & EMC 차폐', desc: '단락 고장전류 보호도체 및 노이즈 실드' },
+  { id: 'tab-npnpnp', cat: 'specs', name: '18. NPN·PNP 센서 결선', desc: '싱크(Sink) / 소스(Source) 입출력 배선도' },
+  { id: 'tab-flybacksurge', cat: 'power', name: '19. 역기전력 서지 스너버', desc: '솔레노이드/릴레이 코일 다이오드·RC 스너버' },
+  { id: 'tab-inrushbreaker', cat: 'power', name: '20. 돌입전류 & 차단기 트립', desc: 'SMPS/변압기 피크 전류 및 MCB 곡선 B/C/D 검증' },
+  { id: 'tab-safetylight', cat: 'specs', name: '21. 안전 라이트커튼 안전거리', desc: 'ISO 13855 작업자 손 진입속도(2m/s) 최소 안전거리' },
+  { id: 'tab-transformer', cat: 'power', name: '22. 제어용 단상 변압기', desc: '1차/2차 전압비, %Z 임피던스, 정격 kVA 용량' },
+  { id: 'tab-shortcircuit', cat: 'power', name: '23. 3상 단락전류 & 차단용량', desc: '배전반 대칭 고장 단락전류(kA) 및 차단기 선정' },
+  { id: 'tab-motioninertia', cat: 'motion', name: '24. 기계부하 관성모멘트(J)', desc: '직동/회전 부하 관성비(Inertia Ratio) 및 가감속 토크' },
+  { id: 'tab-tempconversion', cat: 'specs', name: '25. PT100·열전대(TC) 조견표', desc: '측온저항체(RTD) Ω값 ➔ °C 및 K/J/T/E 열전대 mV' },
+  { id: 'tab-valvecv', cat: 'fluid', name: '26. 밸브 유량계수(Cv)', desc: '액체/가스 압력강하(ΔP)에 따른 제어밸브 Cv/Kv' },
+  { id: 'tab-agvbattery', cat: 'motion', name: '27. AGV 배터리·주행거리', desc: '주행 저항 소요 Ah 용량 및 무인 충전 사이클' },
+  { id: 'tab-busbar', cat: 'power', name: '28. 동부스바 허용전류 규격', desc: '배전반 구리 부스바 규격별 허용전류(A) 산정' },
+  { id: 'tab-cleanesd', cat: 'specs', name: '29. 클린룸 정전기(ESD) 방지', desc: '이오나이저 감쇠시간(Decay Time) 및 제전 매트' },
+  { id: 'tab-spd', cat: 'power', name: '30. 서지보호기(SPD) 용량', desc: '낙뢰 서지 방전전류(In, Imax) 및 전압보호레벨' },
+  { id: 'tab-hoistcrane', cat: 'motion', name: '31. 크레인·호이스트 모터', desc: '권상 하중(Ton), 속도에 따른 모터 kW 및 와이어로프' },
+  { id: 'tab-rolltension', cat: 'motion', name: '32. 롤투롤 웹 장력제어', desc: '언와인더/리와인더 테이퍼 장력 및 파우더 브레이크' },
+  { id: 'tab-vfdsurge', cat: 'motion', name: '33. 인버터(VFD) 반사파 서지', desc: '긴 선로 PWM dV/dt 반사파 피크전압 및 AC 리액터' },
+  { id: 'tab-explosionproof', cat: 'nuclear', name: '34. 방폭(Ex)·본질안전 규격', desc: 'Zone 0/1/2 방폭 구조(Ex d/ia) 및 온도 등급' },
+  { id: 'tab-cabletray', cat: 'specs', name: '35. 케이블트레이 하중·스팬', desc: '케이블 포설 중량(kg/m), 안전율 및 지지 서포트 스팬' },
+  { id: 'tab-luxlighting', cat: 'specs', name: '36. 공장 조도(Lux)·LED 수량', desc: 'KS A 3011 작업장 추천 조도별 LED 등기구 소요 수량' },
+  { id: 'tab-solarpv', cat: 'power', name: '37. 태양광·ESS DC1500V', desc: 'PV 어레이 스트링 전압, MPPT 인버터 및 DC 케이블' },
+  { id: 'tab-pumphead', cat: 'fluid', name: '38. 펌프 전양정 & 배관 손실', desc: '실양정, 배관 마찰손실 수두(m) 및 펌프 소요 kW' },
+  { id: 'tab-bolttorque', cat: 'mech', name: '39. 볼트 체결·조임 토크', desc: '강도구분 8.8/10.9/12.9 축력 및 체결 토크(N·m)' },
+  { id: 'tab-heatexchanger', cat: 'fluid', name: '40. 열교환기·LMTD 전열면적', desc: '대수평균온도차(LMTD), 총괄열전달 U, 전열면적(m²)' },
+  { id: 'tab-beamdeflection', cat: 'mech', name: '41. 보 처짐 & 굽힘 모멘트', desc: '단순보/외팔보 단면 2차 모멘트 및 처짐량(mm)' },
+  { id: 'tab-vacuumchamber', cat: 'nuclear', name: '42. 반도체 진공챔버 배기', desc: '대기압~고진공 도달시간, 진공펌프 용량(m³/h)' },
+  { id: 'tab-batterythermal', cat: 'motion', name: '43. 배터리 팩 발열 & 수냉', desc: '줄열(I²R), 엔트로피 가역열 및 쿨링플레이트 LPM' },
+  { id: 'tab-powerfactor', cat: 'power', name: '44. 진상 콘덴서 역률 개선', desc: '목표 역률(95%) 도달 소요 진상용량(kVAR) 및 절감액' },
+  { id: 'tab-hydraulics', cat: 'fluid', name: '45. 고압 유압실린더 & 펌프', desc: '최고 압력(bar), 실린더 추력(Ton), 소요 유량(LPM)' },
+  { id: 'tab-hvacblower', cat: 'specs', name: '46. 공조 덕트 & 송풍기 풍량', desc: '등마찰 손실법 덕트 치수(W×H) 및 송풍기 CMM' },
+  { id: 'tab-steampipe', cat: 'fluid', name: '47. 스팀배관 관경 & 보일러', desc: '증기 유량(kg/h), 포화증기 압력별 최적 배관경(mm)' },
+  { id: 'tab-mechlife', cat: 'mech', name: '49. 베어링·LM가이드 수명', desc: 'ISO 281 L10h 정격 수명 및 최적 구리스 급유 주기' },
+  { id: 'tab-cuttingforce', cat: 'mech', name: '50. CNC 절삭력 & 주축 동력', desc: 'Kienzle 절삭력 모델, 모터 kW 및 칩 배출률(MRR)' },
+  { id: 'tab-accumulator', cat: 'fluid', name: '51. 고압 유압 축압기(ACC)', desc: '폴리트로픽(n=1.4) 비상 토출 체적 및 질소 봉입압' },
+  { id: 'tab-reactorheat', cat: 'fluid', name: '52. 화학 반응기 열수지', desc: '반응열(ΔHrxn), 재킷 전열면적, 냉각수 LPM 및 열폭주' },
+  { id: 'tab-nucleardecay', cat: 'nuclear', name: '53. 원자로 감쇠열 & 차폐', desc: 'ANS 5.1 정지 잔열, 납/콘크리트 방사선 반감두께(HVL)' },
+  { id: 'tab-robottorque', cat: 'nuclear', name: '54. 6축 로봇 관절 토크', desc: 'Newton-Euler 관절 동역학 토크, 페이로드 & 감속기' },
+  { id: 'tab-rocketnozzle', cat: 'nuclear', name: '55. 로켓 노즐 비추력(Isp)', desc: '드라발 노즐 등엔트로피 팽창, 추력(kN), 비추력(초)' },
+  { id: 'tab-plasmasheath', cat: 'nuclear', name: '56. 반도체 플라즈마 쉬스', desc: '디바이 길이(Debye), 보옴 유속, 쉬스 두께(mm)' },
+  { id: 'tab-batteryslurry', cat: 'motion', name: '57. 배터리 슬러리 건조열', desc: 'NMP 증발 잠열, 건조 존 열풍 풍량(CMM) 및 LEL 25%' },
+  { id: 'tab-besssafety', cat: 'power', name: '58. BESS 열폭주 소방배기', desc: 'NFPA 855 / UL 9540A 방출 오프가스 체적 및 CFM' },
+  { id: 'tab-gearstress', cat: 'mech', name: '59. 기어 치면·굽힘강도', desc: 'AGMA / ISO 6336 루이스 굽힘응력 및 면압 안전율' },
+  { id: 'tab-shipstability', cat: 'fluid', name: '60. 선박 복원성(GM)', desc: '메타센터 높이(GM), 복원정(GZ), IMO 전복 방지' },
+  { id: 'tab-timingbelt', cat: 'mech', name: '61. 타이밍벨트·체인 장력', desc: '고유진동수 주파수(Hz) 측정값, 전달동력, 벨트 폭' },
+  { id: 'tab-ballscrewbuckling', cat: 'mech', name: '62. 볼스크류 좌굴·위험속도', desc: '오일러 압축 좌굴 하중(kN) 및 공진 위험속도(RPM)' },
+  { id: 'tab-orificeflow', cat: 'fluid', name: '63. 오리피스 유량·차압', desc: 'ISO 5167 차압유량계, 베타비(β), 영구 압력손실' },
+  { id: 'tab-insulation', cat: 'fluid', name: '64. 배관 보온단열·열손실', desc: 'ASTM C680 보온재 두께(mm), 방산열량(W/m) 및 절감액' },
+  { id: 'tab-aerationtank', cat: 'specs', name: '65. 수처리 폭기조 산소량', desc: 'BOD 제거 표준 산소요구량(SOR) 및 블로워 동력(kW)' },
+  { id: 'tab-steelbeam', cat: 'mech', name: '66. H형강 처짐·모멘트', desc: '복합하중 H빔/각관 최대 처짐(δ) 및 허용 처짐비(L/300)' },
+  { id: 'tab-mixerpower', cat: 'fluid', name: '67. 교반기 임펠러 동력', desc: '동력수(Np), 교반 레이놀즈수, 러쉬톤/패들 모터 kW' },
+  { id: 'tab-pipingloss', cat: 'fluid', name: '68. 배관 마찰손실·수두', desc: '다알시-바이스바흐 압력강하(bar), 피팅 상당길이' },
+  { id: 'tab-refrigerationcop', cat: 'fluid', name: '69. 냉매 사이클 COP', desc: 'R134a/R410A 압축 동력, 냉동톤(RT), 성적계수(COP)' },
+  { id: 'tab-pipeexpansion', cat: 'fluid', name: '70. 배관 열팽창·U루프', desc: '온도차 신장량(mm), U-루프 신축이음 최소 치수' },
+  { id: 'tab-pipeerosion', cat: 'specs', name: '71. 배관 침식·부식 수명', desc: 'API RP 14E 침식 한계유속, NACE 부식속도 잔여수명' },
+  { id: 'tab-cleanroomdp', cat: 'specs', name: '72. 클린룸 차압·환기횟수', desc: '실간 차압(Pa), 도어 틈새 누설풍량 및 환기횟수(ACH)' },
+  { id: 'tab-fanaffinity', cat: 'motion', name: '73. 송풍기 상사법칙·인버터', desc: '회전수/주파수(Hz) 변경에 따른 풍량/풍압/동력 3승' },
+  { id: 'tab-pressureshell', cat: 'fluid', name: '74. 압력용기 ASME 두께', desc: 'ASME Sec.VIII 셸/경판 최소 요구 두께 및 수압시험' },
+  { id: 'tab-couplingkey', cat: 'mech', name: '75. 축 커플링·키홈 전단', desc: '평행키 전단응력(τ), 면압 찌그러짐(σc) 및 안전계수' },
+  { id: 'tab-foulingheat', cat: 'fluid', name: '76. 열교환기 파울링·오염', desc: '오염 계수(Rf), 총괄 열전달 계수(U), 세정 주기' },
+  { id: 'tab-waterhammer', cat: 'fluid', name: '77. 배관 수격작용(서지)', desc: 'Joukowsky 수격 서지압력(bar), 밸브 임계 폐쇄시간' },
+  { id: 'tab-ctptburden', cat: 'power', name: '78. 변성기 CT·PT 부담(VA)', desc: '계기용 변류기 2차 배선 임피던스 및 포화 검증' }
+];
 
 function filterToolsSearch(query) {
   const q = (query || '').trim().toLowerCase();
-  const tabBtns = document.querySelectorAll('.tab-btn[data-tab]');
-  let firstMatch = null;
+  const dropdown = document.getElementById('quickSearchDropdown');
+  if (!dropdown) return;
 
-  tabBtns.forEach(btn => {
-    const text = (btn.textContent || '').toLowerCase();
-    const tabId = (btn.getAttribute('data-tab') || '').toLowerCase();
-    if (!q || text.includes(q) || tabId.includes(q)) {
-      btn.style.display = 'inline-flex';
-      if (!firstMatch) firstMatch = btn;
-    } else {
-      btn.style.display = 'none';
-    }
+  if (!q) {
+    dropdown.style.display = 'none';
+    dropdown.innerHTML = '';
+    return;
+  }
+
+  const matches = MASTER_TOOLS_CATALOG.filter(t => 
+    t.name.toLowerCase().includes(q) || 
+    t.desc.toLowerCase().includes(q) || 
+    t.id.toLowerCase().includes(q)
+  );
+
+  if (matches.length === 0) {
+    dropdown.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:0.8rem; text-align:center;">일치하는 공학 도구가 없습니다.</div>';
+    dropdown.style.display = 'block';
+    return;
+  }
+
+  let html = '';
+  matches.slice(0, 10).forEach(m => {
+    let catLabel = '전기·전원';
+    if (m.cat === 'motion') catLabel = '모터·배터리';
+    else if (m.cat === 'mech') catLabel = '기계·가공';
+    else if (m.cat === 'fluid') catLabel = '유압·화공';
+    else if (m.cat === 'nuclear') catLabel = '원자력·로봇';
+    else if (m.cat === 'specs') catLabel = '설비·자료실';
+
+    html += `
+      <div class="search-result-item" onclick="selectSearchResultTool('${m.id}')">
+        <div>
+          <div class="search-res-title">${m.name}</div>
+          <div class="search-res-desc">${m.desc}</div>
+        </div>
+        <span class="search-res-badge">${catLabel}</span>
+      </div>
+    `;
   });
 
-  if (firstMatch && q.length >= 3) {
-    // Smoothly scroll into view
-    firstMatch.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  }
+  dropdown.innerHTML = html;
+  dropdown.style.display = 'block';
 }
 
-// Global Ctrl+K / Cmd+K Shortcut
-document.addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-    e.preventDefault();
-    const searchInput = document.getElementById('globalToolSearch');
-    if (searchInput) {
-      searchInput.focus();
-      searchInput.select();
-    }
+function selectSearchResultTool(tabId) {
+  const dropdown = document.getElementById('quickSearchDropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  const searchInput = document.getElementById('globalToolSearch');
+  if (searchInput) searchInput.value = '';
+
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  if (btn) {
+    btn.click();
+    btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+}
+window.selectSearchResultTool = selectSearchResultTool;
+
+// Close search dropdown on click outside
+document.addEventListener('click', (e) => {
+  const searchWrapper = document.querySelector('.quick-search-wrapper');
+  const dropdown = document.getElementById('quickSearchDropdown');
+  if (dropdown && searchWrapper && !searchWrapper.contains(e.target)) {
+    dropdown.style.display = 'none';
   }
 });
 
