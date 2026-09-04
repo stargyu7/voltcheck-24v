@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>볼트체크 PRO | 모션 그래픽스 &amp; 엔지니어링 숏츠 공식 쇼케이스</title>
+  <title>볼트체크 PRO | 5대 공학 캐릭터 애니메이션 숏츠 공식 쇼케이스</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
     :root {
@@ -12,157 +12,187 @@
       --accent-cyan: #00e5ff;
       --accent-gold: #f59e0b;
       --accent-green: #10b981;
+      --accent-purple: #a855f7;
+      --accent-rose: #f43f5e;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background: var(--bg-dark); color: #f8fafc; padding: 2rem 1rem; min-height: 100vh; }
+    body { background: var(--bg-dark); color: #f8fafc; padding: 2.5rem 1rem; min-height: 100vh; }
     .container { max-width: 1400px; margin: 0 auto; }
+    
     header { text-align: center; margin-bottom: 2.5rem; }
-    header h1 { font-size: 2.2rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+    header h1 { font-size: 2.3rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
     header h1 span { color: var(--accent-cyan); }
-    header p { color: #94a3b8; font-size: 1rem; margin-top: 0.5rem; }
+    header p { color: #94a3b8; font-size: 1.05rem; margin-top: 0.6rem; }
 
-    /* Grand Master Feature Card (Animated Motion Graphics) */
-    .master-hero-box {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(8, 14, 26, 0.99));
-      border: 2px solid var(--accent-cyan);
+    /* Grand Showcase Filter Tabs */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+    }
+    .filter-btn {
+      background: rgba(15, 23, 42, 0.8);
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.7rem 1.25rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent-cyan);
+      color: #070c16;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    }
+
+    /* Episode Cards Grid */
+    .episodes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+    .episode-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(8, 14, 26, 0.99));
+      border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       padding: 2.25rem;
-      margin-bottom: 3rem;
       display: flex;
       flex-wrap: wrap;
       gap: 2.5rem;
-      align-items: center;
-      box-shadow: 0 20px 50px rgba(0, 229, 255, 0.25);
+      align-items: flex-start;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease, border-color 0.2s ease;
     }
-    .master-video-frame {
-      width: 340px;
-      height: 604px;
-      background: #000;
-      border-radius: 14px;
-      overflow: hidden;
+    .episode-card:hover {
+      border-color: var(--accent-cyan);
+    }
+    .card-ep1 { border-left: 6px solid var(--accent-cyan); }
+    .card-ep2 { border-left: 6px solid var(--accent-gold); }
+    .card-ep3 { border-left: 6px solid var(--accent-green); }
+    .card-ep4 { border-left: 6px solid var(--accent-purple); }
+    .card-ep5 { border-left: 6px solid var(--accent-rose); }
+
+    .video-column {
+      width: 330px;
       flex-shrink: 0;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
-      border: 2px solid rgba(0, 229, 255, 0.5);
     }
-    .master-video-frame video {
+    .video-box {
+      width: 100%;
+      height: 586px;
+      background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    }
+    .video-box video {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    .master-details {
+
+    .info-column {
       flex: 1;
       min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
-    .badge-yt-master {
-      background: linear-gradient(135deg, #0ea5e9, #6366f1);
-      color: #fff;
+    .char-badge-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .tag-category {
       font-size: 0.82rem;
       font-weight: 800;
-      padding: 6px 16px;
-      border-radius: 50px;
-      display: inline-block;
-      margin-bottom: 0.85rem;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 14px;
+      border-radius: 30px;
+      color: #fff;
     }
-    .master-title {
-      font-size: 1.7rem;
+    .tag-ep1 { background: #0284c7; }
+    .tag-ep2 { background: #d97706; }
+    .tag-ep3 { background: #16a34a; }
+    .tag-ep4 { background: #9333ea; }
+    .tag-ep5 { background: #e11d48; }
+
+    .ep-title {
+      font-size: 1.55rem;
       font-weight: 800;
       color: #fff;
-      margin-bottom: 0.8rem;
       line-height: 1.35;
     }
-    .master-desc {
+    .ep-script-quote {
+      background: rgba(30, 41, 59, 0.6);
+      border-left: 3px solid var(--accent-cyan);
+      padding: 1rem 1.25rem;
+      border-radius: 0 10px 10px 0;
       font-size: 0.92rem;
       color: #cbd5e1;
       line-height: 1.65;
-      margin-bottom: 1.5rem;
     }
-    .feature-points {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
+    .ep-script-quote strong {
+      color: #f8fafc;
     }
-    .feature-chip {
-      background: rgba(14, 165, 233, 0.1);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      padding: 0.6rem 0.9rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: #7dd3fc;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+
     .meta-box {
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(0, 229, 255, 0.25);
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
+      padding: 1.2rem;
       font-size: 0.88rem;
       color: #94a3b8;
     }
     .meta-box strong { color: #f8fafc; }
+    .meta-item { margin-bottom: 0.6rem; }
+    .meta-item:last-child { margin-bottom: 0; }
 
-    .shorts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-    .short-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      overflow: hidden;
+    .btn-group {
       display: flex;
-      flex-direction: column;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
     }
-    .short-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 229, 255, 0.4);
-    }
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      height: 480px;
-      background: #000;
-    }
-    .video-wrapper video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .card-info {
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      flex: 1;
-    }
-    .btn-action-group {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .btn-copy {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.08);
+    .btn-copy-main {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
       color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 0.6rem 0.8rem;
+      border: none;
+      padding: 0.8rem 1.4rem;
       border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.82rem;
       transition: all 0.2s ease;
     }
-    .btn-copy:hover {
-      background: var(--accent-cyan);
-      color: #000;
+    .btn-copy-main:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+    }
+    .btn-link-engine {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 0.8rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    .btn-link-engine:hover {
+      background: rgba(0, 229, 255, 0.15);
       border-color: var(--accent-cyan);
     }
+
     .toast {
       position: fixed;
       bottom: 2rem;
@@ -181,132 +211,171 @@
 <body>
   <div class="container">
     <header>
-      <h1>⚡ 모션 그래픽스 엔지니어링 숏츠 <span>공식 마스터 쇼케이스</span></h1>
-      <p>실시간 전류 흐름 파티클, 라이브 전압 롤링 카운터, 오실로스코프 파형 모션 &amp; KEC 규격 정밀해석</p>
+      <h1>🎬 5대 공학 도메인 캐릭터 숏츠 <span>공식 마스터 쇼케이스</span></h1>
+      <p>산업 현장 캐릭터 애니메이션, 공학 공식 시뮬레이션 &amp; 1080×1920 Full HD 유튜브 숏츠</p>
     </header>
 
-    <!-- GRAND MASTER FEATURED SHORT: ANIMATED MOTION GRAPHICS -->
-    <div class="master-hero-box">
-      <div class="master-video-frame">
-        <video controls autoplay loop muted playsinline>
-          <source src="youtube_shorts_animated_motion.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div class="master-details">
-        <span class="badge-yt-master">✨ 2026 차세대 모션 그래픽스 &amp; 플랜트 실무 해석 에디션</span>
-        <h2 class="master-title">⚡ 24V 제어선로 80m 전압강하 &amp; PLC 통신에러 완벽 해석 (KEC 4.0sq 최적화)</h2>
-        <p class="master-desc">
-          글자 겹침 및 여백을 100% 보정한 정밀 레이아웃 위에, <strong>실시간 전류 흐름 파티클 애니메이션</strong>, <strong>실시간 전압 롤링 카운터 (24.0V → 22.10V FAIL → 23.29V PASS)</strong>, <strong>동적 오실로스코프 리플 노이즈 파형</strong>, 그리고 전문 시니어 엔지니어 보이스오버가 융합된 최고 수준의 홍보 영상입니다.
-        </p>
-
-        <div class="feature-points">
-          <div class="feature-chip">⚡ 전류 이동 파티클 모션</div>
-          <div class="feature-chip">🔢 실시간 전압 롤링 카운터</div>
-          <div class="feature-chip">📈 오실로스코프 리플 파형</div>
-          <div class="feature-chip">🎯 글자 겹침 0% 완벽 보정</div>
-        </div>
-        
-        <div class="meta-box">
-          <div><strong>📌 유튜브 추천 제목:</strong> 24V 제어선로 80m 포설 시 PLC 통신에러 원인? 전압강하 완벽 해석 ⚡ #Shorts</div>
-          <div style="margin-top:8px;"><strong>📝 설명란 및 고정 댓글:</strong><br>
-            산업용 플랜트 현장에서 24V 제어선로 80m 포설 시 단자 전압강하로 인한 PLC 리셋 및 센서 통신 에러를 KEC/IEC 규정에 맞춰 정밀 해석합니다.<br>
-            🌐 78대 전 산업 무료 공학 계산기: https://voltcheck24.com/ (네이버/구글: '볼트체크')
-          </div>
-          <div style="margin-top:8px;"><strong>🏷️ 태그:</strong> #KEC #전압강하 #전장설계 #PLC #제어반 #전기설비 #볼트체크 #Shorts #전기기사 #자동화</div>
-        </div>
-
-        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-          <button class="btn-copy" onclick="copyAnimatedMeta()" style="padding:0.85rem 1.5rem; font-size:0.95rem; background:linear-gradient(135deg, #0284c7, #2563eb); color:#fff; border:none; border-radius:8px;">
-            📋 유튜브 제목·설명·태그 1초 복사하기
-          </button>
-        </div>
-      </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCard('all')">전체 보기 (5부작)</button>
+      <button class="filter-btn" onclick="filterCard('ep1')">⚡ EP.1 전기 (김반장)</button>
+      <button class="filter-btn" onclick="filterCard('ep2')">⚙️ EP.2 모터 (강팀장)</button>
+      <button class="filter-btn" onclick="filterCard('ep3')">📐 EP.3 기계 (이박사)</button>
+      <button class="filter-btn" onclick="filterCard('ep4')">🚰 EP.4 유압 (최수석)</button>
+      <button class="filter-btn" onclick="filterCard('ep5')">🤖 EP.5 첨단 (닥터 넥스트)</button>
     </div>
 
-    <h3 style="font-size:1.3rem; margin-bottom:1.25rem; color:#fff;">📁 추가 엔지니어링 숏츠 시리즈 라인업 (5종)</h3>
-
-    <div class="shorts-grid">
-      <!-- Short 1 -->
-      <div class="short-card">
-        <div class="video-wrapper">
-          <video controls preload="metadata"><source src="shorts_ep1_voltcheck.mp4" type="video/mp4"></video>
-        </div>
-        <div class="card-info">
-          <div>
-            <div style="color:#fb923c; font-size:0.75rem; font-weight:800;">EP.1 전기·전선</div>
-            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">24V 전압강하 &amp; 전선굵기 3초 컷</div>
-            <div style="color:#94a3b8; font-size:0.8rem;">부하와 거리 입력 즉시 전압강하 및 최적 2.5sq 추천.</div>
-          </div>
-          <div class="btn-action-group">
-            <button class="btn-copy" onclick="copyScript(1)">📋 대본 복사</button>
+    <div class="episodes-container">
+      <!-- EPISODE 1 -->
+      <div class="episode-card card-ep1" data-cat="ep1">
+        <div class="video-column">
+          <div class="video-box">
+            <video controls preload="metadata" playsinline>
+              <source src="shorts_char_ep1_electric.mp4" type="video/mp4">
+            </video>
           </div>
         </div>
-      </div>
-
-      <!-- Short 2 -->
-      <div class="short-card">
-        <div class="video-wrapper">
-          <video controls preload="metadata"><source src="shorts_ep2_motor_mc.mp4" type="video/mp4"></video>
-        </div>
-        <div class="card-info">
-          <div>
-            <div style="color:#c084fc; font-size:0.75rem; font-weight:800;">EP.2 모터·차단기</div>
-            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">3상 모터 FLC &amp; MC-32a 정격 산정</div>
-            <div style="color:#94a3b8; font-size:0.8rem;">15kW 모터 정격 30.4A 및 EOCR 트립 곡선 세팅값 3초 완성.</div>
+        <div class="info-column">
+          <div class="char-badge-header">
+            <span class="tag-category tag-ep1">⚡ EP.1 전기·전원</span>
+            <span style="color:#00e5ff; font-weight:800;">김반장 (전기안전 30년차 베테랑)</span>
           </div>
-          <div class="btn-action-group">
-            <button class="btn-copy" onclick="copyScript(2)">📋 대본 복사</button>
+          <h2 class="ep-title">24V 제어선로 80m 전압강하 &amp; PLC 통신에러 긴급 진단 (KEC 4.0sq)</h2>
+          <div class="ep-script-quote">
+            <strong>🎙️ 김반장의 현장 코칭:</strong><br>
+            "현장에서 24V DC 제어선을 80m 길게 깔았는데 PLC 통신이 죽는다고요? 4A에 1.5sq를 쓰면 전압강하가 무려 1.9V, 7.9%나 치솟아 리셋이 발생합니다. KEC 도체 저항 공식으로 4.0sq로 증설하면 0.71V로 뚝 떨어져 KEC 3% 기준을 완벽 통과합니다!"
+          </div>
+          <div class="meta-box">
+            <div class="meta-item"><strong>📌 유튜브 제목:</strong> 24V 제어선로 80m 깔았는데 PLC 통신에러 난다고? 전압강하 완벽 해결 ⚡ #Shorts</div>
+            <div class="meta-item"><strong>📐 핵심 공식:</strong> $e = rac{2 \cdot L \cdot I \cdot ho}{A}$ (L=80m, I=4A ➔ 4.0sq ΔV=0.71V / 2.96% PASS)</div>
+            <div class="meta-item"><strong>🏷️ 태그:</strong> #KEC #전압강하 #전선굵기 #전기기사 #PLC #제어반 #볼트체크 #Shorts</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn-copy-main" onclick="copyEpMeta(1)">📋 유튜브 제목·설명·태그 1초 복사</button>
+            <a href="https://voltcheck24.com/?calc=volt_drop_dc" target="_blank" class="btn-link-engine">🚀 24V 전압강하 계산기 열기 ↗</a>
           </div>
         </div>
       </div>
 
-      <!-- Short 3 -->
-      <div class="short-card">
-        <div class="video-wrapper">
-          <video controls preload="metadata"><source src="shorts_ep3_bearing_life.mp4" type="video/mp4"></video>
-        </div>
-        <div class="card-info">
-          <div>
-            <div style="color:#fde047; font-size:0.75rem; font-weight:800;">EP.3 기계·수명</div>
-            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">ISO 281 베어링 L10h 수명 84,200시간</div>
-            <div style="color:#94a3b8; font-size:0.8rem;">6205 베어링 동정격하중 및 최적 구리스 급유 주기 산출.</div>
-          </div>
-          <div class="btn-action-group">
-            <button class="btn-copy" onclick="copyScript(3)">📋 대본 복사</button>
+      <!-- EPISODE 2 -->
+      <div class="episode-card card-ep2" data-cat="ep2">
+        <div class="video-column">
+          <div class="video-box">
+            <video controls preload="metadata" playsinline>
+              <source src="shorts_char_ep2_motor.mp4" type="video/mp4">
+            </video>
           </div>
         </div>
-      </div>
-
-      <!-- Short 4 -->
-      <div class="short-card">
-        <div class="video-wrapper">
-          <video controls preload="metadata"><source src="shorts_ep4_bess_safety.mp4" type="video/mp4"></video>
-        </div>
-        <div class="card-info">
-          <div>
-            <div style="color:#f43f5e; font-size:0.75rem; font-weight:800;">EP.4 배터리·안전</div>
-            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">NFPA 855 BESS 배터리 열폭주 배기</div>
-            <div style="color:#94a3b8; font-size:0.8rem;">수소 가스 방출량 및 방폭 배기팬 풍량(CMH) 3초 검증.</div>
+        <div class="info-column">
+          <div class="char-badge-header">
+            <span class="tag-category tag-ep2">⚙️ EP.2 모터·드라이브</span>
+            <span style="color:#f59e0b; font-weight:800;">강팀장 (모터 드라이브 마스터)</span>
           </div>
-          <div class="btn-action-group">
-            <button class="btn-copy" onclick="copyScript(4)">📋 대본 복사</button>
+          <h2 class="ep-title">3상 380V 15kW 모터 돌입전류 트립 방지 &amp; MC-32a 정격 산정</h2>
+          <div class="ep-script-quote">
+            <strong>🎙️ 강팀장의 현장 코칭:</strong><br>
+            "15kW 3상 모터 기동하자마자 차단기가 자꾸 트립되나요? 380V 정격 30.4A 조건에서 기동 돌입전류는 6배인 182A까지 치솟습니다. 일반 차단기 대신 모터 전용 D커브 차단기와 MC-32a 전자접촉기를 정확히 매칭해야 소손을 막을 수 있습니다!"
+          </div>
+          <div class="meta-box">
+            <div class="meta-item"><strong>📌 유튜브 제목:</strong> 15kW 3상 모터 켜자마자 차단기 트립되는 이유? 돌입전류와 MC 선정 ⚙️ #Shorts</div>
+            <div class="meta-item"><strong>📐 핵심 공식:</strong> $I_{FLC} = rac{P}{\sqrt{3} \cdot V \cdot \eta \cdot \cos	heta}$ (FLC 30.4A ➔ MC-32a & Type-D Breaker PASS)</div>
+            <div class="meta-item"><strong>🏷️ 태그:</strong> #모터 #전자접촉기 #돌입전류 #EOCR #차단기트립 #전기기사 #볼트체크 #Shorts</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn-copy-main" onclick="copyEpMeta(2)">📋 유튜브 제목·설명·태그 1초 복사</button>
+            <a href="https://voltcheck24.com/?calc=motor_sizing" target="_blank" class="btn-link-engine">🚀 3상 모터 계산기 열기 ↗</a>
           </div>
         </div>
       </div>
 
-      <!-- Short 5 -->
-      <div class="short-card">
-        <div class="video-wrapper">
-          <video controls preload="metadata"><source src="shorts_ep5_hbeam_deflection.mp4" type="video/mp4"></video>
-        </div>
-        <div class="card-info">
-          <div>
-            <div style="color:#38bdf8; font-size:0.75rem; font-weight:800;">EP.5 건축·구조</div>
-            <div style="color:#fff; font-size:1rem; font-weight:700; margin:4px 0;">H형강 보 처짐량 L/300 한계 검토</div>
-            <div style="color:#94a3b8; font-size:0.8rem;">H-300x150 등분포 하중 휨모멘트 및 처짐 안전율 즉시 산출.</div>
+      <!-- EPISODE 3 -->
+      <div class="episode-card card-ep3" data-cat="ep3">
+        <div class="video-column">
+          <div class="video-box">
+            <video controls preload="metadata" playsinline>
+              <source src="shorts_char_ep3_mechanic.mp4" type="video/mp4">
+            </video>
           </div>
-          <div class="btn-action-group">
-            <button class="btn-copy" onclick="copyScript(5)">📋 대본 복사</button>
+        </div>
+        <div class="info-column">
+          <div class="char-badge-header">
+            <span class="tag-category tag-ep3">📐 EP.3 기계·구조</span>
+            <span style="color:#10b981; font-weight:800;">이박사 (정밀 메카트로닉스 수석)</span>
+          </div>
+          <h2 class="ep-title">ISO 281 회전체 6205 베어링 피로수명 L10h (84,200시간) &amp; 윤활주기</h2>
+          <div class="ep-script-quote">
+            <strong>🎙️ 이박사의 정밀 해석:</strong><br>
+            "회전 기계에서 이상 진동이 감지되었다면 베어링 한계 수명을 점검해야 합니다. 6205 볼베어링에 동하중 2.4kN, 1750 RPM이 걸릴 때 ISO 281 피로수명 L10h는 84,200시간, 약 9.6년입니다. 또한 그리스 재윤활 주기는 4,200시간마다 필수입니다!"
+          </div>
+          <div class="meta-box">
+            <div class="meta-item"><strong>📌 유튜브 제목:</strong> 회전기계 모터 베어링 수명 언제까지 버틸까? ISO 281 L10h 계산 📐 #Shorts</div>
+            <div class="meta-item"><strong>📐 핵심 공식:</strong> $L_{10h} = rac{10^6}{60 \cdot n} \cdot (C/P)^p$ ($L_{10h} = 84,200	ext{h}$, 윤활주기 4,200h)</div>
+            <div class="meta-item"><strong>🏷️ 태그:</strong> #베어링수명 #기계설계 #ISO281 #구리스윤활 #진동진단 #일반기계기사 #볼트체크 #Shorts</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn-copy-main" onclick="copyEpMeta(3)">📋 유튜브 제목·설명·태그 1초 복사</button>
+            <a href="https://voltcheck24.com/?calc=bearing_life" target="_blank" class="btn-link-engine">🚀 베어링 수명 계산기 열기 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- EPISODE 4 -->
+      <div class="episode-card card-ep4" data-cat="ep4">
+        <div class="video-column">
+          <div class="video-box">
+            <video controls preload="metadata" playsinline>
+              <source src="shorts_char_ep4_hydraulic.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="info-column">
+          <div class="char-badge-header">
+            <span class="tag-category tag-ep4">🚰 EP.4 유압·배관</span>
+            <span style="color:#a855f7; font-weight:800;">최수석 (유압·플랜트 배관 전문가)</span>
+          </div>
+          <h2 class="ep-title">고압 유압라인 압력 서지 완충 &amp; 질소 축압기(24.8L) 용량 산정</h2>
+          <div class="ep-script-quote">
+            <strong>🎙️ 최수석의 현장 코칭:</strong><br>
+            "유압 실린더 급정지 시 배관 충격음과 압력 서지로 밸브가 터질 것 같나요? 최고압력 210바에서 필요 토출량 6.5리터를 보상하려면 단열변화 지수 1.4의 질소 가스 폴리트로픽 계산을 통해 초기 봉입압력 126바와 최소 24.8리터의 축압기가 산정됩니다!"
+          </div>
+          <div class="meta-box">
+            <div class="meta-item"><strong>📌 유튜브 제목:</strong> 유압 배관 쾅쾅 치는 압력 서지? 질소 축압기 용량 완벽 계산법 🚰 #Shorts</div>
+            <div class="meta-item"><strong>📐 핵심 공식:</strong> $P_0 V_0^n = P_1 V_1^n = P_2 V_2^n$ ($P_0 = 126	ext{ bar}, V_0 = 24.8	ext{L}$ PASS)</div>
+            <div class="meta-item"><strong>🏷️ 태그:</strong> #유압설계 #축압기 #어큐뮬레이터 #압력서지 #수격작용 #플랜트배관 #볼트체크 #Shorts</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn-copy-main" onclick="copyEpMeta(4)">📋 유튜브 제목·설명·태그 1초 복사</button>
+            <a href="https://voltcheck24.com/?calc=accumulator" target="_blank" class="btn-link-engine">🚀 유압 축압기 계산기 열기 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- EPISODE 5 -->
+      <div class="episode-card card-ep5" data-cat="ep5">
+        <div class="video-column">
+          <div class="video-box">
+            <video controls preload="metadata" playsinline>
+              <source src="shorts_char_ep5_bess_robot.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="info-column">
+          <div class="char-badge-header">
+            <span class="tag-category tag-ep5">🤖 EP.5 첨단공학·특수</span>
+            <span style="color:#f43f5e; font-weight:800;">닥터 넥스트 (BESS·로보틱스 AI 연구원)</span>
+          </div>
+          <h2 class="ep-title">NFPA 855 BESS 배터리 열폭주 안전 해석 &amp; 방폭 배기팬(1,250 CMH)</h2>
+          <div class="ep-script-quote">
+            <strong>🎙️ 닥터 넥스트의 공학 브리핑:</strong><br>
+            "대용량 ESS 배터리 룸 화재 안전, 규격대로 설계하셨나요? 배터리 셀 열폭주 시 분당 120리터의 수소 가스가 분출되며 폭발 하한계 4%를 넘으면 대형 사고로 이어집니다. NFPA 855 기준에 따라 안전율 4를 적용하면 최소 시간당 1,250루베의 방폭 배기팬이 필요합니다!"
+          </div>
+          <div class="meta-box">
+            <div class="meta-item"><strong>📌 유튜브 제목:</strong> ESS 배터리 열폭주 화재 폭발 막으려면? NFPA 855 방폭 환기팬 계산 🤖 #Shorts</div>
+            <div class="meta-item"><strong>📐 핵심 공식:</strong> $Q_{vent} = rac{G_{max} \cdot Packs}{LFL \cdot SF \cdot 60}$ ($Q = 1,250	ext{ CMH}$ Ex d IIB+H2 방폭 PASS)</div>
+            <div class="meta-item"><strong>🏷️ 태그:</strong> #ESS #BESS #배터리열폭주 #소방설비 #NFPA855 #방폭팬 #볼트체크 #Shorts</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn-copy-main" onclick="copyEpMeta(5)">📋 유튜브 제목·설명·태그 1초 복사</button>
+            <a href="https://voltcheck24.com/?calc=bess_safety" target="_blank" class="btn-link-engine">🚀 BESS 소방 환기 계산기 열기 ↗</a>
           </div>
         </div>
       </div>
@@ -323,34 +392,98 @@
       setTimeout(() => { toast.style.display = 'none'; }, 2200);
     }
 
-    function copyAnimatedMeta() {
-      const text = `[유튜브 쇼츠 업로드용]
-제목: 24V 제어선로 80m 포설 시 PLC 통신에러 원인? 전압강하 완벽 해석 ⚡ #Shorts
-
-설명:
-산업용 플랜트 현장에서 24V 제어선로 80m 포설 시 단자 전압강하로 인한 PLC 리셋 및 센서 통신 에러를 KEC/IEC 규정에 맞춰 정밀 해석합니다.
-
-✅ 도체 고유저항 전압강하 공식: e = (2 * L * I * rho) / A
-✅ 1.5sq 사용 시: delta V = 1.90V (강하율 7.92% - KEC 기준 초과 REJECT)
-✅ 4.0sq 최적 선정 시: delta V = 0.71V (강하율 2.96% - KEC 3% 이내 PASS)
-
-🌐 78대 전 산업 무료 공학 계산 포털 볼트체크: https://voltcheck24.com/
-(네이버 / 구글 검색: '볼트체크')
-
-#KEC #전압강하 #전장설계 #PLC #제어반 #전기설비 #볼트체크 #Shorts #전기기사 #자동화`;
-      navigator.clipboard.writeText(text).then(() => showToast('유튜브 제목·설명·태그가 복사되었습니다! 🚀'));
+    function filterCard(cat) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.episode-card').forEach(card => {
+        if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     }
 
-    const scripts = {
-      1: "24V 제어선로 전압강하로 PLC 통신 에러가 났다면? 볼트체크에서 전선 굵기(sq)를 3초 만에 검산하세요! https://voltcheck24.com/",
-      2: "3상 유도전동기 15kW 정격전류 30.4A와 MC-32a 전자접촉기 선정, 차단기 트립 곡선까지 3초 완성! 볼트체크",
-      3: "모터 베어링 L10h 수명 84,200시간! ISO 281 규격 베어링 수명과 윤활 주기를 즉시 계산하세요. 볼트체크",
-      4: "ESS 배터리 룸 화재 안전 규격 NFPA 855! 수소 열폭주 배기팬 용량(CMH)을 실시간 산출합니다. 볼트체크",
-      5: "H형강 구조물 처짐 한계 L/300 검토! 휨모멘트와 안전율을 단 3초 만에 무료 검산하세요. 볼트체크"
+    const metas = {
+      1: {
+        title: "24V 제어선로 80m 깔았는데 PLC 통신에러 난다고? 전압강하 완벽 해결 ⚡ #Shorts",
+        desc: `산업용 플랜트 현장에서 24V 제어선로 80m 포설 시 단자 전압강하로 인한 PLC 리셋 및 센서 통신 에러를 KEC/IEC 규정에 맞춰 정밀 해석합니다.
+
+📐 KEC 도체 저항 전압강하 산출식: e = (2 × L × I × ρ) / A
+❌ 1.5 sq 배선 시: ΔV = 1.90V (강하율 7.92% ➔ 허용치 3% 초과 REJECT)
+✅ 4.0 sq 최적 선정: ΔV = 0.71V (강하율 2.96% ➔ KEC 3% 이내 PASS)
+
+🌐 78대 전 산업 무료 공학 계산기 & A4 기술검토서 출력:
+👉 https://voltcheck24.com/
+(네이버 / 구글 검색: '볼트체크')
+
+#KEC #전압강하 #전장설계 #PLC #제어반 #전기설비 #볼트체크 #Shorts #전기기사 #자동화설계`
+      },
+      2: {
+        title: "15kW 3상 모터 켜자마자 차단기 트립되는 이유? 돌입전류와 MC 선정 ⚙️ #Shorts",
+        desc: `3상 380V 15kW 유도전동기 기동 시 정격의 600%에 달하는 돌입전류(182.4A)로 인한 차단기 트립을 방지하고, KS C IEC 규격에 맞는 Type-D 차단기와 MC-32a 전자접촉기를 정확히 산정합니다.
+
+📐 모터 전부하 정격전류 공식: I_FLC = P / (√3 × V × η × cosθ)
+✅ 전부하 정격전류: 30.4A (시동 돌입전류 182.4A)
+✅ 전자접촉기 추천: MC-32a (AC-3 32A 정격)
+✅ 차단기 추천: 50AF / 40AT (Type-D 기동용)
+
+🌐 78대 전 산업 무료 공학 계산 포털 볼트체크:
+👉 https://voltcheck24.com/
+
+#모터 #전자접촉기 #돌입전류 #EOCR #차단기트립 #전기기사 #볼트체크 #Shorts`
+      },
+      3: {
+        title: "회전기계 모터 베어링 수명 언제까지 버틸까? ISO 281 L10h 계산 📐 #Shorts",
+        desc: `산업용 모터 및 펌프 회전체 6205 깊은홈 볼베어링의 ISO 281 정격 피로수명(L10h)과 최적 구리스 재윤활 주기를 공학적으로 정밀 진단합니다.
+
+📐 ISO 281 베어링 피로수명 공식: L10h = (10^6 / 60·n) × (C/P)^p
+✅ 정격 피로 수명 L10h: 84,200 시간 (9.6년 연속 운전 신뢰도 90%)
+✅ 최적 구리스 윤활 주기: 4,200 시간 (약 6개월 주기 권장)
+
+🌐 78대 전 산업 무료 공학 계산 포털 볼트체크:
+👉 https://voltcheck24.com/
+
+#베어링수명 #기계설계 #ISO281 #구리스윤활 #진동진단 #일반기계기사 #볼트체크 #Shorts`
+      },
+      4: {
+        title: "유압 배관 쾅쾅 치는 압력 서지? 질소 축압기 용량 완벽 계산법 🚰 #Shorts",
+        desc: `유압 실린더 급정지 시 발생하는 수격작용(Water Hammer) 압력 서지를 완충하고 밸브 파열을 방지하기 위한 질소 가스 블래더 축압기(Accumulator) 용량을 산정합니다.
+
+📐 가스 폴리트로픽 단열 변화식: P0·V0^n = P1·V1^n = P2·V2^n (n=1.4)
+✅ 초기 질소 봉입 압력 (P0): 126 bar (0.9 × P_min)
+✅ 유효 오일 토출량 (ΔV): 6.50 L 보상
+✅ 총 축압기 요구 체적 (V0): 24.8 L (표준 25L 용기 채택)
+
+🌐 78대 전 산업 무료 공학 계산 포털 볼트체크:
+👉 https://voltcheck24.com/
+
+#유압설계 #축압기 #어큐뮬레이터 #압력서지 #수격작용 #플랜트배관 #볼트체크 #Shorts`
+      },
+      5: {
+        title: "ESS 배터리 열폭주 화재 폭발 막으려면? NFPA 855 방폭 환기팬 계산 🤖 #Shorts",
+        desc: `BESS 배터리 룸 셀 열폭주 시 급격히 분출되는 수소 가스(120L/min)의 폭발 하한계(LFL 4%) 도달을 방지하고, NFPA 855 규정에 맞춘 방폭 배기 환기팬 풍량을 산정합니다.
+
+📐 NFPA 855 방폭 환기 배기량 공식: Q_vent = (G_max × Packs) / (LFL × SF × 60)
+✅ 최대 수소 가스 분출량: 120 L/min
+✅ NFPA 855 필요 배기 풍량: 1,250 CMH (735 CFM)
+✅ 방폭 모터 권장 규격: Ex d IIB+H2 T4 방폭 인증
+
+🌐 78대 전 산업 무료 공학 계산 포털 볼트체크:
+👉 https://voltcheck24.com/
+
+#ESS #BESS #배터리열폭주 #소방설비 #NFPA855 #방폭팬 #볼트체크 #Shorts`
+      }
     };
 
-    function copyScript(id) {
-      navigator.clipboard.writeText(scripts[id]).then(() => showToast(`EP.${id} 대본이 복사되었습니다!`));
+    function copyEpMeta(id) {
+      const m = metas[id];
+      const text = `[유튜브 스튜디오 업로드용 EP.${id}]
+제목: ${m.title}
+
+설명란:
+${m.desc}`;
+      navigator.clipboard.writeText(text).then(() => showToast(`EP.${id} 유튜브 제목·설명이 복사되었습니다! 🚀`));
     }
   </script>
 </body>
