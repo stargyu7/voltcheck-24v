@@ -37,6 +37,24 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://voltcheck24.com/en/bolt-tightening-torque-calculator/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://voltcheck24.com/en/bearing-fatigue-life-calculator/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://voltcheck24.com/en/hydraulic-accumulator-calculator/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://voltcheck24.com/?calc=tab-voltagedrop</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
