@@ -629,6 +629,151 @@ body.theme-precision {
   background: #dbeafe;
 }
 
+.modal-xl.user-guide-modal {
+  width: min(1120px, calc(100vw - 28px));
+  max-height: min(88vh, 900px);
+}
+
+.user-guide-body {
+  padding: 0;
+  overflow: auto;
+  background: #f8fafc;
+}
+
+.guide-intro-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #dbeafe;
+  background: linear-gradient(120deg, #eff6ff 0%, #ffffff 72%);
+}
+
+.guide-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: #0369a1;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.guide-intro-band h3,
+.guide-section-heading h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.guide-intro-band p,
+.guide-section-heading p {
+  margin: 6px 0 0;
+  color: #475569;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.guide-primary-action {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid #0284c7;
+  border-radius: 6px;
+  background: #0369a1;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.guide-primary-action:hover { background: #075985; }
+
+.guide-step-grid,
+.guide-reading-grid,
+.guide-playbook-grid {
+  display: grid;
+  gap: 10px;
+  padding: 16px 22px 0;
+}
+
+.guide-step-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.guide-reading-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); padding-top: 10px; }
+.guide-playbook-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 10px; }
+
+.guide-step-card,
+.guide-reading-item,
+.guide-playbook-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  background: #ffffff;
+}
+
+.guide-step-card { position: relative; }
+.guide-step-card > span { color: #0284c7; font-size: 0.68rem; font-weight: 900; }
+.guide-step-card > i { display: block; width: 18px; height: 18px; margin: 8px 0 7px; color: #0369a1; }
+.guide-step-card strong,
+.guide-reading-item strong,
+.guide-playbook-card strong { display: block; color: #0f172a; font-size: 0.82rem; font-weight: 900; }
+.guide-step-card p,
+.guide-reading-item p,
+.guide-playbook-card p { margin: 5px 0 0; color: #475569; font-size: 0.75rem; line-height: 1.5; }
+
+.guide-section-heading { padding: 18px 22px 0; }
+.guide-reading-item { border-left: 3px solid #16a34a; }
+.guide-reading-warn { border-left-color: #d97706; }
+.guide-reading-danger { border-left-color: #dc2626; }
+.guide-reading-warn strong { color: #b45309; }
+.guide-reading-danger strong { color: #b91c1c; }
+
+.guide-playbook-card { display: flex; flex-direction: column; gap: 7px; }
+.guide-playbook-card .guide-playbook-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.guide-tool-link {
+  min-height: 30px;
+  padding: 0 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #075985;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.guide-tool-link:hover { border-color: #38bdf8; background: #f0f9ff; }
+.guide-playbook-card .guide-sequence { color: #64748b; font-size: 0.71rem; line-height: 1.45; }
+
+.guide-tools-section { padding-bottom: 22px; }
+.guide-tools-directory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px 22px 0;
+}
+.guide-directory-group { min-width: 0; padding: 10px; border: 1px solid #e2e8f0; border-radius: 7px; background: #ffffff; }
+.guide-directory-group h4 { margin: 0 0 7px; color: #334155; font-size: 0.78rem; font-weight: 900; }
+.guide-directory-list { display: flex; flex-direction: column; gap: 3px; }
+.guide-directory-list button { padding: 4px 5px; border: 0; border-radius: 4px; background: transparent; color: #0369a1; text-align: left; font-size: 0.7rem; cursor: pointer; }
+.guide-directory-list button:hover { background: #eff6ff; color: #1d4ed8; }
+
+@media (max-width: 900px) {
+  .guide-step-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .guide-tools-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .guide-intro-band { align-items: stretch; flex-direction: column; }
+  .guide-step-grid, .guide-reading-grid, .guide-playbook-grid, .guide-tools-directory { grid-template-columns: 1fr; }
+  .guide-step-grid, .guide-reading-grid, .guide-playbook-grid, .guide-tools-directory { padding-left: 14px; padding-right: 14px; }
+  .guide-section-heading { padding-left: 14px; padding-right: 14px; }
+  .guide-intro-band { padding: 16px 14px; }
+}
+
 @media (max-width: 768px) {
   .engineering-disclaimer-inner {
     align-items: flex-start;

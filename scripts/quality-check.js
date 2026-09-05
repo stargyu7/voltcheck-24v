@@ -99,6 +99,10 @@ const workflowRequiredSnippets = [
   'getWorkflowRecommendationFromProject',
   'returnProjectCount',
   'returnReportCount',
+  'userGuideModal',
+  'renderUserGuide',
+  'GUIDE_CATEGORY_META',
+  'closeUserGuideAndStart',
 ];
 
 for (const snippet of workflowRequiredSnippets) {

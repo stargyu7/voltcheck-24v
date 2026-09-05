@@ -6543,6 +6543,92 @@ function getToolsCatalog() {
   return Array.from(existingById.values());
 }
 
+// ========================================================================
+// [UX UPGRADE 4] ALL-CALCULATOR USER GUIDE & CATEGORY PLAYBOOKS
+// ========================================================================
+const GUIDE_CATEGORY_META = {
+  power: { label: '전원·보호·배전', icon: 'zap', desc: '전압, 전류, 용량, 보호기, 접지와 배전 여유를 검토합니다.', first: 'tab-voltagedrop', next: ['tab-smpsbudget', 'tab-inrushbreaker', 'tab-shortcircuit'] },
+  signal: { label: '신호·통신·제어', icon: 'radio-tower', desc: '센서 신호, PLC, 네트워크, 안전회로의 전달 품질과 결선을 확인합니다.', first: 'tab-analogloop', next: ['tab-plcscaling', 'tab-rs485', 'tab-grounding'] },
+  motion: { label: '모터·모션·기계', icon: 'settings-2', desc: '모터, 관성, 토크, 장력, 수명과 기계적 여유를 순서대로 검토합니다.', first: 'tab-motorcalc', next: ['tab-motioninertia', 'tab-servoregen', 'tab-mechlife'] },
+  fluid: { label: '유체·배관·공정', icon: 'droplets', desc: '유량, 압력손실, 펌프·밸브·배관과 공정 열부하를 검토합니다.', first: 'tab-pumphead', next: ['tab-valvecv', 'tab-pipingloss', 'tab-waterhammer'] },
+  thermal: { label: '열·냉각·에너지', icon: 'thermometer-snowflake', desc: '발열량, 냉각능력, 열교환, 배터리와 에너지 균형을 확인합니다.', first: 'tab-cabinetcooling', next: ['tab-batterythermal', 'tab-heatexchanger', 'tab-refrigerationcop'] },
+  structure: { label: '구조·재료·시공', icon: 'ruler', desc: '처짐, 좌굴, 응력, 체결, 트레이와 구조 안전 여유를 검토합니다.', first: 'tab-beamdeflection', next: ['tab-steelbeam', 'tab-ballscrewbuckling', 'tab-bolttorque'] },
+  special: { label: '특수·안전·연구', icon: 'shield-alert', desc: '방폭, 클린룸, 진공, 원자력·로봇과 같은 전문 조건을 검토합니다.', first: 'tab-safetylight', next: ['tab-explosionproof', 'tab-cleanesd', 'tab-besssafety'] }
+};
+
+const GUIDE_TOOL_GROUPS = {
+  power: new Set(['tab-voltagedrop', 'tab-smpsbudget', 'tab-transformer', 'tab-shortcircuit', 'tab-inrushbreaker', 'tab-spd', 'tab-grounding', 'tab-busbar', 'tab-ctptburden', 'tab-powerfactor', 'tab-solarpv', 'tab-coppercost']),
+  signal: new Set(['tab-analogloop', 'tab-rs485', 'tab-plcscaling', 'tab-otethernet', 'tab-iolinksafety', 'tab-npnpnp', 'tab-flybacksurge', 'tab-safetylight', 'tab-explosionproof', 'tab-tempconversion', 'tab-cleanesd', 'tab-cabletable', 'tab-bendingradius']),
+  motion: new Set(['tab-motorcalc', 'tab-servoregen', 'tab-motioninertia', 'tab-hoistcrane', 'tab-rolltension', 'tab-vfdsurge', 'tab-bolttorque', 'tab-mechlife', 'tab-cuttingforce', 'tab-gearstress', 'tab-timingbelt', 'tab-couplingkey', 'tab-robottorque']),
+  fluid: new Set(['tab-pneumatics', 'tab-ductutility', 'tab-valvecv', 'tab-hydraulics', 'tab-hvacblower', 'tab-steampipe', 'tab-accumulator', 'tab-reactorheat', 'tab-orificeflow', 'tab-insulation', 'tab-aerationtank', 'tab-mixerpower', 'tab-pipingloss', 'tab-pipeexpansion', 'tab-pipeerosion', 'tab-fanaffinity', 'tab-waterhammer']),
+  thermal: new Set(['tab-cabinetcooling', 'tab-batterythermal', 'tab-heatexchanger', 'tab-refrigerationcop', 'tab-foulingheat', 'tab-agvbattery', 'tab-batteryslurry']),
+  structure: new Set(['tab-beamdeflection', 'tab-steelbeam', 'tab-ballscrewbuckling', 'tab-cabletray', 'tab-pressureshell', 'tab-shipstability']),
+  special: new Set(['tab-sldgenerator', 'tab-vacuumchamber', 'tab-nucleardecay', 'tab-rocketnozzle', 'tab-plasmasheath', 'tab-besssafety', 'tab-cleanroomdp', 'tab-luxlighting'])
+};
+
+function getGuideCategory(tool) {
+  const declared = tool?.cat;
+  if (declared && GUIDE_CATEGORY_META[declared]) return declared;
+  for (const [category, ids] of Object.entries(GUIDE_TOOL_GROUPS)) {
+    if (ids.has(tool?.id)) return category;
+  }
+  return 'signal';
+}
+
+function renderUserGuide() {
+  const playbookGrid = document.getElementById('guidePlaybookGrid');
+  const directory = document.getElementById('guideToolsDirectory');
+  const summary = document.getElementById('guideToolsSummary');
+  if (!playbookGrid || !directory || !summary) return;
+
+  const tools = getToolsCatalog().filter(tool => tool.id !== 'tab-articles');
+  const grouped = Object.fromEntries(Object.keys(GUIDE_CATEGORY_META).map(category => [category, []]));
+  tools.forEach(tool => grouped[getGuideCategory(tool)].push(tool));
+  const toolName = id => tools.find(tool => tool.id === id)?.name || id.replace('tab-', '');
+
+  playbookGrid.innerHTML = Object.entries(GUIDE_CATEGORY_META).map(([category, meta]) => `
+    <article class="guide-playbook-card">
+      <strong><i data-lucide="${meta.icon}"></i> ${meta.label} <span class="guide-count">${grouped[category].length}개</span></strong>
+      <p>${meta.desc}</p>
+      <div class="guide-sequence">시작 → ${escapeHtml(toolName(meta.first))} → ${meta.next.map(toolName).map(escapeHtml).join(' → ')}</div>
+      <div class="guide-playbook-tools">
+        <button type="button" class="guide-tool-link" onclick="closeUserGuideAndStart('${meta.first}')">첫 계산기 열기</button>
+        ${meta.next.slice(0, 2).map(id => `<button type="button" class="guide-tool-link" onclick="closeUserGuideAndStart('${id}')">${escapeHtml(toolName(id))}</button>`).join('')}
+      </div>
+    </article>
+  `).join('');
+
+  directory.innerHTML = Object.entries(GUIDE_CATEGORY_META).map(([category, meta]) => `
+    <section class="guide-directory-group">
+      <h4>${meta.label} <span class="guide-count">${grouped[category].length}</span></h4>
+      <div class="guide-directory-list">
+        ${grouped[category].map(tool => `<button type="button" onclick="closeUserGuideAndStart('${tool.id}')">${escapeHtml(tool.name)}</button>`).join('')}
+      </div>
+    </section>
+  `).join('');
+  summary.textContent = `${tools.length}개 계산기를 7개 작업 분야로 정리했습니다. 도구를 누르면 해당 계산기로 바로 이동합니다.`;
+  if (window.lucide) window.lucide.createIcons();
+}
+
+function openUserGuide() {
+  renderUserGuide();
+  document.getElementById('userGuideModal')?.classList.remove('hidden');
+}
+
+function closeUserGuide() {
+  document.getElementById('userGuideModal')?.classList.add('hidden');
+}
+
+function closeUserGuideAndStart(tabId) {
+  closeUserGuide();
+  switchTab(tabId);
+  document.getElementById(tabId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+window.openUserGuide = openUserGuide;
+window.closeUserGuide = closeUserGuide;
+window.closeUserGuideAndStart = closeUserGuideAndStart;
+
 const GLOBAL_UI_DICTIONARY = {
   // Navigation & Category Chips
   '⭐ 전체 78종': { en: '⭐ All 78 Tools', ja: '⭐ 全78種', vi: '⭐ Tất cả 78 công cụ', es: '⭐ Todas (78)', de: '⭐ Alle 78 Werkzeuge', zh: '⭐ 全部78款' },
@@ -8506,6 +8592,11 @@ document.addEventListener('DOMContentLoaded', () => {
   updateStarIconsAcrossDOM();
   updateReportCartBadges();
   renderReturnWorkspaceDashboard();
+  document.getElementById('openUserGuideBtn')?.addEventListener('click', openUserGuide);
+  document.getElementById('closeUserGuideBtn')?.addEventListener('click', closeUserGuide);
+  document.getElementById('userGuideModal')?.addEventListener('click', (event) => {
+    if (event.target.id === 'userGuideModal') closeUserGuide();
+  });
   injectReportCartButtonsToAllTabs();
   injectWorkflowActionPanels();
 });
