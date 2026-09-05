@@ -101,25 +101,25 @@
       <!-- Interactive Contact Form -->
       <div class="workbench-card" style="background: var(--bg-surface); border: 1px solid var(--border-main); border-radius: var(--radius-md); padding: 2rem;">
         <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--navy-dark); margin-top: 0; margin-bottom: 1.25rem;">온라인 메시지 보내기</h2>
-        <form id="contactForm" onsubmit="event.preventDefault(); alert('문의가 성공적으로 접수되었습니다. 담당 엔지니어 검토 후 회신드리겠습니다.'); document.getElementById('contactForm').reset();">
+        <form id="contactForm" onsubmit="return prepareContactEmail(event);">
           <div class="field-box" style="margin-bottom: 1rem;">
-            <label style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">성함 / 직함 *</label>
-            <input type="text" required placeholder="예: 홍길동 책임연구원" class="input-precision font-mono" style="width: 100%; box-sizing: border-box;">
+            <label for="contactName" style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">성함 / 직함 *</label>
+            <input type="text" id="contactName" required placeholder="예: 홍길동 책임연구원" class="input-precision font-mono" style="width: 100%; box-sizing: border-box;">
           </div>
 
           <div class="field-box" style="margin-bottom: 1rem;">
-            <label style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">회사명 / 소속 *</label>
-            <input type="text" required placeholder="예: (주)한국FA시스템" class="input-precision font-mono" style="width: 100%; box-sizing: border-box;">
+            <label for="contactCompany" style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">회사명 / 소속 *</label>
+            <input type="text" id="contactCompany" required placeholder="예: (주)한국FA시스템" class="input-precision font-mono" style="width: 100%; box-sizing: border-box;">
           </div>
 
           <div class="field-box" style="margin-bottom: 1rem;">
-            <label style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">회신받을 이메일 *</label>
-            <input type="email" required placeholder="name@company.com" class="input-precision font-mono" style="width: 100%; box-sizing: border-box;">
+            <label for="contactEmail" style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">회신받을 이메일 *</label>
+            <input type="email" id="contactEmail" required placeholder="name@company.com" class="input-precision font-mono" style="width: 100%; box-sizing: border-box;">
           </div>
 
           <div class="field-box" style="margin-bottom: 1.25rem;">
-            <label style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">문의 및 피드백 내용 *</label>
-            <textarea required rows="4" placeholder="계산 도구 추가 요청, 전압강하 산출식 검토 의견, 현장 사례 등을 자유롭게 작성해 주세요." class="input-precision" style="width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
+            <label for="contactMessage" style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.35rem;">문의 및 피드백 내용 *</label>
+            <textarea id="contactMessage" required rows="4" placeholder="계산 도구 추가 요청, 전압강하 산출식 검토 의견, 현장 사례 등을 자유롭게 작성해 주세요." class="input-precision" style="width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
           </div>
 
           <button type="submit" class="btn-print" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem;">
@@ -157,6 +157,18 @@
   </footer>
 
   <script>
+    function prepareContactEmail(event) {
+      event.preventDefault();
+      const name = document.getElementById('contactName').value;
+      const company = document.getElementById('contactCompany').value;
+      const email = document.getElementById('contactEmail').value;
+      const message = document.getElementById('contactMessage').value;
+      const subject = encodeURIComponent(`[VoltCheck24 문의] ${company}`);
+      const body = encodeURIComponent(`성함/직함: ${name}\n회사: ${company}\n회신 이메일: ${email}\n\n문의 내용:\n${message}`);
+      window.location.href = `mailto:contact@voltcheck24.com?subject=${subject}&body=${body}`;
+      alert('메일 앱이 열립니다. 메일 앱에서 전송을 완료해 주세요.');
+      return false;
+    }
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) window.lucide.createIcons();
     });

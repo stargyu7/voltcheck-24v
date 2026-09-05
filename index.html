@@ -105,12 +105,6 @@
   <!-- Lucide Icons (Ultra-Fast jsdelivr CDN with defer) -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
 
-  <!-- Google AdSense Verification Script -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7654949933724243"
-     crossorigin="anonymous"></script>
-
-
-
   <link rel="stylesheet" href="styles.css?v=2.2.0">
 
   <!-- Structured Data for Google Rich Snippets (WebApplication + FAQPage) -->
@@ -10196,7 +10190,7 @@
               <div class="global-pay-chip">⚡ Instant ZIP Download</div>
             </div>
             <p style="font-size:0.78rem; color:#166534; margin-top:0.6rem; line-height:1.4;">
-              ✓ Instant automated download upon submission &bull; Official commercial VAT receipt issued via email &bull; Zero international transaction markup
+              Continue to the official payment provider for verified checkout and digital delivery.
             </p>
             <div class="checkout-statutory-notice" id="statutoryNoticeBox">
               <strong>[전자상거래법 제17조 제2항에 따른 법정 고지]</strong><br>
@@ -10234,10 +10228,10 @@
 
             <button type="submit" id="payCheckoutSubmitBtn" class="btn-primary-action w-100 mt-3" style="padding:0.9rem; font-size:1.05rem; font-weight:800;">
               <i data-lucide="lock"></i>
-              <span id="paySubmitBtnText">9,900원 안전 결제 &amp; 파일 즉시 다운로드</span>
+              <span id="paySubmitBtnText">공식 결제 페이지로 이동</span>
             </button>
             <span style="font-size:0.75rem; color:var(--text-muted); display:block; text-align:center; margin-top:0.4rem;">
-              🔒 256-bit SSL 암호화 안전 결제 &bull; 결제 완료 즉시 브라우저에서 ZIP 파일 자동 다운로드 및 이메일 발송
+              결제와 디지털 파일 배송은 선택한 공식 결제 제공업체에서 처리됩니다.
             </span>
           </form>
 
@@ -10436,11 +10430,12 @@
     <div class="cookie-content">
       <span class="cookie-icon">🍪</span>
       <div class="cookie-text" id="cookieBannerText">
-        <strong>VoltCheck Privacy Notice:</strong> We use essential cookies to maintain engineering calculation states and deliver high-performance offline tooling. By browsing, you agree to our <a onclick="openLegalModal('privacy')">Privacy Policy</a>.
+        <strong>VoltCheck Privacy Notice:</strong> We use local storage for preferences and may use non-essential analytics or advertising technologies. Choose your preference or read our <a onclick="openLegalModal('privacy')">Privacy Policy</a>.
       </div>
     </div>
     <div class="cookie-actions">
       <button type="button" class="btn-cookie-learn" onclick="openLegalModal('terms')" id="cookieLearnBtn">Terms</button>
+      <button type="button" class="btn-cookie-learn" onclick="rejectNonEssentialCookies()">Reject non-essential</button>
       <button type="button" class="btn-cookie-accept" onclick="acceptCookies()" id="cookieAcceptBtn">Accept &amp; Continue</button>
     </div>
   </div>

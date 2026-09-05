@@ -56,6 +56,9 @@ const ANALYTICS_EVENTS = {
 };
 
 function trackVoltCheckEvent(name, params = {}) {
+  try {
+    if (localStorage.getItem('voltcheck_cookie_consent') === 'rejected') return;
+  } catch (e) {}
   const payload = {
     event: name,
     page: window.location.pathname + window.location.search + window.location.hash,
@@ -1789,8 +1792,8 @@ function renderSavedCalculations() {
     div.className = 'saved-item';
     div.innerHTML = `
       <div>
-        <div class="saved-item-title">${item.title}</div>
-        <div class="saved-item-meta font-mono">${item.date} • ${item.tab.replace('tab-', '')} • ${item.data.length || 40}m (${item.data.gauge || 'AWG 24'})</div>
+        <div class="saved-item-title">${escapeHtml(item.title)}</div>
+        <div class="saved-item-meta font-mono">${escapeHtml(item.date)} • ${escapeHtml(item.tab?.replace('tab-', '') || 'voltagedrop')} • ${escapeHtml(item.data?.length || 40)}m (${escapeHtml(item.data?.gauge || 'AWG 24')})</div>
       </div>
       <div class="saved-item-actions">
         <button type="button" class="btn-item-load" onclick="loadSavedCalcItem(${item.id})">불러오기</button>
@@ -4049,8 +4052,14 @@ function initProjectWorkspace() {
       const token = window.location.hash.replace('#project=', '');
       const jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(token))));
       const restored = JSON.parse(jsonStr);
-      if (restored && restored.items) {
-        CURRENT_PROJECT = restored;
+      const validItems = restored && Array.isArray(restored.items) && restored.items.length <= 100
+        && restored.items.every(item => item && typeof item === 'object'
+          && Object.values(item).every(value => typeof value !== 'string' || value.length <= 1000));
+      if (validItems) {
+        CURRENT_PROJECT = {
+          name: typeof restored.name === 'string' ? restored.name.slice(0, 160) : 'Shared engineering project',
+          items: restored.items
+        };
         localStorage.setItem('voltcheck_active_project', JSON.stringify(CURRENT_PROJECT));
         setTimeout(() => {
           openProjectModal();
@@ -4218,12 +4227,12 @@ function openProjectModal() {
       html += `
         <div class="project-item-card">
           <div class="project-item-meta">
-            <span class="badge-pill" style="font-size:0.75rem; background:rgba(234,88,12,0.1); color:var(--brand-orange);">${item.calcType}</span>
-            <h5 class="mt-1">${item.label}</h5>
-            <div class="project-item-params">${item.params}</div>
+            <span class="badge-pill" style="font-size:0.75rem; background:rgba(234,88,12,0.1); color:var(--brand-orange);">${escapeHtml(item.calcType)}</span>
+            <h5 class="mt-1">${escapeHtml(item.label)}</h5>
+            <div class="project-item-params">${escapeHtml(item.params)}</div>
           </div>
           <div style="text-align:right;">
-            <div class="project-item-res">${item.result}</div>
+            <div class="project-item-res">${escapeHtml(item.result)}</div>
             <button type="button" class="btn-util mt-1 btn-del-proj-item" data-idx="${idx}" style="color:#ef4444; border-color:#fca5a5; font-size:0.75rem; padding:0.2rem 0.5rem;">
               삭제
             </button>
@@ -4802,13 +4811,20 @@ function submitB2BQuoteLead() {
   leads.push(lead);
   localStorage.setItem('voltcheck_quote_leads', JSON.stringify(leads));
 
-  alert(`[B2B 견적 문의 내용이 정리되었습니다]
-
-신청 회사: ${company} (${region})
-담당자: ${name} (${phone})
-
-입력한 정보는 브라우저 로컬 보관함에 저장되었습니다.
-공식 판매처 또는 대리점 문의 시 ${email}로 회신받을 수 있도록 내용을 확인해 주세요.`);
+  const subject = encodeURIComponent(`[VoltCheck24 B2B 견적 문의] ${company || 'Engineering project'}`);
+  const body = encodeURIComponent([
+    `회사: ${company}`,
+    `지역: ${region}`,
+    `담당자: ${name}`,
+    `전화: ${phone}`,
+    `회신 이메일: ${email}`,
+    `발주 예정: ${timeline}`,
+    `요청사항: ${memo}`,
+    '',
+    `프로젝트 항목: ${lead.items.map(item => typeof item === 'string' ? item : item.label || item.calcType || 'engineering item').join(' | ')}`
+  ].join('\n'));
+  window.location.href = `mailto:contact@voltcheck24.com?subject=${subject}&body=${body}`;
+  alert('견적 문의 내용이 준비되었습니다. 메일 앱에서 전송 버튼을 눌러 최종 접수해 주세요.');
 
   const modal = document.getElementById('quoteModal');
   if (modal) modal.classList.add('hidden');
@@ -5597,31 +5613,29 @@ document.addEventListener('DOMContentLoaded', () => {
 // REAL TOSS PAYMENTS PG GATEWAY & INSTANT DIGITAL ASSET DELIVERY ENGINE
 // ==========================================================================
 
-// [토스페이먼츠 공식 클라이언트 키 설정]
-// 상점 실서버 전환 시 developers.tosspayments.com에서 발급받은 'live_ck_...'로 교체하시면 즉시 사장님 계좌로 실결제 정산됩니다.
-const TOSS_PAYMENTS_CLIENT_KEY = 'test_ck_ZLKGPx4M3MnjGvZzgZYeVBaWypv1';
+function getOfficialCheckoutUrl(tier = SELECTED_DIGITAL_TIER) {
+  const isEn = currentLanguage === 'en';
+  if (isEn) return tier?.price === 29000 ? LEMONSQUEEZY_PRO_URL : LEMONSQUEEZY_STARTER_URL;
+  return CTEE_KR_STORE_URL;
+}
 
 function executeRealCheckoutAndDownload() {
-  const name = document.getElementById('orderName')?.value || '엔지니어';
-  const email = document.getElementById('orderEmail')?.value || '';
-  const phone = document.getElementById('orderPhone')?.value || '';
-  const tax = document.getElementById('orderTaxInvoice')?.value || 'none';
-  const payMethod = '크티(Ctee) 공식 안전결제';
-
-  if (!email) {
-    alert('다운로드 링크 및 영수증을 수신할 이메일 주소를 입력해 주십시오.');
-    return;
-  }
-
-  const orderNum = `VC${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(1000 + Math.random() * 9000)}`;
   const tier = SELECTED_DIGITAL_TIER || { price: 9900, title: '엔지니어 실무 스타터 팩 (9,900원)' };
-  const dlUrl = 'https://voltcheck24.com/assets/downloads/VoltCheck_Pro_Master_Bundle.zip';
-
-  // Instant direct fulfillment & automated file download without external popups
-  fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier, dlUrl);
+  const checkoutUrl = getOfficialCheckoutUrl(tier);
+  trackVoltCheckEvent(ANALYTICS_EVENTS.digitalPackOpen, {
+    action: 'open_official_checkout',
+    tier: tier.title,
+    lang: currentLanguage
+  });
+  const opened = window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
+  if (!opened) window.location.href = checkoutUrl;
 }
 
 function fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier, dlUrl) {
+  console.warn('Direct fulfillment is disabled. Use the official checkout provider for payment verification and delivery.');
+  return false;
+
+  /* Legacy client-side fulfillment code intentionally disabled.
   // 1. Save Paid Order locally
   const paidOrder = {
     orderNum,
@@ -5714,30 +5728,14 @@ function fulfillDigitalOrder(orderNum, name, email, phone, tax, payMethod, tier,
   }
 
   if (window.lucide) window.lucide.createIcons();
+  */
 }
 
-// Check Toss Payments Callback on page load
+// External checkout providers own payment verification and fulfillment.
 function checkTossPaymentCallback() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('tossSuccess') === 'true') {
-    const orderNum = urlParams.get('orderNum') || `VC${Date.now()}`;
-    const amount = parseInt(urlParams.get('amount'), 10) || 9900;
-    const email = decodeURIComponent(urlParams.get('email') || 'buyer@company.com');
-    const name = decodeURIComponent(urlParams.get('name') || '엔지니어');
-    const dlUrl = 'https://voltcheck24.com/assets/downloads/VoltCheck_Pro_Master_Bundle.zip';
-
-    const tier = amount === 29000 ?
-      { price: 29000, title: 'PRO 기업용 마스터 번들 (29,000원)' } :
-      { price: 9900, title: '엔지니어 실무 스타터 팩 (9,900원)' };
-
-    // Open Digital Modal
-    const modal = document.getElementById('digitalProductModal');
-    if (modal) modal.classList.remove('hidden');
-
-    // Fulfill order
-    fulfillDigitalOrder(orderNum, name, email, '', 'none', '토스페이먼츠(승인완료)', tier, dlUrl);
-
-    // Clean URL query parameters
+    alert('결제 결과는 공식 결제 페이지에서 확인해 주세요. 사이트에서 결제 완료를 임의로 처리하지 않습니다.');
     window.history.replaceState({}, document.title, window.location.pathname);
   } else if (urlParams.get('tossFail') === 'true') {
     alert('토스페이먼츠 결제가 취소되었거나 승인되지 않았습니다. 다시 시도해 주십시오.');
@@ -5759,6 +5757,7 @@ function initCookieConsent() {
   try {
     const consent = localStorage.getItem('voltcheck_cookie_consent');
     const banner = document.getElementById('cookieConsentBanner');
+    if (consent === 'accepted') loadAdvertisingScripts();
     if (!consent && banner) {
       setTimeout(() => {
         banner.style.display = 'flex';
@@ -5767,12 +5766,31 @@ function initCookieConsent() {
   } catch (e) { console.error(e); }
 }
 
+function loadAdvertisingScripts() {
+  if (document.querySelector('script[data-voltcheck-ads]')) return;
+  const script = document.createElement('script');
+  script.async = true;
+  script.dataset.voltcheckAds = 'true';
+  script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7654949933724243';
+  script.crossOrigin = 'anonymous';
+  document.head.appendChild(script);
+}
+
 function acceptCookies() {
   try {
     localStorage.setItem('voltcheck_cookie_consent', 'accepted');
   } catch (e) {}
   const banner = document.getElementById('cookieConsentBanner');
   if (banner) banner.style.display = 'none';
+}
+
+function rejectNonEssentialCookies() {
+  try {
+    localStorage.setItem('voltcheck_cookie_consent', 'rejected');
+  } catch (e) {}
+  const banner = document.getElementById('cookieConsentBanner');
+  if (banner) banner.style.display = 'none';
+  loadAdvertisingScripts();
 }
 
 function openLegalModal(tab = 'terms') {
@@ -7127,15 +7145,30 @@ function closeDigitalModal() {
 window.closeDigitalModal = closeDigitalModal;
 
 function selectTierAndBuy(price, tierName) {
+  SELECTED_DIGITAL_TIER = { price, title: tierName };
+  const isEn = currentLanguage === 'en';
   const orderBox = document.getElementById('digitalOrderBox');
   const priceNum = document.getElementById('checkoutPriceNum');
+  const priceUnit = document.querySelector('#digitalOrderBox .tier-price .t-unit');
   const titleEl = document.getElementById('selectedTierTitle');
   const badgeEl = document.getElementById('checkoutTierBadge');
+  const btnText = document.getElementById('paySubmitBtnText');
 
   if (orderBox) orderBox.style.display = 'block';
-  if (priceNum) priceNum.textContent = price.toLocaleString('ko-KR');
-  if (titleEl) titleEl.textContent = tierName;
-  if (badgeEl) badgeEl.textContent = `SELECTED: ${price.toLocaleString('ko-KR')} KRW TIER`;
+  if (isEn) {
+    const usd = price === 29000 ? '19.99' : '9.99';
+    if (priceNum) priceNum.textContent = usd;
+    if (priceUnit) priceUnit.textContent = 'USD (VAT Incl.)';
+    if (titleEl) titleEl.textContent = price === 29000 ? 'PRO Enterprise Master Bundle ($19.99)' : 'Engineering Starter Pack ($9.99)';
+    if (badgeEl) badgeEl.textContent = `SELECTED: $${usd} USD TIER`;
+    if (btnText) btnText.textContent = 'Continue to official checkout';
+  } else {
+    if (priceNum) priceNum.textContent = price.toLocaleString('ko-KR');
+    if (priceUnit) priceUnit.textContent = '원 (VAT 포함)';
+    if (titleEl) titleEl.textContent = tierName;
+    if (badgeEl) badgeEl.textContent = `SELECTED: ${price.toLocaleString('ko-KR')} KRW TIER`;
+    if (btnText) btnText.textContent = '공식 결제 페이지로 이동';
+  }
 
   // Scroll to checkout box smoothly
   if (orderBox) {
@@ -10052,7 +10085,8 @@ function updateSeoMetaOnTabSwitch(tabId) {
       metaDesc.setAttribute('content', `${tool.name} - ${tool.desc}. 볼트체크 78대 산업 엔지니어링 계산기에서 즉시 검증하세요.`);
     }
     // Update URL without reloading
-    const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?calc=${tabId}`;
+    const langParam = currentLanguage && currentLanguage !== 'ko' ? `&lang=${encodeURIComponent(currentLanguage)}` : '';
+    const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?calc=${tabId}${langParam}`;
     window.history.replaceState({ path: newUrl }, '', newUrl);
   }
 }

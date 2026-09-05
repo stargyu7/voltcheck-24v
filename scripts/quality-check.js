@@ -129,10 +129,33 @@ const workflowRequiredSnippets = [
   'closeUserGuideAndStart',
 ];
 
+const securityRequiredSnippets = [
+  'Direct fulfillment is disabled',
+  'getOfficialCheckoutUrl',
+  'escapeHtml(item.title)',
+  'escapeHtml(item.label)',
+  'langParam',
+  'rejectNonEssentialCookies',
+];
+
 for (const snippet of workflowRequiredSnippets) {
   if (!publicText.includes(snippet)) {
     failures.push(`Workflow retention/report feature snippet is missing: ${snippet}`);
   }
+}
+
+for (const snippet of securityRequiredSnippets) {
+  if (!publicText.includes(snippet)) {
+    failures.push(`Security and trust safeguard is missing: ${snippet}`);
+  }
+}
+
+if (appJs.includes("const TOSS_PAYMENTS_CLIENT_KEY")) {
+  failures.push('A client-side Toss test key must not be shipped in the public app.');
+}
+
+if (read('contact.html').includes("alert('문의가 성공적으로 접수되었습니다.")) {
+  failures.push('Contact page must not claim a message was received without sending it.');
 }
 
 for (const page of englishLandingPages) {
