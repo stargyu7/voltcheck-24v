@@ -74,6 +74,8 @@ const allTabPanels = [...indexHtml.matchAll(/<section[^>]*id="([^"]+)"[^>]*class
   .map((match) => match[1]);
 
 const tabPanels = allTabPanels.filter((id) => id !== 'tab-articles');
+const englishHub = read('en/index.html');
+const englishHubCalcLinks = [...englishHub.matchAll(/[?&]calc=([^&"]+)/g)].map((match) => match[1]);
 
 if (new Set(allTabButtons).size !== 78) {
   failures.push(`Expected 78 public navigation tabs including technical notes, found ${new Set(allTabButtons).size}.`);
@@ -96,6 +98,12 @@ for (const id of new Set(tabButtons)) {
 for (const id of new Set(tabPanels)) {
   if (!tabButtons.includes(id)) {
     failures.push(`Tab panel has no matching button: ${id}`);
+  }
+}
+
+for (const calcId of new Set(englishHubCalcLinks)) {
+  if (!tabButtons.includes(calcId)) {
+    failures.push(`English hub links to a missing calculator tab: ${calcId}`);
   }
 }
 

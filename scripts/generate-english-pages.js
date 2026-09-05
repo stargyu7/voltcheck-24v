@@ -162,11 +162,21 @@ function pageTemplate(page) {
     '@context': 'https://schema.org', '@type': 'SoftwareApplication',
     name: page.title.split(' | ')[0], applicationCategory: 'EngineeringApplication',
     operatingSystem: 'Web', url, description: page.description,
-    isAccessibleForFree: true, dateModified: '2026-09-05',
+    isAccessibleForFree: true, dateModified: '2026-09-06',
     publisher: { '@type': 'Organization', name: 'Total Engineering Lab', url: siteOrigin },
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
   };
   const faqPageJson = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqJson };
+  const howToJson = {
+    '@context': 'https://schema.org', '@type': 'HowTo', name: `How to use the ${page.title.split(' | ')[0]}`,
+    description: page.description, totalTime: 'PT3M',
+    step: [
+      { '@type': 'HowToStep', name: 'Collect field inputs', text: 'Collect the equipment rating, installation data, and worst-case operating conditions listed in the input checklist.' },
+      { '@type': 'HowToStep', name: 'Enter consistent units', text: 'Enter the measured or documented values using one consistent unit system.' },
+      { '@type': 'HowToStep', name: 'Review the result', text: 'Review the result, margin, assumptions, and engineering note before selecting hardware.' },
+      { '@type': 'HowToStep', name: 'Validate the design', text: 'Cross-check the result against current standards, project specifications, and manufacturer data.' }
+    ]
+  };
   const breadcrumbJson = {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VoltCheck24 Global', item: `${siteOrigin}/en/` },
@@ -189,7 +199,7 @@ function pageTemplate(page) {
   <meta property="og:url" content="${url}">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="/styles.css?v=2.2.0">
-  <script type="application/ld+json">${JSON.stringify([softwareJson, faqPageJson, breadcrumbJson])}</script>
+  <script type="application/ld+json">${JSON.stringify([softwareJson, faqPageJson, breadcrumbJson, howToJson])}</script>
 </head>
 <body class="seo-page">
   <main class="seo-shell">
@@ -207,6 +217,11 @@ function pageTemplate(page) {
     <section class="seo-checklist">
       <h2>Input checklist</h2>
       <ul>${(inputChecklists[page.slug] || ['Equipment rating', 'Operating condition', 'Installation environment', 'Applicable project specification']).map(item => `<li>${item}</li>`).join('')}</ul>
+    </section>
+    <section class="seo-next-step">
+      <h2>Recommended workflow</h2>
+      <p>Start with the primary calculation, then use the related tool to check the next design dependency. Save or print the result only after the assumptions and worst-case conditions are confirmed.</p>
+      <div class="seo-actions"><a class="primary-action" href="/?calc=${page.calc}&amp;lang=en#calculator">Start with the primary inputs</a><a class="secondary-action" href="/?calc=${page.secondary[0]}&amp;lang=en#calculator">Check the related dependency</a></div>
     </section>
     <section class="seo-grid">
       <article><h2>Formula and Inputs</h2><p>${page.formula}</p></article>
