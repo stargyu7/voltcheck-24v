@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-🌍 [GLOBAL VIRAL ENGINE] Convert Speed Challenge & RPG Battle to Global Shorts
+🏆 [ULTRA-VIRAL BENCHMARK ENGINE] Speed Challenge & 8-Bit RPG Masterpieces
 =============================================================================
 1. Viral 1: Engineering Speed Challenge (shorts_global_viral_speed_challenge.mp4)
 2. Viral 2: 8-Bit Retro RPG Boss Battle (shorts_global_creative_rpg_battle.mp4)
@@ -32,22 +32,6 @@ FONT_BOLD = r"C:\Windows\Fonts\segoeuib.ttf"
 FONT_TITLE = r"C:\Windows\Fonts\arialbd.ttf"
 
 
-async def generate_voice_chunk(text, voice, out_mp3):
-    import edge_tts
-    comm = edge_tts.Communicate(text, voice, rate="+7%")
-    await comm.save(str(out_mp3))
-
-
-def get_audio_duration(file_path):
-    cmd = [FFMPEG, "-i", str(file_path)]
-    p = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
-    for line in p.stderr.split("\n"):
-        if "Duration" in line:
-            parts = line.split("Duration:")[1].split(",")[0].strip().split(":")
-            return float(parts[0]) * 3600 + float(parts[1]) * 60 + float(parts[2])
-    return 8.0
-
-
 def load_wav(path):
     with wave.open(str(path), "r") as f:
         sr = f.getframerate()
@@ -63,17 +47,17 @@ def load_wav(path):
         return sr, data
 
 
-def mix_audio(voice_files, bgm_path, out_wav, bgm_vol=0.18):
-    concat_txt = SCRATCH / "tmp_concat_viral.txt"
+def mix_master_audio(voice_files, bgm_path, out_wav):
+    concat_txt = SCRATCH / "tmp_concat_viral_m.txt"
     with open(concat_txt, "w", encoding="utf-8") as f:
         for vf in voice_files:
             f.write(f"file '{vf}'\n")
 
-    tmp_voice_mp3 = SCRATCH / "tmp_voice_viral.mp3"
+    tmp_voice_mp3 = SCRATCH / "tmp_voice_viral_m.mp3"
     subprocess.run([FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-c", "copy", str(tmp_voice_mp3)],
                    check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    tmp_voice_wav = SCRATCH / "tmp_voice_viral.wav"
+    tmp_voice_wav = SCRATCH / "tmp_voice_viral_m.wav"
     subprocess.run([FFMPEG, "-y", "-i", str(tmp_voice_mp3), "-ar", "44100", "-ac", "1", str(tmp_voice_wav)],
                    check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
@@ -83,26 +67,40 @@ def mix_audio(voice_files, bgm_path, out_wav, bgm_vol=0.18):
     n_samples = len(voice)
     master = np.zeros((n_samples, 2), dtype=np.float32)
 
-    master += voice * 1.35
+    # Broadcast Audio Ducking
+    window_size = int(sr * 0.08)
+    abs_voice = np.abs(voice[:, 0])
+    kernel = np.ones(window_size) / window_size
+    envelope = np.convolve(abs_voice, kernel, mode='same')
+    duck_gain = np.where(envelope > 0.03, 0.12, 0.25)
+    duck_gain = np.column_stack([duck_gain, duck_gain])
 
     if len(bgm) < n_samples:
         repeats = int(math.ceil(n_samples / len(bgm)))
         bgm = np.tile(bgm, (repeats, 1))
     bgm_trimmed = bgm[:n_samples]
-    master += bgm_trimmed * bgm_vol
 
-    # SFX
-    for sfx_name in ["sfx_whoosh.wav", "sfx_alert.wav", "sfx_impact.wav", "sfx_pop.wav"]:
+    master += voice * 1.40
+    master += bgm_trimmed * duck_gain
+
+    # Layered SFX
+    for sfx_name, t_sec, vol in [
+        ("sfx_whoosh.wav", 0.00, 0.70),
+        ("sfx_impact.wav", 1.80, 0.85),
+        ("sfx_alert.wav", 8.20, 0.60),
+        ("sfx_spark.wav", 19.50, 0.65),
+        ("sfx_pop.wav", 24.50, 0.80),
+        ("sfx_whoosh.wav", 33.00, 0.65)
+    ]:
         p = SCRATCH / sfx_name
         if p.exists():
             _, sfx = load_wav(p)
-            for t_sec in [0.05, 8.0, 19.0, 27.0]:
-                idx = int(t_sec * sr)
-                if idx < n_samples:
-                    slen = min(len(sfx), n_samples - idx)
-                    master[idx:idx + slen] += sfx[:slen] * 0.45
+            idx = int(t_sec * sr)
+            if idx < n_samples:
+                slen = min(len(sfx), n_samples - idx)
+                master[idx:idx + slen] += sfx[:slen] * vol
 
-    master = np.tanh(master * 0.92)
+    master = np.tanh(master * 0.94)
 
     with wave.open(str(out_wav), "w") as f:
         f.setnchannels(2)
@@ -110,15 +108,54 @@ def mix_audio(voice_files, bgm_path, out_wav, bgm_vol=0.18):
         f.setframerate(sr)
         f.writeframes((master * 32767).astype(np.int16).tobytes())
 
-    return out_wav, len(master) / sr
+    return out_wav, n_samples / sr, master[:, 0]
+
+
+def draw_hud_grid(draw, w=1080, h=1920):
+    for gx in range(0, w, 90):
+        draw.line([(gx, 0), (gx, h)], fill=(18, 24, 40), width=1)
+    for gy in range(0, h, 90):
+        draw.line([(0, gy), (w, gy)], fill=(18, 24, 40), width=1)
+    for cx, cy in [(90, 90), (990, 90), (90, 1830), (990, 1830)]:
+        draw.line([(cx - 15, cy), (cx + 15, cy)], fill=(0, 200, 255), width=2)
+        draw.line([(cx, cy - 15), (cx, cy + 15)], fill=(0, 200, 255), width=2)
+
+
+def draw_reactive_audio_visualizer(draw, audio_signal, t, sr=44100, num_bars=24):
+    idx = int(t * sr)
+    chunk = audio_signal[max(0, idx - 1024):idx + 1024]
+    energy = np.abs(chunk) if len(chunk) > 0 else np.zeros(10)
+    mean_e = np.mean(energy) * 12.0
+
+    base_y = 1485
+    start_x = 110
+    bar_width = 30
+    gap = 6
+
+    for b in range(num_bars):
+        bx = start_x + b * (bar_width + gap)
+        mod = math.sin(t * 15 + b * 0.5) * 0.4 + 0.6
+        bar_h = int(12 + mean_e * 140 * mod + math.sin(b * 0.8) * 8)
+        bar_h = max(8, min(110, bar_h))
+        col = (255, int(180 + b * 3), 0) if b < 16 else (0, 240, 255)
+        draw.rounded_rectangle([(bx, base_y - bar_h), (bx + bar_width, base_y)], radius=4, fill=col)
+
+
+def get_audio_duration(file_path):
+    cmd = [FFMPEG, "-i", str(file_path)]
+    p = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    for line in p.stderr.split("\n"):
+        if "Duration" in line:
+            parts = line.split("Duration:")[1].split(",")[0].strip().split(":")
+            return float(parts[0]) * 3600 + float(parts[1]) * 60 + float(parts[2])
+    return 8.0
 
 
 # =============================================================================
-# 1. RENDER SPEED CHALLENGE SHORT
+# 1. RENDER ULTRA SPEED CHALLENGE
 # =============================================================================
-async def render_speed_challenge():
+async def render_ultra_speed_challenge():
     out_mp4 = BASE_DIR / "shorts_global_viral_speed_challenge.mp4"
-    voice = "en-US-AndrewMultilingualNeural"
     scripts = [
         "Who sizes industrial cables and motor circuit breakers faster? Let's find out in an epic engineering speed battle!",
         "Contestant one: The rookie engineer digging through a 500-page textbook—30 minutes in and totally lost! Contestant two: The 30-year veteran punching a scientific calculator—5 minutes in with a typo!",
@@ -126,16 +163,10 @@ async def render_speed_challenge():
         "Stop flipping through dusty textbooks and punching calculators. Put 78+ free engineering calculators in your pocket at voltcheck24.com!"
     ]
 
-    print("=" * 75)
-    print("⚡ Rendering Global Speed Challenge Short...")
-    voice_files = []
-    durations = []
-    for idx, text in enumerate(scripts):
-        p = SCRATCH / f"global_speed_tts_{idx}.mp3"
-        await generate_voice_chunk(text, voice, p)
-        dur = get_audio_duration(p)
-        voice_files.append(p)
-        durations.append(dur)
+    print("=" * 80)
+    print("⚡ Rendering Ultra-Benchmark Speed Challenge Short...")
+    voice_files = [SCRATCH / f"global_speed_tts_{i}.mp3" for i in range(4)]
+    durations = [get_audio_duration(vf) for vf in voice_files]
 
     accum = 0.0
     t_cues = []
@@ -143,8 +174,8 @@ async def render_speed_challenge():
         accum += d
         t_cues.append(accum)
 
-    out_wav = SCRATCH / "master_speed_challenge.wav"
-    master_audio, mixed_dur = mix_audio(voice_files, SCRATCH / "speed_sfx.wav", out_wav, 0.18)
+    out_wav = SCRATCH / "ultra_master_speed.wav"
+    master_audio, mixed_dur, audio_signal = mix_master_audio(voice_files, SCRATCH / "speed_sfx.wav", out_wav)
 
     fps = 30
     total_frames = int(mixed_dur * fps)
@@ -160,20 +191,17 @@ async def render_speed_challenge():
     cmd = [
         FFMPEG, "-y", "-f", "rawvideo", "-vcodec", "rawvideo", "-s", "1080x1920",
         "-pix_fmt", "rgb24", "-r", str(fps), "-i", "-", "-i", str(master_audio),
-        "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "19", "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "192k", "-shortest", str(out_mp4)
     ]
     pipe = subprocess.Popen(cmd, stdin=subprocess.PIPE)
 
     for frame_idx in range(total_frames):
         t = frame_idx / fps
-        im = Image.new("RGB", (1080, 1920), (14, 18, 30))
+        im = Image.new("RGB", (1080, 1920), (12, 16, 28))
         draw = ImageDraw.Draw(im)
 
-        for gx in range(0, 1080, 120):
-            draw.line([(gx, 0), (gx, 1920)], fill=(22, 28, 45), width=1)
-        for gy in range(0, 1920, 120):
-            draw.line([(0, gy), (1080, gy)], fill=(22, 28, 45), width=1)
+        draw_hud_grid(draw)
 
         seg_idx = 3
         for idx, cue in enumerate(t_cues):
@@ -181,53 +209,50 @@ async def render_speed_challenge():
                 seg_idx = idx
                 break
 
-        # Header Badge
-        draw.rounded_rectangle([(210, 100), (870, 165)], radius=30, fill=(230, 120, 0), outline=(255, 255, 255), width=1)
-        draw.text((540, 132), "[ ⚡ SPEED CHALLENGE: WHO WINS? ]", font=f_badge, fill=(255, 255, 255), anchor="mm")
-        draw.text((540, 260), "Rookie vs 30-Yr Veteran\nvs 3-Second Cheat Code", font=f_title, fill=(255, 255, 255), anchor="mm", align="center")
+        # Header
+        pulse = int(math.sin(t * 6) * 15)
+        draw.rounded_rectangle([(210, 95), (870, 165)], radius=32, fill=(230 + pulse, 120, 0), outline=(255, 255, 255), width=2)
+        draw.text((540, 130), "[ ⚡ SPEED CHALLENGE: WHO WINS? ]", font=f_badge, fill=(255, 255, 255), anchor="mm")
+        draw.text((542, 252), "Rookie vs 30-Yr Veteran\nvs 3-Second Cheat Code", font=f_title, fill=(0, 0, 0), anchor="mm", align="center")
+        draw.text((540, 250), "Rookie vs 30-Yr Veteran\nvs 3-Second Cheat Code", font=f_title, fill=(255, 255, 255), anchor="mm", align="center")
 
-        # Visuals per segment
         if seg_idx == 0:
-            # Battle Matchup
-            draw.rounded_rectangle([(140, 410), (940, 920)], radius=26, fill=(25, 22, 40), outline=(255, 170, 0), width=3)
-            draw.text((540, 480), "CALCULATION SPEED BATTLE", font=f_badge, fill=(255, 200, 0), anchor="mm")
-            draw.text((540, 560), "3-Phase Voltage Drop & Breaker Sizing", font=f_card, fill=(255, 255, 255), anchor="mm")
+            draw.rounded_rectangle([(120, 380), (960, 930)], radius=28, fill=(25, 22, 40), outline=(255, 170, 0), width=3)
+            draw.text((540, 460), "CALCULATION SPEED ARENA", font=f_badge, fill=(255, 200, 0), anchor="mm")
+            draw.text((540, 550), "3-Phase Voltage Drop & Breaker Sizing", font=f_card, fill=(255, 255, 255), anchor="mm")
 
-            draw.rounded_rectangle([(180, 630), (900, 720)], radius=16, fill=(40, 30, 60))
-            draw.text((540, 675), "⚡ Round 1: Who Gets Sizing Done First?", font=f_card, fill=(0, 230, 255), anchor="mm")
+            draw.rounded_rectangle([(180, 630), (900, 730)], radius=20, fill=(40, 30, 60), outline=(0, 230, 255), width=2)
+            draw.text((540, 680), "⚡ Round 1: Who Calculates Sizing First?", font=f_card, fill=(0, 230, 255), anchor="mm")
 
-            draw.rounded_rectangle([(180, 750), (900, 850)], radius=16, fill=(180, 50, 0))
-            draw.text((540, 800), "⏱️ Ready... SET... GO!", font=f_title, fill=(255, 255, 255), anchor="mm")
+            draw.rounded_rectangle([(180, 770), (900, 870)], radius=20, fill=(200, 40, 0))
+            draw.text((540, 820), "⏱️ Ready... SET... GO!", font=f_title, fill=(255, 255, 255), anchor="mm")
 
         elif seg_idx == 1:
-            # Contestants 1 & 2
-            draw.rounded_rectangle([(120, 380), (960, 630)], radius=20, fill=(28, 20, 25), outline=(255, 80, 80), width=2)
-            draw.text((540, 430), "👨‍🎓 CONTESTANT 1: ROOKIE ENGINEER", font=f_badge, fill=(255, 100, 100), anchor="mm")
-            draw.text((540, 495), "500-Page Textbook Search", font=f_card, fill=(255, 255, 255), anchor="mm")
-            draw.text((540, 560), "⏱️ 30 Minutes Elapsed -> ❌ STUCK!", font=f_title, fill=(255, 60, 60), anchor="mm")
+            draw.rounded_rectangle([(120, 370), (960, 630)], radius=22, fill=(28, 18, 24), outline=(255, 70, 70), width=2)
+            draw.text((540, 420), "👨‍🎓 CONTESTANT 1: ROOKIE ENGINEER", font=f_badge, fill=(255, 100, 100), anchor="mm")
+            draw.text((540, 485), "500-Page Textbook Search", font=f_card, fill=(255, 255, 255), anchor="mm")
+            draw.text((540, 555), "⏱️ 30 Minutes -> ❌ TOTALLY LOST!", font=ImageFont.truetype(FONT_TITLE, 44), fill=(255, 50, 50), anchor="mm")
 
-            draw.rounded_rectangle([(120, 670), (960, 920)], radius=20, fill=(28, 25, 20), outline=(255, 180, 0), width=2)
+            draw.rounded_rectangle([(120, 670), (960, 930)], radius=22, fill=(28, 24, 18), outline=(255, 170, 0), width=2)
             draw.text((540, 720), "👴 CONTESTANT 2: 30-YEAR VETERAN", font=f_badge, fill=(255, 200, 0), anchor="mm")
             draw.text((540, 785), "Scientific Calculator Hand Punching", font=f_card, fill=(255, 255, 255), anchor="mm")
-            draw.text((540, 850), "⏱️ 5 Minutes Elapsed -> ⚠️ TYPO ERROR!", font=f_title, fill=(255, 170, 0), anchor="mm")
+            draw.text((540, 855), "⏱️ 5 Minutes -> ⚠️ TYPO ERROR!", font=ImageFont.truetype(FONT_TITLE, 44), fill=(255, 160, 0), anchor="mm")
 
         elif seg_idx == 2:
-            # Contestant 3: VoltCheck WINNER
-            draw.rounded_rectangle([(100, 370), (980, 930)], radius=28, fill=(15, 32, 50), outline=(0, 255, 170), width=3)
-            draw.rounded_rectangle([(320, 410), (760, 470)], radius=20, fill=(0, 180, 100))
-            draw.text((540, 440), "🏆 CONTESTANT 3: WINNER!", font=f_badge, fill=(255, 255, 255), anchor="mm")
+            draw.rounded_rectangle([(100, 360), (980, 940)], radius=28, fill=(12, 32, 48), outline=(0, 255, 170), width=3)
+            draw.rounded_rectangle([(300, 400), (780, 465)], radius=20, fill=(0, 180, 100))
+            draw.text((540, 432), "🏆 CONTESTANT 3: WINNER!", font=f_badge, fill=(255, 255, 255), anchor="mm")
 
-            draw.text((540, 530), "VOLTCHECK SMART USER ⚡", font=f_title, fill=(0, 230, 255), anchor="mm")
-            draw.text((540, 610), "2 Taps on Smartphone Screen", font=f_card, fill=(255, 255, 255), anchor="mm")
+            draw.text((540, 525), "VOLTCHECK SMART USER ⚡", font=f_title, fill=(0, 230, 255), anchor="mm")
+            draw.text((540, 600), "2 Taps on Smartphone Screen", font=f_card, fill=(255, 255, 255), anchor="mm")
 
-            draw.rounded_rectangle([(180, 670), (900, 780)], radius=20, fill=(0, 120, 70))
-            draw.text((540, 725), "TIME: 2.8 SECONDS FLAT! 🚀", font=f_title, fill=(255, 255, 255), anchor="mm")
+            draw.rounded_rectangle([(180, 660), (900, 780)], radius=20, fill=(0, 120, 70))
+            draw.text((540, 720), "TIME: 2.8 SECONDS FLAT! 🚀", font=ImageFont.truetype(FONT_TITLE, 52), fill=(255, 255, 255), anchor="mm")
 
-            draw.text((540, 830), "✅ 4.0 sq Cable Size Selected (2.9% Drop)", font=f_card, fill=(100, 255, 150), anchor="mm")
-            draw.text((540, 880), "✅ Type-D Breaker & MC-32a Confirmed", font=f_card, fill=(0, 255, 200), anchor="mm")
+            draw.text((540, 830), "✅ 4.0 sq Cable Verified (2.9% Voltage Drop)", font=f_card, fill=(100, 255, 160), anchor="mm")
+            draw.text((540, 885), "✅ Type-D 50AF/40AT Breaker Confirmed", font=f_card, fill=(0, 255, 210), anchor="mm")
 
         else:
-            # CTA
             draw.rounded_rectangle([(100, 350), (980, 930)], radius=32, fill=(12, 22, 42), outline=(0, 220, 255), width=3)
             draw.text((540, 430), "VOLTCHECK ⚡", font=f_title, fill=(0, 230, 255), anchor="mm")
             draw.text((540, 510), "The Ultimate Engineering Cheat Code", font=f_card, fill=(255, 255, 255), anchor="mm")
@@ -235,22 +260,25 @@ async def render_speed_challenge():
             perks = [
                 ("⚡ 78+ Free Engineering Calculators Online", (255, 225, 0)),
                 ("📱 Electrical · Mechanical · Motors · Hydraulics", (0, 230, 255)),
-                ("🚀 100% Free · Mobile Optimized · No Sign-Up", (100, 255, 130))
+                ("🚀 100% Free · Mobile Optimized · No Sign-Up", (100, 255, 140))
             ]
             for p_idx, (text, p_col) in enumerate(perks):
                 by = 590 + p_idx * 95
-                draw.rounded_rectangle([(140, by), (940, by + 75)], radius=16, fill=(22, 38, 68), outline=(0, 160, 220), width=1)
+                draw.rounded_rectangle([(140, by), (940, by + 75)], radius=16, fill=(20, 36, 64), outline=(0, 160, 220), width=1)
                 draw.text((540, by + 37), text, font=f_small, fill=p_col, anchor="mm")
 
+        # Reactive Audio Visualizer
+        draw_reactive_audio_visualizer(draw, audio_signal, t)
+
         # Subtitles
-        draw.rounded_rectangle([(70, 1500), (1010, 1720)], radius=24, fill=(0, 0, 0), outline=(255, 180, 0), width=2)
+        draw.rounded_rectangle([(70, 1510), (1010, 1730)], radius=24, fill=(5, 8, 16), outline=(255, 180, 0), width=2)
         script_text = scripts[seg_idx]
         words = script_text.split()
         mid = len(words) // 2
         line1 = " ".join(words[:mid])
         line2 = " ".join(words[mid:])
-        draw.text((540, 1565), line1, font=f_sub1, fill=(255, 255, 255), anchor="mm")
-        draw.text((540, 1645), line2, font=f_sub2, fill=(255, 220, 0), anchor="mm")
+        draw.text((540, 1572), line1, font=f_sub1, fill=(255, 255, 255), anchor="mm")
+        draw.text((540, 1655), line2, font=f_sub2, fill=(255, 225, 0), anchor="mm")
 
         prog = min(1.0, max(0.0, t / mixed_dur))
         draw.line([(0, 1912), (int(1080 * prog), 1912)], fill=(255, 180, 0), width=8)
@@ -259,15 +287,14 @@ async def render_speed_challenge():
 
     pipe.stdin.close()
     pipe.wait()
-    print(f"✅ Speed Challenge Rendered: {out_mp4.name} ({out_mp4.stat().st_size / (1024*1024):.2f} MB)")
+    print(f"✅ Ultra Speed Challenge Rendered: {out_mp4.name} ({out_mp4.stat().st_size / (1024*1024):.2f} MB)")
 
 
 # =============================================================================
-# 2. RENDER 8-BIT RETRO RPG BATTLE SHORT
+# 2. RENDER ULTRA 8-BIT RETRO RPG
 # =============================================================================
-async def render_rpg_battle():
+async def render_ultra_rpg_battle():
     out_mp4 = BASE_DIR / "shorts_global_creative_rpg_battle.mp4"
-    voice = "en-US-BrianMultilingualNeural"
     scripts = [
         "Deep in the industrial automation dungeon, a Level 80 Boss appears: The 24V Voltage Drop Monster!",
         "The rookie knight attacks with a 1.5 square millimeter copper sword! MISS! Line voltage collapses to 18.2V! The boss breathes the Two-Million-Dollar Line Shutdown Breath!",
@@ -275,16 +302,10 @@ async def render_rpg_battle():
         "Level 99 Electrical Safety Master achieved! Slay voltage drop monsters forever with 78+ free calculators at voltcheck24.com!"
     ]
 
-    print("=" * 75)
-    print("🎮 Rendering Global 8-Bit RPG Battle Short...")
-    voice_files = []
-    durations = []
-    for idx, text in enumerate(scripts):
-        p = SCRATCH / f"global_rpg_tts_{idx}.mp3"
-        await generate_voice_chunk(text, voice, p)
-        dur = get_audio_duration(p)
-        voice_files.append(p)
-        durations.append(dur)
+    print("=" * 80)
+    print("🎮 Rendering Ultra-Benchmark 8-Bit RPG Battle Short...")
+    voice_files = [SCRATCH / f"global_rpg_tts_{i}.mp3" for i in range(4)]
+    durations = [get_audio_duration(vf) for vf in voice_files]
 
     accum = 0.0
     t_cues = []
@@ -292,8 +313,8 @@ async def render_rpg_battle():
         accum += d
         t_cues.append(accum)
 
-    out_wav = SCRATCH / "master_rpg_battle.wav"
-    master_audio, mixed_dur = mix_audio(voice_files, SCRATCH / "rpg_bgm.wav", out_wav, 0.20)
+    out_wav = SCRATCH / "ultra_master_rpg.wav"
+    master_audio, mixed_dur, audio_signal = mix_master_audio(voice_files, SCRATCH / "rpg_bgm.wav", out_wav)
 
     fps = 30
     total_frames = int(mixed_dur * fps)
@@ -309,7 +330,7 @@ async def render_rpg_battle():
     cmd = [
         FFMPEG, "-y", "-f", "rawvideo", "-vcodec", "rawvideo", "-s", "1080x1920",
         "-pix_fmt", "rgb24", "-r", str(fps), "-i", "-", "-i", str(master_audio),
-        "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "19", "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "192k", "-shortest", str(out_mp4)
     ]
     pipe = subprocess.Popen(cmd, stdin=subprocess.PIPE)
@@ -319,7 +340,7 @@ async def render_rpg_battle():
         im = Image.new("RGB", (1080, 1920), (10, 12, 26))
         draw = ImageDraw.Draw(im)
 
-        # Pixel grid background
+        # Pixel Grid
         for gx in range(0, 1080, 80):
             draw.line([(gx, 0), (gx, 1920)], fill=(18, 22, 38), width=1)
         for gy in range(0, 1920, 80):
@@ -331,27 +352,24 @@ async def render_rpg_battle():
                 seg_idx = idx
                 break
 
-        # Pixel RPG Header
-        draw.rounded_rectangle([(230, 100), (850, 165)], radius=12, fill=(180, 0, 180), outline=(255, 255, 255), width=2)
-        draw.text((540, 132), "[ 🎮 8-BIT RETRO RPG BATTLE ]", font=f_badge, fill=(255, 255, 255), anchor="mm")
-        draw.text((540, 260), "Defeat the LV.80\nVoltage Drop Monster!", font=f_title, fill=(255, 255, 255), anchor="mm", align="center")
+        draw.rounded_rectangle([(230, 95), (850, 165)], radius=14, fill=(180, 0, 180), outline=(255, 255, 255), width=2)
+        draw.text((540, 130), "[ 🎮 8-BIT RETRO RPG BATTLE ]", font=f_badge, fill=(255, 255, 255), anchor="mm")
+        draw.text((542, 252), "Defeat the LV.80\nVoltage Drop Monster!", font=f_title, fill=(0, 0, 0), anchor="mm", align="center")
+        draw.text((540, 250), "Defeat the LV.80\nVoltage Drop Monster!", font=f_title, fill=(255, 255, 255), anchor="mm", align="center")
 
         if seg_idx == 0:
-            # Boss Encounter
-            draw.rounded_rectangle([(140, 400), (940, 930)], radius=18, fill=(30, 12, 40), outline=(255, 0, 120), width=3)
+            draw.rounded_rectangle([(140, 400), (940, 930)], radius=20, fill=(30, 12, 40), outline=(255, 0, 120), width=3)
             draw.text((540, 470), "⚔️ BOSS ENCOUNTER ⚔️", font=f_badge, fill=(255, 0, 180), anchor="mm")
             draw.text((540, 560), "LV.80 ΔV OVERLORD", font=f_title, fill=(255, 50, 80), anchor="mm")
 
-            # HP Bar
             draw.text((540, 660), "HP: 1,000,000 / 1,000,000", font=f_card, fill=(255, 255, 255), anchor="mm")
             draw.rectangle([(200, 710), (880, 760)], fill=(40, 20, 40), outline=(255, 255, 255), width=2)
             draw.rectangle([(204, 714), (876, 756)], fill=(255, 0, 80))
 
-            draw.text((540, 840), "Special: 24V Line Drain Aura!", font=f_card, fill=(255, 220, 0), anchor="mm")
+            draw.text((540, 840), "Special Attack: 24V Line Drain Aura!", font=f_card, fill=(255, 220, 0), anchor="mm")
 
         elif seg_idx == 1:
-            # Miss / 18.2V Collapse
-            draw.rounded_rectangle([(140, 400), (940, 930)], radius=18, fill=(35, 15, 25), outline=(255, 50, 50), width=3)
+            draw.rounded_rectangle([(140, 400), (940, 930)], radius=20, fill=(35, 15, 25), outline=(255, 50, 50), width=3)
             draw.text((540, 470), "🗡️ ROOKIE ATTACKS WITH 1.5 sq SWORD", font=f_small, fill=(255, 200, 0), anchor="mm")
 
             draw.rounded_rectangle([(250, 540), (830, 640)], radius=16, fill=(180, 0, 0))
@@ -362,8 +380,7 @@ async def render_rpg_battle():
             draw.text((540, 860), "💥 Line Shutdown Breath Incoming!", font=f_small, fill=(255, 100, 100), anchor="mm")
 
         elif seg_idx == 2:
-            # VoltCheck Meteor Slash
-            draw.rounded_rectangle([(140, 400), (940, 930)], radius=18, fill=(12, 35, 45), outline=(0, 255, 200), width=3)
+            draw.rounded_rectangle([(140, 400), (940, 930)], radius=20, fill=(12, 35, 45), outline=(0, 255, 200), width=3)
             draw.text((540, 460), "✨ SUMMON: SACRED TOOL VOLTCHECK ✨", font=f_small, fill=(0, 255, 255), anchor="mm")
 
             draw.rounded_rectangle([(200, 520), (880, 630)], radius=16, fill=(0, 160, 120))
@@ -371,33 +388,35 @@ async def render_rpg_battle():
 
             draw.text((540, 700), "💥 999,999 CRITICAL HIT! 💥", font=ImageFont.truetype(FONT_TITLE, 54), fill=(255, 255, 0), anchor="mm")
             draw.text((540, 790), "Boss Defeated in 2.8 Seconds!", font=f_card, fill=(100, 255, 150), anchor="mm")
-            draw.text((540, 860), "+50,000 EXP · Factory Saved!", font=f_card, fill=(0, 255, 220), anchor="mm")
+            draw.text((540, 860), "+50,000 EXP · Factory Line Saved!", font=f_card, fill=(0, 255, 220), anchor="mm")
 
         else:
-            # Victory Screen
             draw.rounded_rectangle([(100, 350), (980, 930)], radius=24, fill=(12, 22, 42), outline=(0, 220, 255), width=3)
             draw.text((540, 430), "QUEST COMPLETE! 🏆", font=f_title, fill=(255, 220, 0), anchor="mm")
             draw.text((540, 510), "VoltCheck 78+ Engineering Calculators", font=f_card, fill=(255, 255, 255), anchor="mm")
 
             perks = [
-                ("⚡ Conquer Electrical, Mechanical & Hydraulic Calculations", (255, 225, 0)),
-                ("🛡️ Slay Voltage Drops & Sizing Errors Forever", (0, 230, 255)),
-                ("🎮 100% Free Forever · No Account Required", (100, 255, 130))
+                ("⚡ Slay Voltage Drops & Conductor Sizing Errors", (255, 225, 0)),
+                ("🛡️ Conquer Electrical, Mechanical & Hydraulic Calculations", (0, 230, 255)),
+                ("🎮 100% Free Forever · No Account Required", (100, 255, 140))
             ]
             for p_idx, (text, p_col) in enumerate(perks):
                 by = 590 + p_idx * 95
-                draw.rounded_rectangle([(140, by), (940, by + 75)], radius=12, fill=(22, 38, 68), outline=(0, 160, 220), width=1)
+                draw.rounded_rectangle([(140, by), (940, by + 75)], radius=14, fill=(20, 36, 64), outline=(0, 160, 220), width=1)
                 draw.text((540, by + 37), text, font=f_small, fill=p_col, anchor="mm")
 
+        # Reactive Audio Visualizer
+        draw_reactive_audio_visualizer(draw, audio_signal, t)
+
         # Subtitles
-        draw.rounded_rectangle([(70, 1500), (1010, 1720)], radius=18, fill=(0, 0, 0), outline=(200, 0, 255), width=2)
+        draw.rounded_rectangle([(70, 1510), (1010, 1730)], radius=20, fill=(5, 8, 16), outline=(200, 0, 255), width=2)
         script_text = scripts[seg_idx]
         words = script_text.split()
         mid = len(words) // 2
         line1 = " ".join(words[:mid])
         line2 = " ".join(words[mid:])
-        draw.text((540, 1565), line1, font=f_sub1, fill=(255, 255, 255), anchor="mm")
-        draw.text((540, 1645), line2, font=f_sub2, fill=(255, 220, 0), anchor="mm")
+        draw.text((540, 1572), line1, font=f_sub1, fill=(255, 255, 255), anchor="mm")
+        draw.text((540, 1655), line2, font=f_sub2, fill=(255, 225, 0), anchor="mm")
 
         prog = min(1.0, max(0.0, t / mixed_dur))
         draw.line([(0, 1912), (int(1080 * prog), 1912)], fill=(200, 0, 255), width=8)
@@ -406,12 +425,12 @@ async def render_rpg_battle():
 
     pipe.stdin.close()
     pipe.wait()
-    print(f"✅ RPG Battle Rendered: {out_mp4.name} ({out_mp4.stat().st_size / (1024*1024):.2f} MB)")
+    print(f"✅ Ultra RPG Battle Rendered: {out_mp4.name} ({out_mp4.stat().st_size / (1024*1024):.2f} MB)")
 
 
 async def main():
-    await render_speed_challenge()
-    await render_rpg_battle()
+    await render_ultra_speed_challenge()
+    await render_ultra_rpg_battle()
 
 
 if __name__ == "__main__":
