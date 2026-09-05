@@ -87,44 +87,23 @@ def calculate_schedule_plan(queue_items):
     - 슬롯 1 (광고): 밤 10시 00분 (22:00:00 KST)
     - 슬롯 2 (공학): 밤 10시 05분 (22:05:00 KST)
     """
-    mkt_items = [it for it in queue_items if it["type"] == "marketing" and it.get("status") != "scheduled"]
-    eng_items = [it for it in queue_items if it["type"] == "engineering" and it.get("status") != "scheduled"]
-
-    # 시작일: 내일 (2026-09-06)
-    start_date = (datetime.now(KST) + timedelta(days=1)).date()
-
+    pending_items = [it for it in queue_items if it.get("status") != "scheduled"]
     plan = []
-    day_idx = 0
-
-    while mkt_items or eng_items:
-        current_date = start_date + timedelta(days=day_idx)
-
-        # 슬롯 1 (광고 우선, 없으면 공학)
-        item1 = mkt_items.pop(0) if mkt_items else (eng_items.pop(0) if eng_items else None)
-        if item1:
-            dt1_kst = datetime(current_date.year, current_date.month, current_date.day, 22, 0, 0, tzinfo=KST)
-            dt1_utc = dt1_kst.astimezone(timezone.utc)
-            plan.append({
-                "item": item1,
-                "publish_at_kst": dt1_kst.strftime("%Y-%m-%d %H:%M:%S KST"),
-                "publish_at_utc": dt1_utc.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
-                "day_label": f"Day {day_idx + 1} (슬롯 1 - 22:00)"
-            })
-
-        # 슬롯 2 (공학 우선, 없으면 광고)
-        item2 = eng_items.pop(0) if eng_items else (mkt_items.pop(0) if mkt_items else None)
-        if item2:
-            dt2_kst = datetime(current_date.year, current_date.month, current_date.day, 22, 5, 0, tzinfo=KST)
-            dt2_utc = dt2_kst.astimezone(timezone.utc)
-            plan.append({
-                "item": item2,
-                "publish_at_kst": dt2_kst.strftime("%Y-%m-%d %H:%M:%S KST"),
-                "publish_at_utc": dt2_utc.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
-                "day_label": f"Day {day_idx + 1} (슬롯 2 - 22:05)"
-            })
-
-        day_idx += 1
-
+    for it in pending_items:
+        pub_str = it.get("publish_at", "")
+        # Parse publish_at KST format: '2026-09-07 22:00:00 KST'
+        try:
+            dt_part = pub_str.replace(" KST", "").strip()
+            dt_kst = datetime.strptime(dt_part, "%Y-%m-%d %H:%M:%S").replace(tzinfo=KST)
+        except Exception:
+            dt_kst = datetime.now(KST) + timedelta(days=1)
+        dt_utc = dt_kst.astimezone(timezone.utc)
+        plan.append({
+            "item": it,
+            "publish_at_kst": dt_kst.strftime("%Y-%m-%d %H:%M:%S KST"),
+            "publish_at_utc": dt_utc.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+            "day_label": f"{it.get('id', 'global')}"
+        })
     return plan
 
 
@@ -141,7 +120,8 @@ def upload_scheduled_video(youtube, plan_entry, dry_run=False):
     file_size_mb = file_path.stat().st_size / (1024 * 1024)
     log_message("-" * 75)
     log_message(f"🎬 [{plan_entry['day_label']}] 예약 업로드 준비")
-    log_message(f"   영상: {item['name']} ({file_size_mb:.1f} MB)")
+    name = item.get("name", item.get("title"))
+    log_message(f"   영상: {name} ({file_size_mb:.1f} MB)")
     log_message(f"   제목: {item['title']}")
     log_message(f"   ⏰ 예약 공개 일시: {plan_entry['publish_at_kst']} (컴퓨터 꺼져 있어도 자동 공개)")
     log_message("-" * 75)
@@ -225,7 +205,8 @@ def main():
     print("=" * 80)
     for idx, entry in enumerate(plan, 1):
         item = entry["item"]
-        print(f"{idx}. [{entry['day_label']:<20}] {entry['publish_at_kst']} | {item['name']}")
+        name = item.get("name", item.get("title"))
+        print(f"{idx}. [{entry['day_label']:<20}] {entry['publish_at_kst']} | {name}")
     print("=" * 80 + "\n")
 
     if args.plan_only:
@@ -243,7 +224,8 @@ def main():
 
     success_count = 0
     for idx, entry in enumerate(plan, 1):
-        log_message(f"\n[{idx}/{len(plan)}] {entry['item']['name']} 예약 진행 중...")
+        it_name = entry['item'].get('name', entry['item'].get('title'))
+        log_message(f"\n[{idx}/{len(plan)}] {it_name} 예약 진행 중...")
         res = upload_scheduled_video(youtube, entry, dry_run=args.dry_run)
         if res == "QUOTA_EXCEEDED":
             break
