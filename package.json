@@ -2,6 +2,7 @@
   "scripts": {
     "build:pages": "node scripts/build-pages.js",
     "quality": "node scripts/quality-check.js",
-    "generate:english": "node scripts/generate-english-pages.js"
+    "generate:english": "node scripts/generate-english-pages.js",
+    "check:worker": "node --check worker/src/index.js"
   }
 }

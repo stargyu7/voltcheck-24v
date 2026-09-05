@@ -1,0 +1,22 @@
+{
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
+  "name": "voltcheck-commerce-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-06",
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "vars": {
+    "SITE_ORIGIN": "https://voltcheck24.com",
+    "LEMON_VARIANT_STARTER_ID": "REPLACE_WITH_STARTER_VARIANT_ID",
+    "LEMON_VARIANT_PRO_ID": "REPLACE_WITH_PRO_VARIANT_ID",
+    "DOWNLOAD_TTL_SECONDS": "900"
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "voltcheck-commerce", "database_id": "REPLACE_WITH_D1_DATABASE_ID" }
+  ],
+  "r2_buckets": [
+    { "binding": "FILES", "bucket_name": "voltcheck-paid-files" }
+  ],
+  "routes": [
+    { "pattern": "voltcheck24.com/api/*", "zone_name": "voltcheck24.com" }
+  ]
+}

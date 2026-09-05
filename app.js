@@ -4789,7 +4789,7 @@ function initMonetizationModals() {
 }
 
 // B2B Lead Submission Handler
-function submitB2BQuoteLead() {
+async function submitB2BQuoteLead() {
   const company = document.getElementById('quoteCompany')?.value || '';
   const region = document.getElementById('quoteRegion')?.value || '';
   const name = document.getElementById('quoteName')?.value || '';
@@ -4804,13 +4804,6 @@ function submitB2BQuoteLead() {
     items: CURRENT_PROJECT.items.length > 0 ? CURRENT_PROJECT.items : ['기본 계산기 24V 배선 BOM']
   };
 
-  let leads = [];
-  try {
-    leads = JSON.parse(localStorage.getItem('voltcheck_quote_leads') || '[]');
-  } catch (e) { leads = []; }
-  leads.push(lead);
-  localStorage.setItem('voltcheck_quote_leads', JSON.stringify(leads));
-
   const subject = encodeURIComponent(`[VoltCheck24 B2B 견적 문의] ${company || 'Engineering project'}`);
   const body = encodeURIComponent([
     `회사: ${company}`,
@@ -4823,8 +4816,18 @@ function submitB2BQuoteLead() {
     '',
     `프로젝트 항목: ${lead.items.map(item => typeof item === 'string' ? item : item.label || item.calcType || 'engineering item').join(' | ')}`
   ].join('\n'));
-  window.location.href = `mailto:contact@voltcheck24.com?subject=${subject}&body=${body}`;
-  alert('견적 문의 내용이 준비되었습니다. 메일 앱에서 전송 버튼을 눌러 최종 접수해 주세요.');
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name, company, email, phone, message: `${memo}\n\n프로젝트 항목: ${lead.items.map(item => typeof item === 'string' ? item : item.label || item.calcType || 'engineering item').join(' | ')}` })
+    });
+    if (!response.ok) throw new Error('contact_api_failed');
+    alert('견적 문의가 접수되었습니다. 담당자가 입력하신 이메일로 회신드립니다.');
+  } catch (error) {
+    window.location.href = `mailto:contact@voltcheck24.com?subject=${subject}&body=${body}`;
+    alert('서버 접속이 되지 않아 메일 앱을 열었습니다. 메일 앱에서 전송을 완료해 주세요.');
+  }
 
   const modal = document.getElementById('quoteModal');
   if (modal) modal.classList.add('hidden');

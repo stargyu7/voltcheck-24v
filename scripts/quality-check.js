@@ -9,6 +9,7 @@ const appJs = read('app.js');
 const readme = read('README.md');
 const manifest = read('manifest.json');
 const sitemap = read('sitemap.xml');
+const workerSource = read('worker/src/index.js');
 const englishLandingPages = [
   'en/index.html',
   'en/24v-voltage-drop-calculator/index.html',
@@ -136,6 +137,7 @@ const securityRequiredSnippets = [
   'escapeHtml(item.label)',
   'langParam',
   'rejectNonEssentialCookies',
+  'worker/src/index.js',
 ];
 
 for (const snippet of workflowRequiredSnippets) {
@@ -145,7 +147,8 @@ for (const snippet of workflowRequiredSnippets) {
 }
 
 for (const snippet of securityRequiredSnippets) {
-  if (!publicText.includes(snippet)) {
+  const haystack = snippet === 'worker/src/index.js' ? workerSource : publicText;
+  if (!haystack.includes(snippet === 'worker/src/index.js' ? 'verifyWebhook' : snippet)) {
     failures.push(`Security and trust safeguard is missing: ${snippet}`);
   }
 }

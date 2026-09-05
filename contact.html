@@ -157,7 +157,7 @@
   </footer>
 
   <script>
-    function prepareContactEmail(event) {
+    async function prepareContactEmail(event) {
       event.preventDefault();
       const name = document.getElementById('contactName').value;
       const company = document.getElementById('contactCompany').value;
@@ -165,8 +165,19 @@
       const message = document.getElementById('contactMessage').value;
       const subject = encodeURIComponent(`[VoltCheck24 문의] ${company}`);
       const body = encodeURIComponent(`성함/직함: ${name}\n회사: ${company}\n회신 이메일: ${email}\n\n문의 내용:\n${message}`);
-      window.location.href = `mailto:contact@voltcheck24.com?subject=${subject}&body=${body}`;
-      alert('메일 앱이 열립니다. 메일 앱에서 전송을 완료해 주세요.');
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ name, company, email, message })
+        });
+        if (!response.ok) throw new Error('contact_api_failed');
+        alert('문의가 접수되었습니다. 담당 엔지니어가 입력하신 이메일로 회신드립니다.');
+        document.getElementById('contactForm').reset();
+      } catch (error) {
+        window.location.href = `mailto:contact@voltcheck24.com?subject=${subject}&body=${body}`;
+        alert('서버 접속이 되지 않아 메일 앱을 열었습니다. 메일 앱에서 전송을 완료해 주세요.');
+      }
       return false;
     }
     document.addEventListener('DOMContentLoaded', () => {
