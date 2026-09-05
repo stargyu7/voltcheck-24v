@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-🔬 [FORENSIC WORKBENCH AUTOPSY RENDERER] 100% Global Engineering Education
+🏆 [TIER-1 VIRAL BENCHMARK RENDERER] Split-Screen & 0.8s Hazard Hook Engine
 =============================================================================
-Zero-AI-Feel Architectural Pillars:
-1. Workbench Autopsy Visuals:
-   - Real Tektronix Digital Storage Oscilloscope (DSO) with phosphor ringing
-   - FLIR Thermal Ironbow heatmaps with crosshairs & spot temps
-   - FEA Von Mises stress contour notch concentration
-   - Fluke ProcessMeter 12.00mA LCD & circular vacuum gauges
-2. Tactile Lab Foley:
-   - Probe taps, rotary dials, thermal shutters, relays, cavitation hiss
-3. Broadcast Smart Ducking:
-   - Dynamic voice envelope tracking for professional balance
+Benchmarks Applied:
+1. The 0.8s Rule (Frame 0 Hazard Bar & Instant 80Hz Sub-Bass Impact Drop)
+2. Project Farm Side-by-Side Split Screen (❌ FAIL / Left vs ✅ PASS / Right)
+3. ElectroBOOM High-Energy Urgency & Smart Broadcast Audio Ducking
+4. The Engineering Mindset 24-Band Reactive Phosphor Audio Visualizer
 =============================================================================
 """
 
@@ -24,7 +19,7 @@ import asyncio
 import subprocess
 import numpy as np
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont
 
 if sys.platform == "win32":
     try:
@@ -41,32 +36,34 @@ FONT_TITLE = r"C:\Windows\Fonts\arialbd.ttf"
 FONT_MONO = r"C:\Windows\Fonts\consola.ttf"
 
 # =============================================================================
-# 6-SECTOR EDUCATIONAL EPISODES CONFIGURATION
+# EPISODE DEFINITIONS (SIDE-BY-SIDE BENCHMARK)
 # =============================================================================
-FORENSIC_EPISODES = [
+VIRAL_EPISODES = [
     # 1. Electrical & Power
     {
         "ep_id": "s1_420ma_loop",
         "out_file": "shorts_edu_s1_420ma_loop.mp4",
         "voice": "en-US-AndrewMultilingualNeural",
         "bgm": "bolt_mkt_bgm.wav",
-        "instrument": "fluke_meter",
-        "scripts": [
-            "Check this out... Why do engineers NEVER use 0 to 10 volts for long sensor runs in factories? Because over 100 meters, wire resistance drops your signal by 15%, giving you completely false readings!",
-            "Instead, we use 4 to 20 milliamps. Look at Kirchhoff's Law: in a closed series loop, current is identical at EVERY single point! Whether your cable is 10 meters or 500 meters long, current cannot vanish.",
-            "The transmitter automatically boosts compliance voltage from 12V to 24V to overcome wire resistance. At the PLC, a precision 250-ohm resistor converts 4 to 20mA into an exact 1 to 5 volts, with literally zero signal loss!",
-            "Stop guessing analog loop limits. Calculate transmitter loop resistance and burden in 3 seconds at voltcheck24.com!"
-        ],
-        "badge": "[ ⚡ ELECTRICAL FORENSIC LAB ]",
-        "badge_color": (0, 210, 255),
-        "title": "Why 4-20mA NEVER Drops\nSignal Over 500 Meters!",
+        "hazard_label": "⚠️ CRITICAL 24V SIGNAL LOSS DETECTED ⚠️",
+        "title": "Why Electricians BANNED 0-10V!\n(The 4-20mA Secret)",
         "accent_color": (0, 230, 255),
+        "split_type": "current_loop",
+        "scripts": [
+            "Stop! Look right here! Why did industrial plants completely BAN zero to ten volt sensors? Because over 100 meters of wire, resistance drops your signal by fifteen percent, giving you dangerous false readings!",
+            "Look at the right side: four to twenty milliamps uses Kirchhoff's closed series loop! Current cannot vanish. Whether your wire is ten meters or five hundred meters, current is identical at every single millimeter!",
+            "The transmitter automatically ramps compliance voltage to push exact current through line resistance. At the PLC, a two-hundred-fifty ohm resistor converts twelve milliamps into exact three volts with zero signal drop!",
+            "Never trust voltage loops for long runs. Calculate transmitter burden and line resistance in three seconds at voltcheck24.com!"
+        ],
+        "left_label": "❌ 0-10V (100m CABLE)",
+        "right_label": "✅ 4-20mA (500m CABLE)",
         "foley_cues": [
-            ("foley_rotary_switch.wav", 0.4, 0.8),
-            ("foley_probe_tap.wav", 4.5, 0.7),
-            ("foley_scope_beep.wav", 18.2, 0.6),
-            ("sfx_spark.wav", 24.5, 0.65),
-            ("foley_probe_tap.wav", 30.0, 0.7),
+            ("sfx_impact.wav", 0.00, 0.90),
+            ("sfx_alert.wav", 0.05, 0.75),
+            ("foley_probe_tap.wav", 3.2, 0.75),
+            ("foley_rotary_switch.wav", 12.0, 0.70),
+            ("foley_scope_beep.wav", 22.5, 0.65),
+            ("sfx_whoosh.wav", 32.0, 0.60),
         ]
     },
     # 2. Motors & Drives
@@ -75,23 +72,25 @@ FORENSIC_EPISODES = [
         "out_file": "shorts_edu_s2_vfd_reflected_wave.mp4",
         "voice": "en-US-BrianMultilingualNeural",
         "bgm": "story_bgm_ep2.wav",
-        "instrument": "oscilloscope",
-        "scripts": [
-            "Look at this oscilloscope trace... That is a 1,480-volt peak ringing spike on a motor designed for only 480 volts! And it's destroying the slot insulation right now.",
-            "Here's what happens: modern VFD inverters switch IGBTs in under 100 nanoseconds! That extreme dv/dt sends high-frequency pulse waves down the cable at half the speed of light.",
-            "When the wave hits the motor, the surge impedance jumps from 50 ohms in the cable to 1,000 ohms in the winding! That impedance mismatch creates a reflection coefficient near positive one... doubling the voltage at the terminals!",
-            "If your VFD cable exceeds 30 meters, you MUST size a dv/dt reactor or sine-wave filter. Calculate critical cable distance in 3 seconds at voltcheck24.com!"
-        ],
-        "badge": "[ 🛡️ MOTOR & DRIVE LAB ]",
-        "badge_color": (255, 140, 0),
-        "title": "The 1,500V Reflected Spike\nDestroying Your VFD Motor!",
+        "hazard_label": "💥 1,480V LETHAL SPIKE IN MOTOR WINDING 💥",
+        "title": "Why 480V Inverters Create\n1,500V Death Spikes!",
         "accent_color": (255, 170, 0),
+        "split_type": "vfd_spike",
+        "scripts": [
+            "Look at the left oscilloscope trace! That is a fourteen-hundred-eighty volt spike on a four-hundred-eighty volt motor! And it's burning through slot insulation right now.",
+            "Modern VFD inverters switch IGBTs in under one hundred nanoseconds! That extreme dv/dt shoots high-frequency pulse waves down the cable at half the speed of light.",
+            "When the pulse hits the motor, surge impedance jumps from fifty ohms in cable to one thousand ohms in windings! That mismatch acts like a brick wall, reflecting the wave and doubling voltage at the terminals!",
+            "Look at the right trace: adding a dv/dt reactor clamps voltage down to five hundred twenty volts! Calculate critical cable length in three seconds at voltcheck24.com!"
+        ],
+        "left_label": "❌ NO FILTER (1,480V ARC)",
+        "right_label": "✅ dv/dt REACTOR (520V PASS)",
         "foley_cues": [
-            ("foley_scope_beep.wav", 0.3, 0.7),
-            ("sfx_spark.wav", 2.2, 0.75),
-            ("foley_rotary_switch.wav", 11.5, 0.65),
-            ("foley_relay_clack.wav", 20.0, 0.7),
-            ("sfx_whoosh.wav", 28.5, 0.6),
+            ("sfx_impact.wav", 0.00, 0.90),
+            ("sfx_alert.wav", 0.05, 0.75),
+            ("sfx_spark.wav", 1.8, 0.85),
+            ("foley_scope_beep.wav", 11.5, 0.65),
+            ("foley_relay_clack.wav", 21.0, 0.70),
+            ("sfx_whoosh.wav", 30.0, 0.60),
         ]
     },
     # 3. Mechanical & Structural
@@ -100,23 +99,25 @@ FORENSIC_EPISODES = [
         "out_file": "shorts_edu_s3_shaft_stress_notch.mp4",
         "voice": "en-US-AndrewMultilingualNeural",
         "bgm": "story_bgm_ep3.wav",
-        "instrument": "fea_contour",
+        "hazard_label": "⚙️ CATASTROPHIC FATIGUE FRACTURE WARNING ⚙️",
+        "title": "The 0.5mm Mistake That Snapped\na $45,000 Solid Steel Shaft!",
+        "accent_color": (255, 60, 80),
+        "split_type": "stress_notch",
         "scripts": [
-            "See this red stress hot-spot right here? This 0.5-millimeter sharp shoulder just snapped a $45,000 industrial drive shaft in half after only three weeks of operation!",
-            "The machinist thought a tiny corner radius wouldn't matter. But according to Neuber's stress concentration factor, that sharp 90-degree corner multiplies nominal shear stress by 320%!",
-            "Under cyclic rotation, micro-cracks propagate along the stress concentration line until catastrophic fatigue fracture occurs. Look what happens when we increase the fillet radius from 0.5mm to 3.0mm: Kt plunges from 3.2 down to 1.3, multiplying shaft fatigue life by tenfold!",
-            "Never design rotating shafts with sharp internal steps. Calculate notch stress concentration factors in 3 seconds at voltcheck24.com!"
+            "See this red stress hot-spot on the left? That sharp zero-point-five millimeter step just snapped a forty-five-thousand dollar drive shaft after only three weeks!",
+            "The machinist thought a tiny corner radius didn't matter. But according to Neuber's stress concentration factor, that sharp ninety-degree corner multiplies nominal shear stress by three hundred twenty percent!",
+            "Cyclic rotation created micro-cracks along the red line until sudden fracture. Now look at the right side: increasing fillet radius from zero-point-five to three millimeters drops Kt to one-point-three, multiplying fatigue life tenfold!",
+            "Never machine sharp steps on rotating shafts. Calculate notch stress concentration factors in three seconds at voltcheck24.com!"
         ],
-        "badge": "[ ⚙️ MECHANICAL FORENSIC LAB ]",
-        "badge_color": (240, 30, 60),
-        "title": "The 0.5mm Notch That Snapped\na $45,000 Drive Shaft!",
-        "accent_color": (255, 50, 80),
+        "left_label": "❌ r=0.5mm (Kt=3.20 FAIL)",
+        "right_label": "✅ r=3.0mm (Kt=1.30 PASS)",
         "foley_cues": [
-            ("foley_probe_tap.wav", 0.5, 0.7),
-            ("sfx_impact.wav", 2.0, 0.85),
-            ("foley_rotary_switch.wav", 13.0, 0.65),
-            ("foley_scope_beep.wav", 23.5, 0.65),
-            ("sfx_whoosh.wav", 31.0, 0.6),
+            ("sfx_impact.wav", 0.00, 0.95),
+            ("sfx_alert.wav", 0.05, 0.70),
+            ("foley_probe_tap.wav", 2.2, 0.75),
+            ("foley_rotary_switch.wav", 12.5, 0.65),
+            ("foley_scope_beep.wav", 22.0, 0.65),
+            ("sfx_whoosh.wav", 31.0, 0.60),
         ]
     },
     # 4. Hydraulics & Fluids
@@ -125,48 +126,52 @@ FORENSIC_EPISODES = [
         "out_file": "shorts_edu_s4_hydraulic_cavitation.mp4",
         "voice": "en-US-BrianMultilingualNeural",
         "bgm": "story_bgm_ep4.wav",
-        "instrument": "cavitation_gauge",
-        "scripts": [
-            "Listen to that awful gravel-grinding sound... That is hydraulic cavitation, and it's literally chewing this stainless steel pump impeller into Swiss cheese!",
-            "Most people think fluid only boils when it's hot. But when oil enters a constricted pump inlet, velocity spikes and static pressure plunges below the fluid's vapor pressure! The cold oil spontaneously boils into millions of micro-vapor bubbles.",
-            "When those bubbles travel into the high-pressure zone, they collapse violently in nanoseconds, creating supersonic micro-jets with shockwave pressures exceeding 10,000 bar! That shockwave hammers the metal surface until it pits and shatters.",
-            "Stop destroying expensive hydraulic pumps. Calculate Net Positive Suction Head and line friction in 3 seconds at voltcheck24.com!"
-        ],
-        "badge": "[ 🛢️ FLUID POWER LAB ]",
-        "badge_color": (0, 200, 255),
-        "title": "Why Boiling Cold Oil Destroys\nHydraulic Pumps! (Cavitation)",
+        "hazard_label": "🛢️ 10,000 BAR CAVITATION SHOCKWAVE 🛢️",
+        "title": "Cold Oil Boiling at Room Temp?\nThe 10,000 Bar Pump Destroyer!",
         "accent_color": (0, 220, 255),
+        "split_type": "cavitation",
+        "scripts": [
+            "Listen to that gravel grinding sound! That is hydraulic cavitation, and it's chewing this stainless steel pump impeller into Swiss cheese right now!",
+            "Oil doesn't need heat to boil! Look at the left gauge: when suction pressure drops below fluid vapor pressure at minus zero-point-eight bar, cold room-temperature oil spontaneously boils into vapor bubbles!",
+            "When those bubbles travel into the high-pressure zone, they collapse in nanoseconds, unleashing supersonic micro-jets exceeding ten thousand bar! The right side sizes proper suction pipe diameter, eliminating bubbles completely.",
+            "Protect your hydraulic pumps from cavitation pitting. Calculate Net Positive Suction Head and pipe velocity in three seconds at voltcheck24.com!"
+        ],
+        "left_label": "❌ VACUUM -0.82 BAR (BOILING)",
+        "right_label": "✅ NPSH MARGIN (SMOOTH FLOW)",
         "foley_cues": [
-            ("foley_ultrasound_hiss.wav", 0.2, 0.85),
-            ("sfx_alert.wav", 3.0, 0.6),
-            ("foley_rotary_switch.wav", 12.0, 0.6),
-            ("foley_ultrasound_hiss.wav", 20.0, 0.75),
-            ("sfx_whoosh.wav", 30.0, 0.6),
+            ("sfx_impact.wav", 0.00, 0.90),
+            ("foley_ultrasound_hiss.wav", 0.10, 0.85),
+            ("sfx_alert.wav", 2.5, 0.70),
+            ("foley_rotary_switch.wav", 13.0, 0.65),
+            ("foley_ultrasound_hiss.wav", 21.0, 0.70),
+            ("sfx_whoosh.wav", 30.0, 0.60),
         ]
     },
-    # 5. HVAC & Enclosure Thermal
+    # 5. HVAC & Enclosures
     {
         "ep_id": "s5_panel_dewpoint",
         "out_file": "shorts_edu_s5_panel_dewpoint.mp4",
         "voice": "en-US-AndrewMultilingualNeural",
         "bgm": "story_bgm_ep5.wav",
-        "instrument": "flir_thermal",
-        "scripts": [
-            "Look at this FLIR thermal camera reading: 19 degrees Celsius inside the control cabinet. The maintenance crew set the air conditioner to maximum cooling thinking it was safe... and it blew up a $50,000 PLC rack!",
-            "Here's the deadly trap: the factory floor is 32 degrees Celsius at 80% relative humidity. On the psychrometric chart, that means the dew point is 28.2 degrees!",
-            "When the cabinet interior drops below 28 degrees, the humid air trapped inside reaches 100% saturation. Water vapor condenses out of thin air, creating indoor rain that drips directly onto 24V busbars, sparking short-circuit fires!",
-            "Never set enclosure cooling below ambient dew point. Calculate cabinet cooling BTU and dew point limits in 3 seconds at voltcheck24.com!"
-        ],
-        "badge": "[ ❄️ THERMAL & ENCLOSURE LAB ]",
-        "badge_color": (80, 180, 255),
-        "title": "Setting Enclosure AC Too Cold\nBlew Up a $50,000 PLC Rack!",
+        "hazard_label": "🌧️ INDOOR RAIN & $50,000 PLC FIRE HAZARD 🌧️",
+        "title": "Why Setting Panel AC to 18°C\nCauses Indoor Rain! ($50k Fire)",
         "accent_color": (100, 200, 255),
+        "split_type": "dewpoint",
+        "scripts": [
+            "Look at the thermal camera on the left! The maintenance crew set the panel air conditioner to eighteen degrees thinking cooler is better... and it blew up a fifty-thousand dollar PLC rack!",
+            "Here's the deadly trap: the factory floor is thirty-two degrees at eighty percent humidity. That means the atmospheric dew point is twenty-eight-point-two degrees!",
+            "When the cabinet interior drops below twenty-eight degrees, moisture condenses out of thin air, dripping indoor rain directly onto twenty-four volt power supplies and sparking short-circuit fires!",
+            "Look at the right side: setting AC five degrees above dew point keeps components cool with zero condensation. Calculate panel cooling limits in three seconds at voltcheck24.com!"
+        ],
+        "left_label": "❌ SET 18°C (RAIN CONDENSING)",
+        "right_label": "✅ SET 30°C (DRY & COOL PASS)",
         "foley_cues": [
-            ("foley_flir_shutter.wav", 0.3, 0.85),
-            ("sfx_spark.wav", 3.2, 0.75),
+            ("sfx_impact.wav", 0.00, 0.90),
+            ("sfx_alert.wav", 0.05, 0.70),
+            ("foley_flir_shutter.wav", 1.8, 0.85),
+            ("sfx_spark.wav", 4.0, 0.75),
             ("foley_flir_shutter.wav", 14.5, 0.75),
-            ("foley_relay_clack.wav", 22.0, 0.7),
-            ("sfx_whoosh.wav", 30.0, 0.6),
+            ("sfx_whoosh.wav", 30.0, 0.60),
         ]
     },
     # 6. Robotics & Automation
@@ -175,30 +180,32 @@ FORENSIC_EPISODES = [
         "out_file": "shorts_edu_s6_robot_inertia_ratio.mp4",
         "voice": "en-US-BrianMultilingualNeural",
         "bgm": "bolt_eng_bgm.wav",
-        "instrument": "bode_plot",
-        "scripts": [
-            "Why is this high-speed robotic arm violently oscillating like an earthquake? The motor has plenty of torque, so what went wrong?",
-            "Look at the inertia ratio: the load inertia is 18 times greater than the motor rotor inertia! When the load-to-rotor inertia ratio exceeds 10 to 1, the mechanical compliance of the shaft creates an anti-resonance peak in the control loop.",
-            "No matter how high you crank the servo velocity gain, the controller chases its own mechanical lag, turning into severe violent resonance! Look what happens when we insert a 5-to-1 planetary gearbox: reflected load inertia drops by the square of the gear ratio... a massive 25-fold reduction!",
-            "The inertia ratio drops to 0.7 to 1, and the robot positions with rock-solid sub-millimeter precision. Calculate servo inertia matching in 3 seconds at voltcheck24.com!"
-        ],
-        "badge": "[ 🤖 ROBOTICS & MOTION LAB ]",
-        "badge_color": (0, 255, 180),
-        "title": "The 10:1 Inertia Ratio Trap:\nWhy Robot Arms Shake Violently!",
+        "hazard_label": "🤖 VIOLENT SERVO RESONANCE OSCILLATION 🤖",
+        "title": "Why Robot Arms Shake Like\nEarthquakes! (The 10:1 Trap)",
         "accent_color": (0, 255, 190),
+        "split_type": "inertia_ratio",
+        "scripts": [
+            "Why is this high-speed robot arm violently shaking like an earthquake? The servo motor has plenty of torque, so what went wrong?",
+            "Look at the left trace: load inertia is eighteen times greater than motor rotor inertia! When load-to-rotor inertia ratio exceeds ten to one, shaft elasticity creates anti-resonance, causing uncontrollable hunting oscillation!",
+            "Now look at the right side: we inserted a five-to-one planetary gearbox. Reflected load inertia drops by the square of the gear ratio... a massive twenty-five-fold reduction!",
+            "Inertia ratio plunges to zero-point-seven to one, stabilizing the robot arm with rock-solid sub-millimeter precision. Calculate servo inertia matching in three seconds at voltcheck24.com!"
+        ],
+        "left_label": "❌ DIRECT DRIVE (JL/JM=18:1)",
+        "right_label": "✅ 5:1 GEARBOX (JL/JM=0.72:1)",
         "foley_cues": [
-            ("foley_relay_clack.wav", 0.3, 0.8),
-            ("sfx_alert.wav", 2.5, 0.65),
-            ("foley_scope_beep.wav", 13.0, 0.65),
-            ("foley_rotary_switch.wav", 21.0, 0.7),
-            ("foley_scope_beep.wav", 31.0, 0.7),
+            ("sfx_impact.wav", 0.00, 0.90),
+            ("sfx_alert.wav", 0.05, 0.75),
+            ("foley_relay_clack.wav", 2.0, 0.75),
+            ("foley_scope_beep.wav", 12.5, 0.65),
+            ("foley_rotary_switch.wav", 21.0, 0.70),
+            ("sfx_whoosh.wav", 31.0, 0.60),
         ]
     }
 ]
 
 
 # =============================================================================
-# AUDIO PIPELINE: EDGE-TTS & MASTER MIXER
+# AUDIO SYNTHESIS & DUCKING
 # =============================================================================
 def load_wav(path):
     with wave.open(str(path), "r") as f:
@@ -219,7 +226,7 @@ async def generate_voice_files(ep):
     voice_files = []
     import edge_tts
     for idx, sentence in enumerate(ep["scripts"]):
-        out_mp3 = SCRATCH / f"edu_{ep['ep_id']}_v{idx}.mp3"
+        out_mp3 = SCRATCH / f"viral_{ep['ep_id']}_v{idx}.mp3"
         rate_str = "+4%" if idx == 0 else "+2%"
         communicate = edge_tts.Communicate(sentence, ep["voice"], rate=rate_str)
         await communicate.save(str(out_mp3))
@@ -227,32 +234,37 @@ async def generate_voice_files(ep):
     return voice_files
 
 
-def mix_forensic_audio(voice_files, bgm_path, foley_cues, out_wav):
-    concat_txt = SCRATCH / "tmp_concat_edu.txt"
+def mix_viral_audio(voice_files, bgm_path, foley_cues, out_wav):
+    concat_txt = SCRATCH / "tmp_concat_viral_mix.txt"
     with open(concat_txt, "w", encoding="utf-8") as f:
         for vf in voice_files:
             f.write(f"file '{vf}'\n")
 
-    tmp_voice_mp3 = SCRATCH / "tmp_voice_edu.mp3"
+    tmp_voice_mp3 = SCRATCH / "tmp_voice_viral_mix.mp3"
     subprocess.run([FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-c", "copy", str(tmp_voice_mp3)],
                    check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    tmp_voice_wav = SCRATCH / "tmp_voice_edu.wav"
+    tmp_voice_wav = SCRATCH / "tmp_voice_viral_mix.wav"
     subprocess.run([FFMPEG, "-y", "-i", str(tmp_voice_mp3), "-ar", "44100", "-ac", "1", str(tmp_voice_wav)],
                    check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     sr, voice = load_wav(tmp_voice_wav)
     sr_bgm, bgm = load_wav(bgm_path)
 
-    n_samples = len(voice)
+    # Prepend 0.1s silence to start voice instantly at 0.10s
+    pad = int(sr * 0.10)
+    voice_padded = np.zeros((len(voice) + pad, 2), dtype=np.float32)
+    voice_padded[pad:] = voice
+
+    n_samples = len(voice_padded)
     master = np.zeros((n_samples, 2), dtype=np.float32)
 
-    # Dynamic Broadcast Audio Ducking
+    # Broadcast Dynamic Ducking
     window_size = int(sr * 0.08)
-    abs_voice = np.abs(voice[:, 0])
+    abs_voice = np.abs(voice_padded[:, 0])
     kernel = np.ones(window_size) / window_size
     envelope = np.convolve(abs_voice, kernel, mode='same')
-    duck_gain = np.where(envelope > 0.03, 0.11, 0.24)
+    duck_gain = np.where(envelope > 0.03, 0.10, 0.23)
     duck_gain = np.column_stack([duck_gain, duck_gain])
 
     if len(bgm) < n_samples:
@@ -260,10 +272,10 @@ def mix_forensic_audio(voice_files, bgm_path, foley_cues, out_wav):
         bgm = np.tile(bgm, (repeats, 1))
     bgm_trimmed = bgm[:n_samples]
 
-    master += voice * 1.38
+    master += voice_padded * 1.42
     master += bgm_trimmed * duck_gain
 
-    # Layer Foley & SFX cues
+    # Layer Foley & SFX Cues
     for cue_name, t_sec, vol in foley_cues:
         p = SCRATCH / cue_name
         if not p.exists():
@@ -274,7 +286,7 @@ def mix_forensic_audio(voice_files, bgm_path, foley_cues, out_wav):
             slen = min(len(sfx), n_samples - idx)
             master[idx:idx + slen] += sfx[:slen] * vol
 
-    master = np.tanh(master * 0.94)
+    master = np.tanh(master * 0.95)
 
     with wave.open(str(out_wav), "w") as f:
         f.setnchannels(2)
@@ -286,258 +298,207 @@ def mix_forensic_audio(voice_files, bgm_path, foley_cues, out_wav):
 
 
 # =============================================================================
-# WORKBENCH INSTRUMENT SIMULATORS
+# GRAPHICS ENGINE: 0.8S HAZARD FLASH & SPLIT-SCREEN TESTS
 # =============================================================================
-def draw_hud_base(draw, w=1080, h=1920):
-    """Clean dark engineering workbench background with subtle blueprint grid"""
-    # Grid lines
-    for gx in range(0, w, 80):
-        draw.line([(gx, 0), (gx, h)], fill=(16, 22, 38), width=1)
-    for gy in range(0, h, 80):
-        draw.line([(0, gy), (w, gy)], fill=(16, 22, 38), width=1)
+def draw_hazard_bar(draw, t, hazard_label, w=1080):
+    """0.8s rule: Blinking high-contrast yellow/black hazard warning bar"""
+    # Flash state (10Hz blink in first 1.8 seconds)
+    is_flash = (int(t * 10) % 2 == 0) if t < 1.8 else True
+    bar_h = 75
+    # Striped hazard background
+    stripe_w = 40
+    for sx in range(0, w + bar_h, stripe_w):
+        col = (255, 210, 0) if (sx // stripe_w) % 2 == 0 else (20, 20, 20)
+        draw.polygon([(sx, 0), (sx + 25, 0), (sx + 25 - bar_h, bar_h), (sx - bar_h, bar_h)], fill=col)
 
-    # Frame border
-    draw.rectangle([(25, 25), (w - 25, h - 25)], outline=(35, 48, 75), width=2)
-    # Corner registration brackets
-    corners = [(45, 45), (w - 45, 45), (45, h - 45), (w - 45, h - 45)]
-    for cx, cy in corners:
-        dx = 20 if cx < w // 2 else -20
-        dy = 20 if cy < h // 2 else -20
-        draw.line([(cx, cy), (cx + dx, cy)], fill=(0, 210, 255), width=2)
-        draw.line([(cx, cy), (cx, cy + dy)], fill=(0, 210, 255), width=2)
-
-
-def draw_fluke_processmeter(draw, t, total_dur):
-    """Fluke 789 ProcessMeter simulation (12.00mA LCD & 250 ohm loop)"""
-    bx, by, bw, bh = 140, 530, 800, 520
-    # Yellow Fluke holster body
-    draw.rounded_rectangle([(bx, by), (bx + bw, by + bh)], radius=24, fill=(245, 175, 10), outline=(20, 20, 20), width=6)
-    # Inner dark bezel
-    draw.rounded_rectangle([(bx + 25, by + 25), (bx + bw - 25, by + bh - 25)], radius=16, fill=(28, 30, 36))
-
-    # LCD Screen Window
-    lcd_x, lcd_y, lcd_w, lcd_h = bx + 50, by + 45, bw - 100, 210
-    draw.rounded_rectangle([(lcd_x, lcd_y), (lcd_x + lcd_w, lcd_y + lcd_h)], radius=10, fill=(185, 205, 180), outline=(50, 60, 50), width=4)
-
-    f_lcd = ImageFont.truetype(FONT_TITLE, 76)
-    f_lcd_sm = ImageFont.truetype(FONT_BOLD, 26)
-
-    # Calculate live reading
-    jitter = math.sin(t * 12) * 0.003
-    ma_val = 12.000 + jitter if t < total_dur * 0.7 else 12.000 + jitter
-    pct_val = (ma_val - 4.0) / 16.0 * 100.0
-
-    draw.text((lcd_x + 30, lcd_y + 15), "LOOP POWER  24V DC", fill=(30, 45, 30), font=f_lcd_sm)
-    draw.text((lcd_x + 30, lcd_y + 60), f"{ma_val:.3f}", fill=(15, 25, 15), font=f_lcd)
-    draw.text((lcd_x + 460, lcd_y + 95), "mA DC", fill=(25, 38, 25), font=f_lcd_sm)
-    draw.text((lcd_x + 30, lcd_y + 155), f"PERCENT: {pct_val:.1f} %  [ 250Ω = {ma_val*0.25:.3f} V ]", fill=(30, 50, 30), font=f_lcd_sm)
-
-    # Rotary dial below LCD
-    dial_cx, dial_cy = bx + bw // 2, by + 375
-    draw.ellipse([(dial_cx - 90, dial_cy - 90), (dial_cx + 90, dial_cy + 90)], fill=(45, 48, 55), outline=(15, 15, 18), width=5)
-    # Dial pointer
-    draw.line([(dial_cx, dial_cy), (dial_cx, dial_cy - 75)], fill=(240, 240, 240), width=8)
-    draw.text((dial_cx - 55, dial_cy + 95), "mA OUTPUT / SIM", fill=(240, 180, 20), font=f_lcd_sm)
+    # Center banner badge
+    bx1, bx2 = 60, w - 60
+    badge_bg = (230, 20, 20) if is_flash else (180, 10, 10)
+    draw.rounded_rectangle([(bx1, 10), (bx2, 65)], radius=10, fill=badge_bg, outline=(255, 255, 255), width=2)
+    f_haz = ImageFont.truetype(FONT_TITLE, 28)
+    draw.text((w // 2, 37), hazard_label, fill=(255, 255, 255), font=f_haz, anchor="mm")
 
 
-def draw_oscilloscope_trace(draw, t, total_dur):
-    """Tektronix DSO screen with 1,480V reflected wave ringing"""
-    bx, by, bw, bh = 90, 530, 900, 540
-    # Dark DSO bezel
-    draw.rounded_rectangle([(bx, by), (bx + bw, by + bh)], radius=18, fill=(18, 22, 30), outline=(0, 180, 255), width=3)
+def draw_split_screen_current_loop(draw, t, lx, rx, pw, ph, top_y):
+    """S1: 0-10V (Left) vs 4-20mA (Right)"""
+    # Left: 0-10V dropping over 100m
+    v_drop = 8.42 + math.sin(t * 14) * 0.08
+    draw.rounded_rectangle([(lx, top_y), (lx + pw, top_y + ph)], radius=16, fill=(35, 12, 16), outline=(240, 50, 50), width=3)
+    # LCD Display Left
+    draw.rounded_rectangle([(lx + 25, top_y + 80), (lx + pw - 25, top_y + 240)], radius=10, fill=(45, 18, 22), outline=(180, 40, 40), width=2)
+    f_num = ImageFont.truetype(FONT_TITLE, 64)
+    f_lbl = ImageFont.truetype(FONT_BOLD, 26)
+    draw.text((lx + pw // 2, top_y + 135), f"{v_drop:.2f} V", fill=(255, 80, 80), font=f_num, anchor="mm")
+    draw.text((lx + pw // 2, top_y + 200), "-1.58V (-15.8% ERROR)", fill=(255, 140, 140), font=f_lbl, anchor="mm")
+    # Waveform / Distortion trace
+    draw.text((lx + 35, top_y + 270), "WIRE RESISTANCE: 15.8Ω", fill=(240, 120, 120), font=f_lbl)
+    draw.text((lx + 35, top_y + 320), "TERMINAL: SENSORS OFF", fill=(255, 60, 60), font=f_lbl)
 
-    # Phosphor grid area
-    gx, gy, gw, gh = bx + 30, by + 30, bw - 60, bh - 60
-    draw.rectangle([(gx, gy), (gx + gw, gy + gh)], fill=(6, 12, 18))
-
-    # Grid divisions (10x8)
-    for i in range(1, 10):
-        x = gx + int(i * gw / 10)
-        draw.line([(x, gy), (x, gy + gh)], fill=(20, 45, 55), width=1)
-    for j in range(1, 8):
-        y = gy + int(j * gh / 8)
-        draw.line([(gx, y), (gx + gw, y)], fill=(20, 45, 55), width=1)
-
-    # Dynamic waveform rendering (Reflected wave ringing)
-    points = []
-    center_y = gy + int(gh * 0.65)
-    step_x = 4
-    for px in range(0, gw, step_x):
-        prog = px / gw
-        # Pulse step with high dv/dt and damped ringing
-        if prog < 0.25:
-            sig = 0.0
-        else:
-            t_ring = (prog - 0.25) * 18.0
-            ringing = math.exp(-t_ring * 0.4) * math.cos(t_ring * 16.0 - t * 8.0) * 1.8
-            sig = 1.0 + ringing
-        py = center_y - int(sig * 110)
-        points.append((gx + px, py))
-
-    if len(points) > 1:
-        draw.line(points, fill=(0, 255, 220), width=4)
-
-    f_dso = ImageFont.truetype(FONT_MONO, 28)
-    draw.text((gx + 20, gy + 15), "CH1: 200V / div   500ns / div", fill=(0, 255, 200), font=f_dso)
-    peak_v = int(1480 + math.sin(t * 15) * 22)
-    draw.text((gx + 460, gy + 15), f"Vpeak: {peak_v} V [CRITICAL]", fill=(255, 50, 50), font=f_dso)
-    draw.text((gx + 20, gy + gh - 40), "TRIG: 650V  dv/dt: 12,400 V/μs", fill=(200, 220, 255), font=f_dso)
+    # Right: 4-20mA Rock-Solid 12.000mA
+    ma_val = 12.000 + math.sin(t * 8) * 0.002
+    draw.rounded_rectangle([(rx, top_y), (rx + pw, top_y + ph)], radius=16, fill=(12, 35, 24), outline=(0, 220, 100), width=3)
+    # LCD Display Right
+    draw.rounded_rectangle([(rx + 25, top_y + 80), (rx + pw - 25, top_y + 240)], radius=10, fill=(18, 48, 30), outline=(0, 180, 80), width=2)
+    draw.text((rx + pw // 2, top_y + 135), f"{ma_val:.3f} mA", fill=(0, 255, 140), font=f_num, anchor="mm")
+    draw.text((rx + pw // 2, top_y + 200), "0.00% ZERO SIGNAL LOSS", fill=(120, 255, 180), font=f_lbl, anchor="mm")
+    # Technical Note
+    draw.text((rx + 35, top_y + 270), "KIRCHHOFF SERIES LOOP", fill=(100, 255, 160), font=f_lbl)
+    draw.text((rx + 35, top_y + 320), "250Ω BURDEN = 3.000V", fill=(0, 230, 255), font=f_lbl)
 
 
-def draw_fea_stress_contour(draw, t, total_dur):
-    """FEA Von Mises stress contour heatmap at shaft corner step"""
-    bx, by, bw, bh = 110, 530, 860, 530
-    draw.rounded_rectangle([(bx, by), (bx + bw, by + bh)], radius=18, fill=(15, 18, 25), outline=(240, 50, 70), width=3)
+def draw_split_screen_vfd(draw, t, lx, rx, pw, ph, top_y):
+    """S2: No Filter (Left: 1,480V) vs dv/dt Reactor (Right: 520V)"""
+    f_num = ImageFont.truetype(FONT_TITLE, 60)
+    f_lbl = ImageFont.truetype(FONT_BOLD, 26)
 
-    # Shaft profile outline
-    # Large diameter (D=60mm) -> Step -> Small diameter (d=40mm)
-    cx, cy = bx + bw // 2, by + bh // 2 + 20
-    # Left shaft (large)
-    draw.rectangle([(bx + 80, cy - 140), (cx - 20, cy + 140)], fill=(35, 45, 60), outline=(70, 90, 120), width=3)
-    # Right shaft (small)
-    draw.rectangle([(cx - 20, cy - 80), (bx + bw - 80, cy + 80)], fill=(35, 45, 60), outline=(70, 90, 120), width=3)
+    # Left: High Voltage Ringing Arc
+    draw.rounded_rectangle([(lx, top_y), (lx + pw, top_y + ph)], radius=16, fill=(35, 14, 18), outline=(240, 50, 50), width=3)
+    draw.rounded_rectangle([(lx + 25, top_y + 80), (lx + pw - 25, top_y + 240)], radius=10, fill=(20, 8, 12), outline=(200, 40, 40), width=2)
+    v_peak = int(1480 + math.sin(t * 20) * 35)
+    draw.text((lx + pw // 2, top_y + 135), f"{v_peak} V", fill=(255, 60, 60), font=f_num, anchor="mm")
+    draw.text((lx + pw // 2, top_y + 200), "INSULATION PUNCTURE!", fill=(255, 120, 120), font=f_lbl, anchor="mm")
+    # Scope simulation left
+    draw.text((lx + 35, top_y + 270), "dv/dt: 12,400 V/μs", fill=(255, 100, 100), font=f_lbl)
+    draw.text((lx + 35, top_y + 320), "WAVE REFLECTION: +96%", fill=(255, 150, 50), font=f_lbl)
 
-    # Stress notch hotspot at the fillet step
-    pulse = math.sin(t * 10) * 0.15 + 0.85
-    r_max = int(55 * pulse)
-    for r in range(r_max, 5, -6):
-        alpha = int((1.0 - r / r_max) * 255)
-        # Gradient from crimson to bright yellow
-        col = (255, int(220 * (1 - r / r_max)), 0)
-        draw.ellipse([(cx - 20 - r, cy - 80 - r), (cx - 20 + r, cy - 80 + r)], fill=col)
-        draw.ellipse([(cx - 20 - r, cy + 80 - r), (cx - 20 + r, cy + 80 + r)], fill=col)
-
-    f_fea = ImageFont.truetype(FONT_BOLD, 30)
-    draw.text((bx + 50, by + 30), "FEA STRESS CONCENTRATION (Von Mises)", fill=(255, 80, 80), font=f_fea)
-    draw.text((bx + 50, by + 75), "r = 0.5mm: Kt = 3.20  |  σ_max = 482 MPa (FATIGUE FAIL)", fill=(255, 210, 0), font=f_fea)
-    draw.text((bx + 50, by + bh - 55), "TARGET: r = 3.0mm  ->  Kt = 1.30 (PASS)", fill=(0, 240, 120), font=f_fea)
+    # Right: dv/dt Clamped 520V
+    draw.rounded_rectangle([(rx, top_y), (rx + pw, top_y + ph)], radius=16, fill=(12, 35, 25), outline=(0, 220, 100), width=3)
+    draw.rounded_rectangle([(rx + 25, top_y + 80), (rx + pw - 25, top_y + 240)], radius=10, fill=(8, 24, 16), outline=(0, 180, 80), width=2)
+    v_safe = int(520 + math.sin(t * 8) * 8)
+    draw.text((rx + pw // 2, top_y + 135), f"{v_safe} V", fill=(0, 255, 140), font=f_num, anchor="mm")
+    draw.text((rx + pw // 2, top_y + 200), "100% CLAMPED & SAFE", fill=(120, 255, 180), font=f_lbl, anchor="mm")
+    draw.text((rx + 35, top_y + 270), "dv/dt: < 200 V/μs", fill=(100, 255, 160), font=f_lbl)
+    draw.text((rx + 35, top_y + 320), "100,000h WINDING LIFE", fill=(0, 230, 255), font=f_lbl)
 
 
-def draw_cavitation_vacuum_gauge(draw, t, total_dur):
-    """Vacuum suction gauge and cavitation ultrasound FFT spectrum"""
-    bx, by, bw, bh = 110, 530, 860, 530
-    draw.rounded_rectangle([(bx, by), (bx + bw, by + bh)], radius=18, fill=(15, 20, 28), outline=(0, 190, 255), width=3)
+def draw_split_screen_notch(draw, t, lx, rx, pw, ph, top_y):
+    """S3: r=0.5mm (Left: Kt=3.20) vs r=3.0mm (Right: Kt=1.30)"""
+    f_num = ImageFont.truetype(FONT_TITLE, 60)
+    f_lbl = ImageFont.truetype(FONT_BOLD, 26)
 
-    # Circular vacuum gauge on left
-    gcx, gcy, gr = bx + 230, by + bh // 2 + 10, 160
-    draw.ellipse([(gcx - gr, gcy - gr), (gcx + gr, gcy + gr)], fill=(235, 240, 245), outline=(30, 35, 45), width=8)
+    # Left: Sharp step
+    draw.rounded_rectangle([(lx, top_y), (lx + pw, top_y + ph)], radius=16, fill=(35, 14, 18), outline=(240, 50, 50), width=3)
+    draw.rounded_rectangle([(lx + 25, top_y + 80), (lx + pw - 25, top_y + 240)], radius=10, fill=(20, 8, 12), outline=(200, 40, 40), width=2)
+    draw.text((lx + pw // 2, top_y + 135), "Kt = 3.20", fill=(255, 60, 60), font=f_num, anchor="mm")
+    draw.text((lx + pw // 2, top_y + 200), "STRESS TRIPLE PEAK!", fill=(255, 120, 120), font=f_lbl, anchor="mm")
+    draw.text((lx + 35, top_y + 270), "FILLET RADIUS: 0.5mm", fill=(255, 100, 100), font=f_lbl)
+    draw.text((lx + 35, top_y + 320), "FATIGUE: 3 WEEKS SNAP", fill=(255, 60, 60), font=f_lbl)
 
-    # Red zone (cavitation vacuum < -0.6 bar)
-    draw.pieslice([(gcx - gr + 10, gcy - gr + 10), (gcx + gr - 10, gcy + gr - 10)], 180, 270, fill=(255, 180, 180))
-
-    # Needle angle (-0.8 bar with vibration)
-    vib = math.sin(t * 30) * 4.0
-    angle_deg = 235 + vib
-    rad = math.radians(angle_deg)
-    nx = gcx + math.cos(rad) * (gr - 30)
-    ny = gcy + math.sin(rad) * (gr - 30)
-    draw.line([(gcx, gcy), (nx, ny)], fill=(220, 20, 20), width=5)
-    draw.ellipse([(gcx - 14, gcy - 14), (gcx + 14, gcy + 14)], fill=(40, 40, 40))
-
-    f_sm = ImageFont.truetype(FONT_BOLD, 26)
-    draw.text((gcx - 65, gcy + 55), "-0.82 BAR", fill=(200, 20, 20), font=f_sm)
-    draw.text((gcx - 85, gcy + 90), "VAPOR BOILING", fill=(100, 20, 20), font=f_sm)
-
-    # FFT Spectrum on right
-    sx, sy, sw, sh = bx + 450, by + 80, 360, 380
-    draw.rectangle([(sx, sy), (sx + sw, sy + sh)], fill=(8, 14, 22), outline=(40, 60, 80), width=2)
-    draw.text((sx + 20, sy + 15), "ULTRASOUND SPECTRUM", fill=(0, 230, 255), font=f_sm)
-
-    # Cavitation noise floor surge (20kHz - 80kHz)
-    bars = 16
-    for b in range(bars):
-        bx_bar = sx + 25 + b * 20
-        h_noise = int(35 + math.sin(t * 12 + b * 0.7) * 20 + (b ** 1.3) * 3)
-        draw.rectangle([(bx_bar, sy + sh - 25 - h_noise), (bx_bar + 14, sy + sh - 25)], fill=(255, 90, 30))
+    # Right: Fillet 3.0mm
+    draw.rounded_rectangle([(rx, top_y), (rx + pw, top_y + ph)], radius=16, fill=(12, 35, 25), outline=(0, 220, 100), width=3)
+    draw.rounded_rectangle([(rx + 25, top_y + 80), (rx + pw - 25, top_y + 240)], radius=10, fill=(8, 24, 16), outline=(0, 180, 80), width=2)
+    draw.text((rx + pw // 2, top_y + 135), "Kt = 1.30", fill=(0, 255, 140), font=f_num, anchor="mm")
+    draw.text((rx + pw // 2, top_y + 200), "STRESS DROPPED 60%", fill=(120, 255, 180), font=f_lbl, anchor="mm")
+    draw.text((rx + 35, top_y + 270), "FILLET RADIUS: 3.0mm", fill=(100, 255, 160), font=f_lbl)
+    draw.text((rx + 35, top_y + 320), "FATIGUE: 10x MULTIPLIER", fill=(0, 230, 255), font=f_lbl)
 
 
-def draw_flir_thermal_display(draw, t, total_dur):
-    """FLIR thermal camera display with Ironbow palette and spot temp"""
-    bx, by, bw, bh = 110, 530, 860, 530
-    draw.rounded_rectangle([(bx, by), (bx + bw, by + bh)], radius=18, fill=(10, 14, 22), outline=(100, 180, 255), width=3)
+def draw_split_screen_cavitation(draw, t, lx, rx, pw, ph, top_y):
+    """S4: Boiling Cold Oil (Left: -0.82 bar) vs NPSH Sized (Right: Smooth Flow)"""
+    f_num = ImageFont.truetype(FONT_TITLE, 56)
+    f_lbl = ImageFont.truetype(FONT_BOLD, 26)
 
-    # Thermal viewport
-    tx, ty, tw, th = bx + 40, by + 40, 680, 450
-    # Simulate Ironbow heat distribution
-    draw.rectangle([(tx, ty), (tx + tw, ty + th)], fill=(40, 10, 60))
+    # Left: Cavitation Boiling
+    draw.rounded_rectangle([(lx, top_y), (lx + pw, top_y + ph)], radius=16, fill=(35, 15, 20), outline=(240, 50, 50), width=3)
+    draw.rounded_rectangle([(lx + 25, top_y + 80), (lx + pw - 25, top_y + 240)], radius=10, fill=(20, 8, 12), outline=(200, 40, 40), width=2)
+    draw.text((lx + pw // 2, top_y + 135), "-0.82 BAR", fill=(255, 60, 60), font=f_num, anchor="mm")
+    draw.text((lx + pw // 2, top_y + 200), "10,000 BAR MICRO-JETS", fill=(255, 120, 120), font=f_lbl, anchor="mm")
+    draw.text((lx + 35, top_y + 270), "P_suction < P_vapor", fill=(255, 100, 100), font=f_lbl)
+    draw.text((lx + 35, top_y + 320), "IMPELLER PITTED & EATEN", fill=(255, 60, 60), font=f_lbl)
 
-    # Hot zone (power supply heat)
-    draw.ellipse([(tx + 80, ty + 60), (tx + 300, ty + 280)], fill=(220, 60, 20))
-    draw.ellipse([(tx + 120, ty + 100), (tx + 260, ty + 240)], fill=(255, 210, 40))
-
-    # Dangerous cold condensation zone (evaporator coil drop at 18C)
-    draw.rounded_rectangle([(tx + 380, ty + 120), (tx + 620, ty + 380)], radius=12, fill=(15, 30, 110))
-    draw.rounded_rectangle([(tx + 430, ty + 170), (tx + 570, ty + 330)], radius=8, fill=(0, 160, 230))
-
-    # Crosshair Spot 1 (Cold condensation spot)
-    cx, cy = tx + 500, ty + 250
-    draw.line([(cx - 20, cy), (cx + 20, cy)], fill=(255, 255, 255), width=2)
-    draw.line([(cx, cy - 20), (cx, cy + 20)], fill=(255, 255, 255), width=2)
-
-    f_flir = ImageFont.truetype(FONT_BOLD, 28)
-    draw.text((cx + 25, cy - 15), "Sp1: 18.6°C [CONDENSING!]", fill=(0, 240, 255), font=f_flir)
-    draw.text((tx + 25, ty + 15), "FLIR E76  ε = 0.95", fill=(220, 220, 220), font=f_flir)
-    draw.text((tx + 25, ty + th - 45), "DEW POINT: 28.2°C  ->  RAIN FORMING!", fill=(255, 60, 60), font=f_flir)
-
-    # Vertical Ironbow scale bar on right
-    pal_x = bx + 750
-    for py in range(th):
-        ratio = py / th
-        r = int(255 * (1 - ratio))
-        g = int(180 * math.sin(ratio * math.pi))
-        b = int(240 * ratio)
-        draw.line([(pal_x, ty + py), (pal_x + 35, ty + py)], fill=(r, g, b), width=1)
+    # Right: Smooth Flow
+    draw.rounded_rectangle([(rx, top_y), (rx + pw, top_y + ph)], radius=16, fill=(12, 35, 25), outline=(0, 220, 100), width=3)
+    draw.rounded_rectangle([(rx + 25, top_y + 80), (rx + pw - 25, top_y + 240)], radius=10, fill=(8, 24, 16), outline=(0, 180, 80), width=2)
+    draw.text((rx + pw // 2, top_y + 135), "-0.15 BAR", fill=(0, 255, 140), font=f_num, anchor="mm")
+    draw.text((rx + pw // 2, top_y + 200), "LAMINAR ZERO BUBBLES", fill=(120, 255, 180), font=f_lbl, anchor="mm")
+    draw.text((rx + 35, top_y + 270), "NPSH_avail > NPSH_req", fill=(100, 255, 160), font=f_lbl)
+    draw.text((rx + 35, top_y + 320), "STEEL IMPELLER SAVED", fill=(0, 230, 255), font=f_lbl)
 
 
-def draw_bode_plot(draw, t, total_dur):
-    """Servo frequency response Bode plot showing 10:1 inertia resonance peak"""
-    bx, by, bw, bh = 110, 530, 860, 530
-    draw.rounded_rectangle([(bx, by), (bx + bw, by + bh)], radius=18, fill=(14, 18, 26), outline=(0, 255, 180), width=3)
+def draw_split_screen_dewpoint(draw, t, lx, rx, pw, ph, top_y):
+    """S5: Set 18C (Left: Indoor Rain) vs Set 30C (Right: Dry & Cool)"""
+    f_num = ImageFont.truetype(FONT_TITLE, 56)
+    f_lbl = ImageFont.truetype(FONT_BOLD, 26)
 
-    # Bode Grid
-    bx_g, by_g, bw_g, bh_g = bx + 50, by + 50, bw - 100, bh - 100
-    draw.rectangle([(bx_g, by_g), (bx_g + bw_g, by_g + bh_g)], fill=(8, 12, 18), outline=(30, 45, 60), width=2)
+    # Left: Indoor Rain
+    draw.rounded_rectangle([(lx, top_y), (lx + pw, top_y + ph)], radius=16, fill=(20, 15, 35), outline=(240, 50, 50), width=3)
+    draw.rounded_rectangle([(lx + 25, top_y + 80), (lx + pw - 25, top_y + 240)], radius=10, fill=(14, 10, 26), outline=(200, 40, 40), width=2)
+    draw.text((lx + pw // 2, top_y + 135), "18.0°C (AC)", fill=(0, 180, 255), font=f_num, anchor="mm")
+    draw.text((lx + pw // 2, top_y + 200), "DEW POINT: 28.2°C (RAIN!)", fill=(255, 80, 80), font=f_lbl, anchor="mm")
+    draw.text((lx + 35, top_y + 270), "100% AIR CONDENSATION", fill=(255, 100, 100), font=f_lbl)
+    draw.text((lx + 35, top_y + 320), "SHORT CIRCUIT FIRE!", fill=(255, 60, 60), font=f_lbl)
 
-    # Magnitude resonance curve
-    points = []
-    mid_y = by_g + bh_g // 2
-    for px in range(bw_g):
-        prog = px / bw_g
-        # Anti-resonance notch + massive resonance peak at prog=0.55
-        freq = prog * 100.0
-        peak = 90.0 * math.exp(-((prog - 0.55) ** 2) / 0.003)
-        notch = -45.0 * math.exp(-((prog - 0.45) ** 2) / 0.002)
-        py = mid_y - int(peak + notch + math.sin(t * 8) * 4)
-        points.append((bx_g + px, py))
+    # Right: Safe Setpoint
+    draw.rounded_rectangle([(rx, top_y), (rx + pw, top_y + ph)], radius=16, fill=(12, 35, 25), outline=(0, 220, 100), width=3)
+    draw.rounded_rectangle([(rx + 25, top_y + 80), (rx + pw - 25, top_y + 240)], radius=10, fill=(8, 24, 16), outline=(0, 180, 80), width=2)
+    draw.text((rx + pw // 2, top_y + 135), "30.0°C (AC)", fill=(0, 255, 140), font=f_num, anchor="mm")
+    draw.text((rx + pw // 2, top_y + 200), "ABOVE DEW POINT (DRY)", fill=(120, 255, 180), font=f_lbl, anchor="mm")
+    draw.text((rx + 35, top_y + 270), "HUMIDITY CONTROLLED", fill=(100, 255, 160), font=f_lbl)
+    draw.text((rx + 35, top_y + 320), "$50k PLC RACK PROTECTED", fill=(0, 230, 255), font=f_lbl)
 
-    if len(points) > 1:
-        draw.line(points, fill=(0, 255, 170), width=4)
 
-    f_bode = ImageFont.truetype(FONT_BOLD, 28)
-    draw.text((bx_g + 20, by_g + 15), "BODE PLOT: OPEN LOOP VELOCITY GAIN", fill=(0, 255, 180), font=f_bode)
-    draw.text((bx_g + 320, by_g + 75), "RESONANCE PEAK: +18dB (JL/JM = 18:1)", fill=(255, 70, 70), font=f_bode)
-    draw.text((bx_g + 20, by_g + bh_g - 45), "5:1 GEARBOX REDUCTION -> JL/JM = 0.72:1 (STABLE)", fill=(0, 240, 255), font=f_bode)
+def draw_split_screen_inertia(draw, t, lx, rx, pw, ph, top_y):
+    """S6: Direct Drive (Left: Shaking) vs 5:1 Gearbox (Right: Precision)"""
+    f_num = ImageFont.truetype(FONT_TITLE, 52)
+    f_lbl = ImageFont.truetype(FONT_BOLD, 26)
+
+    # Left: Shaking
+    draw.rounded_rectangle([(lx, top_y), (lx + pw, top_y + ph)], radius=16, fill=(35, 15, 20), outline=(240, 50, 50), width=3)
+    draw.rounded_rectangle([(lx + 25, top_y + 80), (lx + pw - 25, top_y + 240)], radius=10, fill=(20, 8, 12), outline=(200, 40, 40), width=2)
+    draw.text((lx + pw // 2, top_y + 135), "JL/JM = 18:1", fill=(255, 60, 60), font=f_num, anchor="mm")
+    draw.text((lx + pw // 2, top_y + 200), "VIOLENT RESONANCE!", fill=(255, 120, 120), font=f_lbl, anchor="mm")
+    draw.text((lx + 35, top_y + 270), "ANTI-RESONANCE NOTCH", fill=(255, 100, 100), font=f_lbl)
+    draw.text((lx + 35, top_y + 320), "ROBOT ARM HUNTING SHAKE", fill=(255, 60, 60), font=f_lbl)
+
+    # Right: 5:1 Planetary Reducer
+    draw.rounded_rectangle([(rx, top_y), (rx + pw, top_y + ph)], radius=16, fill=(12, 35, 25), outline=(0, 220, 100), width=3)
+    draw.rounded_rectangle([(rx + 25, top_y + 80), (rx + pw - 25, top_y + 240)], radius=10, fill=(8, 24, 16), outline=(0, 180, 80), width=2)
+    draw.text((rx + pw // 2, top_y + 135), "JL/JM = 0.72:1", fill=(0, 255, 140), font=f_num, anchor="mm")
+    draw.text((rx + pw // 2, top_y + 200), "INERTIA DROPPED 25x", fill=(120, 255, 180), font=f_lbl, anchor="mm")
+    draw.text((rx + 35, top_y + 270), "5:1 GEARBOX REDUCTION", fill=(100, 255, 160), font=f_lbl)
+    draw.text((rx + 35, top_y + 320), "±0.01mm ROCK-SOLID PASS", fill=(0, 230, 255), font=f_lbl)
+
+
+def draw_reactive_audio_visualizer(draw, audio_signal, t, sr=44100, num_bars=24):
+    """The Engineering Mindset signature HUD visualizer"""
+    idx = int(t * sr)
+    chunk = audio_signal[max(0, idx - 1024):idx + 1024]
+    energy = np.abs(chunk) if len(chunk) > 0 else np.zeros(10)
+    mean_e = np.mean(energy) * 12.0
+
+    base_y = 1760
+    start_x = 110
+    bar_width = 30
+    gap = 6
+
+    for b in range(num_bars):
+        bx = start_x + b * (bar_width + gap)
+        mod = math.sin(t * 15 + b * 0.5) * 0.4 + 0.6
+        bar_h = int(12 + mean_e * 120 * mod + math.sin(b * 0.8) * 8)
+        bar_h = max(8, min(95, bar_h))
+        col = (0, int(200 + b * 2), 255) if b < 16 else (255, int(220 - (b-16)*20), 0)
+        draw.rounded_rectangle([(bx, base_y - bar_h), (bx + bar_width, base_y)], radius=4, fill=col)
 
 
 # =============================================================================
-# MAIN FORENSIC VIDEO COMPILER
+# MAIN RENDERER
 # =============================================================================
-def render_forensic_video(ep):
-    print("\n" + "=" * 80)
-    print(f"🎬 [FORENSIC WORKBENCH] Rendering: {ep['title'].replace(chr(10), ' ')}")
-    print(f"   Episode ID: {ep['ep_id']} | Instrument: {ep['instrument']}")
-    print("=" * 80)
+def render_viral_video(ep):
+    print("\n" + "=" * 85)
+    print(f"🎬 [TIER-1 VIRAL OVERHAUL] Rendering: {ep['title'].replace(chr(10), ' ')}")
+    print(f"   Episode ID: {ep['ep_id']} | Split: {ep['split_type']}")
+    print("=" * 85)
 
-    # 1. Edge-TTS Audio Generation
+    # 1. Voice generation
     voice_files = asyncio.run(generate_voice_files(ep))
 
-    # 2. Master Audio Mixing with Foley & Ducking
+    # 2. Master audio mixing
     bgm_path = SCRATCH / ep["bgm"]
-    out_wav = SCRATCH / f"edu_{ep['ep_id']}_master.wav"
-    _, total_dur, audio_signal = mix_forensic_audio(voice_files, bgm_path, ep["foley_cues"], out_wav)
+    out_wav = SCRATCH / f"viral_{ep['ep_id']}_master.wav"
+    _, total_dur, audio_signal = mix_viral_audio(voice_files, bgm_path, ep["foley_cues"], out_wav)
     print(f"   Master Audio Duration: {total_dur:.2f} seconds")
 
-    # 3. Stream Frames into FFmpeg
+    # 3. Stream frames into FFmpeg
     out_mp4 = BASE_DIR / ep["out_file"]
     fps = 60
     total_frames = int(total_dur * fps)
@@ -564,52 +525,61 @@ def render_forensic_video(ep):
 
     pipe = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    f_title = ImageFont.truetype(FONT_TITLE, 52)
-    f_badge = ImageFont.truetype(FONT_BOLD, 30)
+    f_title = ImageFont.truetype(FONT_TITLE, 50)
+    f_badge = ImageFont.truetype(FONT_BOLD, 28)
     f_sub = ImageFont.truetype(FONT_BOLD, 36)
-    f_cta = ImageFont.truetype(FONT_TITLE, 42)
+    f_cta = ImageFont.truetype(FONT_TITLE, 40)
+    f_split_hdr = ImageFont.truetype(FONT_TITLE, 28)
 
-    # Sentence timing breakdown
     num_sentences = len(ep["scripts"])
     seg_dur = total_dur / num_sentences
+
+    lx, rx = 45, 555
+    pw, ph = 480, 410
+    split_top_y = 310
 
     for frame_idx in range(total_frames):
         t = frame_idx / fps
         img = Image.new("RGB", (w, h), (10, 14, 22))
         draw = ImageDraw.Draw(img)
 
-        # 1. Base Blueprint HUD Grid
-        draw_hud_base(draw, w, h)
+        # 1. Background Grid & Corner brackets
+        for gx in range(0, w, 80):
+            draw.line([(gx, 0), (gx, h)], fill=(16, 22, 38), width=1)
+        for gy in range(0, h, 80):
+            draw.line([(0, gy), (w, gy)], fill=(16, 22, 38), width=1)
 
-        # 2. Top Forensic Badge & Title
-        draw.text((w // 2, 130), ep["badge"], fill=ep["badge_color"], font=f_badge, anchor="mm")
-        draw.text((w // 2, 235), ep["title"], fill=(255, 255, 255), font=f_title, anchor="mm", align="center")
+        # 2. 0.8s Hazard Bar & Title Header
+        draw_hazard_bar(draw, t, ep["hazard_label"], w)
+        draw.text((w // 2, 195), ep["title"], fill=(255, 255, 255), font=f_title, anchor="mm", align="center")
 
-        # 3. Dynamic Instrument Simulator
-        inst = ep["instrument"]
-        if inst == "fluke_meter":
-            draw_fluke_processmeter(draw, t, total_dur)
-        elif inst == "oscilloscope":
-            draw_oscilloscope_trace(draw, t, total_dur)
-        elif inst == "fea_contour":
-            draw_fea_stress_contour(draw, t, total_dur)
-        elif inst == "cavitation_gauge":
-            draw_cavitation_vacuum_gauge(draw, t, total_dur)
-        elif inst == "flir_thermal":
-            draw_flir_thermal_display(draw, t, total_dur)
-        elif inst == "bode_plot":
-            draw_bode_plot(draw, t, total_dur)
+        # 3. Project Farm Side-by-Side Headers
+        draw.text((lx + pw // 2, split_top_y + 40), ep["left_label"], fill=(255, 70, 70), font=f_split_hdr, anchor="mm")
+        draw.text((rx + pw // 2, split_top_y + 40), ep["right_label"], fill=(0, 230, 120), font=f_split_hdr, anchor="mm")
 
-        # 4. Animated Subtitle Box (Field Engineer Cadence)
+        # 4. Split-Screen Graphic Engine
+        st = ep["split_type"]
+        if st == "current_loop":
+            draw_split_screen_current_loop(draw, t, lx, rx, pw, ph, split_top_y)
+        elif st == "vfd_spike":
+            draw_split_screen_vfd(draw, t, lx, rx, pw, ph, split_top_y)
+        elif st == "stress_notch":
+            draw_split_screen_notch(draw, t, lx, rx, pw, ph, split_top_y)
+        elif st == "cavitation":
+            draw_split_screen_cavitation(draw, t, lx, rx, pw, ph, split_top_y)
+        elif st == "dewpoint":
+            draw_split_screen_dewpoint(draw, t, lx, rx, pw, ph, split_top_y)
+        elif st == "inertia_ratio":
+            draw_split_screen_inertia(draw, t, lx, rx, pw, ph, split_top_y)
+
+        # 5. Dynamic Subtitle Box with Field Engineer Log
         cur_seg = min(int(t / seg_dur), num_sentences - 1)
         sub_text = ep["scripts"][cur_seg]
 
-        sub_box_y = 1130
-        draw.rounded_rectangle([(80, sub_box_y), (w - 80, sub_box_y + 320)], radius=16, fill=(16, 22, 34), outline=(45, 60, 85), width=2)
-        # Category tag
-        draw.text((115, sub_box_y + 35), f"FIELD INVESTIGATION LOG: STEP {cur_seg + 1} OF 4", fill=ep["accent_color"], font=f_badge)
+        sub_y = 760
+        draw.rounded_rectangle([(50, sub_y), (w - 50, sub_y + 360)], radius=18, fill=(16, 22, 34), outline=(45, 65, 95), width=2)
+        draw.text((80, sub_y + 38), f"LAB AUTOPSY LOG: STEP {cur_seg + 1} OF 4", fill=ep["accent_color"], font=f_badge)
 
-        # Wrap text nicely
         words = sub_text.split()
         lines = []
         cur_line = []
@@ -622,13 +592,16 @@ def render_forensic_video(ep):
             lines.append(" ".join(cur_line))
 
         for l_idx, line in enumerate(lines[:4]):
-            draw.text((115, sub_box_y + 85 + l_idx * 48), line, fill=(240, 245, 255), font=f_sub)
+            draw.text((80, sub_y + 90 + l_idx * 50), line, fill=(245, 248, 255), font=f_sub)
 
-        # 5. Bottom Call To Action Banner
-        cta_y = 1530
-        draw.rounded_rectangle([(80, cta_y), (w - 80, cta_y + 190)], radius=18, fill=(18, 25, 40), outline=(0, 200, 255), width=3)
+        # 6. Call To Action Card
+        cta_y = 1150
+        draw.rounded_rectangle([(50, cta_y), (w - 50, cta_y + 200)], radius=18, fill=(18, 26, 42), outline=(0, 210, 255), width=3)
         draw.text((w // 2, cta_y + 55), "78+ FREE INDUSTRIAL CALCULATORS", fill=(0, 220, 255), font=f_badge, anchor="mm")
-        draw.text((w // 2, cta_y + 125), "👉 voltcheck24.com", fill=(255, 255, 255), font=f_cta, anchor="mm")
+        draw.text((w // 2, cta_y + 130), "👉 voltcheck24.com", fill=(255, 255, 255), font=f_cta, anchor="mm")
+
+        # 7. Reactive 24-Band Audio Visualizer
+        draw_reactive_audio_visualizer(draw, audio_signal, t)
 
         pipe.stdin.write(img.tobytes())
 
@@ -643,12 +616,12 @@ def render_forensic_video(ep):
 
 def main():
     print("=" * 85)
-    print("🚀 [VOLTCHECK] Starting 6-Sector Zero-AI-Feel Educational Shorts Production")
+    print("🚀 [TIER-1 VIRAL BENCHMARK] Rendering All 6 Split-Screen Educational Shorts")
     print("=" * 85)
-    for ep in FORENSIC_EPISODES:
-        render_forensic_video(ep)
+    for ep in VIRAL_EPISODES:
+        render_viral_video(ep)
     print("\n" + "=" * 85)
-    print("🎉 All 6 Forensic Engineering Shorts Successfully Rendered in Full HD!")
+    print("🎉 All 6 Split-Screen Forensic Shorts Successfully Rendered in Full HD!")
     print("=" * 85)
 
 

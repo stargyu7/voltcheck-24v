@@ -216,7 +216,7 @@
       ],
       "status": "scheduled",
       "publish_at": "2026-09-10 22:05:00 KST",
-      "video_id": "Q6Vb7ob2KUE"
+      "video_id": "WeMEDuJ1HS4"
     },
     {
       "id": "edu_s2_vfd_reflected_wave",
@@ -237,7 +237,7 @@
       ],
       "status": "scheduled",
       "publish_at": "2026-09-11 22:00:00 KST",
-      "video_id": "4-s7fVmWIoU"
+      "video_id": "RQB1uYosVLM"
     },
     {
       "id": "edu_s3_shaft_stress_notch",
@@ -258,7 +258,7 @@
       ],
       "status": "scheduled",
       "publish_at": "2026-09-11 22:05:00 KST",
-      "video_id": "GfoYN-XbAKs"
+      "video_id": "LAnczjM3MTY"
     },
     {
       "id": "edu_s4_hydraulic_cavitation",
@@ -279,7 +279,7 @@
       ],
       "status": "scheduled",
       "publish_at": "2026-09-12 22:00:00 KST",
-      "video_id": "7MaG3UUZD8o"
+      "video_id": "J9yAL3qfVSI"
     },
     {
       "id": "edu_s5_panel_dewpoint",
@@ -301,7 +301,7 @@
       ],
       "status": "scheduled",
       "publish_at": "2026-09-12 22:05:00 KST",
-      "video_id": "3ua_q4rW5xU"
+      "video_id": "IBAdLnHlmZw"
     },
     {
       "id": "edu_s6_robot_inertia_ratio",
@@ -322,7 +322,7 @@
       ],
       "status": "scheduled",
       "publish_at": "2026-09-13 22:00:00 KST",
-      "video_id": "4MglSUP76vg"
+      "video_id": "2y_wjN9ggXk"
     }
   ]
 }
