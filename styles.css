@@ -411,6 +411,38 @@ body.theme-precision {
   text-decoration: underline;
 }
 
+.engineering-disclaimer-strip {
+  background: #fff7ed;
+  border-bottom: 1px solid #fed7aa;
+  padding: 0.45rem 1rem;
+}
+
+.engineering-disclaimer-inner {
+  max-width: 1520px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #7c2d12;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.engineering-disclaimer-inner strong {
+  flex-shrink: 0;
+  color: #9a3412;
+  font-weight: 900;
+}
+
+@media (max-width: 768px) {
+  .engineering-disclaimer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.74rem;
+  }
+}
+
 .sponsor-link-btn {
   background: transparent;
   border: none;
