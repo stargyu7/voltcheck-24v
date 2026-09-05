@@ -645,6 +645,33 @@
       </div>
     </div>
 
+    <section class="return-workspace-dashboard" aria-label="Saved engineering workspace dashboard">
+      <div class="return-dashboard-main">
+        <span class="return-dashboard-kicker">Return Workspace</span>
+        <h2>내 설계 작업 이어가기</h2>
+        <p id="returnDashboardSummary">저장된 프로젝트와 통합 기술검토서 바구니를 여기서 바로 이어서 사용할 수 있습니다.</p>
+      </div>
+      <div class="return-dashboard-metrics">
+        <button type="button" onclick="openProjectStorageModal()" class="return-metric-card">
+          <span id="returnProjectCount">0</span>
+          <small>저장 프로젝트</small>
+        </button>
+        <button type="button" onclick="openReportCartModal()" class="return-metric-card">
+          <span id="returnReportCount">0</span>
+          <small>보고서 항목</small>
+        </button>
+      </div>
+      <div class="return-dashboard-next">
+        <strong>추천 흐름</strong>
+        <div id="returnNextSteps" class="return-next-steps">
+          <button type="button" onclick="switchTab('tab-voltagedrop')">전압강하</button>
+          <button type="button" onclick="switchTab('tab-smpsbudget')">SMPS</button>
+          <button type="button" onclick="switchTab('tab-motorcalc')">모터</button>
+          <button type="button" onclick="openB2BQuoteModal()">BOM</button>
+        </div>
+      </div>
+    </section>
+
     <!-- ========================================================================= -->
     <!-- TAB 1: DC 24V 전압강하 & 센서 전원 마진 검증기 -->
     <!-- ========================================================================= -->

@@ -94,6 +94,11 @@ const workflowRequiredSnippets = [
   'capturePanelResult',
   'VoltCheck24 통합 기술검토서',
   'print-field-block',
+  'return-workspace-dashboard',
+  'renderReturnWorkspaceDashboard',
+  'getWorkflowRecommendationFromProject',
+  'returnProjectCount',
+  'returnReportCount',
 ];
 
 for (const snippet of workflowRequiredSnippets) {

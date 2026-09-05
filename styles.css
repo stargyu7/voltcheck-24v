@@ -467,6 +467,117 @@ body.theme-precision {
   font-weight: 800;
 }
 
+.return-workspace-dashboard {
+  margin: 14px 0 18px;
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto minmax(260px, 0.9fr);
+  gap: 14px;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.return-dashboard-kicker {
+  display: block;
+  margin-bottom: 3px;
+  color: #0369a1;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.return-dashboard-main h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.return-dashboard-main p {
+  margin: 4px 0 0;
+  color: #475569;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.return-dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 86px);
+  gap: 8px;
+}
+
+.return-metric-card {
+  min-height: 62px;
+  padding: 8px;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  cursor: pointer;
+  text-align: left;
+}
+
+.return-metric-card:hover {
+  border-color: #60a5fa;
+  background: #eff6ff;
+}
+
+.return-metric-card span {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.return-metric-card small {
+  display: block;
+  margin-top: 6px;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.return-dashboard-next {
+  min-width: 0;
+}
+
+.return-dashboard-next strong {
+  display: block;
+  margin-bottom: 7px;
+  color: #334155;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.return-next-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.return-next-steps button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #075985;
+  font-size: 0.74rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.return-next-steps button:hover {
+  border-color: #0284c7;
+  background: #f0f9ff;
+}
+
 .workflow-action-panel {
   margin: 16px 0;
   padding: 14px;
@@ -524,6 +635,19 @@ body.theme-precision {
     flex-direction: column;
     gap: 0.15rem;
     font-size: 0.74rem;
+  }
+
+  .return-workspace-dashboard {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .return-dashboard-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .return-next-steps button {
+    flex: 1 1 120px;
   }
 
   .workflow-action-panel {

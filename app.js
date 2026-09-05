@@ -7660,6 +7660,7 @@ function saveProjectsList(list) {
   } catch (e) {
     console.error("Failed to save projects to LocalStorage", e);
   }
+  renderReturnWorkspaceDashboard();
 }
 
 function openProjectStorageModal() {
@@ -7796,6 +7797,7 @@ function loadProjectById(id) {
       });
     }
     closeProjectStorageModal();
+    renderReturnWorkspaceDashboard();
     alert(`[불러오기 완료] '${proj.name}' 설계 데이터가 화면에 복원되었습니다.`);
   }, 100);
 }
@@ -8188,6 +8190,74 @@ function saveReportCartItems(items) {
     localStorage.setItem(REPORT_CART_STORAGE_KEY, JSON.stringify(items));
   } catch (e) {}
   updateReportCartBadges();
+  renderReturnWorkspaceDashboard();
+}
+
+function getWorkflowRecommendationFromProject(project) {
+  const tabId = project?.tabId || '';
+  if (tabId === 'tab-voltagedrop') {
+    return [
+      { tabId: 'tab-smpsbudget', label: 'SMPS 용량 검토' },
+      { tabId: 'tab-motorcalc', label: '모터·MC 검토' },
+      { action: 'quote', label: 'BOM 문의 정리' }
+    ];
+  }
+  if (tabId === 'tab-smpsbudget') {
+    return [
+      { tabId: 'tab-voltagedrop', label: '전압강하 재검토' },
+      { tabId: 'tab-inrushbreaker', label: '돌입전류·차단기' },
+      { action: 'quote', label: 'BOM 문의 정리' }
+    ];
+  }
+  if (tabId === 'tab-motorcalc') {
+    return [
+      { tabId: 'tab-inrushbreaker', label: '돌입전류·트립' },
+      { tabId: 'tab-shortcircuit', label: '단락전류' },
+      { action: 'quote', label: 'BOM 문의 정리' }
+    ];
+  }
+  return [
+    { tabId: 'tab-voltagedrop', label: '전압강하' },
+    { tabId: 'tab-smpsbudget', label: 'SMPS' },
+    { tabId: 'tab-motorcalc', label: '모터' },
+    { action: 'quote', label: 'BOM' }
+  ];
+}
+
+function openWorkflowStep(step) {
+  if (step.action === 'quote') {
+    openB2BQuoteModal();
+    return;
+  }
+  switchTab(step.tabId);
+}
+
+function renderReturnWorkspaceDashboard() {
+  const projectCountEl = document.getElementById('returnProjectCount');
+  const reportCountEl = document.getElementById('returnReportCount');
+  const summaryEl = document.getElementById('returnDashboardSummary');
+  const nextEl = document.getElementById('returnNextSteps');
+  if (!projectCountEl || !reportCountEl || !summaryEl || !nextEl) return;
+
+  const projects = getSavedProjects();
+  const reportItems = getReportCartItems();
+  const latest = projects[0];
+
+  projectCountEl.textContent = projects.length;
+  reportCountEl.textContent = reportItems.length;
+  summaryEl.textContent = latest
+    ? `최근 저장: ${latest.name} · ${latest.toolName || '공학 도구'}`
+    : '전압강하, SMPS, 모터 계산 결과를 저장하면 다음 방문 때 이곳에서 바로 이어갈 수 있습니다.';
+
+  const steps = getWorkflowRecommendationFromProject(latest);
+  nextEl.innerHTML = steps.map(step => `
+    <button type="button" data-workflow-tab="${step.tabId || ''}" data-workflow-action="${step.action || ''}">
+      ${escapeHtml(step.label)}
+    </button>
+  `).join('');
+  nextEl.querySelectorAll('button').forEach((button, index) => {
+    button.addEventListener('click', () => openWorkflowStep(steps[index]));
+  });
 }
 
 function addToReportCart(tabId) {
@@ -8428,12 +8498,14 @@ window.removeFromReportCart = removeFromReportCart;
 window.clearReportCart = clearReportCart;
 window.printUnifiedMasterReport = printUnifiedMasterReport;
 window.quickSaveWorkflowProject = quickSaveWorkflowProject;
+window.renderReturnWorkspaceDashboard = renderReturnWorkspaceDashboard;
 
 // Initialize on DOM Loaded
 document.addEventListener('DOMContentLoaded', () => {
   renderFavoritesBar();
   updateStarIconsAcrossDOM();
   updateReportCartBadges();
+  renderReturnWorkspaceDashboard();
   injectReportCartButtonsToAllTabs();
   injectWorkflowActionPanels();
 });
@@ -8442,6 +8514,7 @@ document.addEventListener('DOMContentLoaded', () => {
 renderFavoritesBar();
 updateStarIconsAcrossDOM();
 updateReportCartBadges();
+renderReturnWorkspaceDashboard();
 injectReportCartButtonsToAllTabs();
 injectWorkflowActionPanels();
 
