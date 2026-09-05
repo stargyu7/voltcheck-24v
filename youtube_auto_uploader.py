@@ -395,19 +395,25 @@ def authenticate_youtube(client_secret_path: Path):
 
         if not creds:
             if not client_secret_path.exists():
-                print("=" * 70)
-                print("❌ [오류] Google Cloud 인증 파일(client_secret.json)을 찾을 수 없습니다!")
-                print(f"예상 경로: {client_secret_path}")
-                print("=" * 70)
-                print("💡 [해결 방법 - 2분 소요]:")
-                print("1. Google Cloud Console(https://console.cloud.google.com/) 접속")
-                print("2. 'YouTube Data API v3' 사용 설정")
-                print("3. '사용자 인증 정보' > 'OAuth 클라이언트 ID 만들기' (데스크톱 앱 선택)")
-                print("4. 다운로드한 JSON 파일명을 'client_secret.json'으로 변경하여")
-                print(f"   현재 폴더({BASE_DIR})에 넣어주세요.")
-                print("자세한 내용은 'YOUTUBE_API_SETUP_GUIDE.md' 문서를 참조하세요!")
-                print("=" * 70)
-                sys.exit(1)
+                # 폴더 내 client_secret*.json 파일 자동 탐색
+                candidates = list(BASE_DIR.glob("client_secret*.json"))
+                if candidates:
+                    client_secret_path = candidates[0]
+                    print(f"💡 [자동 탐색 성공] 인증 키 파일을 발견했습니다: {client_secret_path.name}")
+                else:
+                    print("=" * 70)
+                    print("❌ [오류] Google Cloud 인증 파일(client_secret.json)을 찾을 수 없습니다!")
+                    print(f"예상 경로: {client_secret_path}")
+                    print("=" * 70)
+                    print("💡 [해결 방법 - 2분 소요]:")
+                    print("1. Google Cloud Console(https://console.cloud.google.com/) 접속")
+                    print("2. 'YouTube Data API v3' 사용 설정")
+                    print("3. '사용자 인증 정보' > 'OAuth 클라이언트 ID 만들기' (데스크톱 앱 선택)")
+                    print("4. 다운로드한 JSON 파일명을 'client_secret.json'으로 변경하여")
+                    print(f"   현재 폴더({BASE_DIR})에 넣어주세요.")
+                    print("자세한 내용은 'YOUTUBE_API_SETUP_GUIDE.md' 문서를 참조하세요!")
+                    print("=" * 70)
+                    sys.exit(1)
 
             print("[1/3] 브라우저를 열어 YouTube 채널 관리자 Google 로그인을 진행합니다...")
             flow = InstalledAppFlow.from_client_secrets_file(str(client_secret_path), SCOPES)
