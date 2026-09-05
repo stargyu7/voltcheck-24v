@@ -15,6 +15,22 @@ const englishLandingPages = [
   'en/dc-wire-size-calculator/index.html',
   'en/smps-capacity-calculator/index.html',
   'en/motor-breaker-sizing-calculator/index.html',
+  'en/bolt-tightening-torque-calculator/index.html',
+  'en/bearing-fatigue-life-calculator/index.html',
+  'en/hydraulic-accumulator-calculator/index.html',
+  'en/4-20ma-loop-calculator/index.html',
+  'en/plc-analog-scaling-calculator/index.html',
+  'en/rs485-termination-calculator/index.html',
+  'en/control-panel-cooling-calculator/index.html',
+  'en/pneumatic-air-consumption-calculator/index.html',
+  'en/pump-head-calculator/index.html',
+  'en/control-valve-cv-calculator/index.html',
+  'en/battery-thermal-calculator/index.html',
+  'en/hvac-duct-pressure-loss-calculator/index.html',
+  'en/servo-regen-resistor-calculator/index.html',
+  'en/safety-light-curtain-distance-calculator/index.html',
+  'en/short-circuit-current-calculator/index.html',
+  'en/cable-bending-radius-calculator/index.html',
 ];
 
 const publicText = [indexHtml, appJs, readme, manifest, sitemap, ...englishLandingPages.map(read)].join('\n');

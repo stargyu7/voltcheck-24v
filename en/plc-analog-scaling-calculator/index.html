@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PLC Analog Scaling Calculator for 4-20mA and ADC Inputs | VoltCheck24</title>
+  <meta name="description" content="Generate engineering-unit scaling formulas for 4-20mA, 0-10V, and common PLC ADC raw ranges used in industrial automation.">
+  <link rel="canonical" href="https://voltcheck24.com/en/plc-analog-scaling-calculator/">
+  <link rel="alternate" hreflang="en" href="https://voltcheck24.com/en/plc-analog-scaling-calculator/">
+  <link rel="alternate" hreflang="ko" href="https://voltcheck24.com/?calc=tab-plcscaling">
+  <link rel="alternate" hreflang="x-default" href="https://voltcheck24.com/en/plc-analog-scaling-calculator/">
+  <meta property="og:title" content="PLC Analog Scaling Calculator for 4-20mA and ADC Inputs | VoltCheck24">
+  <meta property="og:description" content="Generate engineering-unit scaling formulas for 4-20mA, 0-10V, and common PLC ADC raw ranges used in industrial automation.">
+  <meta property="og:url" content="https://voltcheck24.com/en/plc-analog-scaling-calculator/">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="/styles.css?v=2.2.0">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PLC Analog Scaling Calculator for 4-20mA and ADC Inputs","applicationCategory":"EngineeringApplication","operatingSystem":"Web","url":"https://voltcheck24.com/en/plc-analog-scaling-calculator/","description":"Generate engineering-unit scaling formulas for 4-20mA, 0-10V, and common PLC ADC raw ranges used in industrial automation.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"mainEntity":[{"@type":"Question","name":"Which raw range should I use?","acceptedAnswer":{"@type":"Answer","text":"Use the exact range documented for the installed analog input module, not a generic 12-bit or 16-bit assumption."}},{"@type":"Question","name":"Can I generate PLC code from the result?","acceptedAnswer":{"@type":"Answer","text":"The interactive calculator provides a scaling equation and vendor-oriented code guidance for commissioning."}}]}</script>
+</head>
+<body class="seo-page">
+  <main class="seo-shell">
+    <p class="seo-eyebrow">VoltCheck24 Engineering Calculator</p>
+    <h1>PLC Analog Scaling Calculator for 4-20mA and ADC Inputs</h1>
+    <p class="seo-lead">Generate engineering-unit scaling formulas for 4-20mA, 0-10V, and common PLC ADC raw ranges used in industrial automation.</p>
+    <div class="seo-actions">
+      <a class="primary-action" href="/?calc=tab-plcscaling&amp;lang=en">Open Interactive Calculator</a>
+      <a class="secondary-action" href="/?calc=tab-analogloop&amp;lang=en">Open 4-20mA Loop Calculator</a>
+    </div>
+    <section class="seo-grid">
+      <article><h2>Formula and Inputs</h2><p>EU = EUmin + (Raw - Rawmin) x (EUmax - EUmin) / (Rawmax - Rawmin).</p></article>
+      <article><h2>Industrial Use Cases</h2><p>Use this page when commissioning Siemens, Rockwell, Mitsubishi, Omron, or custom PLC analog input ranges.</p></article>
+      <article><h2>Engineering Note</h2><p>Confirm the card’s actual raw count range, under-range and over-range behavior, signal type, and engineering-unit limits before downloading code.</p></article>
+    </section>
+    <section class="seo-faq"><h2>FAQ</h2><h3>Which raw range should I use?</h3><p>Use the exact range documented for the installed analog input module, not a generic 12-bit or 16-bit assumption.</p><h3>Can I generate PLC code from the result?</h3><p>The interactive calculator provides a scaling equation and vendor-oriented code guidance for commissioning.</p></section>
+    <p class="seo-disclaimer">Preliminary engineering reference only. Confirm final selections against current standards, project specifications, and manufacturer data.</p>
+  </main>
+</body>
+</html>
