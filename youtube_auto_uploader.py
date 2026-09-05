@@ -566,14 +566,64 @@ def main():
         return
 
     if not args.all and not args.video:
-        print("💡 사용 방법 안내:")
-        print("  - 전체 업로드: python youtube_auto_uploader.py --all")
-        print("  - 일부 비공개 테스트: python youtube_auto_uploader.py --all --privacy unlisted")
-        print("  - 단일 영상 업로드: python youtube_auto_uploader.py --video story1")
-        print("  - 목록 보기: python youtube_auto_uploader.py --list")
-        print("  - 설정 테스트: python youtube_auto_uploader.py --all --dry-run")
-        list_videos()
-        return
+        while True:
+            print("\n" + "=" * 75)
+            print("   🚀 볼트체크 (VoltCheck) 유튜브 숏츠 100% 전자동 업로더")
+            print("   YouTube Shorts 100% Automated Production Uploader")
+            print("=" * 75)
+            print("  [1] 🌟 9편 전체 일괄 업로드 (공개: Public) - 강력 추천!")
+            print("  [2] 🧪 9편 전체 일괄 업로드 (일부공개: Unlisted 테스트용)")
+            print("  [3] 🎬 단일 영상 선택 업로드 (1편만 골라서 올리기)")
+            print("  [4] 📋 등록된 9편 동영상 목록 및 파일 확인")
+            print("  [5] 🔍 업로드 사전 점검 모의 테스트 (Dry-Run)")
+            print("  [0] 프로그램 종료")
+            print("=" * 75)
+            try:
+                choice = input("원하시는 번호를 입력하세요 (기본값 1): ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\n종료합니다.")
+                return
+
+            if not choice:
+                choice = "1"
+
+            if choice == "1":
+                args.all = True
+                args.privacy = "public"
+                break
+            elif choice == "2":
+                args.all = True
+                args.privacy = "unlisted"
+                break
+            elif choice == "3":
+                list_videos()
+                try:
+                    vkey = input("업로드할 동영상 키를 입력하세요 (예: story1): ").strip()
+                except (EOFError, KeyboardInterrupt):
+                    return
+                if vkey in SHORTS_REGISTRY:
+                    args.video = vkey
+                    args.privacy = "public"
+                    break
+                else:
+                    print(f"❌ 올바르지 않은 키입니다: {vkey}")
+                    continue
+            elif choice == "4":
+                list_videos()
+                try:
+                    input("계속하려면 Enter를 누르세요...")
+                except (EOFError, KeyboardInterrupt):
+                    return
+                continue
+            elif choice == "5":
+                args.all = True
+                args.dry_run = True
+                break
+            elif choice == "0":
+                print("프로그램을 종료합니다.")
+                return
+            else:
+                print("잘못된 입력입니다. 다시 선택해주세요.")
 
     # 업로드 대상 선정
     targets = []
