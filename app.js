@@ -8545,8 +8545,10 @@ function updateReportCartBadges() {
 function openReportCartModal() {
   const modal = document.getElementById('reportCartModal');
   if (!modal) return;
+  restoreReportMetaForm();
   renderReportCart();
   modal.style.display = 'flex';
+  if (window.lucide) window.lucide.createIcons();
 }
 
 function closeReportCartModal() {
@@ -8599,18 +8601,60 @@ function clearReportCart() {
   renderReportCart();
 }
 
+function getReportMeta() {
+  return {
+    project: document.getElementById('cartReportProject')?.value.trim() || document.getElementById('projectNameInput')?.value.trim() || 'VoltCheck24 Engineering Review',
+    client: document.getElementById('cartReportClient')?.value.trim() || 'Internal Review',
+    author: document.getElementById('cartReportAuthor')?.value.trim() || 'VoltCheck24 User',
+    standard: document.getElementById('cartReportStandard')?.value || 'IEC 60204-1',
+    purpose: document.getElementById('cartReportPurpose')?.value.trim() || '입력 조건에 대한 사전 설계 검토'
+  };
+}
+
+function persistReportMetaForm() {
+  const meta = getReportMeta();
+  try { localStorage.setItem('voltcheck_report_meta', JSON.stringify(meta)); } catch (e) {}
+  return meta;
+}
+
+function restoreReportMetaForm() {
+  let meta = {};
+  try { meta = JSON.parse(localStorage.getItem('voltcheck_report_meta') || '{}'); } catch (e) {}
+  const values = {
+    cartReportProject: meta.project || document.getElementById('projectNameInput')?.value || '',
+    cartReportClient: meta.client || '',
+    cartReportAuthor: meta.author || '',
+    cartReportStandard: meta.standard || 'IEC 60204-1',
+    cartReportPurpose: meta.purpose || ''
+  };
+  Object.entries(values).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  });
+}
+
+function reportChecklistComplete() {
+  return ['reportCheckInputs', 'reportCheckConditions', 'reportCheckDatasheet']
+    .every(id => document.getElementById(id)?.checked);
+}
+
 function printUnifiedMasterReport() {
   const items = getReportCartItems();
   if (items.length === 0) {
     alert("바구니에 담긴 검토 항목이 없습니다. 먼저 계산 결과를 담아주세요.");
     return;
   }
+  if (!reportChecklistComplete()) {
+    alert('출력 전에 입력값·현장 조건·제조사 데이터시트 확인 항목을 모두 체크해 주세요.');
+    return;
+  }
+  const reportMeta = persistReportMetaForm();
   closeReportCartModal();
   trackVoltCheckEvent(ANALYTICS_EVENTS.reportPrint, {
     action: 'print_unified_report',
     itemCount: items.length
   });
-  const projectName = document.getElementById('projectNameInput')?.value || 'VoltCheck24 Engineering Review';
+  const projectName = reportMeta.project || document.getElementById('projectNameInput')?.value || 'VoltCheck24 Engineering Review';
   const issuedAt = new Date().toLocaleString('ko-KR');
   const rows = items.map((item, idx) => `
     <tr>
@@ -8662,14 +8706,14 @@ function printUnifiedMasterReport() {
 <body>
   <header class="report-head">
     <h1>VoltCheck24 통합 기술검토서</h1>
-    <div class="meta">프로젝트: ${escapeHtml(projectName)}<br>발행일: ${escapeHtml(issuedAt)}<br>검토 항목: ${items.length}개</div>
+    <div class="meta">프로젝트: ${escapeHtml(projectName)}<br>고객사: ${escapeHtml(reportMeta.client)}<br>작성자: ${escapeHtml(reportMeta.author)}<br>검토 기준: ${escapeHtml(reportMeta.standard)}<br>검토 목적: ${escapeHtml(reportMeta.purpose)}<br>발행일: ${escapeHtml(issuedAt)}<br>검토 항목: ${items.length}개</div>
   </header>
   <table>
     <thead><tr><th>No.</th><th>계산 도구</th><th>핵심 결과</th><th>판정</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>
   ${fieldBlocks}
-  <div class="disclaimer">계산 결과는 현장 판단을 돕는 참고 자료입니다. 최종 설계, 안전 인증, 구매 사양 확정에는 최신 법규, 프로젝트 기준서, 제조사 데이터시트와 유자격 기술자의 검토를 우선 적용하세요.</div>
+   <div class="disclaimer"><strong>적용 조건 및 품질 확인</strong><br>계산 결과는 현장 판단을 돕는 참고 자료입니다. 입력값과 단위를 확인했으며, 최종 설계·안전 인증·구매 사양 확정에는 최신 법규, 프로젝트 기준서, 제조사 데이터시트와 유자격 기술자의 검토를 우선 적용하세요.</div>
   <script>window.onload = () => { window.print(); };</script>
 </body>
 </html>`);
