@@ -15,7 +15,16 @@
       "title": "Overtightening Bolts with an Impact Wrench Snapped a $250k Mold! 💥 #Shorts",
       "description": "Real shop floor disaster: An operator tightened M16 10.9 high-strength bolts by feel using an impact wrench.\nThe bolt yielded past its ultimate tensile strength, snapped, and ruined a $250,000 injection mold!\n\nNever guess torque by hand. Calculate precision bolt tightening torque in 3 seconds:\n👉 https://voltcheck24.com/?calc=bolt_torque\n\n#machining #moldmaking #bolttorque #impactwrench #machinist #mechanicalengineering #voltcheck #Shorts",
       "comment": "💥 Machine shops & toolmakers: How do you enforce torque specs on the shop floor?\nTorque wrench sign-offs, smart tools, or digital checklists? Drop your shop rules below! 👇\n(Free 3-sec bolt torque calculator: https://voltcheck24.com/?calc=bolt_torque )",
-      "tags": ["machining", "mold making", "bolt torque", "impact wrench", "machinist", "mechanical engineering", "voltcheck", "Shorts"],
+      "tags": [
+        "machining",
+        "mold making",
+        "bolt torque",
+        "impact wrench",
+        "machinist",
+        "mechanical engineering",
+        "voltcheck",
+        "Shorts"
+      ],
       "status": "scheduled",
       "publish_at": "2026-09-06 22:00:00 KST",
       "video_id": "kNvp7IkAWjY"
@@ -27,7 +36,16 @@
       "title": "Bolt Tightening Torque Formula T = k·d·F Mastered in 40 Seconds ⚙️ #Shorts",
       "description": "Master the universal bolt tightening torque equation: T = k × d × F\n- T: Tightening Torque (N·m)\n- k: Torque Coefficient (Dry: 0.20 vs Lubricated: 0.15)\n- d: Nominal Bolt Diameter (m)\n- F: Clamping Preload Force (N)\n\nUsing the wrong torque coefficient (k) creates a 30%+ error in clamp force, leading to bolt fatigue or sudden fracture!\n\n78+ Free Engineering Calculators for Mechanical & Electrical Design:\n👉 https://voltcheck24.com/?calc=bolt_torque\n\n#bolttorque #mechanicalengineering #machinist #torqueformula #clampingforce #machining #voltcheck #Shorts",
       "comment": "⚙️ Engineers: What torque coefficient (k) do you specify for dry vs lubricated fasteners?\n0.20 dry, 0.15 moly, or custom test bench data? Let's discuss below! 👇\n(Free bolt torque calculator: https://voltcheck24.com/?calc=bolt_torque )",
-      "tags": ["bolt torque", "mechanical engineering", "machinist", "torque formula", "clamping force", "machining", "voltcheck", "Shorts"],
+      "tags": [
+        "bolt torque",
+        "mechanical engineering",
+        "machinist",
+        "torque formula",
+        "clamping force",
+        "machining",
+        "voltcheck",
+        "Shorts"
+      ],
       "status": "scheduled",
       "publish_at": "2026-09-06 22:05:00 KST",
       "video_id": "0sbRa8fcKyU"
@@ -39,9 +57,20 @@
       "title": "Undersized 24V Cable Caused a $2M Factory Shutdown at 2 AM! 💥 #Shorts",
       "description": "At 2:14 AM, a $2M robotic production line halted because someone saved 30 cents using 1.5 sq wire over 80m!\nVoltage dropped to 18.2V, killing optical sensors. Upgraded to 4.0 sq in 3 seconds using VoltCheck.\n\nFree 3-second 24V voltage drop calculator:\n👉 https://voltcheck24.com/?calc=volt_drop_dc\n\n#electrician #smartfactory #automation #voltagedrop #robotics #plc #cablesizing #voltcheck #Shorts",
       "comment": "⚡ What is the longest 24V sensor run in your facility? Have you verified line voltage drop?\nCheck conductor gauge before you pull cable: https://voltcheck24.com/?calc=volt_drop_dc",
-      "tags": ["electrician", "smart factory", "automation", "voltage drop", "robotics", "plc", "cable sizing", "voltcheck", "Shorts"],
-      "status": "pending",
-      "publish_at": "2026-09-07 22:00:00 KST"
+      "tags": [
+        "electrician",
+        "smart factory",
+        "automation",
+        "voltage drop",
+        "robotics",
+        "plc",
+        "cable sizing",
+        "voltcheck",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "publish_at": "2026-09-07 22:00:00 KST",
+      "video_id": "H74X1Agj4sY"
     },
     {
       "id": "global_day2_viral",
@@ -50,9 +79,19 @@
       "title": "Rookie vs 30-Year Veteran vs 3-Second Engineering Cheat Code ⚡ #Shorts",
       "description": "Engineering Speed Challenge:\n- Rookie: 500-page textbook (30 min)\n- 30-Year Veteran: Scientific calculator (5 min)\n- VoltCheck User: 2 taps on smartphone (2.8 seconds DONE!)\n\nFree 78+ engineering calculators for electrical, mechanical, and hydraulics:\n👉 https://voltcheck24.com/\n\n#engineering #electrician #stem #engineeringstudent #smartfactory #mechanicalengineering #voltcheck #Shorts",
       "comment": "⚡ How long does cable sizing or motor breaker calculation take you by hand?\nTry the 3-second free engineering cheat code: https://voltcheck24.com/",
-      "tags": ["engineering", "electrician", "stem", "engineering student", "smart factory", "mechanical engineering", "voltcheck", "Shorts"],
-      "status": "pending",
-      "publish_at": "2026-09-07 22:05:00 KST"
+      "tags": [
+        "engineering",
+        "electrician",
+        "stem",
+        "engineering student",
+        "smart factory",
+        "mechanical engineering",
+        "voltcheck",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "publish_at": "2026-09-07 22:05:00 KST",
+      "video_id": "srJeHh5Adjc"
     },
     {
       "id": "global_day3_mkt",
@@ -61,9 +100,19 @@
       "title": "Why Motors Trip Circuit Breakers on Startup (600% Inrush Spike) 💥 #Shorts",
       "description": "Starting a 15kW motor draws 600% inrush current (182A), tripping standard Type-C breakers!\nWhy Type-D breakers and proper magnetic contactors (MC) are mandatory for industrial motors.\n\nFree 3-second motor sizing calculator:\n👉 https://voltcheck24.com/?calc=motor_current\n\n#electrician #electricmotor #circuitbreaker #inrushcurrent #motorcontrol #electricalengineering #voltcheck #Shorts",
       "comment": "⚙️ What breaker trip curve do you specify for high-inertia motor loads? Type C or Type D?\nFree motor breaker & contactor sizing tool: https://voltcheck24.com/?calc=motor_current",
-      "tags": ["electrician", "electric motor", "circuit breaker", "inrush current", "motor control", "electrical engineering", "voltcheck", "Shorts"],
-      "status": "pending",
-      "publish_at": "2026-09-08 22:00:00 KST"
+      "tags": [
+        "electrician",
+        "electric motor",
+        "circuit breaker",
+        "inrush current",
+        "motor control",
+        "electrical engineering",
+        "voltcheck",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "publish_at": "2026-09-08 22:00:00 KST",
+      "video_id": "ZpdoRVJqvq0"
     },
     {
       "id": "global_day3_rpg",
@@ -72,9 +121,19 @@
       "title": "8-Bit Retro RPG: Defeating the 24V Voltage Drop Boss Monster! 🎮 #Shorts",
       "description": "Boss Encounter: LV.80 Voltage Drop Monster drains bus line down to 18.2V!\nRookie attacks with 1.5 sq wire: MISS!\nEngineer summons VoltCheck: 4.0 sq Meteor Slash deals 999,999 CRITICAL DAMAGE!\n\nLevel up your engineering with 78+ free calculators:\n👉 https://voltcheck24.com/\n\n#retrogame #pixelart #rpg #engineering #voltagedrop #electrician #voltcheck #Shorts",
       "comment": "🎮 Have you ever fought the 24V Voltage Drop monster at 2 AM on the plant floor?\nEquip the VoltCheck cheat code: https://voltcheck24.com/",
-      "tags": ["retro game", "pixel art", "rpg", "engineering", "voltage drop", "electrician", "voltcheck", "Shorts"],
-      "status": "pending",
-      "publish_at": "2026-09-08 22:05:00 KST"
+      "tags": [
+        "retro game",
+        "pixel art",
+        "rpg",
+        "engineering",
+        "voltage drop",
+        "electrician",
+        "voltcheck",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "publish_at": "2026-09-08 22:05:00 KST",
+      "video_id": "TnxDC69OcTQ"
     },
     {
       "id": "global_day4_bearing",
@@ -83,9 +142,19 @@
       "title": "Horrible Screeching Noise Before an Industrial Drive Shaft Snapped! ⚙️ #Shorts",
       "description": "Pump motor vibration skyrocketed to 12.8 mm/s due to bearing fatigue past ISO 281 L10h limits!\nPrevent catastrophic shaft fracture with precision fatigue life calculation.\n\nFree ISO 281 bearing life calculator:\n👉 https://voltcheck24.com/\n\n#bearing #machinist #iso281 #vibrationanalysis #reliability #mechanicalengineering #voltcheck #Shorts",
       "comment": "⚙️ What vibration threshold triggers bearing replacement in your preventive maintenance program?\nFree ISO 281 L10h bearing calculator: https://voltcheck24.com/",
-      "tags": ["bearing", "machinist", "iso281", "vibration analysis", "reliability", "mechanical engineering", "voltcheck", "Shorts"],
-      "status": "pending",
-      "publish_at": "2026-09-09 22:00:00 KST"
+      "tags": [
+        "bearing",
+        "machinist",
+        "iso281",
+        "vibration analysis",
+        "reliability",
+        "mechanical engineering",
+        "voltcheck",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "publish_at": "2026-09-09 22:00:00 KST",
+      "video_id": "4qLP1VqKx1M"
     },
     {
       "id": "global_day4_hydraulic",
@@ -94,9 +163,18 @@
       "title": "300 Bar Water Hammer Shock Blew a Hydraulic High-Pressure Line! 🚰 #Shorts",
       "description": "Rapid valve closure created supersonic acoustic shockwaves, spiking 210 bar line pressure past 300 bar!\nHow proper bladder accumulator gas pre-charge sizing dampens surge shocks.\n\nFree hydraulic accumulator sizing calculator:\n👉 https://voltcheck24.com/\n\n#hydraulics #waterhammer #accumulator #mechanicalengineering #fluidpower #voltcheck #Shorts",
       "comment": "🚰 Have you experienced water hammer rupturing hydraulic pipes or blowing seals?\nCalculate gas pre-charge volume in seconds: https://voltcheck24.com/",
-      "tags": ["hydraulics", "water hammer", "accumulator", "mechanical engineering", "fluid power", "voltcheck", "Shorts"],
-      "status": "pending",
-      "publish_at": "2026-09-09 22:05:00 KST"
+      "tags": [
+        "hydraulics",
+        "water hammer",
+        "accumulator",
+        "mechanical engineering",
+        "fluid power",
+        "voltcheck",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "publish_at": "2026-09-09 22:05:00 KST",
+      "video_id": "rVecHpQ_xZw"
     },
     {
       "id": "global_day5_bess",
@@ -105,9 +183,19 @@
       "title": "Almost Caught in an ESS Battery Room Gas Explosion! (NFPA 855) 🤖 #Shorts",
       "description": "Lithium-ion thermal runaway releases explosive hydrogen and toxic gases.\nWithout NFPA 855 ventilation rate sizing, gas concentration exceeds the 25% lower explosive limit (LFL)!\n\nCalculate battery room explosion safety ventilation:\n👉 https://voltcheck24.com/\n\n#bess #battery #energy #electricalsafety #nfpa855 #lithiumion #voltcheck #Shorts",
       "comment": "🔋 Energy storage engineers: Are your battery rooms calculated for NFPA 855 exhaust airflow?\nFree BESS ventilation calculation tool: https://voltcheck24.com/",
-      "tags": ["bess", "battery", "energy", "electrical safety", "nfpa855", "lithium ion", "voltcheck", "Shorts"],
-      "status": "pending",
-      "publish_at": "2026-09-10 22:00:00 KST"
+      "tags": [
+        "bess",
+        "battery",
+        "energy",
+        "electrical safety",
+        "nfpa855",
+        "lithium ion",
+        "voltcheck",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "publish_at": "2026-09-10 22:00:00 KST",
+      "video_id": "JqU6nzxsH6o"
     }
   ]
 }
