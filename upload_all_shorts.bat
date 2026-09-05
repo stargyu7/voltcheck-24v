@@ -2,6 +2,9 @@
 chcp 65001 > nul
 setlocal enabledelayedexpansion
 
+:: 관리자 권한 실행 등으로 작업 경로가 System32로 변경되는 현상 방지 (배치 파일 폴더로 이동)
+cd /d "%~dp0"
+
 title 볼트체크(VoltCheck) 유튜브 숏츠 자동 업로더
 
 cls
@@ -95,7 +98,7 @@ echo ===========================================================================
 echo 🚀 9편 전체 동영상을 [공개 (Public)]로 순차 자동 업로드합니다.
 echo ==============================================================================
 echo.
-python youtube_auto_uploader.py --all --privacy public
+python "%~dp0youtube_auto_uploader.py" --all --privacy public
 echo.
 echo 모든 작업이 끝났습니다.
 pause
@@ -107,7 +110,7 @@ echo ===========================================================================
 echo 🧪 9편 전체 동영상을 [일부공개 (Unlisted)]로 순차 자동 업로드합니다.
 echo ==============================================================================
 echo.
-python youtube_auto_uploader.py --all --privacy unlisted
+python "%~dp0youtube_auto_uploader.py" --all --privacy unlisted
 echo.
 echo 모든 작업이 끝났습니다.
 pause
@@ -130,14 +133,14 @@ echo   creative2 : [창의 걸작 #2] 공장 멈춘 날 부품 단톡방 유출 
 echo ==============================================================================
 set /p VIDEO_KEY="동영상 키 입력 (예: story1): "
 if "%VIDEO_KEY%"=="" goto MENU
-python youtube_auto_uploader.py --video %VIDEO_KEY% --privacy public
+python "%~dp0youtube_auto_uploader.py" --video %VIDEO_KEY% --privacy public
 echo.
 pause
 goto MENU
 
 :SHOW_LIST
 cls
-python youtube_auto_uploader.py --list
+python "%~dp0youtube_auto_uploader.py" --list
 echo.
 pause
 goto MENU
@@ -148,7 +151,7 @@ echo ===========================================================================
 echo 🔍 [모의 테스트] 실제 업로드 없이 파일 및 설정 유효성 검증
 echo ==============================================================================
 echo.
-python youtube_auto_uploader.py --all --dry-run
+python "%~dp0youtube_auto_uploader.py" --all --dry-run
 echo.
 pause
 goto MENU
