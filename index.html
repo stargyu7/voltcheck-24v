@@ -17,6 +17,9 @@
   <link rel="alternate" hreflang="ko" href="https://voltcheck24.com/?lang=ko">
   <link rel="alternate" hreflang="en" href="https://voltcheck24.com/?lang=en">
   <link rel="alternate" hreflang="ja" href="https://voltcheck24.com/?lang=ja">
+  <link rel="alternate" hreflang="vi" href="https://voltcheck24.com/?lang=vi">
+  <link rel="alternate" hreflang="es" href="https://voltcheck24.com/?lang=es">
+  <link rel="alternate" hreflang="de" href="https://voltcheck24.com/?lang=de">
   <link rel="alternate" hreflang="zh" href="https://voltcheck24.com/?lang=zh">
   <link rel="alternate" hreflang="x-default" href="https://voltcheck24.com/">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -211,10 +214,21 @@
             <i data-lucide="share-2"></i>
             <span>조건 공유</span>
           </button>
-          <button id="langToggleBtn" class="btn-util" title="Language Switch">
-            <i data-lucide="globe"></i>
-            <span id="currentLangText">KO</span>
-          </button>
+          <div class="lang-dropdown-container">
+            <button id="langToggleBtn" class="btn-util" onclick="toggleLangDropdown(event)" title="Global Language Switch">
+              <i data-lucide="globe"></i>
+              <span id="currentLangText">🇰🇷 KO</span>
+            </button>
+            <div id="langMenuDropdown" class="lang-menu-dropdown">
+              <button type="button" class="lang-option-item" onclick="selectLanguage('ko')">🇰🇷 한국어 (KO)</button>
+              <button type="button" class="lang-option-item" onclick="selectLanguage('en')">🇺🇸 English (EN)</button>
+              <button type="button" class="lang-option-item" onclick="selectLanguage('ja')">🇯🇵 日本語 (JA)</button>
+              <button type="button" class="lang-option-item" onclick="selectLanguage('vi')">🇻🇳 Tiếng Việt (VI)</button>
+              <button type="button" class="lang-option-item" onclick="selectLanguage('es')">🇪🇸 Español (ES)</button>
+              <button type="button" class="lang-option-item" onclick="selectLanguage('de')">🇩🇪 Deutsch (DE)</button>
+              <button type="button" class="lang-option-item" onclick="selectLanguage('zh')">🇨🇳 中文 (ZH)</button>
+            </div>
+          </div>
           <button id="printReportBtn" class="btn-print" title="A4 기술 검토서 출력">
             <i data-lucide="printer"></i>
             <span>검토서 인쇄</span>

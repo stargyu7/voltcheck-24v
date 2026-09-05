@@ -3016,18 +3016,30 @@ const TAB_I18N_DATA = {
 
 function applyLanguage(lang) {
   currentLanguage = lang;
-  translateEntireDOM(lang);
-  const isEn = lang === 'en';
-  const data = TAB_I18N_DATA[lang] || TAB_I18N_DATA.ko;
+  if (document.documentElement) {
+    document.documentElement.lang = lang;
+  }
   const langText = document.getElementById('currentLangText');
-  if (langText) langText.textContent = lang.toUpperCase();
+  if (langText) langText.textContent = (typeof LANG_FLAGS !== 'undefined' && LANG_FLAGS[lang]) ? LANG_FLAGS[lang] : lang.toUpperCase();
+
+  translateEntireDOM(lang);
+  const isEn = lang !== 'ko';
+  const data = TAB_I18N_DATA[lang] || TAB_I18N_DATA.ko;
 
   // 1. Top Nav Buttons & Brand
   const brandName = document.querySelector('.brand-name');
   if (brandName) brandName.textContent = 'Total Engineering';
 
   const brandTag = document.querySelector('.brand-tagline');
-  if (brandTag) brandTag.textContent = isEn ? 'Industrial Automation & Electrical Total Engineering Suite' : '산업용 제어선로 전압강하 & 전장설계 토털 엔지니어링 툴킷';
+  if (brandTag) {
+    if (lang === 'en') brandTag.textContent = 'Industrial Automation & Electrical Total Engineering Suite';
+    else if (lang === 'ja') brandTag.textContent = '産業用制御・FA・電気・機械 総合エンジニアリングポータル';
+    else if (lang === 'vi') brandTag.textContent = 'Cổng thông tin tính toán kỹ thuật điện & tự động hóa công nghiệp';
+    else if (lang === 'es') brandTag.textContent = 'Portal de Ingeniería Eléctrica y Automatización Industrial Total';
+    else if (lang === 'de') brandTag.textContent = 'Industrielle Automatisierungs- und Elektrotechnik-Suite';
+    else if (lang === 'zh') brandTag.textContent = '工业自动化与电气全领域工程计算门户';
+    else brandTag.textContent = '산업용 제어선로 전압강하 & 전장설계 토털 엔지니어링 툴킷';
+  }
 
   const digitalBtn = document.querySelector('#openDigitalProductBtn span:first-of-type');
   if (digitalBtn) digitalBtn.textContent = isEn ? 'Pro Excel·CAD Pack' : '실무 엑셀·CAD 팩';
@@ -3360,16 +3372,28 @@ function applyLanguage(lang) {
   if (window.lucide) window.lucide.createIcons();
 }
 
+const LANG_FLAGS = {
+  ko: '🇰🇷 KO',
+  en: '🇺🇸 EN',
+  ja: '🇯🇵 JA',
+  vi: '🇻🇳 VI',
+  es: '🇪🇸 ES',
+  de: '🇩🇪 DE',
+  zh: '🇨🇳 ZH'
+};
+
 function initLanguage() {
-  const savedLang = localStorage.getItem('voltcheck_lang') || 'ko';
-  currentLanguage = savedLang;
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramLang = urlParams.get('lang');
+  const savedLang = paramLang || localStorage.getItem('voltcheck_lang') || 'ko';
+  currentLanguage = LANG_FLAGS[savedLang] ? savedLang : 'ko';
   applyLanguage(currentLanguage);
 }
 
 function toggleLanguage() {
-  currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
-  localStorage.setItem('voltcheck_lang', currentLanguage);
-  applyLanguage(currentLanguage);
+  const order = ['ko', 'en', 'ja', 'vi', 'es', 'de', 'zh'];
+  const nextIdx = (order.indexOf(currentLanguage) + 1) % order.length;
+  selectLanguage(order[nextIdx]);
 }
 
 
@@ -6233,6 +6257,26 @@ function toggleLangDropdown(e) {
 function selectLanguage(lang) {
   const menu = document.getElementById('langMenuDropdown');
   if (menu) menu.classList.remove('show');
+  currentLanguage = lang;
+  try {
+    localStorage.setItem('voltcheck_lang', lang);
+  } catch (e) {}
+
+  if (document.documentElement) {
+    document.documentElement.lang = lang;
+  }
+
+  // Update URL search param without reload
+  try {
+    const url = new URL(window.location.href);
+    if (lang === 'ko') {
+      url.searchParams.delete('lang');
+    } else {
+      url.searchParams.set('lang', lang);
+    }
+    window.history.replaceState({}, '', url.toString());
+  } catch (e) {}
+
   applyLanguage(lang);
 }
 
@@ -6479,97 +6523,180 @@ const MASTER_TOOLS_CATALOG = [
   { id: 'tab-cabletable', cat: 'specs', name: '05. AWG-SQ 배선 조견표', desc: 'AWG 대 단면적(sq), 도체 저항, 허용전류 환산' },
   { id: 'tab-rs485', cat: 'specs', name: '06. RS-485 통신 거리·노드', desc: '보레이트별 최대 통신거리, 120Ω 종단저항' },
   { id: 'tab-pneumatics', cat: 'specs', name: '07. 공압 실린더 공기소모량', desc: '보어경/행정 에어 소비량(NL/min) 및 콤프레셔 HP' },
-  { id: 'tab-ductutility', cat: 'specs', name: '08. 배선 덕트·후렉시블 점유율', desc: '내선규정 20%/40% 점유율 및 최적 덕트 사이즈' },
-  { id: 'tab-plcscaling', cat: 'specs', name: '09. PLC 아날로그 스케일링', desc: '4-20mA / 0-10V ➔ 0-16000 Raw Data 변환식' },
-  { id: 'tab-motorcalc', cat: 'motion', name: '10. 3상 모터·MC 개폐기', desc: '정격 전류(A), 전자접촉기(MC), EOCR 열동계전기' },
-  { id: 'tab-bendingradius', cat: 'specs', name: '11. 케이블 곡률반경(R)', desc: '외경(OD) 기준 고정/가동 케이블베어 최소 반경' },
-  { id: 'tab-otethernet', cat: 'specs', name: '12. 산업용 이더넷 대역폭', desc: 'EtherNet/IP, PROFINET, EtherCAT 네트워크 트래픽' },
-  { id: 'tab-servoregen', cat: 'motion', name: '13. 서보 회생저항 용량', desc: '감속 회생에너지(Joule), 제동 저항값(Ω) 및 W' },
-  { id: 'tab-coppercost', cat: 'power', name: '14. 구리시세 & 케이블 원가', desc: 'LME 실시간 구리 중량당 케이블 단가 산출' },
-  { id: 'tab-sldgenerator', cat: 'power', name: '15. 단선결선도 CAD 생성', desc: '수배전반 계통도 DXF / SVG 자동 생성기' },
-  { id: 'tab-iolinksafety', cat: 'specs', name: '16. IO-Link & 안전회로 카테고리', desc: 'ISO 13849-1 PLe/Cat.4 및 SIL3 안전 설계 기준' },
-  { id: 'tab-grounding', cat: 'power', name: '17. 접지(PE)선 & EMC 차폐', desc: '단락 고장전류 보호도체 및 노이즈 실드' },
-  { id: 'tab-npnpnp', cat: 'specs', name: '18. NPN·PNP 센서 결선', desc: '싱크(Sink) / 소스(Source) 입출력 배선도' },
-  { id: 'tab-flybacksurge', cat: 'power', name: '19. 역기전력 서지 스너버', desc: '솔레노이드/릴레이 코일 다이오드·RC 스너버' },
-  { id: 'tab-inrushbreaker', cat: 'power', name: '20. 돌입전류 & 차단기 트립', desc: 'SMPS/변압기 피크 전류 및 MCB 곡선 B/C/D 검증' },
-  { id: 'tab-safetylight', cat: 'specs', name: '21. 안전 라이트커튼 안전거리', desc: 'ISO 13855 작업자 손 진입속도(2m/s) 최소 안전거리' },
-  { id: 'tab-transformer', cat: 'power', name: '22. 제어용 단상 변압기', desc: '1차/2차 전압비, %Z 임피던스, 정격 kVA 용량' },
-  { id: 'tab-shortcircuit', cat: 'power', name: '23. 3상 단락전류 & 차단용량', desc: '배전반 대칭 고장 단락전류(kA) 및 차단기 선정' },
-  { id: 'tab-motioninertia', cat: 'motion', name: '24. 기계부하 관성모멘트(J)', desc: '직동/회전 부하 관성비(Inertia Ratio) 및 가감속 토크' },
-  { id: 'tab-tempconversion', cat: 'specs', name: '25. PT100·열전대(TC) 조견표', desc: '측온저항체(RTD) Ω값 ➔ °C 및 K/J/T/E 열전대 mV' },
-  { id: 'tab-valvecv', cat: 'fluid', name: '26. 밸브 유량계수(Cv)', desc: '액체/가스 압력강하(ΔP)에 따른 제어밸브 Cv/Kv' },
-  { id: 'tab-agvbattery', cat: 'motion', name: '27. AGV 배터리·주행거리', desc: '주행 저항 소요 Ah 용량 및 무인 충전 사이클' },
-  { id: 'tab-busbar', cat: 'power', name: '28. 동부스바 허용전류 규격', desc: '배전반 구리 부스바 규격별 허용전류(A) 산정' },
-  { id: 'tab-cleanesd', cat: 'specs', name: '29. 클린룸 정전기(ESD) 방지', desc: '이오나이저 감쇠시간(Decay Time) 및 제전 매트' },
-  { id: 'tab-spd', cat: 'power', name: '30. 서지보호기(SPD) 용량', desc: '낙뢰 서지 방전전류(In, Imax) 및 전압보호레벨' },
-  { id: 'tab-hoistcrane', cat: 'motion', name: '31. 크레인·호이스트 모터', desc: '권상 하중(Ton), 속도에 따른 모터 kW 및 와이어로프' },
-  { id: 'tab-rolltension', cat: 'motion', name: '32. 롤투롤 웹 장력제어', desc: '언와인더/리와인더 테이퍼 장력 및 파우더 브레이크' },
-  { id: 'tab-vfdsurge', cat: 'motion', name: '33. 인버터(VFD) 반사파 서지', desc: '긴 선로 PWM dV/dt 반사파 피크전압 및 AC 리액터' },
-  { id: 'tab-explosionproof', cat: 'nuclear', name: '34. 방폭(Ex)·본질안전 규격', desc: 'Zone 0/1/2 방폭 구조(Ex d/ia) 및 온도 등급' },
-  { id: 'tab-cabletray', cat: 'specs', name: '35. 케이블트레이 하중·스팬', desc: '케이블 포설 중량(kg/m), 안전율 및 지지 서포트 스팬' },
-  { id: 'tab-luxlighting', cat: 'specs', name: '36. 공장 조도(Lux)·LED 수량', desc: 'KS A 3011 작업장 추천 조도별 LED 등기구 소요 수량' },
-  { id: 'tab-solarpv', cat: 'power', name: '37. 태양광·ESS DC1500V', desc: 'PV 어레이 스트링 전압, MPPT 인버터 및 DC 케이블' },
-  { id: 'tab-pumphead', cat: 'fluid', name: '38. 펌프 전양정 & 배관 손실', desc: '실양정, 배관 마찰손실 수두(m) 및 펌프 소요 kW' },
-  { id: 'tab-bolttorque', cat: 'mech', name: '39. 볼트 체결·조임 토크', desc: '강도구분 8.8/10.9/12.9 축력 및 체결 토크(N·m)' },
-  { id: 'tab-heatexchanger', cat: 'fluid', name: '40. 열교환기·LMTD 전열면적', desc: '대수평균온도차(LMTD), 총괄열전달 U, 전열면적(m²)' },
-  { id: 'tab-beamdeflection', cat: 'mech', name: '41. 보 처짐 & 굽힘 모멘트', desc: '단순보/외팔보 단면 2차 모멘트 및 처짐량(mm)' },
-  { id: 'tab-vacuumchamber', cat: 'nuclear', name: '42. 반도체 진공챔버 배기', desc: '대기압~고진공 도달시간, 진공펌프 용량(m³/h)' },
-  { id: 'tab-batterythermal', cat: 'motion', name: '43. 배터리 팩 발열 & 수냉', desc: '줄열(I²R), 엔트로피 가역열 및 쿨링플레이트 LPM' },
-  { id: 'tab-powerfactor', cat: 'power', name: '44. 진상 콘덴서 역률 개선', desc: '목표 역률(95%) 도달 소요 진상용량(kVAR) 및 절감액' },
-  { id: 'tab-hydraulics', cat: 'fluid', name: '45. 고압 유압실린더 & 펌프', desc: '최고 압력(bar), 실린더 추력(Ton), 소요 유량(LPM)' },
-  { id: 'tab-hvacblower', cat: 'specs', name: '46. 공조 덕트 & 송풍기 풍량', desc: '등마찰 손실법 덕트 치수(W×H) 및 송풍기 CMM' },
-  { id: 'tab-steampipe', cat: 'fluid', name: '47. 스팀배관 관경 & 보일러', desc: '증기 유량(kg/h), 포화증기 압력별 최적 배관경(mm)' },
-  { id: 'tab-mechlife', cat: 'mech', name: '49. 베어링·LM가이드 수명', desc: 'ISO 281 L10h 정격 수명 및 최적 구리스 급유 주기' },
-  { id: 'tab-cuttingforce', cat: 'mech', name: '50. CNC 절삭력 & 주축 동력', desc: 'Kienzle 절삭력 모델, 모터 kW 및 칩 배출률(MRR)' },
-  { id: 'tab-accumulator', cat: 'fluid', name: '51. 고압 유압 축압기(ACC)', desc: '폴리트로픽(n=1.4) 비상 토출 체적 및 질소 봉입압' },
-  { id: 'tab-reactorheat', cat: 'fluid', name: '52. 화학 반응기 열수지', desc: '반응열(ΔHrxn), 재킷 전열면적, 냉각수 LPM 및 열폭주' },
-  { id: 'tab-nucleardecay', cat: 'nuclear', name: '53. 원자로 감쇠열 & 차폐', desc: 'ANS 5.1 정지 잔열, 납/콘크리트 방사선 반감두께(HVL)' },
-  { id: 'tab-robottorque', cat: 'nuclear', name: '54. 6축 로봇 관절 토크', desc: 'Newton-Euler 관절 동역학 토크, 페이로드 & 감속기' },
-  { id: 'tab-rocketnozzle', cat: 'nuclear', name: '55. 로켓 노즐 비추력(Isp)', desc: '드라발 노즐 등엔트로피 팽창, 추력(kN), 비추력(초)' },
-  { id: 'tab-plasmasheath', cat: 'nuclear', name: '56. 반도체 플라즈마 쉬스', desc: '디바이 길이(Debye), 보옴 유속, 쉬스 두께(mm)' },
-  { id: 'tab-batteryslurry', cat: 'motion', name: '57. 배터리 슬러리 건조열', desc: 'NMP 증발 잠열, 건조 존 열풍 풍량(CMM) 및 LEL 25%' },
-  { id: 'tab-besssafety', cat: 'power', name: '58. BESS 열폭주 소방배기', desc: 'NFPA 855 / UL 9540A 방출 오프가스 체적 및 CFM' },
-  { id: 'tab-gearstress', cat: 'mech', name: '59. 기어 치면·굽힘강도', desc: 'AGMA / ISO 6336 루이스 굽힘응력 및 면압 안전율' },
-  { id: 'tab-shipstability', cat: 'fluid', name: '60. 선박 복원성(GM)', desc: '메타센터 높이(GM), 복원정(GZ), IMO 전복 방지' },
-  { id: 'tab-timingbelt', cat: 'mech', name: '61. 타이밍벨트·체인 장력', desc: '고유진동수 주파수(Hz) 측정값, 전달동력, 벨트 폭' },
-  { id: 'tab-ballscrewbuckling', cat: 'mech', name: '62. 볼스크류 좌굴·위험속도', desc: '오일러 압축 좌굴 하중(kN) 및 공진 위험속도(RPM)' },
-  { id: 'tab-orificeflow', cat: 'fluid', name: '63. 오리피스 유량·차압', desc: 'ISO 5167 차압유량계, 베타비(β), 영구 압력손실' },
-  { id: 'tab-insulation', cat: 'fluid', name: '64. 배관 보온단열·열손실', desc: 'ASTM C680 보온재 두께(mm), 방산열량(W/m) 및 절감액' },
-  { id: 'tab-aerationtank', cat: 'specs', name: '65. 수처리 폭기조 산소량', desc: 'BOD 제거 표준 산소요구량(SOR) 및 블로워 동력(kW)' },
-  { id: 'tab-steelbeam', cat: 'mech', name: '66. H형강 처짐·모멘트', desc: '복합하중 H빔/각관 최대 처짐(δ) 및 허용 처짐비(L/300)' },
-  { id: 'tab-mixerpower', cat: 'fluid', name: '67. 교반기 임펠러 동력', desc: '동력수(Np), 교반 레이놀즈수, 러쉬톤/패들 모터 kW' },
-  { id: 'tab-pipingloss', cat: 'fluid', name: '68. 배관 마찰손실·수두', desc: '다알시-바이스바흐 압력강하(bar), 피팅 상당길이' },
-  { id: 'tab-refrigerationcop', cat: 'fluid', name: '69. 냉매 사이클 COP', desc: 'R134a/R410A 압축 동력, 냉동톤(RT), 성적계수(COP)' },
-  { id: 'tab-pipeexpansion', cat: 'fluid', name: '70. 배관 열팽창·U루프', desc: '온도차 신장량(mm), U-루프 신축이음 최소 치수' },
-  { id: 'tab-pipeerosion', cat: 'specs', name: '71. 배관 침식·부식 수명', desc: 'API RP 14E 침식 한계유속, NACE 부식속도 잔여수명' },
-  { id: 'tab-cleanroomdp', cat: 'specs', name: '72. 클린룸 차압·환기횟수', desc: '실간 차압(Pa), 도어 틈새 누설풍량 및 환기횟수(ACH)' },
-  { id: 'tab-fanaffinity', cat: 'motion', name: '73. 송풍기 상사법칙·인버터', desc: '회전수/주파수(Hz) 변경에 따른 풍량/풍압/동력 3승' },
-  { id: 'tab-pressureshell', cat: 'fluid', name: '74. 압력용기 ASME 두께', desc: 'ASME Sec.VIII 셸/경판 최소 요구 두께 및 수압시험' },
-  { id: 'tab-couplingkey', cat: 'mech', name: '75. 축 커플링·키홈 전단', desc: '평행키 전단응력(τ), 면압 찌그러짐(σc) 및 안전계수' },
-  { id: 'tab-foulingheat', cat: 'fluid', name: '76. 열교환기 파울링·오염', desc: '오염 계수(Rf), 총괄 열전달 계수(U), 세정 주기' },
-  { id: 'tab-waterhammer', cat: 'fluid', name: '77. 배관 수격작용(서지)', desc: 'Joukowsky 수격 서지압력(bar), 밸브 임계 폐쇄시간' },
-  { id: 'tab-ctptburden', cat: 'power', name: '78. 변성기 CT·PT 부담(VA)', desc: '계기용 변류기 2차 배선 임피던스 및 포화 검증' }
-];
+  { id: 'tab-ductutility', cat: 'specs', name: '08. 배선 덕트·후렉시블 �const GLOBAL_UI_DICTIONARY = {
+  // Navigation & Category Chips
+  '⭐ 전체 38종 (All)': { en: '⭐ All 78 Tools', ja: '⭐ 全78種', vi: '⭐ Tất cả 78 công cụ', es: '⭐ Todas (78)', de: '⭐ Alle 78 Werkzeuge', zh: '⭐ 全部78款' },
+  '⚡ 전원·변압기·SPD·PV': { en: '⚡ Power, TR, SPD & PV', ja: '⚡ 電源・変圧器・SPD', vi: '⚡ Nguồn, Biến áp & SPD', es: '⚡ Potencia, TR y SPD', de: '⚡ Strom, Trafo, SPD & PV', zh: '⚡ 电源·变压器·SPD' },
+  '🛡️ 모터·롤투롤·VFD': { en: '🛡️ Motors, R2R & VFD', ja: '🛡️ モータ・R2R・VFD', vi: '🛡️ Động cơ, R2R & VFD', es: '🛡️ Motores, R2R y VFD', de: '🛡️ Motoren, R2R & FU', zh: '🛡️ 电机·卷绕·VFD' },
+  '🌡️ 신호·통신·방폭(Ex)': { en: '🌡️ Signals, OT & Ex', ja: '🌡️ 信号・通信・防爆', vi: '🌡️ Tín hiệu, OT & Chống nổ', es: '🌡️ Señales, OT y Ex', de: '🌡️ Signale, OT & Ex-Schutz', zh: '🌡️ 信号·通信·防爆' },
+  '📁 트레이·조도·클린룸': { en: '📁 Trays, Lux & Fab', ja: '📁 トレイ・照度・クリーン', vi: '📁 Máng cáp, Độ rọi & Phòng sạch', es: '📁 Bandejas, Lux y Sala Limpia', de: '📁 Kabeltrassen, Lux & Reinraum', zh: '📁 桥架·照度·洁净室' },
 
-function filterToolsSearch(query) {
-  const q = (query || '').trim().toLowerCase();
-  const dropdown = document.getElementById('quickSearchDropdown');
-  if (!dropdown) return;
+  // Top Header Utility
+  '단위 환산': { en: 'Unit Converter', ja: '単位換算', vi: 'Đổi đơn vị', es: 'Conversor', de: 'Einheiten', zh: '单位换算' },
+  '내 보관함': { en: 'Saved Calcs', ja: '保存一覧', vi: 'Đã lưu', es: 'Guardados', de: 'Gespeichert', zh: '我的收藏' },
+  '조건 공유': { en: 'Share Link', ja: '条件共有', vi: 'Chia sẻ', es: 'Compartir', de: 'Link teilen', zh: '条件分享' },
+  '검토서 인쇄': { en: 'Print Report', ja: '計算書印刷', vi: 'In báo cáo', es: 'Imprimir', de: 'Prüfbericht', zh: '打印报告' },
+  '실무 엑셀·CAD 팩': { en: 'Pro Excel·CAD Pack', ja: '実務エクセル・CAD', vi: 'Gói Excel & CAD', es: 'Pack Excel y CAD', de: 'Excel & CAD-Paket', zh: '实务Excel·CAD' },
+  '상세 환경 설정': { en: 'Advanced Settings', ja: '詳細環境設定', vi: 'Cài đặt nâng cao', es: 'Ajustes Avanzados', de: 'Erweiterte Einstellungen', zh: '高级环境设置' },
+  '설계 파라미터 입력': { en: 'Design Parameters', ja: '設計パラメータ入力', vi: 'Thông số thiết kế', es: 'Parámetros de Diseño', de: 'Auslegungsparameter', zh: '设计参数输入' },
+  '검증 판정 결과 및 계측 데이터': { en: 'Verification & Readouts', ja: '判定結果およびデータ', vi: 'Kết quả thẩm định', es: 'Veredicto y Lecturas', de: 'Prüfergebnisse & Messwerte', zh: '校验结果与读数' },
+  '검토 결과 텍스트 복사': { en: 'Copy Verdict Text', ja: '結果テキストをコピー', vi: 'Sao chép kết quả', es: 'Copiar Resultado', de: 'Ergebnis kopieren', zh: '复制结果文本' },
 
-  if (!q) {
-    dropdown.style.display = 'none';
-    dropdown.innerHTML = '';
-    return;
+  // Compliance Strip & Pro Monetization Banner
+  'IEC 60204-1, NFPA 79, KEC 및 UL 508A 산업용 제어선로 및 전장설계 국제 기술 기준 준용': {
+    en: 'Compliant with IEC 60204-1, NFPA 79, KEC, and UL 508A International Standards',
+    ja: 'IEC 60204-1, NFPA 79, KEC および UL 508A 国際標準に準拠',
+    vi: 'Tuân thủ các tiêu chuẩn quốc tế IEC 60204-1, NFPA 79, KEC và UL 508A',
+    es: 'Conforme a las Normas Internacionales IEC 60204-1, NFPA 79, KEC y UL 508A',
+    de: 'Konform mit IEC 60204-1, NFPA 79, KEC und UL 508A Standards',
+    zh: '符合 IEC 60204-1、NFPA 79、KEC 和 UL 508A 国际标准'
+  },
+  '기술 검증 기준 및 설계 자문단 소개 →': {
+    en: 'Standards Verification & Engineering Advisory Board →',
+    ja: '技術検証基準および設計諮問団の紹介 →',
+    vi: 'Tiêu chuẩn thẩm định & Hội đồng cố vấn kỹ thuật →',
+    es: 'Verificación de Normas y Consejo Asesor de Ingeniería →',
+    de: 'Normenüberprüfung & Ingenieurbeirat →',
+    zh: '技术验证标准及设计顾问团介绍 →'
+  },
+  '38대 전 도구 오프라인 자동연산 엑셀(XLSX) & 전기 CAD 심볼 200종': {
+    en: 'All Tools Offline Auto-Calculating Excel (XLSX) & 200 Electrical CAD Symbols',
+    ja: '全種オフライン自動計算エクセル(XLSX)＆電気CADシンボル200種',
+    vi: 'Bộ công cụ Excel (XLSX) tự động tính toán offline & 200 ký hiệu CAD điện',
+    es: 'Pack Maestro Offline Excel (XLSX) y 200 Símbolos CAD Eléctricos',
+    de: 'Offline Excel-Berechnungs-Paket (XLSX) & 200 Elektro-CAD-Symbole',
+    zh: '全部工具离线自动计算Excel(XLSX)与200款电气CAD符号包'
+  },
+  '사내 보안 폐쇄망(인터넷 불가 연구소/공장)에서 평생 영구 소장하여 즉시 활용하는 실무 엔지니어 필수 번들': {
+    en: 'Essential master bundle for industrial engineers on secure offline factory intranets with lifetime ownership',
+    ja: '社内セキュリティ閉鎖網（ネット不可工場・研究所）で永年活用できる実務エンジニア必須バンドル',
+    vi: 'Gói công cụ thiết yếu cho kỹ sư công nghiệp trên mạng nội bộ bảo mật ngoại tuyến sở hữu trọn đời',
+    es: 'Paquete esencial para ingenieros en redes industriales cerradas sin internet con propiedad de por vida',
+    de: 'Unverzichtbares Bundle für Ingenieure in sicheren Offline-Werksnetzen mit lebenslanger Nutzung',
+    zh: '适用于企业安全隔离内网（无外网工厂/研发室）的终身永久使用实务工程师必备工具包'
+  },
+  '엑셀 팩 즉시 받기 (9,900원) →': {
+    en: 'Get Excel Pack Instantly ($9.99 / 9,900 KRW) →',
+    ja: 'エクセルパックを即時入手 (9,900ウォン) →',
+    vi: 'Tải gói Excel ngay ($9.99 / 9,900 KRW) →',
+    es: 'Obtener Pack Excel al Instante ($9.99) →',
+    de: 'Excel-Paket sofort herunterladen ($9.99) →',
+    zh: '立即获取Excel工具包 (9,900韩元) →'
+  },
+  '기업용 29,000원 안내': {
+    en: 'Corporate Pro Package ($29.99)',
+    ja: '法人・チーム用プラン',
+    vi: 'Gói doanh nghiệp ($29.99)',
+    es: 'Paquete Corporativo ($29.99)',
+    de: 'Unternehmenslizenz ($29.99)',
+    zh: '企业专业版方案'
+  },
+
+  // Pneumatics (Tab 7)
+  '튜브 내경 (Bore)': { en: 'Cylinder Bore Diameter', ja: 'シリンダ内径 (Bore)', vi: 'Đường kính xi lanh (Bore)', es: 'Diámetro del Cilindro (Bore)', de: 'Zylinder-Innendurchmesser (Bore)', zh: '气缸内径 (Bore)' },
+  '스트로크 (Stroke)': { en: 'Stroke Length (Stroke)', ja: 'ストローク長 (Stroke)', vi: 'Hành trình xi lanh (Stroke)', es: 'Longitud de Carrera (Stroke)', de: 'Hublänge (Stroke)', zh: '气缸行程 (Stroke)' },
+  '공급 압력': { en: 'Supply Air Pressure', ja: '供給空気圧', vi: 'Áp suất khí cấp', es: 'Presión de Suministro', de: 'Versorgungsdruck', zh: '供气压力' },
+  '분당 사이클': { en: 'Cycles Per Minute (CPM)', ja: '動作サイクル/分', vi: 'Chu kỳ mỗi phút (CPM)', es: 'Ciclos por Minuto (CPM)', de: 'Zyklen pro Minute (CPM)', zh: '每分钟动作循环' },
+  '동일 실린더 수량': { en: 'Cylinder Quantity', ja: 'シリンダ台数', vi: 'Số lượng xi lanh', es: 'Cantidad de Cilindros', de: 'Zylinderanzahl', zh: '同款气缸数量' },
+  '튜브 배관 길이': { en: 'Pneumatic Tubing Length', ja: '配管チューブ長', vi: 'Chiều dài ống khí', es: 'Longitud de Tubo Neumático', de: 'Schlauchlänge', zh: '气管配管长度' },
+  '실린더 사양 입력': { en: 'Actuator Specifications', ja: 'シリンダ仕様入力', vi: 'Thông số xi lanh', es: 'Especificaciones del Cilindro', de: 'Zylinderspezifikationen', zh: '气缸规格输入' },
+  '공기 소모량 및 동력': { en: 'Air Consumption & Power', ja: '空気消費量および動力', vi: 'Tiêu thụ khí & Công suất', es: 'Consumo de Aire y Potencia', de: 'Luftverbrauch & Leistung', zh: '耗气量与动力' },
+  'TOTAL AIR CONSUMPTION (총 분당 공기 소모량)': { en: 'TOTAL AIR CONSUMPTION (Nℓ/min)', ja: '総空気消費量 (Nℓ/min)', vi: 'TỔNG TIÊU THỤ KHÍ (Nℓ/min)', es: 'CONSUMO TOTAL DE AIRE (Nℓ/min)', de: 'GESAMTLUFTVERBRAUCH (Nℓ/min)', zh: '每分钟总耗气量 (Nℓ/min)' },
+  '추천 콤프레샤': { en: 'Recommended Compressor', ja: '推奨コンプレッサー', vi: 'Máy nén khí đề xuất', es: 'Compresor Recomendado', de: 'Empfohlener Kompressor', zh: '推荐空压机' },
+  '1회 동작 소모량 (1-t)': { en: 'Air per Cycle (1-t)', ja: '1サイクル消費量', vi: 'Tiêu thụ mỗi chu kỳ', es: 'Consumo por Ciclo', de: 'Verbrauch pro Hub', zh: '单次动作耗气量' },
+  '전진 정지 추력 (@0.5MPa)': { en: 'Forward Thrust (@0.5MPa)', ja: '前進推力 (@0.5MPa)', vi: 'Lực đẩy tiến (@0.5MPa)', es: 'Empuje de Avance (@0.5MPa)', de: 'Vorschubkraft (@0.5MPa)', zh: '前进推力 (@0.5MPa)' },
+
+  // Voltage Drop & Loop (Tab 1 & 2)
+  '선로 편도 배선 거리 (L)': { en: 'One-Way Cable Distance (L)', ja: '線路片道配線長 (L)', vi: 'Khoảng cách cáp 1 chiều (L)', es: 'Distancia de Cable Unidireccional (L)', de: 'Einfache Leitungslänge (L)', zh: '单程布线距离 (L)' },
+  '케이블 도선 규격': { en: 'Wire Gauge Specification', ja: 'ケーブル導体規格', vi: 'Quy cách tiết diện dây', es: 'Calibre del Conductor', de: 'Leitungsquerschnitt (AWG/SQ)', zh: '电缆导线规格' },
+  '말단 부하 소비전류 (I)': { en: 'Load Operating Current (I)', ja: '末端負荷消費電流 (I)', vi: 'Dòng tiêu thụ tải (I)', es: 'Corriente de Carga (I)', de: 'Lastbetriebsstrom (I)', zh: '末端负载工作电流 (I)' },
+  '공급 전원 전압 (Vs)': { en: 'Supply Power Voltage (Vs)', ja: '供給電源電圧 (Vs)', vi: 'Điện áp nguồn cấp (Vs)', es: 'Tensión de Alimentación (Vs)', de: 'Versorgungsspannung (Vs)', zh: '供电电源电压 (Vs)' },
+  '최소 동작 전압 (Vmin)': { en: 'Min Operating Voltage (Vmin)', ja: '最小動作電圧 (Vmin)', vi: 'Điện áp tối thiểu (Vmin)', es: 'Tensión Mínima de Operación', de: 'Min. Betriebsspannung (Vmin)', zh: '最低工作电压 (Vmin)' },
+
+  // SMPS & Cooling (Tab 3 & 4)
+  '상시 부하 전류 합계': { en: 'Steady-State Load Current Sum', ja: '常時負荷電流合計', vi: 'Tổng dòng tải liên tục', es: 'Suma de Corrientes Continuas', de: 'Dauerlaststrom-Summe', zh: '常时负载电流合计' },
+  '제어반 내부 발열량': { en: 'Internal Heat Dissipation', ja: '盤内総発熱量', vi: 'Tỏa nhiệt nội bộ tủ điện', es: 'Disipación Térmica Interna', de: 'Schaltschrank-Verlustleistung', zh: '柜内总发热量' },
+  '공장 최고 외기온도': { en: 'Max Ambient Temperature', ja: '最高外気温度', vi: 'Nhiệt độ môi trường cực đại', es: 'Temperatura Ambiente Máxima', de: 'Max. Umgebungstemperatur', zh: '最高环境温度' },
+  '제어반 내부 목표온도': { en: 'Target Internal Temperature', ja: '盤内目標温度', vi: 'Nhiệt độ mục tiêu trong tủ', es: 'Temperatura Objetivo Interna', de: 'Ziel-Innentemperatur', zh: '柜内目标控制温度' },
+
+  // Roll Tension (Tab 33)
+  '롤 규격 및 라인 속도 파라미터': { en: 'Roll Dimensions & Line Speed', ja: 'ロール規格＆ライン速度設定', vi: 'Thông số cuộn & Tốc độ dây chuyền', es: 'Dimensiones del Rollo y Velocidad', de: 'Rollenabmessungen & Bahngeschwindigkeit', zh: '卷材规格与线速度参数' },
+  '필요 서보 모터 토크 & 테이퍼 장력 판정': { en: 'Required Servo Torque & Taper Verdict', ja: '必要サーボトルク＆テーパー張力判定', vi: 'Mô-men xoắn servo & Lực căng côn', es: 'Torque Requerido y Tensión Cónica', de: 'Erforderliches Drehmoment & Konischer Zug', zh: '所需伺服扭矩与锥度张力判定' },
+  '초기 지관 외경 (D_core)': { en: 'Core Outer Diameter (D_core)', ja: '初期コア外径 (D_core)', vi: 'Đường kính lõi cuộn (D_core)', es: 'Diámetro del Mandril (D_core)', de: 'Wickelkerndurchmesser (D_core)', zh: '初始卷芯外径 (D_core)' },
+  '최대 권취 외경 (D_max)': { en: 'Max Package Diameter (D_max)', ja: '最大巻取外径 (D_max)', vi: 'Đường kính cuộn cực đại (D_max)', es: 'Diámetro Máximo (D_max)', de: 'Max. Wickeldurchmesser (D_max)', zh: '最大卷绕外径 (D_max)' },
+  '초기 권취 장력 (T_base)': { en: 'Base Web Tension (T_base)', ja: '初期巻取張力 (T_base)', vi: 'Lực căng cuộn ban đầu (T_base)', es: 'Tensión Base de Bobinado', de: 'Basis-Bahnzug (T_base)', zh: '初始卷绕张力 (T_base)' },
+  '테이퍼 감쇠율 (Taper Ratio)': { en: 'Taper Ratio (%)', ja: 'テーパー減衰率 (%)', vi: 'Tỷ lệ giảm côn (%)', es: 'Relación de Conicidad (%)', de: 'Taper-Verhältnis (%)', zh: '锥度衰减率 (%)' },
+  '생산 라인 속도 (Line Speed)': { en: 'Production Line Speed', ja: '生産ライン速度', vi: 'Tốc độ dây chuyền', es: 'Velocidad de Línea', de: 'Linien-Geschwindigkeit', zh: '生产线速度' },
+  '감속기 감속비 (Gear Ratio i)': { en: 'Gearbox Ratio (i)', ja: '減速比 (i)', vi: 'Tỷ số truyền giảm tốc (i)', es: 'Relación de Reducción (i)', de: 'Getriebeuntersetzung (i)', zh: '减速机减速比 (i)' },
+
+  // VFD Surge & Ex (Tab 34 & 35)
+  '인버터 입력 선간 전압 (Vin)': { en: 'VFD Input Line Voltage (Vin)', ja: 'インバータ入力電圧 (Vin)', vi: 'Điện áp đầu vào biến tần (Vin)', es: 'Tensión de Entrada del VFD', de: 'FU-Eingangsspannung (Vin)', zh: '变频器输入线电压 (Vin)' },
+  '모터 케이블 포설 거리 (L)': { en: 'Motor Cable Length (L)', ja: 'モータケーブル長 (L)', vi: 'Chiều dài cáp động cơ (L)', es: 'Longitud de Cable al Motor (L)', de: 'Motorkabellänge (L)', zh: '电机电缆敷设距离 (L)' },
+  '모터 절연 등급 (Motor Class)': { en: 'Motor Insulation Class', ja: 'モータ絶縁クラス', vi: 'Cấp cách điện động cơ', es: 'Clase de Aislamiento del Motor', de: 'Motor-Isolationsklasse', zh: '电机绝缘等级' },
+  '인버터 캐리어 주파수': { en: 'VFD Carrier Frequency', ja: 'キャリア周波数', vi: 'Tần số sóng mang biến tần', es: 'Frecuencia Portadora', de: 'Taktfrequenz / Trägerfrequenz', zh: '变频器载波频率' },
+  '방폭 위험 장소 (Zone)': { en: 'Hazardous Area Zone', ja: '防爆危険場所 (Zone)', vi: 'Khu vực nguy hiểm chống nổ', es: 'Zona de Atmósfera Explosiva', de: 'Ex-Zone', zh: '防爆危险区域 (Zone)' },
+  '폭발 가스 그룹 (Gas Group)': { en: 'Explosive Gas Group', ja: '爆発ガスグループ', vi: 'Nhóm khí gây nổ', es: 'Grupo de Gas Explosivo', de: 'Explosionsgruppe', zh: '爆炸性气体组别' },
+  '최고 표면 온도 등급 (T Class)': { en: 'Max Surface Temp Class (T)', ja: '最高表面温度等級 (T)', vi: 'Cấp nhiệt độ bề mặt cực đại (T)', es: 'Clase de Temperatura Superficial', de: 'Temperaturklasse (T)', zh: '最高表面温度等级 (T)' },
+  '방폭 구역 케이블 길이 (L)': { en: 'Hazardous Cable Length (L)', ja: '防爆区間ケーブル長 (L)', vi: 'Chiều dài cáp vùng chống nổ (L)', es: 'Longitud de Cable en Zona Ex', de: 'Ex-Kabellänge (L)', zh: '防爆区域电缆长度 (L)' },
+
+  // Tray, Lux, Solar (Tab 36, 37, 38)
+  '트레이 폭 (Tray Width W)': { en: 'Tray Width (W)', ja: 'トレイ幅 (W)', vi: 'Bề rộng máng cáp (W)', es: 'Ancho de Bandeja (W)', de: 'Kabelrinnenbreite (W)', zh: '桥架宽度 (W)' },
+  '지지대 설치 간격 (Support Span L)': { en: 'Support Span (L)', ja: '支持スパン (L)', vi: 'Khoảng cách giá đỡ (L)', es: 'Distancia entre Soportes (L)', de: 'Stützabstand (L)', zh: '支架安装间距 (L)' },
+  '동력 케이블 (굵은선) 가닥수': { en: 'Power Cable Core Count', ja: '動力ケーブル条数', vi: 'Số sợi cáp động lực', es: 'Cables de Potencia', de: 'Anzahl Leistungskabel', zh: '动力电缆根数' },
+  '제어 케이블 (가는선) 가닥수': { en: 'Control Cable Core Count', ja: '制御ケーブル条数', vi: 'Số sợi cáp điều khiển', es: 'Cables de Control', de: 'Anzahl Steuerkabel', zh: '控制电缆根数' },
+  '용도별 표준 조도 (Target Lux)': { en: 'Standard Target Lux', ja: '用途別標準照度 (Lux)', vi: 'Độ rọi tiêu chuẩn (Lux)', es: 'Iluminancia Objetivo (Lux)', de: 'Soll-Beleuchtungsstärke (Lux)', zh: '用途标准照度 (Target Lux)' },
+  '바닥/작업면 면적 (Area A)': { en: 'Workplane Area (A)', ja: '作業面面積 (A)', vi: 'Diện tích mặt sàn/làm việc (A)', es: 'Área del Plano de Trabajo (A)', de: 'Arbeitsflächen-Areal (A)', zh: '工作面面积 (Area A)' },
+  'LED 1등당 정격 광속 (Lumen F)': { en: 'Luminous Flux per Fixture', ja: '器具定格光束 (Lumen F)', vi: 'Quang thông định mức mỗi đèn', es: 'Flujo Luminoso por Luminaria', de: 'Lichtstrom pro Leuchte (Lumen F)', zh: '单套灯具额定光通量' },
+  'LED 1등당 소비전력 (Power W)': { en: 'Power per Fixture (W)', ja: '器具消費電力 (W)', vi: 'Công suất mỗi đèn (W)', es: 'Potencia por Luminaria (W)', de: 'Leistung pro Leuchte (W)', zh: '单套灯具功率 (W)' },
+  '직렬 모듈 수량 (N_series)': { en: 'Series Module Count', ja: '直列モジュール数', vi: 'Số tấm pin nối tiếp', es: 'Módulos en Serie', de: 'Module in Reihe', zh: '串联组件数量' },
+  '모듈 개방전압 Voc (STC 기준)': { en: 'Module Voc at STC', ja: 'モジュール開放電圧 Voc', vi: 'Điện áp hở mạch Voc (STC)', es: 'Tensión de Circuito Abierto Voc', de: 'Leerlaufspannung Voc (STC)', zh: '组件开路电压 Voc' },
+  '모듈 단락전류 Isc (STC 기준)': { en: 'Module Isc at STC', ja: 'モジュール短絡電流 Isc', vi: 'Dòng ngắn mạch Isc (STC)', es: 'Corriente de Cortocircuito Isc', de: 'Kurzschlussstrom Isc (STC)', zh: '组件短路电流 Isc' },
+  '접속반까지 DC 배선 거리 (L)': { en: 'DC Cable Run Distance (L)', ja: 'DC配線長 (L)', vi: 'Khoảng cách dây DC đến tủ (L)', es: 'Longitud de Cableado DC (L)', de: 'DC-Kabelstrecke (L)', zh: '至汇流箱DC布线距离 (L)' }
+};
+
+function translateEntireDOM(lang) {
+  if (!lang || lang === 'ko') return;
+  const dict = GLOBAL_UI_DICTIONARY;
+
+  // Walk all DOM elements with text
+  const elements = document.querySelectorAll('label, h1, h2, h3, h4, h5, p, span, strong, button, th, td, option, .tv-label, .gauge-label, .summary-label');
+  elements.forEach(el => {
+    if (el.children.length === 0) {
+      const raw = el.textContent ? el.textContent.trim() : '';
+      if (dict[raw] && dict[raw][lang]) {
+        el.textContent = dict[raw][lang];
+      }
+    } else {
+      el.childNodes.forEach(node => {
+        if (node.nodeType === 3) { // TEXT_NODE
+          const raw = node.textContent ? node.textContent.trim() : '';
+          if (dict[raw] && dict[raw][lang]) {
+            node.textContent = dict[raw][lang];
+          }
+        }
+      });
+    }
+  });
+
+  // Translate Select Options
+  document.querySelectorAll('select option').forEach(opt => {
+    const raw = opt.textContent ? opt.textContent.trim() : '';
+    if (dict[raw] && dict[raw][lang]) {
+      opt.textContent = dict[raw][lang];
+    }
+  });
+
+  // Translate Input Placeholders
+  const searchInput = document.getElementById('globalToolSearch');
+  if (searchInput) {
+    if (lang === 'en') searchInput.placeholder = 'Search 78 engineering tools (e.g. 24V, Bearing, Motor, Hydraulic, Robot...) [Ctrl+K]';
+    else if (lang === 'es') searchInput.placeholder = 'Buscar 78 herramientas de ingeniería (ej. 24V, Rodamiento, Motor, Hidráulica...) [Ctrl+K]';
+    else if (lang === 'ja') searchInput.placeholder = '78種の工学ツールを検索（例：24V, 軸受, モータ, 油圧, ロボット...） [Ctrl+K]';
+    else if (lang === 'vi') searchInput.placeholder = 'Tìm kiếm 78 công cụ kỹ thuật (vd: 24V, Vòng bi, Động cơ, Thủy lực, Robot...) [Ctrl+K]';
+    else if (lang === 'de') searchInput.placeholder = '78 Engineering-Tools suchen (z.B. 24V, Lager, Motor, Hydraulik, Roboter...) [Ctrl+K]';
+    else if (lang === 'zh') searchInput.placeholder = '搜索78款工程工具（例如：24V, 轴承, 电机, 液压, 机器人...） [Ctrl+K]';
   }
-
-  const matches = MASTER_TOOLS_CATALOG.filter(t => 
-    t.name.toLowerCase().includes(q) || 
-    t.desc.toLowerCase().includes(q) || 
-    t.id.toLowerCase().includes(q)
-  );
-
-  if (matches.length === 0) {
-    dropdown.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:0.8rem; text-align:center;">일치하는 공학 도구가 없습니다.</div>';
+} 공학 도구가 없습니다.</div>';
     dropdown.style.display = 'block';
     return;
   }
