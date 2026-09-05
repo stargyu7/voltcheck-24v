@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build:pages": "node scripts/build-pages.js",
+    "quality": "node scripts/quality-check.js"
+  }
+}
