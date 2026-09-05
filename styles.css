@@ -434,6 +434,39 @@ body.theme-precision {
   font-weight: 900;
 }
 
+.global-discovery-strip {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.global-discovery-inner {
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  color: #334155;
+  font-size: 0.82rem;
+}
+
+.global-discovery-inner strong {
+  flex: 0 0 auto;
+  color: #0f172a;
+}
+
+.global-discovery-inner a {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #075985;
+  background: #f8fafc;
+  text-decoration: none;
+  font-weight: 800;
+}
+
 @media (max-width: 768px) {
   .engineering-disclaimer-inner {
     align-items: flex-start;
@@ -4775,4 +4808,139 @@ body, h1, h2, h3, h4, h5, p, span, div, label, li {
   color: #38bdf8;
   border: 1px solid rgba(14, 165, 233, 0.3);
   white-space: nowrap;
+}
+
+/* ==========================================================================
+   GLOBAL SEO CALCULATOR LANDING PAGES
+   ========================================================================== */
+body.seo-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.seo-shell {
+  width: min(1040px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 64px 0;
+}
+
+.seo-eyebrow {
+  margin: 0 0 10px;
+  color: #0369a1;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.seo-shell h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: 4.5rem;
+  line-height: 0.95;
+  letter-spacing: 0;
+  color: #082f49;
+}
+
+.seo-lead {
+  max-width: 760px;
+  margin: 22px 0 0;
+  font-size: 1.12rem;
+  line-height: 1.7;
+  color: #334155;
+}
+
+.seo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 30px 0 42px;
+}
+
+.seo-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 6px;
+  font-size: 0.94rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.primary-action {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.secondary-action {
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.seo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.seo-grid article,
+.seo-faq {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 22px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.seo-grid h2,
+.seo-faq h2,
+.seo-faq h3 {
+  margin: 0 0 10px;
+  color: #0f172a;
+  letter-spacing: 0;
+}
+
+.seo-grid h2,
+.seo-faq h2 {
+  font-size: 1.02rem;
+}
+
+.seo-faq h3 {
+  margin-top: 18px;
+  font-size: 0.98rem;
+}
+
+.seo-grid p,
+.seo-faq p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.seo-faq {
+  margin-top: 14px;
+}
+
+@media (max-width: 760px) {
+  .seo-shell {
+    width: min(100% - 24px, 1040px);
+    padding: 38px 0;
+  }
+
+  .seo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seo-shell h1 {
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+
+  .seo-actions a {
+    width: 100%;
+  }
 }

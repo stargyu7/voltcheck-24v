@@ -8,8 +8,16 @@ const indexHtml = read('index.html');
 const appJs = read('app.js');
 const readme = read('README.md');
 const manifest = read('manifest.json');
+const sitemap = read('sitemap.xml');
+const englishLandingPages = [
+  'en/index.html',
+  'en/24v-voltage-drop-calculator/index.html',
+  'en/dc-wire-size-calculator/index.html',
+  'en/smps-capacity-calculator/index.html',
+  'en/motor-breaker-sizing-calculator/index.html',
+];
 
-const publicText = [indexHtml, appJs, readme, manifest].join('\n');
+const publicText = [indexHtml, appJs, readme, manifest, sitemap, ...englishLandingPages.map(read)].join('\n');
 
 const forbiddenPatterns = [
   /aggregateRating/,
@@ -77,6 +85,23 @@ for (const id of new Set(tabPanels)) {
 
 if (!indexHtml.includes('engineering-disclaimer-strip')) {
   failures.push('Engineering disclaimer strip is missing from the public page.');
+}
+
+for (const page of englishLandingPages) {
+  const html = read(page);
+  const publicUrl = `https://voltcheck24.com/${page.replace(/index\.html$/, '')}`;
+  if (!html.includes('<html lang="en">')) {
+    failures.push(`${page} is missing lang="en".`);
+  }
+  if (!html.includes(`rel="canonical" href="${publicUrl}"`)) {
+    failures.push(`${page} is missing the expected canonical URL: ${publicUrl}`);
+  }
+  if (!html.includes('application/ld+json')) {
+    failures.push(`${page} is missing JSON-LD structured data.`);
+  }
+  if (!sitemap.includes(`<loc>${publicUrl}</loc>`)) {
+    failures.push(`${page} is missing from sitemap.xml.`);
+  }
 }
 
 JSON.parse(manifest);
