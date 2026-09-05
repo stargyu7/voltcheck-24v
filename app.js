@@ -8132,6 +8132,47 @@ window.toggleSmartSync = toggleSmartSync;
 // ==========================================================================
 
 const REPORT_CART_STORAGE_KEY = 'voltcheck_report_cart_items';
+const WORKFLOW_TABS = new Set(['tab-voltagedrop', 'tab-smpsbudget', 'tab-motorcalc']);
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function getActiveToolName(tabId) {
+  const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  return activeBtn?.querySelector('span')?.textContent?.trim() || tabId.replace('tab-', '');
+}
+
+function capturePanelFields(panel) {
+  return Array.from(panel.querySelectorAll('input, select, textarea'))
+    .filter(el => el.id && !el.closest('.modal-backdrop') && !el.closest('.custom-modal-overlay'))
+    .slice(0, 18)
+    .map(el => {
+      const label = panel.querySelector(`label[for="${el.id}"]`)?.textContent?.trim()
+        || el.getAttribute('aria-label')
+        || el.id;
+      const unit = el.closest('.input-with-unit')?.querySelector('.unit-label')?.textContent?.trim() || '';
+      const value = el.type === 'checkbox' ? (el.checked ? 'ON' : 'OFF') : el.value;
+      return { label, value: unit ? `${value} ${unit}` : value };
+    })
+    .filter(item => item.value !== '');
+}
+
+function capturePanelResult(panel) {
+  const verdictEl = panel.querySelector('.verdict-stamp, .badge-safe, .badge-warn, .badge-danger, [id*="Verdict"]');
+  const heroValueEl = panel.querySelector('.terminal-voltage-big, .voltage-hero-card .font-mono, [id^="res"][class*="font-mono"]');
+  const recText = panel.querySelector('#recText, .engineering-opinion, .result-comment, [id*="Rec"], [id*="Opinion"]')?.textContent?.trim();
+  return {
+    verdict: verdictEl?.textContent?.replace(/\s+/g, ' ').trim() || '검토 완료',
+    summary: heroValueEl?.textContent?.replace(/\s+/g, ' ').trim() || '산출 데이터 생성',
+    note: recText ? recText.replace(/\s+/g, ' ').slice(0, 220) : ''
+  };
+}
 
 function getReportCartItems() {
   try {
@@ -8150,24 +8191,20 @@ function saveReportCartItems(items) {
 }
 
 function addToReportCart(tabId) {
-  const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-  const toolName = activeBtn?.querySelector('span')?.textContent || '공학 도구';
+  const toolName = getActiveToolName(tabId);
   const panel = document.getElementById(tabId);
   if (!panel) return;
 
-  // Extract main verdict text and value
-  const verdictEl = panel.querySelector('.verdict-stamp, .badge-safe, .badge-warn, [id*="Verdict"]');
-  const verdictText = verdictEl?.textContent.trim() || '검증 완료 (PASS)';
-  
-  const heroValueEl = panel.querySelector('.terminal-voltage-big, [class*="hero-big"], [id*="res"], [id*="calc"]');
-  const mainResultText = heroValueEl?.textContent.trim() || '산출 데이터 정상';
+  const result = capturePanelResult(panel);
 
   const cartItem = {
     id: 'item_' + Date.now(),
     tabId: tabId,
     toolName: toolName,
-    verdict: verdictText,
-    summary: mainResultText,
+    verdict: result.verdict,
+    summary: result.summary,
+    note: result.note,
+    fields: capturePanelFields(panel),
     timestamp: new Date().toISOString()
   };
 
@@ -8178,6 +8215,30 @@ function addToReportCart(tabId) {
   saveReportCartItems(items);
 
   alert(`[바구니 담기 완료] '${toolName}' 결과가 통합 결재서 바구니에 추가되었습니다! (현재 ${items.length}개)`);
+}
+
+function quickSaveWorkflowProject(tabId) {
+  const panel = document.getElementById(tabId);
+  if (!panel) return;
+
+  const toolName = getActiveToolName(tabId);
+  const result = capturePanelResult(panel);
+  const name = `${toolName} - ${new Date().toLocaleDateString('ko-KR')}`;
+  const project = {
+    id: 'proj_' + Date.now(),
+    name,
+    tabId,
+    toolName,
+    createdAt: new Date().toISOString(),
+    result,
+    data: Object.fromEntries(capturePanelFields(panel).map(item => [item.label, item.value]))
+  };
+
+  const list = getSavedProjects();
+  list.unshift(project);
+  saveProjectsList(list.slice(0, 50));
+  renderSavedProjectsList();
+  alert(`[프로젝트 저장 완료]\n'${name}' 계산 조건과 핵심 결과를 브라우저 보관함에 저장했습니다.`);
 }
 
 function updateReportCartBadges() {
@@ -8222,6 +8283,7 @@ function renderReportCart() {
           <strong style="font-size:0.88rem; color:#0f172a;">${item.summary}</strong>
         </div>
         <div style="font-size:0.72rem; color:#059669; font-weight:700; margin-top:0.25rem;">판정: ${item.verdict}</div>
+        ${item.note ? `<div style="font-size:0.72rem; color:#64748b; margin-top:0.25rem;">${escapeHtml(item.note)}</div>` : ''}
       </div>
       <button type="button" onclick="removeFromReportCart('${item.id}')" style="background:#fee2e2; color:#dc2626; border:none; padding:0.35rem 0.6rem; border-radius:4px; font-size:0.75rem; font-weight:800; cursor:pointer;" title="삭제">
         &times;
@@ -8250,7 +8312,93 @@ function printUnifiedMasterReport() {
     return;
   }
   closeReportCartModal();
-  window.print();
+  const projectName = document.getElementById('projectNameInput')?.value || 'VoltCheck24 Engineering Review';
+  const issuedAt = new Date().toLocaleString('ko-KR');
+  const rows = items.map((item, idx) => `
+    <tr>
+      <td>${idx + 1}</td>
+      <td>${escapeHtml(item.toolName)}</td>
+      <td>${escapeHtml(item.summary)}</td>
+      <td>${escapeHtml(item.verdict)}</td>
+    </tr>
+    ${item.note ? `<tr><td></td><td colspan="3" class="note-cell">${escapeHtml(item.note)}</td></tr>` : ''}
+  `).join('');
+  const fieldBlocks = items.map(item => `
+    <section class="print-field-block">
+      <h3>${escapeHtml(item.toolName)}</h3>
+      <dl>
+        ${(item.fields || []).slice(0, 10).map(field => `<div><dt>${escapeHtml(field.label)}</dt><dd>${escapeHtml(field.value)}</dd></div>`).join('')}
+      </dl>
+    </section>
+  `).join('');
+
+  const printWindow = window.open('', '_blank', 'width=960,height=720');
+  if (!printWindow) {
+    alert('팝업 차단으로 보고서 창을 열 수 없습니다. 브라우저 팝업 허용 후 다시 시도해 주세요.');
+    return;
+  }
+  printWindow.document.write(`<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>VoltCheck24 통합 기술검토서</title>
+  <style>
+    body { font-family: Arial, "Malgun Gothic", sans-serif; margin: 28px; color: #0f172a; }
+    .report-head { border-bottom: 3px solid #0f172a; padding-bottom: 14px; margin-bottom: 18px; }
+    h1 { margin: 0; font-size: 24px; letter-spacing: 0; }
+    .meta { margin-top: 8px; color: #475569; font-size: 12px; line-height: 1.6; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 12px; }
+    th, td { border: 1px solid #cbd5e1; padding: 8px; vertical-align: top; }
+    th { background: #f1f5f9; text-align: left; }
+    .note-cell { color: #475569; background: #f8fafc; }
+    .print-field-block { break-inside: avoid; margin-top: 16px; border: 1px solid #e2e8f0; padding: 12px; }
+    .print-field-block h3 { margin: 0 0 8px; font-size: 15px; }
+    dl { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; }
+    dl div { display: flex; justify-content: space-between; border-bottom: 1px dotted #cbd5e1; gap: 10px; }
+    dt { color: #64748b; }
+    dd { margin: 0; font-weight: 700; text-align: right; }
+    .disclaimer { margin-top: 18px; padding: 10px; background: #fff7ed; border: 1px solid #fed7aa; color: #7c2d12; font-size: 11px; line-height: 1.5; }
+    @media print { body { margin: 14mm; } }
+  </style>
+</head>
+<body>
+  <header class="report-head">
+    <h1>VoltCheck24 통합 기술검토서</h1>
+    <div class="meta">프로젝트: ${escapeHtml(projectName)}<br>발행일: ${escapeHtml(issuedAt)}<br>검토 항목: ${items.length}개</div>
+  </header>
+  <table>
+    <thead><tr><th>No.</th><th>계산 도구</th><th>핵심 결과</th><th>판정</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  ${fieldBlocks}
+  <div class="disclaimer">계산 결과는 현장 판단을 돕는 참고 자료입니다. 최종 설계, 안전 인증, 구매 사양 확정에는 최신 법규, 프로젝트 기준서, 제조사 데이터시트와 유자격 기술자의 검토를 우선 적용하세요.</div>
+  <script>window.onload = () => { window.print(); };</script>
+</body>
+</html>`);
+  printWindow.document.close();
+}
+
+function injectWorkflowActionPanels() {
+  WORKFLOW_TABS.forEach(tabId => {
+    const panel = document.getElementById(tabId);
+    if (!panel || panel.querySelector('.workflow-action-panel')) return;
+    const target = panel.querySelector('.meter-workbench-grid, .calc-grid, .input-output-grid') || panel.querySelector('.main-desc');
+    if (!target) return;
+    const actionPanel = document.createElement('section');
+    actionPanel.className = 'workflow-action-panel';
+    actionPanel.innerHTML = `
+      <div>
+        <strong>계산 후 다음 작업</strong>
+        <span>조건 저장, 통합 기술검토서, BOM 문의까지 한 번에 이어갑니다.</span>
+      </div>
+      <div class="workflow-action-buttons">
+        <button type="button" onclick="quickSaveWorkflowProject('${tabId}')">프로젝트 저장</button>
+        <button type="button" onclick="addToReportCart('${tabId}')">보고서에 담기</button>
+        <button type="button" onclick="openB2BQuoteModal()">BOM 문의 정리</button>
+      </div>
+    `;
+    target.after(actionPanel);
+  });
 }
 
 // Attach Cart Button to each Tab Readout Panel
@@ -8279,6 +8427,7 @@ window.closeReportCartModal = closeReportCartModal;
 window.removeFromReportCart = removeFromReportCart;
 window.clearReportCart = clearReportCart;
 window.printUnifiedMasterReport = printUnifiedMasterReport;
+window.quickSaveWorkflowProject = quickSaveWorkflowProject;
 
 // Initialize on DOM Loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -8286,6 +8435,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateStarIconsAcrossDOM();
   updateReportCartBadges();
   injectReportCartButtonsToAllTabs();
+  injectWorkflowActionPanels();
 });
 
 // Also run immediately if script loaded after DOM
@@ -8293,6 +8443,7 @@ renderFavoritesBar();
 updateStarIconsAcrossDOM();
 updateReportCartBadges();
 injectReportCartButtonsToAllTabs();
+injectWorkflowActionPanels();
 
 
 // ==========================================================================

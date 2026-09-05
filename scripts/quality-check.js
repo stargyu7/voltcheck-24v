@@ -87,6 +87,21 @@ if (!indexHtml.includes('engineering-disclaimer-strip')) {
   failures.push('Engineering disclaimer strip is missing from the public page.');
 }
 
+const workflowRequiredSnippets = [
+  'workflow-action-panel',
+  'quickSaveWorkflowProject',
+  'capturePanelFields',
+  'capturePanelResult',
+  'VoltCheck24 통합 기술검토서',
+  'print-field-block',
+];
+
+for (const snippet of workflowRequiredSnippets) {
+  if (!publicText.includes(snippet)) {
+    failures.push(`Workflow retention/report feature snippet is missing: ${snippet}`);
+  }
+}
+
 for (const page of englishLandingPages) {
   const html = read(page);
   const publicUrl = `https://voltcheck24.com/${page.replace(/index\.html$/, '')}`;

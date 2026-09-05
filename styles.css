@@ -467,12 +467,76 @@ body.theme-precision {
   font-weight: 800;
 }
 
+.workflow-action-panel {
+  margin: 16px 0;
+  padding: 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.workflow-action-panel strong {
+  display: block;
+  color: #0f172a;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.workflow-action-panel span {
+  display: block;
+  margin-top: 2px;
+  color: #475569;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.workflow-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.workflow-action-buttons button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1d4ed8;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.workflow-action-buttons button:hover {
+  border-color: #2563eb;
+  background: #dbeafe;
+}
+
 @media (max-width: 768px) {
   .engineering-disclaimer-inner {
     align-items: flex-start;
     flex-direction: column;
     gap: 0.15rem;
     font-size: 0.74rem;
+  }
+
+  .workflow-action-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .workflow-action-buttons {
+    justify-content: stretch;
+  }
+
+  .workflow-action-buttons button {
+    flex: 1 1 120px;
   }
 }
 
