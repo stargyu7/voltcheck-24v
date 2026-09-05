@@ -137,11 +137,42 @@ const pages = [
   }
 ];
 
+const inputChecklists = {
+  '4-20ma-loop-calculator': ['Supply voltage and worst-case voltage', 'Transmitter minimum operating voltage', 'Cable length and conductor resistance', 'Barrier and shunt resistance'],
+  'plc-analog-scaling-calculator': ['Signal type and range', 'PLC raw minimum and maximum', 'Engineering-unit minimum and maximum', 'Vendor card data sheet'],
+  'rs485-termination-calculator': ['Baud rate and cable length', 'Node count and cable type', 'Maximum stub length', 'Trunk-end termination plan'],
+  'control-panel-cooling-calculator': ['Panel dimensions and enclosure type', 'Internal electrical losses', 'Maximum ambient temperature', 'Target internal temperature'],
+  'pneumatic-air-consumption-calculator': ['Cylinder bore, rod, and stroke', 'Operating pressure', 'Cycles per minute', 'Simultaneous actuator quantity'],
+  'pump-head-calculator': ['Design flow rate', 'Static elevation or pressure', 'Pipe diameter and length', 'Fluid density and viscosity'],
+  'control-valve-cv-calculator': ['Fluid and specific gravity', 'Normal and maximum flow', 'Available pressure drop', 'Temperature and phase condition'],
+  'battery-thermal-calculator': ['Pack voltage and capacity', 'Charge or discharge C-rate', 'Internal resistance', 'Cooling target and duty cycle'],
+  'hvac-duct-pressure-loss-calculator': ['Design airflow', 'Duct dimensions and length', 'Fittings, filters, and coils', 'Fan efficiency and operating temperature'],
+  'servo-regen-resistor-calculator': ['Reflected inertia', 'Maximum speed', 'Deceleration time', 'DC bus voltage and capacitance'],
+  'safety-light-curtain-distance-calculator': ['Detection resolution', 'Approach speed', 'Sensor and logic response time', 'Measured machine stopping time'],
+  'short-circuit-current-calculator': ['Transformer kVA and voltage', 'Transformer percent impedance', 'Cable length and impedance', 'Breaker interrupting rating'],
+  'cable-bending-radius-calculator': ['Cable outside diameter', 'Dynamic bend-radius multiplier', 'Travel stroke and speed', 'Carrier fill and separation']
+};
+
 function pageTemplate(page) {
   const url = `${siteOrigin}/en/${page.slug}/`;
   const faqJson = page.faq.map(([question, answer]) => ({
     '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer }
   }));
+  const softwareJson = {
+    '@context': 'https://schema.org', '@type': 'SoftwareApplication',
+    name: page.title.split(' | ')[0], applicationCategory: 'EngineeringApplication',
+    operatingSystem: 'Web', url, description: page.description,
+    isAccessibleForFree: true, dateModified: '2026-09-05',
+    publisher: { '@type': 'Organization', name: 'Total Engineering Lab', url: siteOrigin },
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+  };
+  const faqPageJson = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqJson };
+  const breadcrumbJson = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VoltCheck24 Global', item: `${siteOrigin}/en/` },
+      { '@type': 'ListItem', position: 2, name: page.title.split(' | ')[0], item: url }
+    ]
+  };
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -158,7 +189,7 @@ function pageTemplate(page) {
   <meta property="og:url" content="${url}">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="/styles.css?v=2.2.0">
-  <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: page.title.split(' | ')[0], applicationCategory: 'EngineeringApplication', operatingSystem: 'Web', url, description: page.description, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, mainEntity: faqJson })}</script>
+  <script type="application/ld+json">${JSON.stringify([softwareJson, faqPageJson, breadcrumbJson])}</script>
 </head>
 <body class="seo-page">
   <main class="seo-shell">
@@ -169,12 +200,21 @@ function pageTemplate(page) {
       <a class="primary-action" href="/?calc=${page.calc}&amp;lang=en">Open Interactive Calculator</a>
       <a class="secondary-action" href="/?calc=${page.secondary[0]}&amp;lang=en">Open ${page.secondary[1]}</a>
     </div>
+    <section class="seo-workflow">
+      <h2>How to use this calculator</h2>
+      <ol><li>Collect the values below from the equipment nameplate, data sheet, or field measurement.</li><li>Enter values using one consistent unit system and use worst-case operating conditions.</li><li>Review the result, margin, and engineering note before selecting hardware.</li><li>Cross-check the result with the related calculator and save the review for your project record.</li></ol>
+    </section>
+    <section class="seo-checklist">
+      <h2>Input checklist</h2>
+      <ul>${(inputChecklists[page.slug] || ['Equipment rating', 'Operating condition', 'Installation environment', 'Applicable project specification']).map(item => `<li>${item}</li>`).join('')}</ul>
+    </section>
     <section class="seo-grid">
       <article><h2>Formula and Inputs</h2><p>${page.formula}</p></article>
       <article><h2>Industrial Use Cases</h2><p>${page.use}</p></article>
       <article><h2>Engineering Note</h2><p>${page.note}</p></article>
     </section>
     <section class="seo-faq"><h2>FAQ</h2>${page.faq.map(([q, a]) => `<h3>${q}</h3><p>${a}</p>`).join('')}</section>
+    <nav class="seo-related" aria-label="Related engineering calculators"><strong>Related calculator:</strong> <a href="/?calc=${page.secondary[0]}&amp;lang=en">${page.secondary[1]}</a> · <a href="/en/">Browse all English calculators</a></nav>
     <p class="seo-disclaimer">Preliminary engineering reference only. Confirm final selections against current standards, project specifications, and manufacturer data.</p>
   </main>
 </body>
