@@ -150,7 +150,9 @@ def upload_single_short(youtube, item, privacy="public", dry_run=False):
             "title": item["title"],
             "description": item["description"],
             "tags": item.get("tags", []),
-            "categoryId": "28"  # 과학기술
+            "categoryId": "28",  # 과학기술
+            "defaultLanguage": "en",
+            "defaultAudioLanguage": "en"
         },
         "status": {
             "privacyStatus": privacy,

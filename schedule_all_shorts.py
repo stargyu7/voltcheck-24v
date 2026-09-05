@@ -136,7 +136,9 @@ def upload_scheduled_video(youtube, plan_entry, dry_run=False):
             "title": item["title"],
             "description": item["description"],
             "tags": item.get("tags", []),
-            "categoryId": "28"
+            "categoryId": "28",
+            "defaultLanguage": "en",
+            "defaultAudioLanguage": "en"
         },
         "status": {
             "privacyStatus": "private",
