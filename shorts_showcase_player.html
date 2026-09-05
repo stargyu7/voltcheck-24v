@@ -216,7 +216,8 @@
     </header>
 
     <div class="filter-bar">
-      <button class="filter-btn active" onclick="filterCard('all')">전체 보기 (7편)</button>
+      <button class="filter-btn active" onclick="filterCard('all')">전체 보기</button>
+      <button class="filter-btn" onclick="filterCard('natural')">🔥 [자연스러운 썰] 전선 아끼다 1억 날린 썰</button>
       <button class="filter-btn" onclick="filterCard('mkt1')">🚨 [바이럴 #1] 20억 라인 멈춤 (CCTV 감식)</button>
       <button class="filter-btn" onclick="filterCard('mkt2')">⚡ [바이럴 #2] 3초 컷 스피드 대결 (신입 vs 부장님)</button>
       <button class="filter-btn" onclick="filterCard('ep1')">⚡ EP.1 전기 (김반장)</button>
@@ -227,6 +228,37 @@
     </div>
 
     <div class="episodes-container">
+      <!-- NATURAL VIRAL STORY: 100M WON LOSS ESCAPE -->
+      <div class="episode-card" data-cat="natural" style="border-left: 6px solid #10b981; background: linear-gradient(135deg, rgba(6, 40, 30, 0.95), rgba(10, 15, 25, 0.98));">
+        <div class="video-column">
+          <div class="video-box">
+            <video controls preload="metadata" playsinline>
+              <source src="shorts_natural_engineer_story.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="info-column">
+          <div class="char-badge-header">
+            <span class="tag-category" style="background: #10b981; color:#000; font-weight:800;">🔥 초자연스러운 실화 썰 (1분미만 스타일)</span>
+            <span style="color:#34d399; font-weight:800;">현직 엔지니어 구어체 입담 &amp; 실제 현장 B-Roll 컷편집</span>
+          </div>
+          <h2 class="ep-title">전선 얇은 거 썼다가 1억 날릴 뻔한 썰 (실제 스마트팩토리 실화) 💥</h2>
+          <div class="ep-script-quote" style="border-left-color: #10b981;">
+            <strong>🎙️ 현장 썰 나레이션 하이라이트:</strong><br>
+            "야, 너네 공장에서 원가 아낀다고 전선 얇은 거 썼다가 1억 날릴 뻔한 썰 들어봤냐? 실제 있었던 일인데, 새벽 2시에 20억짜리 로봇 라인이 셧다운된 거야. 설비팀 달려오고 난리가 났는데 원인이 뭔지 알아? 300원 아끼겠다고 24V 선로 80m에 1.5스퀘어를 깐 거지. 테스터기 찍어보니까 18.2V! 센서가 뻗어버림 ㅋㅋㅋ 공장장님 얼굴 하얘지고 다들 멘붕 왔을 때, 과장님이 폰 꺼내서 볼트체크 딱 켜더니 3초 만에 4.0스퀘어로 바꾸라더라. 선 바꾸자마자 라인 바로 정상 가동! 시말서 쓰기 싫으면 네이버에 볼트체크 검색해둬라. 평생 무료거든."
+          </div>
+          <div class="meta-box">
+            <div class="meta-item"><strong>📌 유튜브 제목:</strong> 전선 얇은 거 썼다가 1억 날릴 뻔한 썰 (실화) 💥 #Shorts</div>
+            <div class="meta-item"><strong>🎯 연출 기법:</strong> 노랑/흰색 볼드 팝업 자막, 멀티미터 18.2V 실측 B-Roll, 핸드헬드 카메라 무빙, 그루비 테크 비트</div>
+            <div class="meta-item"><strong>🏷️ 태그:</strong> #직장인썰 #전기기사 #전압강하 #스마트팩토리 #제어반 #전장설계 #공장자동화 #볼트체크 #Shorts</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn-copy-main" style="background: linear-gradient(135deg, #10b981, #059669); color:#000;" onclick="copyEpMeta('natural')">📋 [자연스러운 썰] 유튜브 제목·설명·태그 1초 복사</button>
+            <a href="https://voltcheck24.com/?calc=volt_drop_dc" target="_blank" class="btn-link-engine">🚀 24V 전압강하 계산기 열기 ↗</a>
+          </div>
+        </div>
+      </div>
+
       <!-- VIRAL MARKETING 1: CCTV MYSTERY -->
       <div class="episode-card card-ep1" data-cat="mkt1" style="border-left: 6px solid #ef4444; background: linear-gradient(135deg, rgba(30, 10, 15, 0.95), rgba(10, 15, 25, 0.98));">
         <div class="video-column">
@@ -469,6 +501,26 @@
     }
 
     const metas = {
+      natural: {
+        title: "전선 얇은 거 썼다가 1억 날릴 뻔한 썰 (실화) 💥 #Shorts",
+        desc: `야, 너네 공장에서 원가 아낀다고 전선 얇은 거 썼다가 1억 날릴 뻔한 썰 들어봤냐?
+
+저번 주에 실제 있었던 일인데, 새벽 2시에 20억짜리 로봇 라인이 갑자기 셧다운된 거야...
+설비팀 달려오고 난리가 났는데 원인이 뭔지 알아?
+300원 아끼겠다고 24V 선로 80m에 1.5스퀘어를 깐 거지.
+테스터기 찍어보니까 18.2V! 센서가 뻗어버림 ㅋㅋㅋ
+
+공장장님 얼굴 하얘지고 다들 멘붕 왔을 때,
+과장님이 폰 꺼내서 볼트체크 딱 켜더니 3초 만에 4.0스퀘어로 바꾸라더라.
+선 바꾸자마자 라인 바로 정상 가동!
+
+시말서 쓰기 싫으면 네이버에 '볼트체크' 검색해둬라. 평생 무료거든.
+
+👉 78대 전 산업 공학 계산기 포털: https://voltcheck24.com/
+👉 네이버/구글 검색창: [볼트체크]
+
+#직장인썰 #전기기사 #전압강하 #스마트팩토리 #제어반 #전장설계 #공장자동화 #볼트체크 #Shorts`
+      },
       mkt1: {
         title: "20억짜리 로봇 라인이 멈춘 충격적인 범인 (실제 CCTV 감식 파일) 🚨 #Shorts",
         desc: `새벽 2시 14분, 초당 50만 원씩 손실이 발생하는 스마트팩토리 자동화 라인이 긴급 정지했습니다!
