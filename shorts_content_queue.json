@@ -1,6 +1,53 @@
 {
   "queue": [
     {
+      "id": "new_eng_bolt_formula",
+      "type": "engineering",
+      "name": "현장 선배도 헷갈리는 볼트 조임 토크 계산 공식 T = k·d·F 완벽 마스터 ⚙️ #Shorts #볼트체크",
+      "file": "shorts_new_eng_bolt_formula.mp4",
+      "title": "현장 선배도 헷갈리는 볼트 조임 토크 계산 공식 T = k·d·F 완벽 마스터 ⚙️ #Shorts #볼트체크",
+      "description": "볼트 체결 토크 기본 공식: T = k × d × F\n- T: 체결 토크 (N·m)\n- k: 토크 계수 (건식 0.20 vs 윤활 0.15)\n- d: 볼트 호칭경 (m)\n- F: 체결 축력 (N)\n\n💡 토크 계수(k)를 잘못 적용하면 동일 토크라도 축력이 30% 이상 달라져 파단 위험!\nM16 10.9 볼트의 항복 축력 98.7kN 기준 최적의 토크를 3초 만에 검증하세요.\n\n👉 78대 전 산업 무료 공학 계산기 포털: https://voltcheck24.com/\n👉 볼트 토크 계산기: https://voltcheck24.com/?calc=bolt_torque\n\n#볼트조임토크 #토크공식 #기계공학 #공학계산기 #축력계산 #볼트체크 #Shorts #전기기사",
+      "comment": "⚙️ 토크 공식 T = k·d·F 에서 토크 계수(k) 하나 잘못 넣으면 체결력 30% 오차 납니다!\n건식(0.20), 윤활(0.15) 마찰계수와 볼트 강도별 항복강도 3초 만에 자동 검증하세요.\n👉 볼트체크 계산기: https://voltcheck24.com/?calc=bolt_torque",
+      "tags": [
+        "볼트체크",
+        "토크공식",
+        "볼트조임토크",
+        "기계공학",
+        "축력계산",
+        "항복강도",
+        "공학계산기",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "last_uploaded_at": "2026-09-05T17:20:51.031848",
+      "video_id": "ECu5yjnLStE",
+      "publish_at": "2026-09-06 22:05:00 KST"
+    },
+    {
+      "id": "new_mkt_bolt_torque",
+      "type": "marketing",
+      "name": "임팩 렌치로 볼트 대충 조였다 3억짜리 금형 날릴 뻔한 썰 (실화) 💥 #Shorts #볼트체크",
+      "file": "shorts_new_mkt_bolt_torque.mp4",
+      "title": "임팩 렌치로 볼트 대충 조였다 3억짜리 금형 날릴 뻔한 썰 (실화) 💥 #Shorts #볼트체크",
+      "description": "현장에서 감이나 임팩 렌치로 대충 조였다가 M16 10.9 고장력 볼트가 뚝 끊어지며 3억짜리 금형이 날아갈 뻔한 실화!\n과토크로 볼트가 파단되거나 풀림 사고가 발생하는 치명적인 이유!\n스마트폰으로 볼트체크 3초 만에 켜서 볼트 호칭(M16)과 10.9 등급 넣고 284.3 N·m 적정 체결 토크 완벽 산출!\n\n👉 78대 전 산업 무료 공학 계산기 포털: https://voltcheck24.com/\n👉 볼트 토크 계산기: https://voltcheck24.com/?calc=bolt_torque\n\n#볼트토크 #기계설계 #금형사고 #스마트팩토리 #체결토크 #임팩렌치 #볼트체크 #Shorts #공학계산기",
+      "comment": "🚨 현장에서 '손맛'이나 '임팩 렌치'로 대충 조이다가 볼트 파단되고 수억 원대 금형·설비 날아갑니다!\n볼트 규격(M10~M36)과 강도 등급만 넣으면 3초 만에 적정 체결 토크 완벽 계산!\n👉 볼트 토크 계산기: https://voltcheck24.com/?calc=bolt_torque",
+      "tags": [
+        "볼트체크",
+        "볼트토크",
+        "체결토크",
+        "기계설계",
+        "금형설계",
+        "임팩렌치",
+        "스마트팩토리",
+        "공학계산기",
+        "Shorts"
+      ],
+      "status": "scheduled",
+      "last_uploaded_at": "2026-09-05T17:20:51.031832",
+      "video_id": "Nt4OqzPS-rw",
+      "publish_at": "2026-09-06 22:00:00 KST"
+    },
+    {
       "id": "mkt1",
       "type": "marketing",
       "name": "[광고/바이럴] 20억 로봇 라인이 멈춘 범인 (CCTV 감식)",
@@ -24,9 +71,10 @@
         "Shorts",
         "쇼츠"
       ],
-      "status": "uploaded",
-      "last_uploaded_at": "2026-09-05T17:06:56.208595",
-      "video_id": "DRY_RUN_ID"
+      "status": "scheduled",
+      "last_uploaded_at": null,
+      "video_id": "LI5e9p-5G0Y",
+      "publish_at": "2026-09-06 22:00:00 KST"
     },
     {
       "id": "eng1",
@@ -52,9 +100,10 @@
         "Shorts",
         "쇼츠"
       ],
-      "status": "uploaded",
-      "last_uploaded_at": "2026-09-05T17:07:01.211249",
-      "video_id": "DRY_RUN_ID"
+      "status": "scheduled",
+      "last_uploaded_at": null,
+      "video_id": "5LMOA_m6XQ4",
+      "publish_at": "2026-09-06 22:05:00 KST"
     },
     {
       "id": "mkt2",
@@ -81,7 +130,8 @@
       ],
       "status": "pending",
       "last_uploaded_at": null,
-      "video_id": null
+      "video_id": null,
+      "publish_at": null
     },
     {
       "id": "eng2",
@@ -108,7 +158,8 @@
       ],
       "status": "pending",
       "last_uploaded_at": null,
-      "video_id": null
+      "video_id": null,
+      "publish_at": null
     },
     {
       "id": "mkt3",
@@ -135,7 +186,8 @@
       ],
       "status": "pending",
       "last_uploaded_at": null,
-      "video_id": null
+      "video_id": null,
+      "publish_at": null
     },
     {
       "id": "eng3",
@@ -161,7 +213,8 @@
       ],
       "status": "pending",
       "last_uploaded_at": null,
-      "video_id": null
+      "video_id": null,
+      "publish_at": null
     },
     {
       "id": "mkt4",
@@ -188,7 +241,8 @@
       ],
       "status": "pending",
       "last_uploaded_at": null,
-      "video_id": null
+      "video_id": null,
+      "publish_at": null
     },
     {
       "id": "eng4",
@@ -214,7 +268,8 @@
       ],
       "status": "pending",
       "last_uploaded_at": null,
-      "video_id": null
+      "video_id": null,
+      "publish_at": null
     },
     {
       "id": "eng5",
@@ -241,7 +296,8 @@
       ],
       "status": "pending",
       "last_uploaded_at": null,
-      "video_id": null
+      "video_id": null,
+      "publish_at": null
     }
   ]
 }
