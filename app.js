@@ -41,6 +41,46 @@ const MATERIAL_PROPERTIES = {
 let currentUnitStandard = 'AWG';
 let currentLanguage = 'ko';
 
+const ANALYTICS_EVENTS = {
+  toolOpen: 'tool_open',
+  calculate: 'calculator_calculate',
+  shareLink: 'share_link',
+  reportPrint: 'report_print',
+  reportCartAdd: 'report_cart_add',
+  projectSave: 'project_save',
+  projectLoad: 'project_load',
+  languageChange: 'language_change',
+  themeChange: 'theme_change',
+  guideOpen: 'user_guide_open',
+  digitalPackOpen: 'digital_pack_open'
+};
+
+function trackVoltCheckEvent(name, params = {}) {
+  const payload = {
+    event: name,
+    page: window.location.pathname + window.location.search + window.location.hash,
+    tool: document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'unknown',
+    lang: currentLanguage,
+    ...params
+  };
+
+  try {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(payload);
+  } catch (e) {}
+
+  try {
+    window.dispatchEvent(new CustomEvent('voltcheck:analytics', { detail: payload }));
+  } catch (e) {}
+}
+
+function getActiveToolLabel(tabId = null) {
+  const activeBtn = tabId
+    ? document.querySelector(`.tab-btn[data-tab="${tabId}"]`)
+    : document.querySelector('.tab-btn.active');
+  return activeBtn?.querySelector('span')?.textContent || tabId || 'unknown';
+}
+
 const FA_PRESETS = {
   photo_sensor: { length: 40, gauge: 'AWG 24', sqGauge: '0.2 SQ', current: 0.035, vmin: 21.6 },
   solenoid: { length: 30, gauge: 'AWG 20', sqGauge: '0.5 SQ', current: 0.45, vmin: 21.6 },
@@ -111,6 +151,11 @@ function bindEvents() {
       updateUrlHash();
 
       // Quick selective draw only for the tab opened
+      trackVoltCheckEvent(ANALYTICS_EVENTS.toolOpen, {
+        action: 'tab_switch',
+        tab: tabId,
+        toolLabel: btn.querySelector('span')?.textContent || tabId
+      });
       if (tabId === 'tab-voltagedrop') calculateVoltageDrop();
       else if (tabId === 'tab-rs485') calculateRS485();
       else if (tabId === 'tab-ductutility') calculateDuctFill();
@@ -118,7 +163,13 @@ function bindEvents() {
   });
 
   // Share URL Button
-  document.getElementById('shareUrlBtn')?.addEventListener('click', copyShareableLink);
+  document.getElementById('shareUrlBtn')?.addEventListener('click', () => {
+    trackVoltCheckEvent(ANALYTICS_EVENTS.shareLink, {
+      action: 'share_url_click',
+      toolLabel: getActiveToolLabel()
+    });
+    copyShareableLink();
+  });
 
   // Tab 1: Length Slider <-> Number Input Sync
   const lenNum = document.getElementById('wireLength');
@@ -352,7 +403,13 @@ function bindEvents() {
   document.getElementById('exportTableCsvBtn')?.addEventListener('click', exportTableAsCsv);
 
   // Print Report
-  document.getElementById('printReportBtn')?.addEventListener('click', () => openPrintCustomizer());
+  document.getElementById('printReportBtn')?.addEventListener('click', () => {
+    trackVoltCheckEvent(ANALYTICS_EVENTS.reportPrint, {
+      action: 'open_print_customizer',
+      toolLabel: getActiveToolLabel()
+    });
+    openPrintCustomizer();
+  });
 
   // Glossary Live Search Filter
   document.getElementById('glossarySearchInput')?.addEventListener('input', (e) => {
@@ -395,7 +452,12 @@ function bindEvents() {
   document.getElementById('submitQuoteBtn')?.addEventListener('click', handleQuoteSubmit);
 
   // Language Toggle
-  document.getElementById('langToggleBtn')?.addEventListener('click', toggleLanguage);
+  document.getElementById('langToggleBtn')?.addEventListener('click', () => {
+    trackVoltCheckEvent(ANALYTICS_EVENTS.languageChange, {
+      action: 'toggle_language_menu'
+    });
+    toggleLanguage();
+  });
 
   // Policy links
   document.getElementById('linkPrivacyPolicy')?.addEventListener('click', (e) => { e.preventDefault(); openPolicyModal('privacy'); });
@@ -1651,6 +1713,10 @@ function toggleTheme() {
   const isDark = document.body.classList.toggle('theme-dark');
   localStorage.setItem('voltcheck_theme', isDark ? 'dark' : 'light');
   updateThemeButton(isDark);
+  trackVoltCheckEvent(ANALYTICS_EVENTS.themeChange, {
+    action: 'toggle_theme',
+    mode: isDark ? 'dark' : 'light'
+  });
 }
 
 function updateThemeButton(isDark) {
@@ -1699,6 +1765,11 @@ function saveCurrentCalculation() {
 
   if (titleInput) titleInput.value = '';
   renderSavedCalculations();
+  trackVoltCheckEvent(ANALYTICS_EVENTS.projectSave, {
+    action: 'save_history_snapshot',
+    title,
+    tab: activeTab
+  });
   alert(`[보관함 저장 완료]\n\n"${title}" 계산 세팅이 보관함에 안전하게 저장되었습니다.`);
 }
 
@@ -1879,6 +1950,10 @@ function copyShareableLink() {
   updateUrlHash();
   const fullUrl = window.location.href;
   navigator.clipboard.writeText(fullUrl).then(() => {
+    trackVoltCheckEvent(ANALYTICS_EVENTS.shareLink, {
+      action: 'copy_full_url',
+      toolLabel: getActiveToolLabel()
+    });
     alert('[설계 조건 링크 복사 완료]\n\n현재 계산 파라미터가 포함된 고유 URL이 복사되었습니다.\n동료 엔지니어에게 공유하면 동일한 검토 화면이 바로 열립니다.');
   });
 }
@@ -1905,6 +1980,10 @@ function generateAndPrintReport() {
   document.getElementById('rptFinalStatus').textContent = document.getElementById('verdictBadgeText').textContent.includes('PASS') ? 'PASS' : 'FAIL';
   document.getElementById('rptConclusionText').textContent = document.getElementById('recText').textContent.replace('엔지니어링 소견:', '');
 
+  trackVoltCheckEvent(ANALYTICS_EVENTS.reportPrint, {
+    action: 'print_single_report',
+    toolLabel: getActiveToolLabel()
+  });
   window.print();
 }
 
@@ -4653,6 +4732,9 @@ function initMonetizationModals() {
 
   if (digitalBtn && digitalModal) {
     digitalBtn.addEventListener('click', () => {
+      trackVoltCheckEvent(ANALYTICS_EVENTS.digitalPackOpen, {
+        action: 'open_digital_pack'
+      });
       digitalModal.classList.remove('hidden');
       if (window.lucide) window.lucide.createIcons();
     });
@@ -4672,6 +4754,7 @@ function initMonetizationModals() {
 
   if (quoteBtn && quoteModal) {
     quoteBtn.addEventListener('click', () => {
+      trackVoltCheckEvent('quote_modal_open', { action: 'open_quote_modal' });
       // Prepopulate active BOM specs
       const gauge = document.getElementById('wireGaugeValue')?.value || 'AWG 22';
       const len = document.getElementById('wireLength')?.value || '40';
@@ -6613,6 +6696,7 @@ function renderUserGuide() {
 function openUserGuide() {
   renderUserGuide();
   document.getElementById('userGuideModal')?.classList.remove('hidden');
+  trackVoltCheckEvent(ANALYTICS_EVENTS.guideOpen, { action: 'open_user_guide_modal' });
 }
 
 function closeUserGuide() {
@@ -7811,6 +7895,12 @@ function saveCurrentProject() {
   list.unshift(newProj);
   saveProjectsList(list);
 
+  trackVoltCheckEvent(ANALYTICS_EVENTS.projectSave, {
+    action: 'save_project_workspace',
+    tab: activeTabId,
+    toolLabel: activeToolName,
+    name: projectName
+  });
   alert(`[저장 완료] '${projectName}' 프로젝트가 브라우저에 안전하게 저장되었습니다.`);
   renderSavedProjectsList();
 }
@@ -7884,6 +7974,12 @@ function loadProjectById(id) {
     }
     closeProjectStorageModal();
     renderReturnWorkspaceDashboard();
+    trackVoltCheckEvent(ANALYTICS_EVENTS.projectLoad, {
+      action: 'load_project_workspace',
+      tab: proj.tabId,
+      toolLabel: proj.toolName,
+      name: proj.name
+    });
     alert(`[불러오기 완료] '${proj.name}' 설계 데이터가 화면에 복원되었습니다.`);
   }, 100);
 }
@@ -8370,6 +8466,12 @@ function addToReportCart(tabId) {
   items.push(cartItem);
   saveReportCartItems(items);
 
+  trackVoltCheckEvent(ANALYTICS_EVENTS.reportCartAdd, {
+    action: 'add_report_cart',
+    tab: tabId,
+    toolLabel: toolName,
+    verdict: result.verdict
+  });
   alert(`[바구니 담기 완료] '${toolName}' 결과가 통합 결재서 바구니에 추가되었습니다! (현재 ${items.length}개)`);
 }
 
@@ -8468,6 +8570,10 @@ function printUnifiedMasterReport() {
     return;
   }
   closeReportCartModal();
+  trackVoltCheckEvent(ANALYTICS_EVENTS.reportPrint, {
+    action: 'print_unified_report',
+    itemCount: items.length
+  });
   const projectName = document.getElementById('projectNameInput')?.value || 'VoltCheck24 Engineering Review';
   const issuedAt = new Date().toLocaleString('ko-KR');
   const rows = items.map((item, idx) => `
@@ -8592,7 +8698,10 @@ document.addEventListener('DOMContentLoaded', () => {
   updateStarIconsAcrossDOM();
   updateReportCartBadges();
   renderReturnWorkspaceDashboard();
-  document.getElementById('openUserGuideBtn')?.addEventListener('click', openUserGuide);
+  document.getElementById('openUserGuideBtn')?.addEventListener('click', () => {
+    trackVoltCheckEvent(ANALYTICS_EVENTS.guideOpen, { action: 'open_user_guide' });
+    openUserGuide();
+  });
   document.getElementById('closeUserGuideBtn')?.addEventListener('click', closeUserGuide);
   document.getElementById('userGuideModal')?.addEventListener('click', (event) => {
     if (event.target.id === 'userGuideModal') closeUserGuide();
