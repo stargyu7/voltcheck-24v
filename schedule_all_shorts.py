@@ -133,8 +133,8 @@ def upload_scheduled_video(youtube, plan_entry, dry_run=False):
     # YouTube 예약 업로드 필수 스펙: privacyStatus = "private" & publishAt = UTC ISO 문자열
     body = {
         "snippet": {
-            "title": item["title"],
-            "description": item["description"],
+            "title": item["title"].replace("<", "").replace(">", ""),
+            "description": item["description"].replace("<", "").replace(">", ""),
             "tags": item.get("tags", []),
             "categoryId": "28",
             "defaultLanguage": "en",

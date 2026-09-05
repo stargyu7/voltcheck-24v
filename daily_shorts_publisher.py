@@ -147,8 +147,8 @@ def upload_single_short(youtube, item, privacy="public", dry_run=False):
 
     body = {
         "snippet": {
-            "title": item["title"],
-            "description": item["description"],
+            "title": item["title"].replace("<", "").replace(">", ""),
+            "description": item["description"].replace("<", "").replace(">", ""),
             "tags": item.get("tags", []),
             "categoryId": "28",  # 과학기술
             "defaultLanguage": "en",
