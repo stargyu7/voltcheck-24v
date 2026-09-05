@@ -1,50 +1,96 @@
 {
+  "channel_strategy": "100%_GLOBAL_ENGLISH_ONLY",
+  "target_market": "Worldwide (USA, Europe, India, Global Engineering Community)",
+  "language_config": {
+    "defaultLanguage": "en",
+    "defaultAudioLanguage": "en",
+    "voice_story": "en-US-AndrewMultilingualNeural",
+    "voice_technical": "en-US-BrianMultilingualNeural"
+  },
   "queue": [
     {
-      "id": "global_mkt_bolt_torque",
-      "type": "global_english",
-      "name": "Overtightening Bolts with an Impact Wrench Snapped a $250k Mold! 💥 #Shorts",
+      "id": "global_day1_mkt",
+      "type": "global_story",
       "file": "shorts_global_mkt_bolt_torque.mp4",
       "title": "Overtightening Bolts with an Impact Wrench Snapped a $250k Mold! 💥 #Shorts",
       "description": "Real shop floor disaster: An operator tightened M16 10.9 high-strength bolts by feel using an impact wrench.\nThe bolt yielded past its ultimate tensile strength, snapped, and ruined a $250,000 injection mold!\n\nNever guess torque by hand. Calculate precision bolt tightening torque in 3 seconds:\n👉 https://voltcheck24.com/?calc=bolt_torque\n\n#machining #moldmaking #bolttorque #impactwrench #machinist #mechanicalengineering #voltcheck #Shorts",
       "comment": "💥 Machine shops & toolmakers: How do you enforce torque specs on the shop floor?\nTorque wrench sign-offs, smart tools, or digital checklists? Drop your shop rules below! 👇\n(Free 3-sec bolt torque calculator: https://voltcheck24.com/?calc=bolt_torque )",
-      "tags": [
-        "machining",
-        "mold making",
-        "bolt torque",
-        "impact wrench",
-        "machinist",
-        "mechanical engineering",
-        "voltcheck",
-        "Shorts"
-      ],
+      "tags": ["machining", "mold making", "bolt torque", "impact wrench", "machinist", "mechanical engineering", "voltcheck", "Shorts"],
       "status": "scheduled",
-      "last_uploaded_at": "2026-09-05T18:01:16",
-      "video_id": "kNvp7IkAWjY",
-      "publish_at": "2026-09-06 22:00:00 KST"
+      "publish_at": "2026-09-06 22:00:00 KST",
+      "video_id": "kNvp7IkAWjY"
     },
     {
-      "id": "global_eng_bolt_formula",
-      "type": "global_english",
-      "name": "Bolt Tightening Torque Formula T = k·d·F Mastered in 40 Seconds ⚙️ #Shorts",
+      "id": "global_day1_eng",
+      "type": "global_engineering",
       "file": "shorts_global_eng_bolt_formula.mp4",
       "title": "Bolt Tightening Torque Formula T = k·d·F Mastered in 40 Seconds ⚙️ #Shorts",
       "description": "Master the universal bolt tightening torque equation: T = k × d × F\n- T: Tightening Torque (N·m)\n- k: Torque Coefficient (Dry: 0.20 vs Lubricated: 0.15)\n- d: Nominal Bolt Diameter (m)\n- F: Clamping Preload Force (N)\n\nUsing the wrong torque coefficient (k) creates a 30%+ error in clamp force, leading to bolt fatigue or sudden fracture!\n\n78+ Free Engineering Calculators for Mechanical & Electrical Design:\n👉 https://voltcheck24.com/?calc=bolt_torque\n\n#bolttorque #mechanicalengineering #machinist #torqueformula #clampingforce #machining #voltcheck #Shorts",
       "comment": "⚙️ Engineers: What torque coefficient (k) do you specify for dry vs lubricated fasteners?\n0.20 dry, 0.15 moly, or custom test bench data? Let's discuss below! 👇\n(Free bolt torque calculator: https://voltcheck24.com/?calc=bolt_torque )",
-      "tags": [
-        "bolt torque",
-        "mechanical engineering",
-        "machinist",
-        "torque formula",
-        "clamping force",
-        "machining",
-        "voltcheck",
-        "Shorts"
-      ],
+      "tags": ["bolt torque", "mechanical engineering", "machinist", "torque formula", "clamping force", "machining", "voltcheck", "Shorts"],
       "status": "scheduled",
-      "last_uploaded_at": "2026-09-05T18:01:16",
-      "video_id": "0sbRa8fcKyU",
-      "publish_at": "2026-09-06 22:05:00 KST"
+      "publish_at": "2026-09-06 22:05:00 KST",
+      "video_id": "0sbRa8fcKyU"
+    },
+    {
+      "id": "global_day2_mkt",
+      "type": "global_story",
+      "file": "shorts_global_mkt_motor_inrush.mp4",
+      "title": "Why Motors Trip Circuit Breakers on Startup (600% Inrush Spike) 💥 #Shorts",
+      "description": "Starting an industrial electric motor draws 600% of its full load current in the first 100 milliseconds!\nSizing breakers purely based on nameplate running amps causes immediate tripping and downtime.\n\nCalculate motor starting inrush and Type-D breaker sizing in 3 seconds:\n👉 https://voltcheck24.com/?calc=motor_current\n\n#electrician #electricmotor #circuitbreaker #inrushcurrent #electricalengineering #voltcheck #Shorts",
+      "tags": ["electrician", "electric motor", "circuit breaker", "inrush current", "electrical engineering", "voltcheck", "Shorts"],
+      "status": "pending",
+      "publish_at": "2026-09-07 22:00:00 KST"
+    },
+    {
+      "id": "global_day2_eng",
+      "type": "global_engineering",
+      "file": "shorts_global_eng_motor_formula.mp4",
+      "title": "Motor Full Load Current & Breaker Sizing Formula Demystified ⚙️ #Shorts",
+      "description": "Industrial 3-Phase Motor Calculation Equation:\nI_FLC = P / (√3 × V × η × cosθ)\nStarting current peaks at 6x I_FLC.\nLearn how to size magnetic contactors (AC-3) and thermal overload relays.\n\nFree 3-second motor sizing calculator:\n👉 https://voltcheck24.com/?calc=motor_current\n\n#motorsizing #electrician #electricalengineering #flc #contactor #voltcheck #Shorts",
+      "tags": ["motor sizing", "electrician", "electrical engineering", "flc", "contactor", "voltcheck", "Shorts"],
+      "status": "pending",
+      "publish_at": "2026-09-07 22:05:00 KST"
+    },
+    {
+      "id": "global_day3_mkt",
+      "type": "global_story",
+      "file": "shorts_global_mkt_hydraulic_hammer.mp4",
+      "title": "Hydraulic Pipe Ruptured by 300 Bar Water Hammer Shock! 🚰 #Shorts",
+      "description": "Rapid valve closure creates massive acoustic shock waves in high-pressure hydraulic circuits, rupturing hard piping.\nHow a properly sized hydraulic accumulator dampens surge pressures and saves systems.\n\nCalculate hydraulic accumulator pre-charge volume in seconds:\n👉 https://voltcheck24.com/\n\n#hydraulics #mechanicalengineering #waterhammer #accumulator #fluidpower #voltcheck #Shorts",
+      "tags": ["hydraulics", "mechanical engineering", "water hammer", "accumulator", "fluid power", "voltcheck", "Shorts"],
+      "status": "pending",
+      "publish_at": "2026-09-08 22:00:00 KST"
+    },
+    {
+      "id": "global_day3_eng",
+      "type": "global_engineering",
+      "file": "shorts_global_eng_accumulator_formula.mp4",
+      "title": "Hydraulic Accumulator Gas Pre-charge Sizing Formula (Boyle's Law) ⚙️ #Shorts",
+      "description": "Hydraulic accumulator gas pre-charge sizing based on polytropic compression: P0 × V0^n = P1 × V1^n = P2 × V2^n.\nNever set nitrogen pre-charge pressure higher than 90% of minimum working pressure!\n\nFree industrial hydraulics engineering calculator:\n👉 https://voltcheck24.com/\n\n#hydraulics #accumulator #boyleslaw #mechanicalengineering #fluidpower #voltcheck #Shorts",
+      "tags": ["hydraulics", "accumulator", "boyles law", "mechanical engineering", "fluid power", "voltcheck", "Shorts"],
+      "status": "pending",
+      "publish_at": "2026-09-08 22:05:00 KST"
+    },
+    {
+      "id": "global_day4_mkt",
+      "type": "global_story",
+      "file": "shorts_global_mkt_bearing_failure.mp4",
+      "title": "Horrible Screeching Noise Before an Industrial Drive Shaft Snapped! ⚙️ #Shorts",
+      "description": "High-speed machinery bearing seized up under uncalculated dynamic radial loads, grinding the main shaft to pieces.\nWhy calculating ISO 281 L10h fatigue life is mandatory before commissioning.\n\nFree bearing life calculator:\n👉 https://voltcheck24.com/\n\n#bearing #machinist #iso281 #vibrationanalysis #mechanicalengineering #voltcheck #Shorts",
+      "tags": ["bearing", "machinist", "iso281", "vibration analysis", "mechanical engineering", "voltcheck", "Shorts"],
+      "status": "pending",
+      "publish_at": "2026-09-09 22:00:00 KST"
+    },
+    {
+      "id": "global_day4_eng",
+      "type": "global_engineering",
+      "file": "shorts_global_eng_bearing_formula.mp4",
+      "title": "Bearing L10h Fatigue Life Calculation Formula (ISO 281) Mastered ⚙️ #Shorts",
+      "description": "Universal Bearing Life Equation:\nL10h = (10^6 / (60 × n)) × (C / P)^p\nWhere p = 3 for ball bearings, p = 10/3 for roller bearings.\nCalculate dynamic equivalent load P = X·Fr + Y·Fa in 3 seconds.\n\nFree ISO 281 bearing calculator:\n👉 https://voltcheck24.com/\n\n#bearinglife #iso281 #mechanicalengineering #machinist #tribology #voltcheck #Shorts",
+      "tags": ["bearing life", "iso281", "mechanical engineering", "machinist", "tribology", "voltcheck", "Shorts"],
+      "status": "pending",
+      "publish_at": "2026-09-09 22:05:00 KST"
     }
   ]
 }
