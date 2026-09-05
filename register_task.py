@@ -12,13 +12,13 @@ if sys.platform == "win32":
 
 bat_path = Path(__file__).resolve().parent / "run_daily_shorts.bat"
 
-# Windows schtasks 명령어 구성
+# Windows schtasks 명령어 구성 (매일 밤 10시 = 22:00)
 cmd = [
     "schtasks", "/create",
-    "/tn", "VoltCheck_Daily_Shorts_8AM",
+    "/tn", "VoltCheck_Daily_Shorts_10PM",
     "/tr", f'"{bat_path}"',
     "/sc", "daily",
-    "/st", "08:00",
+    "/st", "22:00",
     "/f"
 ]
 
@@ -29,6 +29,6 @@ if res.stderr:
     print("오류:\n", res.stderr)
 
 if res.returncode == 0:
-    print("🎉 [성공] 매일 아침 8시 자동 발행 스케줄이 Windows 작업 스케줄러에 등록되었습니다!")
+    print("🎉 [성공] 매일 밤 10시(22:00) 자동 발행 스케줄이 Windows 작업 스케줄러에 등록되었습니다!")
 else:
     print(f"⚠️ 등록 실패 (코드 {res.returncode}). 관리자 권한으로 다시 시도해주세요.")
