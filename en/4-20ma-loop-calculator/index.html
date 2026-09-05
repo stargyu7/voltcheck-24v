@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://voltcheck24.com/en/4-20ma-loop-calculator/">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="/styles.css?v=2.2.0">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"4-20mA Loop Voltage Margin Calculator","applicationCategory":"EngineeringApplication","operatingSystem":"Web","url":"https://voltcheck24.com/en/4-20ma-loop-calculator/","description":"Check transmitter voltage margin, loop resistance, shunt resistor loading, and cable losses for industrial 4-20mA current loops.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"mainEntity":[{"@type":"Question","name":"Why is 250 ohms common in a 4-20mA loop?","acceptedAnswer":{"@type":"Answer","text":"A 250 ohm shunt converts 4-20mA into 1-5V using Ohm’s law, which matches many analog input modules."}},{"@type":"Question","name":"What causes a 4-20mA loop to fail at 20mA?","acceptedAnswer":{"@type":"Answer","text":"The loop may run out of voltage compliance because cable, barrier, shunt, and device losses exceed the available supply margin."}}]}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"SoftwareApplication","name":"4-20mA Loop Voltage Margin Calculator","applicationCategory":"EngineeringApplication","operatingSystem":"Web","url":"https://voltcheck24.com/en/4-20ma-loop-calculator/","description":"Check transmitter voltage margin, loop resistance, shunt resistor loading, and cable losses for industrial 4-20mA current loops.","isAccessibleForFree":true,"dateModified":"2026-09-05","publisher":{"@type":"Organization","name":"Total Engineering Lab","url":"https://voltcheck24.com"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is 250 ohms common in a 4-20mA loop?","acceptedAnswer":{"@type":"Answer","text":"A 250 ohm shunt converts 4-20mA into 1-5V using Ohm’s law, which matches many analog input modules."}},{"@type":"Question","name":"What causes a 4-20mA loop to fail at 20mA?","acceptedAnswer":{"@type":"Answer","text":"The loop may run out of voltage compliance because cable, barrier, shunt, and device losses exceed the available supply margin."}}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"VoltCheck24 Global","item":"https://voltcheck24.com/en/"},{"@type":"ListItem","position":2,"name":"4-20mA Loop Voltage Margin Calculator","item":"https://voltcheck24.com/en/4-20ma-loop-calculator/"}]}]</script>
 </head>
 <body class="seo-page">
   <main class="seo-shell">
@@ -25,12 +25,21 @@
       <a class="primary-action" href="/?calc=tab-analogloop&amp;lang=en">Open Interactive Calculator</a>
       <a class="secondary-action" href="/?calc=tab-plcscaling&amp;lang=en">Open PLC Scaling Calculator</a>
     </div>
+    <section class="seo-workflow">
+      <h2>How to use this calculator</h2>
+      <ol><li>Collect the values below from the equipment nameplate, data sheet, or field measurement.</li><li>Enter values using one consistent unit system and use worst-case operating conditions.</li><li>Review the result, margin, and engineering note before selecting hardware.</li><li>Cross-check the result with the related calculator and save the review for your project record.</li></ol>
+    </section>
+    <section class="seo-checklist">
+      <h2>Input checklist</h2>
+      <ul><li>Supply voltage and worst-case voltage</li><li>Transmitter minimum operating voltage</li><li>Cable length and conductor resistance</li><li>Barrier and shunt resistance</li></ul>
+    </section>
     <section class="seo-grid">
       <article><h2>Formula and Inputs</h2><p>Loop margin = supply voltage - transmitter minimum voltage - cable resistance drop - barrier and shunt voltage drop.</p></article>
       <article><h2>Industrial Use Cases</h2><p>Use this tool for pressure, flow, temperature, and level transmitters connected to PLC or DCS analog input cards.</p></article>
       <article><h2>Engineering Note</h2><p>Verify the transmitter minimum operating voltage, barrier entity parameters, shunt resistor tolerance, and worst-case supply voltage from manufacturer data.</p></article>
     </section>
     <section class="seo-faq"><h2>FAQ</h2><h3>Why is 250 ohms common in a 4-20mA loop?</h3><p>A 250 ohm shunt converts 4-20mA into 1-5V using Ohm’s law, which matches many analog input modules.</p><h3>What causes a 4-20mA loop to fail at 20mA?</h3><p>The loop may run out of voltage compliance because cable, barrier, shunt, and device losses exceed the available supply margin.</p></section>
+    <nav class="seo-related" aria-label="Related engineering calculators"><strong>Related calculator:</strong> <a href="/?calc=tab-plcscaling&amp;lang=en">PLC Scaling Calculator</a> · <a href="/en/">Browse all English calculators</a></nav>
     <p class="seo-disclaimer">Preliminary engineering reference only. Confirm final selections against current standards, project specifications, and manufacturer data.</p>
   </main>
 </body>
