@@ -20,11 +20,11 @@ import json
 import argparse
 from pathlib import Path
 
-# Windows 터미널 한글 및 유니코드 출력(cp949 에러 방지) 지원
+# Windows 터미널 한글 및 유니코드 출력(cp949 에러 방지) 및 실시간 버퍼링 해제
 if sys.platform == "win32":
     try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
+        sys.stdout.reconfigure(encoding="utf-8", line_buffering=True)
+        sys.stderr.reconfigure(encoding="utf-8", line_buffering=True)
     except Exception:
         pass
 
@@ -416,8 +416,10 @@ def authenticate_youtube(client_secret_path: Path):
                     sys.exit(1)
 
             print("[1/3] 브라우저를 열어 YouTube 채널 관리자 Google 로그인을 진행합니다...")
+            print("👉 브라우저 창이 열리면 Google 계정으로 로그인 후 [계속] / [허용]을 눌러주세요.")
+            sys.stdout.flush()
             flow = InstalledAppFlow.from_client_secrets_file(str(client_secret_path), SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_local_server(port=0, open_browser=True)
 
         # 토큰 영구 저장
         with open(TOKEN_FILE, "w", encoding="utf-8") as token:
